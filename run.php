@@ -120,9 +120,8 @@ try {
             )
         );
         */
-        $GLOBALS['id'] = $discord->user->id;
-        $tag = $discord->user->tag;
-        echo "[READY] Logged in as $tag (" . $GLOBALS['id'] . ')' . PHP_EOL;
+        $tag = $discord->user->username . "#" . $discord->user->discriminator;
+        echo "[READY] Logged in as $tag (" . $discord->id . ')' . PHP_EOL;
         $dt = new DateTime("now"); // convert UNIX timestamp to PHP DateTime
         echo "[READY TIMESTAMP] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
         

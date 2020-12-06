@@ -35,7 +35,7 @@ $author_channel_id			= $author_channel->id; 												//echo "author_channel_i
 $author_channel_class		= get_class($author_channel);
 
 /*
-if ($GLOBALS['id'] == $reaction->user->id)
+if ("{$discord->id}" == $reaction->user->id)
     return true; //Don't process reactions made by this bot
 */
 

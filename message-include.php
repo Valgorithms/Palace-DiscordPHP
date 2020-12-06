@@ -438,7 +438,7 @@ else {
 }
 
 if (($rolepicker_id == "") || ($rolepicker_id == "0") || ($rolepicker_id === null)) { //Message rolepicker menus
-    $rolepicker_id = $GLOBALS['id']; //Default to Palace Bot
+    $rolepicker_id = $discord->id; //Default to Palace Bot
 }
 global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
 global $gender, $gender_message_text;

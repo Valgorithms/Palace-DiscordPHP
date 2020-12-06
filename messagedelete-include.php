@@ -48,7 +48,7 @@ if (get_class($message->author) == "Discord\Parts\User\User") { //True if direct
     echo "[DM MESSAGE DELETED]" . PHP_EOL;
     return true; //Don't process DMs
 }
-if ($GLOBALS['id'] == "{$author_user->id}") {
+if ("{$discord->id}" == "{$author_user->id}") {
     echo "[SELF MESSAGE DELETED]" . PHP_EOL;
     return true; //Don't log messages made by this bot
 }
