@@ -6,7 +6,7 @@ $user = $guildmember->user;
 $user_username 											= $user->username; 													//echo "author_username: " . $author_username . PHP_EOL;
 $user_id 												= $user->id;														//echo "new_user_id: " . $new_user_id . PHP_EOL;
 $user_discriminator 									= $user->discriminator;												//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-$user_avatar 											= $user->avatar;											//echo "author_id: " . $author_id . PHP_EOL;
+$user_avatar 											= $user->avatar;													//echo "author_id: " . $author_id . PHP_EOL;
 $user_check 											= "$user_username#$user_discriminator"; 							//echo "author_check: " . $author_check . PHP_EOL;\
 $user_tag												= $user->tag;
 $user_createdTimestamp									= $user->createdTimestamp();
@@ -36,7 +36,7 @@ $guild_folder = "\\guilds\\$author_guild_id";
 $guild_config_path = __DIR__  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 include "$guild_config_path";
 if ($welcome_log_channel_id) {
-    $welcome_log_channel	= $guildmember->guild->channels->get('id', $welcome_log_channel_id);
+    $welcome_log_channel = $guildmember->guild->channels->get('id', $welcome_log_channel_id);
 }
 if ($welcome_public_channel_id) {
     $welcome_public_channel	= $guildmember->guild->channels->get('id', $welcome_public_channel_id);
@@ -45,27 +45,32 @@ if ($welcome_public_channel_id) {
 //	Build the embed
 $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 $embed
-//	->setTitle("$user_check")																			// Set a title
+//	->setTitle("$user_check")																// Set a title
     ->setColor("a7c5fd")																	// Set a color (the thing on the left side)
-//	->setDescription("$author_guild_name")												// Set a description (below title, above fields)
-    ->setDescription("<@$user_id> just joined **$author_guild_name**\n
-	There are now **$guild_memberCount** members.\n
-	Account created on $user_createdTimestamp")												// Set a description (below title, above fields)
-    //X days agow
+    ->setDescription("<@$user_id> just joined **$author_guild_name**" . PHP_EOL .			// Set a description (below title, above fields)
+		"There are now **$guild_memberCount** members." . PHP_EOL .
+		"Account created on $user_createdTimestamp")										
+    //X days ago
 //	->setAuthor("$user_check", "$author_guild_avatar")  									// Set an author with icon
-//	->addField("Roles", 		"$author_role_name_queue_full")											// New line after this
     
-    ->setThumbnail("$user_avatar")														// Set a thumbnail (the image in the top right corner)
 //	->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
     ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-    
     ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
     ->setURL("");
+if ($user_avatar) $embed->setThumbnail("$user_avatar");										// Set a thumbnail (the image in the top right corner)
 
 if ($welcome_log_channel) { //Send a detailed embed with user info
-    $welcome_log_channel->sendEmbed($embed);
+    $welcome_log_channel->sendMessage("", false, $embed)->done(null,
+		function ($error) {
+			echo "[ERROR] $error".PHP_EOL;
+		}
+	);
 } elseif ($modlog_channel) { //Send a detailed embed with user info
-    $modlog_channel->sendEmbed($embed);
+    $modlog_channel->sendMessage("", false, $embed)->done(null, 
+		function ($error) {
+			echo "[ERROR] $error".PHP_EOL;
+		}
+	);
 }
 if ($welcome_public_channel) { //Greet the new user to the server
     $welcome_public_channel->sendMessage("Welcome <@$user_id> to $author_guild_name!");
