@@ -20,32 +20,36 @@ $old_avatar				= $user_old->avatar;
 
 $changes = "";
 
-if ($old_tag != $new_tag){
-	//echo "old_tag: " . $old_tag . PHP_EOL;
-	//echo "new_tag: " . $new_tag . PHP_EOL;
-	$changes = $changes . "Old tag: $old_tag\nNew tag: $new_tag\n";
-	
-	//Place user info in target's folder
-	$array = VarLoad($user_folder, "tags.php");
-	if ($old_tag && $array)
-	if (!in_array($old_tag, $array))
-		$array[] = $old_tag;
-	if ($new_tag && $array)
-	if (!in_array($new_tag, $array)) $array[] = $new_tag;
-	VarSave($user_folder, "tags.php", $array);
+if ($old_tag != $new_tag) {
+    //echo "old_tag: " . $old_tag . PHP_EOL;
+    //echo "new_tag: " . $new_tag . PHP_EOL;
+    $changes = $changes . "Old tag: $old_tag\nNew tag: $new_tag\n";
+    
+    //Place user info in target's folder
+    $array = VarLoad($user_folder, "tags.php");
+    if ($old_tag && $array) {
+        if (!in_array($old_tag, $array)) {
+            $array[] = $old_tag;
+        }
+    }
+    if ($new_tag && $array) {
+        if (!in_array($new_tag, $array)) {
+            $array[] = $new_tag;
+        }
+    }
+    VarSave($user_folder, "tags.php", $array);
 }
 
-if ($old_avatar != $new_avatar){
-	//echo "old_avatar: " . $old_avatar . PHP_EOL;
-	//echo "new_avatar: " . $new_avatar . PHP_EOL;
-	$changes = $changes . "Old avatar: $old_avatar\nNew avatar: $new_avatar\n";
-	
-	//Place user info in target's folder
-	VarSave($user_folder, "avatars.php", $new_avatar);
+if ($old_avatar != $new_avatar) {
+    //echo "old_avatar: " . $old_avatar . PHP_EOL;
+    //echo "new_avatar: " . $new_avatar . PHP_EOL;
+    $changes = $changes . "Old avatar: $old_avatar\nNew avatar: $new_avatar\n";
+    
+    //Place user info in target's folder
+    VarSave($user_folder, "avatars.php", $new_avatar);
 }
 
-if($changes != ""){
-	echo "$old_username changed their information:\n" . $changes . PHP_EOL;	
+if ($changes != "") {
+    echo "$old_username changed their information:\n" . $changes . PHP_EOL;
 }
 return true;
-?>

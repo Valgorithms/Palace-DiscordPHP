@@ -1,21 +1,21 @@
 <?php
 //This code is dynamically driven by run.php and cannot be encapsulated into a function
-if (php_sapi_name() == "cli"){
-	//echo "CLI" . PHP_EOL;
-}else{ //Browser
-	return true;
+if (php_sapi_name() == "cli") {
+    //echo "CLI" . PHP_EOL;
+} else { //Browser
+    return true;
 }
 
 //Create the image
 echo "CREATE CACHED IMAGE" . PHP_EOL;
-$my_img = imagecreate( 300, 80 );
-imagesetthickness ( $my_img, 1 );
+$my_img = imagecreate(300, 80);
+imagesetthickness($my_img, 1);
 
-$background 	= imagecolorallocate( $my_img,	47, 	49, 	54	); //First call to this function is always the background
-$text_colour 	= imagecolorallocate( $my_img,	255, 	255, 	0	);
-$line_colour 	= imagecolorallocate( $my_img,	167, 	197, 	253	);
-imagestring( $my_img, 4, 30, 25, $author_username, $text_colour );
-imageline( $my_img, 30, 45, 260, 45, $line_colour );
+$background 	= imagecolorallocate($my_img, 47, 49, 54); //First call to this function is always the background
+$text_colour 	= imagecolorallocate($my_img, 255, 255, 0);
+$line_colour 	= imagecolorallocate($my_img, 167, 197, 253);
+imagestring($my_img, 4, 30, 25, $author_username, $text_colour);
+imageline($my_img, 30, 45, 260, 45, $line_colour);
 
 /*
 // Create image instances
@@ -44,9 +44,10 @@ $full_folder_path = $img_dir_path . $cache_folder; //echo "full_folder_path: " .
 //Delete old images before creating the new one
 //echo "DELETING OLD IMAGES" . PHP_EOL;
 $files = glob($full_folder_path . "*"); //Get all file names
-foreach($files as $file){ //Iterate files
-  if(is_file($file))
-	unlink($file); //Delete file
+foreach ($files as $file) { //Iterate files
+  if (is_file($file)) {
+      unlink($file);
+  } //Delete file
 }
 clearstatcache();
 
@@ -59,4 +60,3 @@ imagepng($my_img, $img_dir_path . $img_output_path);
 
 
 // \CharlotteDunois\Yasmin\Utils\DataHelpers::makeBase64URI($file),
-?>

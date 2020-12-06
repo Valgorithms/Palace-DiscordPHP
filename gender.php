@@ -2,10 +2,10 @@
 include_once 'custom_functions.php';
 
 $gender = array(
-	"gender Fluid" => "💧",
-	"non Binary" => "⛔",
-	"female" => "♀️",
-	"male" => "♂️",
+    "gender Fluid" => "💧",
+    "non Binary" => "⛔",
+    "female" => "♀️",
+    "male" => "♂️",
 );
 
 //Message copy-pasta:
@@ -15,4 +15,3 @@ $gender_message_text = "**Role Menu: Gender**
 :female_sign: : `Female`
 :male_sign: : `Male`
 ";
-?>

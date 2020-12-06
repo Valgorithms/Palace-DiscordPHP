@@ -19,4 +19,3 @@ $urlstring = "http://production.shippingapis.com/ShippingAPITest.dll?API=ZipCode
 $xmlstring = "<ZipCodeLookupRequest USERID='$userid'><Address ID='0'><Address1></Address1><Address2>$address2</Address2><City>$city</City><State>$state</State></Address></ZipCodeLookupRequest>";
 //print($xml->asXML());
 //$author_channel->sendMessage($urlstring . urlencode($xmlstring));
-?>

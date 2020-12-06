@@ -2,9 +2,9 @@
 include_once 'custom_functions.php';
 
 $customroles = array(
-	"Persistence" => "♾️",
-	"Nomads" => "🛠️",
-	"TDM" => "🔫"
+    "Persistence" => "♾️",
+    "Nomads" => "🛠️",
+    "TDM" => "🔫"
 );
 
 //Message copy-pasta:
@@ -13,4 +13,3 @@ $customroles_message_text = "**Role Menu: Ping Tags**
 :tools: : `Nomads`
 :gun: : `TDM`
 ";
-?>

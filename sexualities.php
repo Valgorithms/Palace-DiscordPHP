@@ -2,13 +2,13 @@
 include_once 'custom_functions.php';
 
 $sexualities = array(
-	"straight" => "👩‍❤️‍💋‍👨", 
-	"questioning Sexuality" => "❓",
-	"asexual" => "🛑",
-	"pansexual" => "🥘",
-	"bicurious" => "❔",
-	"bi" => "🚻",
-	"gay/Lesbian" => "🏳️‍🌈"
+    "straight" => "👩‍❤️‍💋‍👨",
+    "questioning Sexuality" => "❓",
+    "asexual" => "🛑",
+    "pansexual" => "🥘",
+    "bicurious" => "❔",
+    "bi" => "🚻",
+    "gay/Lesbian" => "🏳️‍🌈"
 );
 
 //Message copy-pasta:
@@ -21,4 +21,3 @@ $sexuality_message_text = "**Role Menu: Sexualities**
 :restroom: : `Bi`
 :rainbow_flag: : `Gay/Lesbian`
 ";
-?>

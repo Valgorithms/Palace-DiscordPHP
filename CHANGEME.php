@@ -5,4 +5,3 @@ $creator_name									= "Valithor";
 $creator_discriminator							= "5947";
 $creator_id										= "116927250145869826";
 $creator_check									= "$creator_name#$creator_discriminator";
-?>

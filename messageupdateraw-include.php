@@ -31,43 +31,44 @@ $log_message = "[Link](https://discord.com/channels/$author_guild_id/$author_cha
 **Channel:** <#$channel_id>
 **Message ID:** $id
 **New content:** $content" . PHP_EOL;
-$channel->fetchMessage($id)->then(function($message) use ($modlog_channel, $log_message){	//Resolve the promise
-	//Load author info
-	$author_user													= $message->author; //User object
-	$author_channel 												= $message->channel;
-	$author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
-	$author_channel_class											= get_class($author_channel);
-	$is_dm = false;
-	if ($author_channel_class === "CharlotteDunois\Yasmin\Models\DMChannel"){ //True if direct message
-		$is_dm = true;
-		return true; //Don't process DMs
-	}
-	
-	$author_username 												= $author_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
-	$author_discriminator 											= $author_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-	$author_id 														= $author_user->id;												//echo "author_id: " . $author_id . PHP_EOL;
-	$author_avatar 													= $author_user->avatar;									//echo "author_avatar: " . $author_avatar . PHP_EOL;
-	$author_check 													= "$author_username#$author_discriminator"; 					//echo "author_check: " . $author_check . PHP_EOL;
-	
+$channel->fetchMessage($id)->then(function ($message) use ($modlog_channel, $log_message) {	//Resolve the promise
+    //Load author info
+    $author_user													= $message->author; //User object
+    $author_channel 												= $message->channel;
+    $author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
+    $author_channel_class											= get_class($author_channel);
+    $is_dm = false;
+    if ($author_channel_class === "CharlotteDunois\Yasmin\Models\DMChannel") { //True if direct message
+        $is_dm = true;
+        return true; //Don't process DMs
+    }
+    
+    $author_username 												= $author_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
+    $author_discriminator 											= $author_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
+    $author_id 														= $author_user->id;												//echo "author_id: " . $author_id . PHP_EOL;
+    $author_avatar 													= $author_user->avatar;									//echo "author_avatar: " . $author_avatar . PHP_EOL;
+    $author_check 													= "$author_username#$author_discriminator"; 					//echo "author_check: " . $author_check . PHP_EOL;
+    
 //			Build the embed
-	$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
-	$embed
+    $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+    $embed
 //				->setTitle("$user_check")																// Set a title
-		->setColor("a7c5fd")																	// Set a color (the thing on the left side)
+        ->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 //				->setDescription("$author_guild_name")												// Set a description (below title, above fields)
 //				->setDescription("")														// Set a description (below title, above fields)
-		->setAuthor("$author_check ($author_id)", $author_avatar)  											// Set an author with icon
-		->addField("Uncached Message Update", 		"$log_message")				// New line after this
-		
+        ->setAuthor("$author_check ($author_id)", $author_avatar)  											// Set an author with icon
+        ->addField("Uncached Message Update", "$log_message")				// New line after this
+        
 //				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
-		->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-		
-		->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-		->setURL("");
-//			Send the message
-//			We do not need another promise here, so we call done, because we want to consume the promise
-	if($modlog_channel)$modlog_channel->sendEmbed($embed);
-	return true; //No more processing, we only want to process the first person mentioned
+        ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
+        
+        ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
+        ->setURL("");
+    //			Send the message
+    //			We do not need another promise here, so we call done, because we want to consume the promise
+    if ($modlog_channel) {
+        $modlog_channel->sendEmbed($embed);
+    }
+    return true; //No more processing, we only want to process the first person mentioned
 });
-?>

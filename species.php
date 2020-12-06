@@ -2,43 +2,43 @@
 include_once 'custom_functions.php';
 
 $species = array(
-	"aquatic" => "🐟", //:fish:
-	"avian" => "🐦", //:bird:
-	"bat" => "🦇", //:bat:
-	"bear" => "🐻", //:bear:
-	"canine" => "🐶", //:dog:
-	"deer" => "🦌",//:deer:
-	"dolphin" => "🐬", //:dolphin:
-	"dragon" => "🐉", //:dragon:
-	"equine" => "🐴", //:horse:
-	"feline" => "😺", //:smiley_cat:
+    "aquatic" => "🐟", //:fish:
+    "avian" => "🐦", //:bird:
+    "bat" => "🦇", //:bat:
+    "bear" => "🐻", //:bear:
+    "canine" => "🐶", //:dog:
+    "deer" => "🦌",//:deer:
+    "dolphin" => "🐬", //:dolphin:
+    "dragon" => "🐉", //:dragon:
+    "equine" => "🐴", //:horse:
+    "feline" => "😺", //:smiley_cat:
 );
 
 $species2 = array(
-	"fox" => "🦊", //:fox:
-	"hybrid" => "🔀", //:twisted_rightwards_arrows:
-	"mouse" => "🐭", //:mouse: 
-	"kangaroo" => "🏀", //:basketball: 
-	"pokemon" => "🍎", //:apple:
-	"protogen" => "🤖", //:robot:
-	"rabbit" => "🐰", //:rabbit:
-	"reptile" => "🦎", //:lizard:
-	"sergal" => "🧀", //:cheese: 
-	"shapeshifter" => "🔷" //:small_blue_diamond:
+    "fox" => "🦊", //:fox:
+    "hybrid" => "🔀", //:twisted_rightwards_arrows:
+    "mouse" => "🐭", //:mouse:
+    "kangaroo" => "🏀", //:basketball:
+    "pokemon" => "🍎", //:apple:
+    "protogen" => "🤖", //:robot:
+    "rabbit" => "🐰", //:rabbit:
+    "reptile" => "🦎", //:lizard:
+    "sergal" => "🧀", //:cheese:
+    "shapeshifter" => "🔷" //:small_blue_diamond:
 );
 
 $species3 = array(
-	"wolf" => "🐺", //:wolf:
-	"goat" => "🐐", //:goat:
-	"human" => "🚶", //:person_walking: 
-	"mobold" => "🍆", //:eggplant:
-	"otter" => "🍿", //:popcorn:
-	"panda" => "🐼", //:panda_face:
-	"penguin" => "🐧", //:penguin:
-	"raccoon" => "🕳️", //:hole:
-	"shark" => "🦈", //:shark:
-	"squirrel" => "🌰", //:chestnut:
-	"misc/Unlisted Species" => "🤷" //:person_shrugging: ///Unlisted Species
+    "wolf" => "🐺", //:wolf:
+    "goat" => "🐐", //:goat:
+    "human" => "🚶", //:person_walking:
+    "mobold" => "🍆", //:eggplant:
+    "otter" => "🍿", //:popcorn:
+    "panda" => "🐼", //:panda_face:
+    "penguin" => "🐧", //:penguin:
+    "raccoon" => "🕳️", //:hole:
+    "shark" => "🦈", //:shark:
+    "squirrel" => "🌰", //:chestnut:
+    "misc/Unlisted Species" => "🤷" //:person_shrugging: ///Unlisted Species
 );
 
 //Message copy-pasta:
@@ -78,4 +78,3 @@ $species3_message_text = "**Role Menu: Species3**
 :shark: : `Shark` 
 :chestnut: : `Squirrel`
 :person_shrugging: : `Misc/Unlisted Species`";
-?>
