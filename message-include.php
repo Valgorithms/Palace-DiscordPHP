@@ -4197,7 +4197,7 @@ if(substr($message_content_lower, 0, 1) == $command_symbol){
 			$x++;
 		}
 	}
-	if ($user_perms['kick_membeaaaaaaaaaaars'] && substr($message_content_lower, 0, 5) == 'kick '){ //;kick
+	if ($user_perms['kick_members'] && substr($message_content_lower, 0, 5) == 'kick '){ //;kick
 		echo "[KICK]" . PHP_EOL;
 		//Get an array of people mentioned
 		$mentions_arr 	= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
