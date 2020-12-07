@@ -20,3 +20,7 @@ nomads_linked_mode.php
 phpDocumentor.phar
 cmd.lnk
 .php_cs.cache
+remove_embed.txt
+remove_result.txt
+add_result.txt
+add_embed.txt

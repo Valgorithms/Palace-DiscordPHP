@@ -8,7 +8,7 @@ $user_id 												= $user->id;														//echo "new_user_id: " . $new_use
 $user_discriminator 									= $user->discriminator;												//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
 $user_avatar 											= $user->avatar;													//echo "author_id: " . $author_id . PHP_EOL;
 $user_check 											= "$user_username#$user_discriminator"; 							//echo "author_check: " . $author_check . PHP_EOL;\
-$user_tag												= $user->tag;
+$user_tag												= $user_check;
 $user_createdTimestamp									= $user->createdTimestamp();
 $user_createdTimestamp									= date("D M j H:i:s Y", $user_createdTimestamp);
 
@@ -41,18 +41,17 @@ if ($welcome_log_channel_id) {
 if ($welcome_public_channel_id) {
     $welcome_public_channel	= $guildmember->guild->channels->get('id', $welcome_public_channel_id);
 }
-
+echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 //	Build the embed
 $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 $embed
-//	->setTitle("$user_check")																// Set a title
-    ->setColor("a7c5fd")																	// Set a color (the thing on the left side)
-    ->setDescription("<@$user_id> just joined **$author_guild_name**" . PHP_EOL .			// Set a description (below title, above fields)
-		"There are now **$guild_memberCount** members." . PHP_EOL .
+	->setTitle("Member Joined")																// Set a title
+    ->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
+    ->setDescription("<@$user_id> just joined **$author_guild_name**" . "\n" .				// Set a description (below title, above fields)
+		//"There are now **$guild_memberCount** members." . "\n" .
 		"Account created on $user_createdTimestamp")										
     //X days ago
-//	->setAuthor("$user_check", "$author_guild_avatar")  									// Set an author with icon
-    
+    ->addFieldValues("Member Count", "$guild_memberCount")
 //	->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
     ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
     ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
@@ -60,22 +59,38 @@ $embed
 if ($user_avatar) $embed->setThumbnail("$user_avatar");										// Set a thumbnail (the image in the top right corner)
 
 if ($welcome_log_channel) { //Send a detailed embed with user info
-    $welcome_log_channel->sendMessage("", false, $embed)->done(null,
-		function ($error) {
-			echo "[ERROR] $error".PHP_EOL;
-		}
-	);
+	echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+	ob_flush();
+	ob_start();
+	var_dump($embed);
+	file_put_contents("add_embed.txt", ob_get_flush());
+    $welcome_log_channel->sendMessage("", false, $embed)->done(function ($r) {
+		ob_flush();
+		ob_start();
+		var_dump($r);
+		file_put_contents("add_result.txt", ob_get_flush());
+	}, function ($error) {
+		ob_flush();
+		ob_start();
+		var_dump($error);
+		file_put_contents("add_error.txt", ob_get_flush());
+	});
 } elseif ($modlog_channel) { //Send a detailed embed with user info
-    $modlog_channel->sendMessage("", false, $embed)->done(null, 
-		function ($error) {
-			echo "[ERROR] $error".PHP_EOL;
-		}
-	);
+    $modlog_channel->sendMessage("", false, $embed)->done(function ($r) {
+		ob_flush();
+		ob_start();
+		var_dump($r);
+		file_put_contents("add_result.txt", ob_get_flush());
+	}, function ($error) {
+		ob_flush();
+		ob_start();
+		var_dump($error);
+		file_put_contents("add_error.txt", ob_get_flush());
+	});
 }
 if ($welcome_public_channel) { //Greet the new user to the server
     $welcome_public_channel->sendMessage("Welcome <@$user_id> to $author_guild_name!");
 }
-
 $user_folder = "\\users\\$user_id";
 CheckDir($user_folder);
 //Place user info in target's folder
@@ -86,5 +101,5 @@ if ($user_tag && $array) {
     }
 }
 VarSave($user_folder, "tags.php", $array);
-
+echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 return true;

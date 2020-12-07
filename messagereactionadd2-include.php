@@ -223,7 +223,7 @@ if ($rp0) {
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
                                 $respondent_member->addRole($role->id);
-                            }, static function ($e) {
+                            }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
                             echo "[ROLE $select_name CREATED]" . PHP_EOL;
@@ -270,7 +270,7 @@ if ($rp0) {
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
                                 $respondent_member->addRole($role->id);
-                            }, static function ($e) {
+                            }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
                             echo "[ROLE $select_name CREATED]" . PHP_EOL;
@@ -317,7 +317,7 @@ if ($rp0) {
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
                                 $respondent_member->addRole($role->id);
-                            }, static function ($e) {
+                            }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
                             echo "[ROLE $select_name CREATED]" . PHP_EOL;
@@ -364,7 +364,7 @@ if ($rp0) {
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
                                 $respondent_member->addRole($role->id);
-                            }, static function ($e) {
+                            }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
                             echo "[ROLE $select_name CREATED]" . PHP_EOL;
@@ -407,7 +407,7 @@ if ($rp0) {
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
                                 $respondent_member->addRole($role->id);
-                            }, static function ($e) {
+                            }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
                             echo "[ROLE $select_name CREATED]" . PHP_EOL;
@@ -453,7 +453,7 @@ if ($rp0) {
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
                                 $respondent_member->addRole($role->id);
-                            }, static function ($e) {
+                            }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
                             echo "[ROLE $select_name CREATED]" . PHP_EOL;

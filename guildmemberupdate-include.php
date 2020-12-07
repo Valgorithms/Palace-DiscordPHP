@@ -1,7 +1,8 @@
 <?php
+if ($member === null) return true; //either the loadAllMembers option or the privileged GUILD_MEMBERS intent may be missing
 include_once "custom_functions.php";
-$author_guild = $member_new->guild;
-$author_guild_id = $member_new->guild->id;
+$author_guild = $member->guild;
+$author_guild_id = $member->guild->id;
 //echo "guildMemberUpdate ($author_guild_id)" . PHP_EOL;
 //Leave the guild if blacklisted
 //GLOBAL $blacklisted_guilds;
@@ -22,15 +23,17 @@ if ($blacklisted_guilds) {
 global $whitelisted_guilds;
 if ($whitelisted_guilds) {
     if (!in_array($author_guild_id, $whitelisted_guilds)) {
-        $author_guild->leave($author_guild_id)->done(null, function ($error) {
-            echo $error.PHP_EOL; //Echo any errors
-        });
+        $author_guild->leave($author_guild_id)->done(null,
+			function ($error) {
+				var_dump($error->getMessage());
+			}
+		);
     }
 }
 
-$member_id			= $member_new->id;
-$member_guild		= $member_new->guild;
-$new_user			= $member_new->user;
+$member_id			= $member->id;
+$member_guild		= $member->guild;
+$new_user			= $member->user;
 $old_user			= $member_old->user;
 
 echo "guildMemberUpdate ($author_guild_id - $member_id)" . PHP_EOL;
@@ -55,9 +58,11 @@ if (!include "$guild_config_path") {
     if ($counter <= 10) {
         $GLOBALS[$author_guild_id."_config_counter"]++;
     } else {
-        $author_guild->leave($author_guild_id)->done(null, function ($error) {
-            echo $error.PHP_EOL; //Echo any errors
-        });
+        $author_guild->leave($author_guild_id)->done(null,
+            function ($error) {
+				var_dump($error->getMessage());
+            }
+        );
         rmdir(__DIR__  . $guild_folder);
         echo "GUILD DIR REMOVED" . PHP_EOL;
     }
@@ -66,17 +71,19 @@ if (!include "$guild_config_path") {
 $modlog_channel		= $member_guild->channels->get('id', $modlog_channel_id);
 
 //		Member properties
-$new_roles			= $member_new->roles;
-$new_displayName	= $member_new->displayName;
+$new_roles		= $member->roles;
+$new_username	= $member->username;
+$new_nick		= $member->nick;
 
-$old_roles			= $member_old->roles;
-$old_displayName	= $member_old->displayName;
+$old_roles		= $member_old->roles;
+$old_username	= $member_old->username;
+$old_nick		= $member_old->nick;
 
 //		User properties
-$new_tag			= $new_user->tag;
+$new_tag			= $new_user->username . "#" . $new_user->discriminator;
 $new_avatar			= $new_user->avatar;
 
-$old_tag			= $old_user->tag;
+$old_tag			= $old_user->username . "#" . $old_user->discriminator;
 $old_avatar			= $old_user->avatar;
 
 //		Populate roles
@@ -108,7 +115,7 @@ $changes = "";
 if ($old_tag != $new_tag) {
     echo "old_tag: " . $old_tag . PHP_EOL;
     echo "new_tag: " . $new_tag . PHP_EOL;
-    $changes = $changes . "Old tag: $old_tag\n New tag: $new_tag\n";
+    $changes = $changes . "Old tag: $old_tag\n New tag: $new_tag\n"; //Awaiting diff rewokr/changes
     
     //Place user info in target's folder
     $array = VarLoad($user_folder, "tags.php");
@@ -143,30 +150,52 @@ if ($old_avatar != $new_avatar) { //Old avatar  is returning the avatar of the b
     */
 }
 
-// ->nickname seems to return null sometimes, so use displayName instead
-if ($old_displayName != $new_displayName) {
-    echo "old_displayName: " . $old_displayName . PHP_EOL;
-    echo "new_displayName: " . $new_displayName . PHP_EOL;
-    $changes = $changes . "Nickname change:\n`$old_displayName`→`$new_displayName`\n";
+// ->nickname seems to return null sometimes, so use username instead
+if ($old_username != $new_username) {
+    echo "old_username: " . $old_username . PHP_EOL;
+    echo "new_username: " . $new_username . PHP_EOL;
+    $changes = $changes . "Username change:\n`$old_username`→`$new_username`\n";
     
     //Place user info in target's folder
     $array = VarLoad($user_folder, "nicknames.php");
     if (!(is_array($array))) {
         $array = array();
     }
-    if ($old_displayName != $new_displayName) {
-        if (!(in_array($old_displayName, $array))) {
-            $array[] = $old_displayName;
+    if ($old_username != $new_username) {
+        if (!(in_array($old_username, $array))) {
+            $array[] = $old_username;
         }
-        if ($new_displayName && $array) {
-            if (!(in_array($new_displayName, $array))) {
-                $array[] = $new_displayName;
+        if ($new_username && $array) {
+            if (!(in_array($new_username, $array))) {
+                $array[] = $new_username;
+            }
+        }
+    }
+    VarSave($user_folder, "usernames.php", $array);
+}
+
+if ($old_nick != $new_nick) {
+    echo "old_nick: " . $old_nick . PHP_EOL;
+    echo "new_nick: " . $new_nick . PHP_EOL;
+    $changes = $changes . "Nickname change:\n`$old_nick`→`$new_nick`\n";
+    
+    //Place user info in target's folder
+    $array = VarLoad($user_folder, "nicknames.php");
+    if (!(is_array($array))) {
+        $array = array();
+    }
+    if ($old_nick != $new_nick) {
+        if (!(in_array($old_nick, $array))) {
+            $array[] = $old_nick;
+        }
+        if ($new_nick && $array) {
+            if (!(in_array($new_nick, $array))) {
+                $array[] = $new_nick;
             }
         }
     }
     VarSave($user_folder, "nicknames.php", $array);
 }
-
 if ($old_member_roles_ids != $new_member_roles_ids) {
     //			Build the string for the reply
 
@@ -237,14 +266,14 @@ if (($modlog_channel_id != null) && ($modlog_channel_id != "")) {
             $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
             $embed
 //					->setTitle("Commands")																	// Set a title
-            ->setColor("a7c5fd")																	// Set a color (the thing on the left side)
+            ->setColor(a7c5fd)																	// Set a color (the thing on the left side)
             ->setDescription("<@$member_id>\n**User Update**\n$changes")									// Set a description (below title, above fields)
 //					->addFieldValues("**User Update**", "$changes")												// New line after this
             
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
             ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-            ->setAuthor("$old_tag", "$old_avatar")  												// Set an author with icon
+            ->setAuthor("$new_tag", "$new_avatar")  												// Set an author with icon
             ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
             ->setURL("");                             												// Set the URL
 //				Send a message

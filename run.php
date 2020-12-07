@@ -40,10 +40,14 @@ use Discord\Parts\User\User;
 use Discord\Parts\Guild\Role;
 use Carbon\Carbon;
 
+$logger = new Monolog\Logger('HTTPLogger');
+$logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
+
 $discord = new Discord([
     'token' => "$token",
     'loadAllMembers' => true,
-    'storeMessages' => true
+    'storeMessages' => true,
+	//'httpLogger' => $logger
 ]);
 
 $loop = $discord->getLoop();
@@ -138,7 +142,7 @@ try {
             include 'guildmemberremove-include.php';
         });
         
-        $discord->on('GUILD_MEMBER_UPDATE', function ($member_new, $member_old) use ($discord) { //Handling of a member getting updated
+        $discord->on('GUILD_MEMBER_UPDATE', function ($member, $discord, $member_old)/* use ($discord) */{ //Handling of a member getting updated
             include "guildmemberupdate-include.php";
         });
             

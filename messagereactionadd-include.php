@@ -5,7 +5,7 @@ if (($reaction->message->content == null) || ($reaction->message->content == "")
     //var_dump($reaction->message);
     $reaction->message->channel->messages->fetch("{$reaction->message->id}")->done(function ($message) use ($reaction, $discord) : void {
         include 'messagereactionadd2-include.php';
-    }, static function ($e) {
+    }, static function ($error) {
         echo $e->getMessage() . PHP_EOL;
     });
     return true; //Don't process blank messages, bots, webhooks, or rich embeds

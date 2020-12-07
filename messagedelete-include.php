@@ -43,7 +43,7 @@ $author_channel = $message->channel;
 $author_channel_id = $author_channel->id; //echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 $author_channel_class = get_class($author_channel);
 $is_dm = false;
-if (get_class($message->author) == "Discord\Parts\User\User") { //True if direct message //True if direct message
+if (get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
     $is_dm = true;
     echo "[DM MESSAGE DELETED]" . PHP_EOL;
     return true; //Don't process DMs
@@ -63,14 +63,15 @@ $author_check = "$author_username#$author_discriminator"; //echo "author_check: 
 $guild = $message->channel->guild;
 $author_guild_id = $guild->id; echo "deleted message guild id: $author_guild_id" . PHP_EOL;
 
+if (!$guild) { //Probably a DM
+    return true;
+}
+
 //Load config variables for the guild
 $guild_folder = "\\guilds\\$author_guild_id";
 $guild_config_path = __DIR__ . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 include "$guild_config_path";
 
-if (!$guild) {
-    return true;
-} //Probably a DM
 if ($author_channel_id == $modlog_channel_id) {
     return true;
 } //Don't log deletion of messages in the log channel

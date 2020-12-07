@@ -100,7 +100,7 @@ if ($is_dm === false) { //Guild message
         if (!in_array($author_guild_id, $whitelisted_guilds)) {
             //$author_guild->leave()->done(null, function ($error){
             $discord->guilds->leave($author_guild)->done(null, function ($error) {
-                echo "[ERROR] $error".PHP_EOL; //Echo any errors
+                var_dump($error->getMessage()); //Echo any errors
             });
         }
     }
@@ -2964,7 +2964,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             $author_member->addRole($role_dev_id)->done(
                 null,
                 function ($error) { //echo "role_admin_id: $role_admin_id" . PHP_EOL;
-                    echo "[ERROR] $error".PHP_EOL;
+                    var_dump($error->getMessage());
                 }
             );
         }
@@ -2972,7 +2972,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             $author_member->removeRole($role_dev_id)->done(
                 null, //echo "role_admin_id: $role_admin_id" . PHP_EOL;
                 function ($error) {
-                    echo "[ERROR] $error".PHP_EOL;
+                    var_dump($error->getMessage());
                 }
             );
         }
@@ -4062,7 +4062,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     $restcord_result = $restcord_result ?? '';
                     /*
                     $message->channel->sendMessage( $restcord_result, array('embed' => $embed))->done(null, function ($error){
-                        echo "[ERROR] $error".PHP_EOL; //Echo any errors
+                        var_dump($error->getMessage()); //Echo any errors
                     });
                     */
                     $message->channel->sendEmbed($embed);
@@ -4488,7 +4488,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         //if ($general_channel) $general_channel->sendMessage( 'Welcome to the Palace, <@$mention_id>! Feel free to pick out some roles in #role-picker!');
                     },
                     function ($error) {
-                        echo "[ERROR] $error".PHP_EOL;
+                        var_dump($error->getMessage());
                     }
                 );
                 echo "Verify role added to $mention_id" . PHP_EOL;
@@ -4714,8 +4714,8 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
             $author_guild->unban($mention_id)->done(function ($r) {
               var_dump($r);
-            }, function ($e) {
-              var_dump($e->getMessage());
+            }, function ($error) {
+              var_dump($error->getMessage());
             });
 
             //$author_guild->bans->fetch($mention_id)->done(function ($ban) use ($guild){
@@ -4763,8 +4763,8 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         foreach ($ids as $id) {
             $author_guild->unban($id)->done(function ($r) {
                 var_dump($r);
-            }, function ($e) {
-                var_dump($e->getMessage());
+            }, function ($error) {
+                var_dump($error->getMessage());
             });
         }
         return true;
@@ -4956,12 +4956,9 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 					**🗓️Date:** $warndate
 					**📝Reason:** " . str_replace($filter, "", $message_content);
                     //Kick the user
-                    $target_guildmember->kick($reason)->done(
-                        null,
-                        function ($error) {
-                            echo "[ERROR] $error".PHP_EOL; //Echo any errors
-                        }
-                    );
+                    $target_guildmember->kick($reason)->done(null, function ($error) {
+                        var_dump($error->getMessage()); //Echo any errors
+                    });
                     if ($react) {
                         $message->react("🥾");
                     } //Boot
@@ -5315,7 +5312,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         $target_guildmember->addRole($role_verified_id)->done(
                             null,
                             function ($error) {
-                                echo "[ERROR] $error".PHP_EOL;
+                                var_dump($error->getMessage());
                             }
                         ); //echo "Verify role added ($role_verified_id)" . PHP_EOL;
                     
