@@ -173,22 +173,22 @@ if ($is_dm === false) { //Guild message
         $games_channel = null;
     }
     if ($suggestion_pending_channel_id) {
-        $suggestion_pending_channel		= $author_guild->channels->get('id', strval($suggestion_pending_channel_id));
+        $suggestion_pending_channel	= $author_guild->channels->get('id', strval($suggestion_pending_channel_id));
     } else {
         $suggestion_pending_channel = null;
     }
     if ($suggestion_approved_channel_id) {
-        $suggestion_approved_channel	= $author_guild->channels->get('id', strval($suggestion_approved_channel_id));
+        $suggestion_approved_channel = $author_guild->channels->get('id', strval($suggestion_approved_channel_id));
     } else {
         $suggestion_approved_channel = null;
     }
 	if ($tip_pending_channel_id) {
-        $tip_pending_channel		= $author_guild->channels->get('id', strval($tip_pending_channel_id));
+        $tip_pending_channel = $author_guild->channels->get('id', strval($tip_pending_channel_id));
     } else {
         $tip_pending_channel = null;
     }
     if ($tip_approved_channel_id) {
-        $tip_approved_channel	= $author_guild->channels->get('id', strval($tip_approved_channel_id));
+        $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
     } else {
         $tip_approved_channel = null;
     }
@@ -2064,6 +2064,65 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 }
                 return true;
             }
+        }
+    }
+	if ($suggestion_pending_channel != null) {
+         if ((substr($message_content_lower, 0, 11) == 'suggestion ') || (substr($message_content_lower, 0, 8) == 'suggest ')) { //;suggestion
+            //return true;
+			$filter = "suggestion ";
+            $value = str_replace($filter, "", $message_content_lower);
+            $filter = "suggest ";
+            $value = str_replace($filter, "", $value);
+            if (($value == "") || ($value == null)) {
+                return $message->reply("Invalid input! Please enter text for your suggestion");
+            }
+            //Build the embed message
+            $message_sanitized = str_replace("*", "", $value);
+            $message_sanitized = str_replace("@", "", $message_sanitized);
+            $message_sanitized = str_replace("_", "", $message_sanitized);
+            $message_sanitized = str_replace("`", "", $message_sanitized);
+            $message_sanitized = str_replace("\n", "", $message_sanitized);
+            $doc_length = strlen($message_sanitized);
+            if ($doc_length <= 2048) {
+                //Find the size of $suggestions and get what will be the next number
+                if (CheckFile($guild_folder, "guild_suggestions.php")) {
+                    $array = VarLoad($guild_folder, "guild_suggestions.php");
+                }
+                if ($array) {
+                    $array_count = sizeof($array);
+                } else {
+                    $array_count = 0;
+                }
+                //Build the embed
+                $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+                $embed
+                ->setTitle("#$array_count")																// Set a title
+                ->setColor(0xe1452d)																	// Set a color (the thing on the left side)
+                ->setDescription("$message_sanitized")													// Set a description (below title, above fields)
+                ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
+                ->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
+                ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
+                ->setURL("");                             												// Set the URL
+            $suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
+                $new_message->react("👍");
+                $new_message->react("👎");
+                //Save the suggestion somewhere
+                $array = VarLoad($guild_folder, "guild_suggestions.php");
+                $array[] = $embed->getRawAttributes();
+                VarSave($guild_folder, "guild_suggestions.php", $array);
+            });
+            } else {
+                $message->reply("Please shorten your suggestion!");
+            }
+            $message->reply("Your suggestion has been logged and is pending approval!")->then(function ($new_message) use ($discord, $message) {
+                $message->delete(); //Delete the original ;suggestion message
+                $discord->getLoop()->addTimer(10, function () use ($new_message) {
+                    $new_message->delete(); //Delete message confirming the suggestion was logged
+                    return true;
+                });
+                return true;
+            });
+            return true;
         }
     }
 	if ($tip_approved_channel != null) {
