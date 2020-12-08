@@ -88,6 +88,20 @@ if (!CheckFile($guild_folder, "suggestion_approved_channel_id.php")) {
     $suggestion_approved_channel_id = strval(VarLoad($guild_folder, "suggestion_approved_channel_id.php"));
 }
 
+if (!CheckFile($guild_folder, "tip_pending_channel_id.php")) {
+    $tip_pending_channel_id = ""; //Channel where moderators can see pending tips
+    VarSave($guild_folder, "tip_pending_channel_id.php", strval($tip_pending_channel_id));
+} else {
+    $tip_pending_channel_id = strval(VarLoad($guild_folder, "tip_pending_channel_id.php"));
+}
+
+if (!CheckFile($guild_folder, "tip_approved_channel_id.php")) {
+    $tip_approved_channel_id = ""; //Channel where approved tips get reposted to for community voting
+    VarSave($guild_folder, "tip_approved_channel_id.php", strval($tip_approved_channel_id));
+} else {
+    $tip_approved_channel_id = strval(VarLoad($guild_folder, "tip_approved_channel_id.php"));
+}
+
 //Optional Role IDs
 if (!CheckFile($guild_folder, "role_18_id.php")) {
     $role_18_id = ""; //Someone being watched has their messages duplicated to this channel instead of a DM (Leave commented to use DMs)

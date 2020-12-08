@@ -182,6 +182,17 @@ if ($is_dm === false) { //Guild message
     } else {
         $suggestion_approved_channel = null;
     }
+	if ($tip_pending_channel_id) {
+        $tip_pending_channel		= $author_guild->channels->get('id', strval($tip_pending_channel_id));
+    } else {
+        $tip_pending_channel = null;
+    }
+    if ($tip_approved_channel_id) {
+        $tip_approved_channel	= $author_guild->channels->get('id', strval($tip_approved_channel_id));
+    } else {
+        $tip_approved_channel = null;
+    }
+	
 } else { //Direct message
     if ($author_id != $discord->user->id) { //Don't trigger on messages sent by this bot
         global $server_invite;
@@ -499,7 +510,10 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $documentation = $documentation . "`setup games channel #channel` Where users can play games\n";
                 $documentation = $documentation . "`setup suggestion pending #channel` \n";
                 $documentation = $documentation . "`setup suggestion approved #channel` \n";
-                //Messages
+                $documentation = $documentation . "`setup tip pending #channel` \n";
+                $documentation = $documentation . "`setup tip approved #channel` \n";
+                
+				//Messages
                 
                 $documentation = $documentation . "**Messages:**\n";
                 /* Deprecated
@@ -587,6 +601,8 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $documentation = $documentation . "`games #channel` <#{$games_channel->id}>\n";
                 $documentation = $documentation . "`suggestion pending #channel` <#{$suggestion_pending_channel->id}>\n";
                 $documentation = $documentation . "`suggestion approved #channel` <#{$suggestion_approved_channel->id}>\n";
+				$documentation = $documentation . "`tip pending #channel` <#{$tip_pending_channel->id}>\n";
+                $documentation = $documentation . "`tip approved #channel` <#{$tip_approved_channel->id}>\n";
                 //Messages
                 $documentation = $documentation . "**Messages:**\n";
                 if ($species_message_id) {
@@ -1189,7 +1205,36 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        //Users
+        if (substr($message_content_lower, 0, 18) == 'setup tip pending ') {
+            $filter = "setup tip pending ";
+            $value = str_replace($filter, "", $message_content_lower);
+            $value = str_replace("<#", "", $value);
+            $value = str_replace(">", "", $value);
+            $value = trim($value); //echo "value: " . $value . PHP_EOL;
+            if (is_numeric($value)) {
+                VarSave($guild_folder, "tip_pending_channel_id.php", $value);
+                $message->reply("Tip pending channel ID saved!");
+            } else {
+                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
+            }
+            return true;
+        }
+        if (substr($message_content_lower, 0, 19) == 'setup tip approved ') {
+            $filter = "setup tip approved ";
+            $value = str_replace($filter, "", $message_content_lower);
+            $value = str_replace("<#", "", $value);
+            $value = str_replace(">", "", $value);
+            $value = trim($value); //echo "value: " . $value . PHP_EOL;
+            if (is_numeric($value)) {
+                VarSave($guild_folder, "tip_approved_channel_id.php", $value);
+                $message->reply("Tip approved channel ID saved!");
+            } else {
+                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
+            }
+            return true;
+        }
+        
+		//Users
         if (substr($message_content_lower, 0, 17) == 'setup rolepicker ') {
             $filter = "setup rolepicker ";
             $value = str_replace($filter, "", $message_content_lower);
@@ -1386,6 +1431,17 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             if (($suggestion_pending_channel === null) || ($suggestion_pending_channel == "") || ($suggestion_pending_channel == "0")) {
                 $documentation = $documentation . "~~";
             }
+			if (($tip_pending_channel === null) || ($tip_pending_channel == "") || ($tip_pending_channel == "0")) {
+                $documentation = $documentation . "~~";
+            }
+			//tip approve
+            $documentation = $documentation . "`tip approve #`\n";
+            //tip deny
+            $documentation = $documentation . "`tip deny #`\n";
+			if (($tip_pending_channel === null) || ($tip_pending_channel == "") || ($tip_pending_channel == "0")) {
+                $documentation = $documentation . "~~";
+            }
+			
         }
         if ($creator || $owner || $dev || $admin || $mod) {
             $documentation = $documentation . "\n__**Moderators:**__\n";
@@ -1452,6 +1508,14 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         }
         $documentation = $documentation . "`suggest` posts a suggestion for staff to vote on\n";
         if (($suggestion_pending_channel === null) || ($suggestion_pending_channel == "") || ($suggestion_pending_channel == "0")) {
+            $documentation = $documentation . "~~";
+        }
+		//tip
+        if (($tip_pending_channel === null) || ($tip_pending_channel == "") || ($tip_pending_channel == "0")) {
+            $documentation = $documentation . "~~";
+        }
+        $documentation = $documentation . "`tip` posts a tip for staff to vote on\n";
+        if (($tip_pending_channel === null) || ($tip_pending_channel == "") || ($tip_pending_channel == "0")) {
             $documentation = $documentation . "~~";
         }
 
@@ -2002,16 +2066,96 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
         }
     }
+	if ($tip_approved_channel != null) {
+        if ($creator || $owner || $dev || $admin || $mod) {
+            if (substr($message_content_lower, 0, 12) == 'tip approve ') { //;tip approve
+                $filter = "tip approve ";
+				$value = str_replace($filter, "", $value);
+                $pieces = explode(" ", $value);
+                $valid = false;
+                $nums = array();
+                foreach ($pieces as $piece) {
+                    if (is_numeric($piece) || $piece == false) {
+                        echo "approve: " . (int)$piece . PHP_EOL;
+                        $nums[] = (int)$piece;
+                        $valid = true;
+                    }
+                }
+                if (!$valid) {
+                    return $message->reply("Invalid input! Please enter an integer number");
+                }
+                foreach ($nums as $num) {
+                    //Get the message stored at the index
+                    $array = VarLoad($guild_folder, "guild_tips.php");
+                    if (!$array) {
+                        return false;
+                    }
+                    if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
+                        $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
+                        echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+                        $tip_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($message) use ($guild_folder, $embed) {
+                            //Repost the tip
+                            $message->react("👍");
+                            $message->react("👎");
+                        });
+                        //Clear the value stored in the array
+                        $array[$num] = "Approved";
+                        if ($react) {
+                            $message->react("👍");
+                        }
+                        //Send a DM to the person who made the tip to let them know that it has been approved.
+                    } else {
+                        return $message->reply("Tip not found or already processed!");
+                    }
+                }
+                return true; //catch
+            }
+            if (substr($message_content_lower, 0, 9) == 'tip deny ') { //;tip deny
+                //return true;
+                $filter = "tip deny ";
+                $value = str_replace($filter, "", $message_content_lower);
+                $pieces = explode(" ", $value);
+                $valid = false;
+                $nums = array();
+                foreach ($pieces as $piece) {
+                    if (is_numeric($piece)) {
+                        echo "deny: " . (int)$piece . PHP_EOL;
+                        $nums[] = (int)$piece;
+                        $valid = true;
+                    }
+                }
+                if (!$valid) {
+                    return $message->reply("Invalid input! Please enter an integer number");
+                }
+                foreach ($nums as $num) {
+                    //Get the message stored at the index
+                    $array = VarLoad($guild_folder, "guild_tips.php");
+                    if (!$array) {
+                        return false;
+                    }
+                    if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
+                        $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
+                        //Clear the value stored in the array
+                        $array[$num] = "Denied";
+                        if ($react) {
+                            $message->react("👍");
+                        }
+                    } else {
+                        return $message->reply("Tip not found or already processed!");
+                    }
+                }
+                return true;
+            }
+        }
+    }
 
-    if ($suggestion_pending_channel != null) {
-        if ((substr($message_content_lower, 0, 11) == 'suggestion ') || (substr($message_content_lower, 0, 8) == 'suggest ')) { //;suggestion
+    if ($tip_pending_channel != null) {
+        if (substr($message_content_lower, 0, 4) == 'tip ') { //;tip
             //return true;
-            $filter = "suggestion ";
+            $filter = "tip ";
             $value = str_replace($filter, "", $message_content_lower);
-            $filter = "suggest ";
-            $value = str_replace($filter, "", $value);
             if (($value == "") || ($value == null)) {
-                return $message->reply("Invalid input! Please enter text for your suggestion");
+                return $message->reply("Invalid input! Please enter text for your tip");
             }
             //Build the embed message
             $message_sanitized = str_replace("*", "", $value);
@@ -2021,9 +2165,9 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             $message_sanitized = str_replace("\n", "", $message_sanitized);
             $doc_length = strlen($message_sanitized);
             if ($doc_length <= 2048) {
-                //Find the size of $suggestions and get what will be the next number
-                if (CheckFile($guild_folder, "guild_suggestions.php")) {
-                    $array = VarLoad($guild_folder, "guild_suggestions.php");
+                //Find the size of $tips and get what will be the next number
+                if (CheckFile($guild_folder, "guild_tips.php")) {
+                    $array = VarLoad($guild_folder, "guild_tips.php");
                 }
                 if ($array) {
                     $array_count = sizeof($array);
@@ -2040,21 +2184,21 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 ->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
-            $suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
+            $tip_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
                 $new_message->react("👍");
                 $new_message->react("👎");
-                //Save the suggestion somewhere
-                $array = VarLoad($guild_folder, "guild_suggestions.php");
+                //Save the tip somewhere
+                $array = VarLoad($guild_folder, "guild_tips.php");
                 $array[] = $embed->getRawAttributes();
-                VarSave($guild_folder, "guild_suggestions.php", $array);
+                VarSave($guild_folder, "guild_tips.php", $array);
             });
             } else {
-                $message->reply("Please shorten your suggestion!");
+                $message->reply("Please shorten your tip!");
             }
-            $message->reply("Your suggestion has been logged and is pending approval!")->then(function ($new_message) use ($discord, $message) {
-                $message->delete(); //Delete the original ;suggestion message
+            $message->reply("Your tip has been logged and is pending approval!")->then(function ($new_message) use ($discord, $message) {
+                $message->delete(); //Delete the original ;tip message
                 $discord->getLoop()->addTimer(10, function () use ($new_message) {
-                    $new_message->delete(); //Delete message confirming the suggestion was logged
+                    $new_message->delete(); //Delete message confirming the tip was logged
                     return true;
                 });
                 return true;
