@@ -134,10 +134,18 @@ if ($modlog_channel) {
         $modlog_channel->sendMessage($content, false, $embed)->then(function ($new_message) use ($message, $embed, $message_embeds, $modlog_channel) {
             $embed_count = 1;
             foreach ($message_embeds as $deleted_embed) {
-                $deleted_embed->setTimestamp(null);
-                $modlog_channel->sendMessage("Deleted embed $embed_count ", false, $deleted_embed)->done(null, function ($error) {
-                    echo $error.PHP_EOL; //Echo any errors
-                });
+                $deleted_embed->setTimestamp();
+                $modlog_channel->sendMessage("Deleted embed $embed_count ", false, $deleted_embed)->done(function ($r) {
+					//ob_flush();
+					//ob_start();
+					//var_dump($r);
+					//file_put_contents("result_dump.txt", ob_get_flush());
+				}, function ($error) {
+					//ob_flush();
+					//ob_start();
+					var_dump($error);
+					//file_put_contents("remove_error.txt", ob_get_flush());
+				});
                 $embed_count++;
             }
         });

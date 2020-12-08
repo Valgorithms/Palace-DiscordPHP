@@ -31,14 +31,29 @@ if ($whitelisted_guilds) {
     }
 }
 
-$member_id			= $member->id;
-$member_guild		= $member->guild;
-$new_user			= $member->user;
-$old_user			= $member_old->user;
+
+if($member){
+	$new_roles		= $member->roles;
+	$new_username	= $member->username;
+	$new_nick		= $member->nick;
+	$member_id		= $member->id;
+	$member_guild	= $member->guild;
+	$new_user		= $member->user;
+	$new_tag		= $new_user->username . "#" . $new_user->discriminator;
+	$new_avatar		= $new_user->avatar;
+}
+if ($member_old){	
+	$old_roles		= $member_old->roles;
+	$old_username	= $member_old->username;
+	$old_nick		= $member_old->nick;
+	$old_user		= $member_old->user;
+	$old_tag		= $old_user->username . "#" . $old_user->discriminator;
+	$old_avatar		= $old_user->avatar;
+}
 
 echo "guildMemberUpdate ($author_guild_id - $member_id)" . PHP_EOL;
 
-$user_folder		= "\\users\\$member_id";
+$user_folder = "\\users\\$member_id";
 CheckDir($user_folder);
 
 $guild_folder = "\\guilds\\$author_guild_id";
@@ -68,23 +83,7 @@ if (!include "$guild_config_path") {
     }
 }
 
-$modlog_channel		= $member_guild->channels->get('id', $modlog_channel_id);
-
-//		Member properties
-$new_roles		= $member->roles;
-$new_username	= $member->username;
-$new_nick		= $member->nick;
-
-$old_roles		= $member_old->roles;
-$old_username	= $member_old->username;
-$old_nick		= $member_old->nick;
-
-//		User properties
-$new_tag			= $new_user->username . "#" . $new_user->discriminator;
-$new_avatar			= $new_user->avatar;
-
-$old_tag			= $old_user->username . "#" . $old_user->discriminator;
-$old_avatar			= $old_user->avatar;
+$modlog_channel	= $member_guild->channels->get('id', $modlog_channel_id);
 
 //		Populate roles
 $old_member_roles_names 											= array();
@@ -133,8 +132,7 @@ if ($old_tag != $new_tag) {
     }
 }
 
-if ($old_avatar != $new_avatar) { //Old avatar  is returning the avatar of the bot
-    /*
+if ($old_avatar != $new_avatar) {
     //echo "old_avatar: " . $old_avatar . PHP_EOL;
     //echo "new_avatar: " . $new_avatar . PHP_EOL;
     $changes = $changes . "Old avatar: $old_avatar\n New avatar: $new_avatar\n";
@@ -147,10 +145,8 @@ if ($old_avatar != $new_avatar) { //Old avatar  is returning the avatar of the b
     if (!(in_array($new_avatar, $array)))
         $array[] = $new_avatar;
     VarSave($user_folder, "avatars.php", $array);
-    */
 }
 
-// ->nickname seems to return null sometimes, so use username instead
 if ($old_username != $new_username) {
     echo "old_username: " . $old_username . PHP_EOL;
     echo "new_username: " . $new_username . PHP_EOL;
