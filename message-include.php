@@ -2127,12 +2127,12 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         if ($creator || $owner || $dev || $admin || $mod) {
             if (substr($message_content_lower, 0, 12) == 'tip approve ') { //;tip approve
                 $filter = "tip approve ";
-				$value = str_replace($filter, "", $value);
-                $pieces = explode(" ", $value);
+				$value = str_replace($filter, "", $message_content_lower);
+                $pieces = explode(" ", $value); echo "pieces: "; var_dump($pieces); echo PHP_EOL;
                 $valid = false;
                 $nums = array();
                 foreach ($pieces as $piece) {
-                    if (is_numeric($piece) || $piece == false) {
+                    if (is_numeric($piece)){
                         echo "approve: " . (int)$piece . PHP_EOL;
                         $nums[] = (int)$piece;
                         $valid = true;

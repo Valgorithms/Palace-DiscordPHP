@@ -41,7 +41,7 @@ if ($welcome_log_channel_id) {
 if ($welcome_public_channel_id) {
     $welcome_public_channel	= $guildmember->guild->channels->get('id', $welcome_public_channel_id);
 }
-echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 //	Build the embed
 $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 $embed
@@ -107,5 +107,5 @@ if ($user_tag && $array) {
     }
 }
 VarSave($user_folder, "tags.php", $array);
-echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 return true;
