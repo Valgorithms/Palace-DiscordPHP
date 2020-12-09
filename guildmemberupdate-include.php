@@ -12,7 +12,7 @@ if ($blacklisted_guilds) {
     if (in_array($author_guild_id, $blacklisted_guilds)) {
         /*
         $author_guild->leave($author_guild_id)->done(null, function ($error){
-            echo $error.PHP_EOL; //Echo any errors
+            var_dump($error->getMessage()); //Echo any errors
         });
         */
         echo "[LEAVE BLACKLISTED GUILD - $author_guild_id]" . PHP_EOL;
@@ -31,8 +31,14 @@ if ($whitelisted_guilds) {
     }
 }
 
-
 if($member){
+	if (get_class($member) != "Discord\Parts\User\Member") { //Load author info
+		ob_flush();
+		ob_start();
+		var_dump($member);
+		file_put_contents("update_member.txt", ob_get_flush());
+		return true;
+	}
 	$new_roles		= $member->roles;
 	$new_username	= $member->username;
 	$new_nick		= $member->nick;
@@ -42,7 +48,14 @@ if($member){
 	$new_tag		= $new_user->username . "#" . $new_user->discriminator;
 	$new_avatar		= $new_user->avatar;
 }
-if ($member_old){	
+if ($member_old){
+	if (get_class($member_old) != "Discord\Parts\User\Member") { //Load author info
+		ob_flush();
+		ob_start();
+		var_dump($member_old);
+		file_put_contents("update_member_old.txt", ob_get_flush());
+		return true;
+	}
 	$old_roles		= $member_old->roles;
 	$old_username	= $member_old->username;
 	$old_nick		= $member_old->nick;

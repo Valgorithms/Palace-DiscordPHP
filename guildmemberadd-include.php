@@ -59,16 +59,20 @@ $embed
 if ($user_avatar) $embed->setThumbnail("$user_avatar");										// Set a thumbnail (the image in the top right corner)
 
 if ($welcome_log_channel) { //Send a detailed embed with user info
+/*
 	echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 	ob_flush();
 	ob_start();
 	var_dump($embed);
 	file_put_contents("add_embed.txt", ob_get_flush());
+	*/
     $welcome_log_channel->sendMessage("", false, $embed)->done(function ($r) {
+		/*
 		ob_flush();
 		ob_start();
 		var_dump($r);
 		file_put_contents("add_result.txt", ob_get_flush());
+		*/
 	}, function ($error) {
 		ob_flush();
 		ob_start();
@@ -77,10 +81,12 @@ if ($welcome_log_channel) { //Send a detailed embed with user info
 	});
 } elseif ($modlog_channel) { //Send a detailed embed with user info
     $modlog_channel->sendMessage("", false, $embed)->done(function ($r) {
+		/*
 		ob_flush();
 		ob_start();
 		var_dump($r);
 		file_put_contents("add_result.txt", ob_get_flush());
+		*/
 	}, function ($error) {
 		ob_flush();
 		ob_start();

@@ -66,17 +66,21 @@ if ($welcome === true) {
 		if ($user_avatar) $embed->setThumbnail("$user_avatar");									// Set a thumbnail (the image in the top right corner)
     
     if ($welcome_log_channel) {
+		/*
 		echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 		ob_flush();
 		ob_start();
 		var_dump($embed);
 		file_put_contents("remove_embed.txt", ob_get_flush());
+		*/
         //Send the message, announcing the member's departure
         $welcome_log_channel->sendEmbed($embed)->done(function ($r) {
+			/*
 			ob_flush();
 			ob_start();
 			var_dump($r);
 			file_put_contents("remove_result.txt", ob_get_flush());
+			*/
         }, function ($error) {
 			ob_flush();
 			ob_start();
@@ -85,17 +89,21 @@ if ($welcome === true) {
         });
         return true;
     } elseif ($modlog_channel) { //Send a detailed embed with user info
+		/*
 		echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 		ob_flush();
 		ob_start();
 		var_dump($embed);
 		file_put_contents("remove_embed.txt", ob_get_flush());
+		*/
         //Send the message, announcing the member's departure
         $modlog_channel->sendEmbed($embed)->done(function ($r) {
+			/*
 			ob_flush();
 			ob_start();
 			var_dump($r);
 			file_put_contents("result_dump.txt", ob_get_flush());
+			*/
         }, function ($error) {
 			ob_flush();
 			ob_start();

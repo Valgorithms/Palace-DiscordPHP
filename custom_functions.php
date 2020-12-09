@@ -60,7 +60,7 @@ function CheckFile($foldername, $filename)
 {
     if ($foldername !== null) {
         $folder_symbol = "/";
-    }
+    }  else $folder_symbol = "";
     //echo "CheckDir" . PHP_EOL;
     include("constants.php");
     $path = $DIR.$foldername.$folder_symbol.$filename;
@@ -79,7 +79,7 @@ function VarSave($foldername, $filename, $variable)
 {
     if ($foldername !== null) {
         $folder_symbol = "/";
-    }
+    }  else $folder_symbol = "";
     //echo "VarSave" . PHP_EOL;
     include("constants.php");
     $path = $DIR.$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
@@ -99,7 +99,7 @@ function VarLoad($foldername, $filename)
 {
     if ($foldername !== null) {
         $folder_symbol = "/";
-    }
+    }  else $folder_symbol = "";
     //echo "[VarLoad]" . PHP_EOL;
     include("constants.php");
     $path = $DIR.$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
@@ -117,7 +117,7 @@ function VarDelete($foldername, $filename)
 {
     if ($foldername !== null) {
         $folder_symbol = "/";
-    }
+    }  else $folder_symbol = "";
     echo "VarDelete" . PHP_EOL;
     include("constants.php");
     $path = $DIR.$foldername.$folder_symbol.$filename; //echo "PATH: $path" . PHP_EOL;
@@ -343,7 +343,7 @@ function SetCooldown($foldername, $filename)
     echo "SET COOLDOWN" . PHP_EOL;
     if ($foldername !== null) {
         $folder_symbol = "/";
-    }
+    }  else $folder_symbol = "";
     include("constants.php");
     $path = $DIR.$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
     $now = new DateTime();

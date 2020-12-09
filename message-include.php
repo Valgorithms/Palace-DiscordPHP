@@ -512,9 +512,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $documentation = $documentation . "`setup suggestion approved #channel` \n";
                 $documentation = $documentation . "`setup tip pending #channel` \n";
                 $documentation = $documentation . "`setup tip approved #channel` \n";
-                
 				//Messages
-                
                 $documentation = $documentation . "**Messages:**\n";
                 /* Deprecated
                 $documentation = $documentation . "`setup species messageid`\n";
@@ -2207,7 +2205,6 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
         }
     }
-
     if ($tip_pending_channel != null) {
         if (substr($message_content_lower, 0, 4) == 'tip ') { //;tip
             //return true;
