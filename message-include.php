@@ -2009,8 +2009,9 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
                         $suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($message) use ($guild_folder, $embed) {
                             //Repost the suggestion
-                            $message->react("👍");
-                            $message->react("👎");
+                            $message->react("👍")->then(function($result) use ($message){
+								$message->react("👎");
+							});
                         });
                         //Clear the value stored in the array
                         $array[$num] = "Approved";
@@ -2102,8 +2103,9 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
             $suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
-                $new_message->react("👍");
-                $new_message->react("👎");
+                $new_message->react("👍")->then(function($result) use ($new_message){
+						$new_message->react("👎");
+				});
                 //Save the suggestion somewhere
                 $array = VarLoad($guild_folder, "guild_suggestions.php");
                 $array[] = $embed->getRawAttributes();
@@ -2150,10 +2152,11 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
                         echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
-                        $tip_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($message) use ($guild_folder, $embed) {
+                        $tip_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
                             //Repost the tip
-                            $message->react("👍");
-                            $message->react("👎");
+							$new_message->react("👍")->then(function($result) use ($new_message){
+								$new_message->react("👎");
+							});
                         });
                         //Clear the value stored in the array
                         $array[$num] = "Approved";
