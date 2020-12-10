@@ -4028,65 +4028,67 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             $poll = str_replace($duration, "", $poll);
             if (($poll != "" && $poll != null) && is_numeric($duration)) {
                 $author_channel->sendMessage("**VOTE TIME! ($duration seconds)**\n`".trim($poll)."`")->then(function ($message) use ($discord, $author_channel, $duration) {
-                    $message->react("👍");
-                    $message->react("👎");
-                    //$discord->getLoop()->addTimer($duration, function() use ($message, $author_channel) {
-                    /*
-                    $reactions = $message->reactions;
-                    $yes_count = 0;
-                    $no_count = 0;
-                    foreach ($reactions as $reaction){
-                        $emoji = $reaction->emoji;
-                        $count = $reaction->count;
-                        if ($emoji == "👍")
-                            $yes_count = $count;
-                        if ($emoji == "👎")
-                            $no_count = $count;
-                    }
-                    */
-                    $storage = [];
-                    $message->createReactionCollector(function ($reaction) use (&$storage) {
-                        if (! isset($storage[$reaction->emoji->name])) {
-                            $storage[$reaction->emoji->name] = 0;
-                        }
+                    $message->react("👍")->then(function($result) use ($discord, $author_channel, $duration, $message){
+						$message->react("👎")->then(function($result) use ($discord, $author_channel, $duration, $message){
+							//$discord->getLoop()->addTimer($duration, function() use ($message, $author_channel) {
+							/*
+							$reactions = $message->reactions;
+							$yes_count = 0;
+							$no_count = 0;
+							foreach ($reactions as $reaction){
+								$emoji = $reaction->emoji;
+								$count = $reaction->count;
+								if ($emoji == "👍")
+									$yes_count = $count;
+								if ($emoji == "👎")
+									$no_count = $count;
+							}
+							*/
+							$storage = [];
+							$message->createReactionCollector(function ($reaction) use (&$storage) {
+								if (! isset($storage[$reaction->emoji->name])) {
+									$storage[$reaction->emoji->name] = 0;
+								}
 
-                        $storage[$reaction->emoji->name]++;
-                    }, ['time' => $duration * 1000])->done(function ($reactions) use (&$storage, $message) {
-                        $yes_count = 0;
-                        $no_count = 0;
-                        //$msg = '';
-                        foreach ($storage as $emoji => $count) {
-                            var_dump($emoji);
-                            echo PHP_EOL;
-                            if ($emoji == "👍") {
-                                $yes_count = $count;
-                            }
-                            if ($emoji == "👎") {
-                                $no_count = $count;
-                            }
-                            //$msg .= $emoji.': '.$count.', ';
-                        }
-                        //Count reacts
-                        if (($yes_count - $no_count) == 0) {
-                            $message->channel->sendMessage("**Vote tied! ($yes_count:$no_count)**");
-                            return true;
-                        }
-                        if (($yes_count - $no_count) > 0) {
-                            $message->channel->sendMessage("**Vote passed! ($yes_count:$no_count)**");
-                            return true;
-                        }
-                        if (($yes_count - $no_count) < 0) {
-                            $message->channel->sendMessage("**Vote failed! ($yes_count:$no_count)**");
-                            return true;
-                        }
-                        $author_channel->sendMessage("**Vote errored! ($yes_count:$no_count)**");
+								$storage[$reaction->emoji->name]++;
+							}, ['time' => $duration * 1000])->done(function ($reactions) use (&$storage, $message) {
+								$yes_count = 0;
+								$no_count = 0;
+								//$msg = '';
+								foreach ($storage as $emoji => $count) {
+									var_dump($emoji);
+									echo PHP_EOL;
+									if ($emoji == "👍") {
+										$yes_count = $count;
+									}
+									if ($emoji == "👎") {
+										$no_count = $count;
+									}
+									//$msg .= $emoji.': '.$count.', ';
+								}
+								//Count reacts
+								if (($yes_count - $no_count) == 0) {
+									$message->channel->sendMessage("**Vote tied! ($yes_count:$no_count)**");
+									return true;
+								}
+								if (($yes_count - $no_count) > 0) {
+									$message->channel->sendMessage("**Vote passed! ($yes_count:$no_count)**");
+									return true;
+								}
+								if (($yes_count - $no_count) < 0) {
+									$message->channel->sendMessage("**Vote failed! ($yes_count:$no_count)**");
+									return true;
+								}
+								$author_channel->sendMessage("**Vote errored! ($yes_count:$no_count)**");
 
-                        $message->reply($msg);
-                    });
-                        
-                    return true;
-                    //});
-                    //return true;
+								$message->reply($msg);
+							});
+								
+							return true;
+							//});
+							//return true;
+						});
+					});
                 });
             } else {
                 return $message->reply("Invalid input!");
