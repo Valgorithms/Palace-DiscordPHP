@@ -4069,10 +4069,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 					});
 					$message->react("👍")->then(function($result) use ($discord, $author_channel, $duration, $message){
 						$message->react("👎")->then(function($result) use ($discord, $author_channel, $duration, $message){
-								
 							return true;
-							//});
-							//return true;
 						});
 					});
 				});
