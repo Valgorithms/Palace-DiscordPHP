@@ -40,11 +40,11 @@ if($member){
 		return true;
 	}
 	$new_roles		= $member->roles;
-	$new_username	= $member->username;
 	$new_nick		= $member->nick;
 	$member_id		= $member->id;
 	$member_guild	= $member->guild;
 	$new_user		= $member->user;
+	$new_username	= $new_user->username;
 	$new_tag		= $new_user->username . "#" . $new_user->discriminator;
 	$new_avatar		= $new_user->avatar;
 }
@@ -57,9 +57,9 @@ if ($member_old){
 		return true;
 	}
 	$old_roles		= $member_old->roles;
-	$old_username	= $member_old->username;
 	$old_nick		= $member_old->nick;
 	$old_user		= $member_old->user;
+	$old_username	= $old_user->username;
 	$old_tag		= $old_user->username . "#" . $old_user->discriminator;
 	$old_avatar		= $old_user->avatar;
 }
@@ -101,24 +101,20 @@ $modlog_channel	= $member_guild->channels->get('id', $modlog_channel_id);
 //		Populate roles
 $old_member_roles_names 											= array();
 $old_member_roles_ids 												= array();
-$x=0;
+
 foreach ($old_roles as $role) {
-    if ($x!=0) { //0 is always @everyone so skip it
         $old_member_roles_names[] 									= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
         $old_member_roles_ids[]										= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-    }
-    $x++;
 }
 
 $new_member_roles_names 											= array();
 $new_member_roles_ids 												= array();
-$x=0;
+
 foreach ($new_roles as $role) {
-    if ($x!=0) { //0 is always @everyone so skip it
+    
         $new_member_roles_names[] 									= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
         $new_member_roles_ids[]										= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-    }
-    $x++;
+    
 }
 
 
@@ -237,7 +233,7 @@ if ($old_member_roles_ids != $new_member_roles_ids) {
         if (in_array($role_diff, $old_member_roles_ids)) {
             $switch = "Removed roles: ";
         } else {
-            $switch = "Roles: ";
+            $switch = "Added Roles: ";
         }
         $changes = $changes . $switch . "<@&$role_diff>";
     }

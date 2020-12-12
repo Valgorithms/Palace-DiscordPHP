@@ -407,7 +407,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 					->setTitle("Setup commands for $author_guild_name")														// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 					->setDescription("$documentation")														// Set a description (below title, above fields)
-//					->addField("⠀", "$documentation")														// New line after this			
+//					->addFieldValues("⠀", "$documentation")														// New line after this			
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
 //					->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
@@ -475,7 +475,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 					->setTitle("Current setup for $author_guild_name")														// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 					->setDescription("$documentation")														// Set a description (below title, above fields)
-//					->addField("⠀", "$documentation")														// New line after this			
+//					->addFieldValues("⠀", "$documentation")														// New line after this			
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
 //					->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
@@ -1055,7 +1055,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 					->setTitle("Commands for $author_guild_name")											// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 					->setDescription("$documentation")														// Set a description (below title, above fields)
-//					->addField("⠀", "$documentation")														// New line after this			
+//					->addFieldValues("⠀", "$documentation")														// New line after this			
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
 //					->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
@@ -1131,7 +1131,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 					->setTitle("Settings for $author_guild_name")											// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 					->setDescription("$documentation")														// Set a description (below title, above fields)
-//					->addField("⠀", "$documentation")														// New line after this
+//					->addFieldValues("⠀", "$documentation")														// New line after this
 					
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -1340,7 +1340,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //				->setTitle("Roles")																		// Set a title
 				->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 				->setDescription("$author_guild_name")												// Set a description (below title, above fields)
-				->addField("Roles", 		"$author_role_name_queue_full")								// New line after this if ,true
+				->addFieldValues("Roles", 		"$author_role_name_queue_full")								// New line after this if ,true
 				
 				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -1430,8 +1430,8 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //						->setTitle("Roles")																		// Set a title
 						->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 						->setDescription("$author_guild_name")												// Set a description (below title, above fields)
-//						->addField("Roles", 	"$mention_role_name_queue_full")								// New line after this
-						->addField("Roles", 	"$mention_role_id_queue_full", true)							// New line after this
+//						->addFieldValues("Roles", 	"$mention_role_name_queue_full")								// New line after this
+						->addFieldValues("Roles", 	"$mention_role_id_queue_full", true)							// New line after this
 						
 						->setThumbnail("$mention_avatar")														// Set a thumbnail (the image in the top right corner)
 //						->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -1475,7 +1475,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //					->setTitle("Avatar")																	// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 //					->setDescription("$author_guild_name")												// Set a description (below title, above fields)
-//					->addField("Total Given", 		"$vanity_give_count")									// New line after this
+//					->addFieldValues("Total Given", 		"$vanity_give_count")									// New line after this
 					
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 					->setImage("$author_avatar")             												// Set an image (below everything except footer)
@@ -1540,7 +1540,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //					->setTitle("Avatar")																	// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 //					->setDescription("$author_guild_name")												// Set a description (below title, above fields)
-//					->addField("Total Given", 		"$vanity_give_count")									// New line after this
+//					->addFieldValues("Total Given", 		"$vanity_give_count")									// New line after this
 						
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 					->setImage("$mention_avatar")             												// Set an image (below everything except footer)
@@ -1639,7 +1639,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 						->setTitle("#$array_count")																	// Set a title
 						->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 						->setDescription("$value")																// Set a description (below title, above fields)
-	//					->addField("⠀", "$reason")																// New line after this
+	//					->addFieldValues("⠀", "$reason")																// New line after this
 						
 	//					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 	//					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -1752,7 +1752,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //							->setTitle("Commands")																	// Set a title
 							->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 							->setDescription("$reason")																// Set a description (below title, above fields)
-//							->addField("⠀", "$reason")																// New line after this
+//							->addFieldValues("⠀", "$reason")																// New line after this
 							
 //							->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //							->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -1849,7 +1849,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //							->setTitle("Commands")																	// Set a title
 							->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 							->setDescription("$reason")																// Set a description (below title, above fields)
-//							->addField("⠀", "$reason")																// New line after this
+//							->addFieldValues("⠀", "$reason")																// New line after this
 							
 //							->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //							->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -1946,7 +1946,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //							->setTitle("Commands")																	// Set a title
 							->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 							->setDescription("$reason")																// Set a description (below title, above fields)
-//							->addField("⠀", "$reason")																// New line after this
+//							->addFieldValues("⠀", "$reason")																// New line after this
 							
 //							->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //							->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -2042,7 +2042,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //							->setTitle("Commands")																	// Set a title
 							->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 							->setDescription("$reason")																// Set a description (below title, above fields)
-//							->addField("⠀", "$reason")																// New line after this
+//							->addFieldValues("⠀", "$reason")																// New line after this
 							
 //							->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //							->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -2582,21 +2582,21 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 						->setTitle("Vanity Stats")																// Set a title
 						->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 						->setDescription("$author_guild_name")												// Set a description (below title, above fields)
-						->addField("Total Given", 		"$vanity_give_count")									// New line after this
-						->addField("Hugs", 				"$hugger_count", true)
-						->addField("Kisses", 			"$kisser_count", true)
-						->addField("Nuzzles", 			"$nuzzler_count", true)
-						->addField("Boops", 			"$booper_count", true)
-						->addField("Baps", 				"$baper_count", true)
-						->addField("Pets", 				"$peter_count", true)
-						->addField("⠀", 				"⠀", true)												// Invisible unicode for separator
-						->addField("Total Received", 	"$vanity_get_count")									// New line after this
-						->addField("Hugs", 				"$hugged_count", true)
-						->addField("Kisses", 			"$kissed_count", true)
-						->addField("Nuzzles", 			"$nuzzled_count", true)
-						->addField("Boops", 			"$booped_count", true)
-						->addField("Baps", 				"$baped_count", true)
-						->addField("Pets", 				"$peted_count", true)
+						->addFieldValues("Total Given", 		"$vanity_give_count")									// New line after this
+						->addFieldValues("Hugs", 				"$hugger_count", true)
+						->addFieldValues("Kisses", 			"$kisser_count", true)
+						->addFieldValues("Nuzzles", 			"$nuzzler_count", true)
+						->addFieldValues("Boops", 			"$booper_count", true)
+						->addFieldValues("Baps", 				"$baper_count", true)
+						->addFieldValues("Pets", 				"$peter_count", true)
+						->addFieldValues("⠀", 				"⠀", true)												// Invisible unicode for separator
+						->addFieldValues("Total Received", 	"$vanity_get_count")									// New line after this
+						->addFieldValues("Hugs", 				"$hugged_count", true)
+						->addFieldValues("Kisses", 			"$kissed_count", true)
+						->addFieldValues("Nuzzles", 			"$nuzzled_count", true)
+						->addFieldValues("Boops", 			"$booped_count", true)
+						->addFieldValues("Baps", 				"$baped_count", true)
+						->addFieldValues("Pets", 				"$peted_count", true)
 						
 						->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //						->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -2672,17 +2672,17 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 							->setTitle("Vanity Stats")																// Set a title
 							->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 							->setDescription("$author_guild_name")												// Set a description (below title, above fields)
-							->addField("Total Given", 		"$target_vanity_give_count")							// New line after this
-							->addField("Hugs", 				"$target_hugger_count", true)
-							->addField("Kisses", 			"$target_kisser_count", true)
-							->addField("Nuzzles", 			"$target_nuzzler_count", true)
-							->addField("Boops", 			"$target_booper_count", true)
-							->addField("⠀", 				"⠀", true)												// Invisible unicode for separator
-							->addField("Total Received", 	"$target_vanity_get_count")								// New line after this
-							->addField("Hugs", 				"$target_hugged_count", true)
-							->addField("Kisses", 			"$target_kissed_count", true)
-							->addField("Nuzzles", 			"$target_nuzzled_count", true)
-							->addField("Boops", 			"$target_booped_count", true)
+							->addFieldValues("Total Given", 		"$target_vanity_give_count")							// New line after this
+							->addFieldValues("Hugs", 				"$target_hugger_count", true)
+							->addFieldValues("Kisses", 			"$target_kisser_count", true)
+							->addFieldValues("Nuzzles", 			"$target_nuzzler_count", true)
+							->addFieldValues("Boops", 			"$target_booper_count", true)
+							->addFieldValues("⠀", 				"⠀", true)												// Invisible unicode for separator
+							->addFieldValues("Total Received", 	"$target_vanity_get_count")								// New line after this
+							->addFieldValues("Hugs", 				"$target_hugged_count", true)
+							->addFieldValues("Kisses", 			"$target_kissed_count", true)
+							->addFieldValues("Nuzzles", 			"$target_nuzzled_count", true)
+							->addFieldValues("Boops", 			"$target_booped_count", true)
 							
 							->setThumbnail("$mention_avatar")														// Set a thumbnail (the image in the top right corner)
 //							->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             		// Set an image (below everything except footer)
@@ -2789,14 +2789,14 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 					->setTitle("$mention_check ($mention_nickname)")																// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 //					->setDescription("$author_guild_name")									// Set a description (below title, above fields)
-					->addField("ID", "$mention_id", true)
-					->addField("Avatar", "[Link]($mention_avatar)", true)
-					->addField("Account Created", "$mention_createdDate", true)
-					->addField("Account Age", "$mention_createdAge", true)
-					->addField("Joined Server", "$mention_joinedDate", true)
-					->addField("Server Age", "$mention_joinedAge", true)
-					->addField("Tag history (last 5)", "`$mention_tags`")
-					->addField("Nickname history (last 5)", "`$mention_nicknames`")
+					->addFieldValues("ID", "$mention_id", true)
+					->addFieldValues("Avatar", "[Link]($mention_avatar)", true)
+					->addFieldValues("Account Created", "$mention_createdDate", true)
+					->addFieldValues("Account Age", "$mention_createdAge", true)
+					->addFieldValues("Joined Server", "$mention_joinedDate", true)
+					->addFieldValues("Server Age", "$mention_joinedAge", true)
+					->addFieldValues("Tag history (last 5)", "`$mention_tags`")
+					->addFieldValues("Nickname history (last 5)", "`$mention_nicknames`")
 
 					->setThumbnail("$mention_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -2821,7 +2821,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //				->setTitle("$author_check")																// Set a title
 				->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 				->setDescription("$author_guild_name")									// Set a description (below title, above fields)
-//				->addField("⠀", "$documentation")														// New line after this
+//				->addFieldValues("⠀", "$documentation")														// New line after this
 				
 				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -2932,7 +2932,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //						->setTitle("Roles")																		// Set a title
 						->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 //						->setDescription("$author_guild_name")													// Set a description (below title, above fields)
-						->addField("Verified", 		"<@$mention_id>")											// New line after this if ,true
+						->addFieldValues("Verified", 		"<@$mention_id>")											// New line after this if ,true
 
 						->setThumbnail("$mention_avatar")														// Set a thumbnail (the image in the top right corner)
 //						->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -3281,8 +3281,8 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //					->setTitle("Commands")																	// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 //					->setDescription("Infractions for $mention_check")										// Set a description (below title, above fields)
-					->addField("Infractions for $mention_check", "$mention_infraction_queue_full")			// New line after this
-//					->addField("⠀", "Use '" . $command_symbol . "removeinfraction @mention #' to remove")	// New line after this
+					->addFieldValues("Infractions for $mention_check", "$mention_infraction_queue_full")			// New line after this
+//					->addFieldValues("⠀", "Use '" . $command_symbol . "removeinfraction @mention #' to remove")	// New line after this
 					
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -3420,7 +3420,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 				Account created on $user_createdTimestamp")												// Set a description (below title, above fields)
 				//X days agow
 //				->setAuthor("$user_check", "$author_guild_avatar")  									// Set an author with icon
-//				->addField("Roles", 		"$author_role_name_queue_full")											// New line after this
+//				->addFieldValues("Roles", 		"$author_role_name_queue_full")											// New line after this
 				
 				->setThumbnail("$user_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -3651,7 +3651,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //					->setTitle("Commands")																	// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 					->setDescription("<@$member_id>\n**User Update**\n$changes")									// Set a description (below title, above fields)
-//					->addField("**User Update**", "$changes")												// New line after this
+//					->addFieldValues("**User Update**", "$changes")												// New line after this
 					
 //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -3730,7 +3730,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 				->setDescription("<@$user_id> has left the server!\n
 				There are now **$guild_memberCount** members.")											// Set a description (below title, above fields)
 //				->setAuthor("$member_check", "$author_guild_avatar")  									// Set an author with icon
-				->addField("Roles", 		"$mention_role_id_queue")									// New line after this
+				->addFieldValues("Roles", 		"$mention_role_id_queue")									// New line after this
 				
 				->setThumbnail("$user_avatar")															// Set a thumbnail (the image in the top right corner)
 //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')            // Set an image (below everything except footer)
@@ -3850,7 +3850,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 	//				->setTitle("Commands")																	// Set a title
 					->setColor("a7c5fd")																	// Set a color (the thing on the left side)
 	//				->setDescription("Commands for $author_guild_name")									// Set a description (below title, above fields)
-					->addField("Message Update", "$changes")												// New line after this
+					->addFieldValues("Message Update", "$changes")												// New line after this
 					
 	//				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 	//				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -3930,7 +3930,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //				->setDescription("$author_guild_name")												// Set a description (below title, above fields)
 //				->setDescription("")														// Set a description (below title, above fields)
 				->setAuthor("$author_check ($author_id)", $author_avatar)  											// Set an author with icon
-				->addField("Uncached Message Update", 		"$log_message")				// New line after this
+				->addFieldValues("Uncached Message Update", 		"$log_message")				// New line after this
 				
 //				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
@@ -3997,7 +3997,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 			->setDescription("$log_message")														// Set a description (below title, above fields)
 			//X days ago
 			->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
-//			->addField("Roles", 		"$author_role_name_queue_full")								// New line after this
+//			->addFieldValues("Roles", 		"$author_role_name_queue_full")								// New line after this
 			
 			->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //			->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)

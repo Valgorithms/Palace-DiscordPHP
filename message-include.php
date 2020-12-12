@@ -1,4 +1,6 @@
 <?php
+if ($message->author->bot) return; //Don't process messages sent by bots
+
 $message_content = $message->content;
 if (($message_content == null) || ($message_content == "")) {
     return true;
@@ -400,46 +402,42 @@ Get the guild-related collections for the author
 //Populate arrays of the info we need
 $author_member_roles_names 										= array();
 $author_member_roles_ids 										= array();
-$x=0;
 foreach ($author_member_roles as $role) {
-    if ($x!=0) { //0 is always @everyone so skip it
-        $author_member_roles_names[] 							= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-        $author_member_roles_ids[]								= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-        if ($role->id == $role_18_id) {
-            $adult 			= true;
-        }							//Author has the 18+ role
-        if ($role->id == $role_dev_id) {
-            $dev 			= true;
-        }							//Author has the dev role
-        if ($role->id == $role_owner_id) {
-            $owner	 		= true;
-        }							//Author has the owner role
-        if ($role->id == $role_admin_id) {
-            $admin 			= true;
-        }							//Author has the admin role
-        if ($role->id == $role_mod_id) {
-            $mod 			= true;
-        }							//Author has the mod role
-        if ($role->id == $role_assistant_id) {
-            $assistant 		= true;
-        }							//Author has the assistant role
-        if ($role->id == $role_tech_id) {
-            $tech 		= true;
-        }							//Author has the tech role
-        if ($role->id == $role_verified_id) {
-            $verified 		= true;
-        }							//Author has the verified role
-        if ($role->id == $role_bot_id) {
-            $bot 			= true;
-        }							//Author has the bot role
-        if ($role->id == $role_vzgbot_id) {
-            $vzgbot 		= true;
-        }							//Author is this bot
-        if ($role->id == $role_muted_id) {
-            $muted 			= true;
-        }							//Author is this bot
-    }
-    $x++;
+	$author_member_roles_names[] 							= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+	$author_member_roles_ids[]								= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+	if ($role->id == $role_18_id) {
+		$adult = true;
+	}							//Author has the 18+ role
+	if ($role->id == $role_dev_id) {
+		$dev = true;
+	}							//Author has the dev role
+	if ($role->id == $role_owner_id) {
+		$owner = true;
+	}							//Author has the owner role
+	if ($role->id == $role_admin_id) {
+		$admin = true;
+	}							//Author has the admin role
+	if ($role->id == $role_mod_id) {
+		$mod = true;
+	}							//Author has the mod role
+	if ($role->id == $role_assistant_id) {
+		$assistant = true;
+	}							//Author has the assistant role
+	if ($role->id == $role_tech_id) {
+		$tech = true;
+	}							//Author has the tech role
+	if ($role->id == $role_verified_id) {
+		$verified = true;
+	}							//Author has the verified role
+	if ($role->id == $role_bot_id) {
+		$bot = true;
+	}							//Author has the bot role
+	if ($role->id == $role_vzgbot_id) {
+		$vzgbot = true;
+	}							//Author is this bot
+	if ($role->id == $role_muted_id) {
+		$muted = true;
+	}							//Author is this bot
 }
 if ($creator || $owner || $dev) {
     $bypass = true;
@@ -1701,8 +1699,10 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             //include (__DIR__ . "/machikoro/game.php");
         }
     }
-    if ($message_content_lower == 'ping') {
-        echo 'PING' . PHP_EOL;
+    if ($message_content_lower == 'ping') { //;ping
+        echo '[PING]' . PHP_EOL;
+		$pingdiff = $message->timestamp->floatDiffInRealSeconds();
+        //$message->reply("your message took $pingdiff to arrive.");
         $message->reply("Pong!");
         return true;
     }
@@ -1802,13 +1802,13 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
     //				Populate arrays of the info we need
     //				$target_guildmember_roles_names 						= array();
             $target_guildmember_roles_ids 							= array(); //Not being used here, but might as well grab it
-            $x=0;
+            
             foreach ($target_guildmember_role_collection as $role) {
-                if ($x!=0) { //0 is @everyone so skip it
-    //						$target_guildmember_roles_names[] 				= $role->name; 													//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+                
+    //				$target_guildmember_roles_names[] 				= $role->name; 													//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
                     $target_guildmember_roles_ids[] 				= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-                }
-                $x++;
+                
+                
             }
             
             //				Build the string for the reply
@@ -2244,8 +2244,9 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
             $tip_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
-                $new_message->react("👍");
-                $new_message->react("👎");
+                $new_message->react("👍")->then(function ($result){
+					$new_message->react("👎");
+				});
                 //Save the tip somewhere
                 $array = VarLoad($guild_folder, "guild_tips.php");
                 $array[] = $embed->getRawAttributes();
@@ -4067,10 +4068,8 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 
 						$message->reply($msg);
 					});
-					$message->react("👍")->then(function($result) use ($discord, $author_channel, $duration, $message){
-						$message->react("👎")->then(function($result) use ($discord, $author_channel, $duration, $message){
-							return true;
-						});
+					$message->react("👍")->then(function($result){
+						$message->react("👎");
 					});
 				});
             } else {
@@ -4151,7 +4150,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
                     $embed
                         ->setTitle("$mention_check ($mention_id)")																// Set a title
-                        ->setColor("0xe1452d")																	// Set a color (the thing on the left side)
+                        ->setColor(0xe1452d)																	// Set a color (the thing on the left side)
             //					->setDescription("$author_guild_name")									// Set a description (below title, above fields)
                         ->addFieldValues("ID", "$mention_id", true)
                         ->addFieldValues("Avatar", "[Link]($mention_avatar)", true)
@@ -4656,14 +4655,13 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             
             //				Populate arrays of the info we need
             $target_verified										= false; //Default
-            $x=0;
+            
             foreach ($target_guildmember_role_collection as $role) {
-                if ($x!=0) { //0 is @everyone so skip it
+                
                     if ($role->id == $role_verified_id) {
                         $target_verified 							= true;
                     }
-                }
-                $x++;
+                
             }
             
             if ($target_verified == false) {
@@ -4757,7 +4755,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 
                 //  				Populate arrays of the info we need
                 //  				$target_guildmember_roles_names 					= array();
-                $x=0;
+                
                 $target_dev = false;
                 $target_owner = false;
                 $target_admin = false;
@@ -4765,7 +4763,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $target_vzgbot = false;
                 $target_guildmember_roles_ids = array();
                 foreach ($target_guildmember_role_collection as $role) {
-                    if ($x!=0) { //0 is @everyone so skip it
+                    
                         $target_guildmember_roles_ids[] 						= $role->id; 											//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
                         if ($role->id == $role_dev_id) {
                             $target_dev 		= true;
@@ -4785,8 +4783,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         if ($role->name == "Palace Bot") {
                             $target_vzgbot 		= true;
                         }							//Author is this bot
-                    }
-                    $x++;
+                    
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_vzg) || ($creator || $owner)) { //Guild owner and bot creator can ban anyone
                     if ($mention_id == $creator_id) {
@@ -4854,7 +4851,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             if ($react) {
                 $message->react("👎");
             }
-            $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+            //$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         }
         return true;
     }
@@ -5093,7 +5090,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 
                 //  				Populate arrays of the info we need
                 //  				$target_guildmember_roles_names 					= array();
-                $x=0;
+                
                 $target_dev = false;
                 $target_owner = false;
                 $target_admin = false;
@@ -5101,7 +5098,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $target_vzgbot = false;
                 $target_guildmember_roles_ids = array();
                 foreach ($target_guildmember_role_collection as $role) {
-                    if ($x!=0) { //0 is @everyone so skip it
+                    
                         $target_guildmember_roles_ids[] 						= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
                         if ($role->id == $role_18_id) {
                             $target_adult 		= true;
@@ -5130,8 +5127,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         if ($role->id == $role_muted_id) {
                             $target_muted 		= true;
                         }							//Author is this bot
-                    }
-                    $x++;
+
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Guild owner and bot creator can kick anyone
                     if ($mention_id == $creator_id) {
@@ -5224,7 +5220,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 
 //  			Populate arrays of the info we need
                 //	    		$target_guildmember_roles_names 					= array();
-                $x=0;
+                
                 $target_dev = false;
                 $target_owner = false;
                 $target_admin = false;
@@ -5233,7 +5229,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $target_guildmember_roles_ids = array();
                 $removed_roles = array();
                 foreach ($target_guildmember_role_collection as $role) {
-                    if ($x!=0) { //0 is @everyone so skip it
+                    
                         $removed_roles[] = $role->id;
                         $target_guildmember_roles_ids[] 						= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
                         if ($role->id == $role_dev_id) {
@@ -5251,8 +5247,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         if ($role->id == $role_vzgbot_id) {
                             $target_vzgbot 		= true;
                         }							//Author is this bot
-                    }
-                    $x++;
+                    
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Guild owner and bot creator can mute anyone
                     if ($mention_id == $creator_id) {
@@ -5356,9 +5351,9 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $target_vzgbot = false;
                 //				Populate arrays of the info we need
                 $target_guildmember_roles_ids = array();
-                $x=0;
+                
                 foreach ($target_guildmember_role_collection as $role) {
-                    if ($x!=0) { //0 is @everyone so skip it
+                    
                         $target_guildmember_roles_ids[] 						= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
                         if ($role->id == $role_dev_id) {
                             $target_dev 		= true;
@@ -5378,8 +5373,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         if ($role->name == "Palace Bot") {
                             $target_vzgbot 		= true;
                         }							//Author is this bot
-                    }
-                    $x++;
+
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) {
                     if ($mention_id == $creator_id) {
@@ -5487,14 +5481,13 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     $mention_avatar 										= "{$target_guildmember_user->avatar}";					//echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
                     
                     $target_verified										= false; //Default
-                    $x=0;
+                    
                     foreach ($target_guildmember_role_collection as $role) {
-                        if ($x!=0) { //0 is @everyone so skip it
+                        
                             if ($role->id == $role_verified_id) {
                                 $target_verified 							= true;
                             }
-                        }
-                        $x++;
+                        
                     }
                     if ($target_verified == false) { //Add the verified role to the member
                         $target_guildmember->addRole($role_verified_id)->done(

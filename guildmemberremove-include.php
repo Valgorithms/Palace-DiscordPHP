@@ -20,11 +20,8 @@ if ($welcome === true) {
     $target_guildmember_roles_mentions			= array();
     $x=0;
     foreach ($target_guildmember_role_collection as $role) {
-        if ($x!=0) { //0 is @everyone so skip it
-//			$target_guildmember_roles_names[] 				= $role->name; 													//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-            $target_guildmember_roles_mentions[] = "<@&{$role->id}>"; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-        }
-        $x++;
+//		$target_guildmember_roles_names[] 				= $role->name; 													//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+		$target_guildmember_roles_mentions[] = "<@&{$role->id}>"; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
     }
     $mention_role_id_queue = "";
     foreach ($target_guildmember_roles_mentions as $mention_role) {

@@ -53,11 +53,11 @@ $channel->fetchMessage($id)->then(function ($message) use ($modlog_channel, $log
     $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
     $embed
 //				->setTitle("$user_check")																// Set a title
-        ->setColor("a7c5fd")																	// Set a color (the thing on the left side)
+        ->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
 //				->setDescription("$author_guild_name")												// Set a description (below title, above fields)
 //				->setDescription("")														// Set a description (below title, above fields)
         ->setAuthor("$author_check ($author_id)", $author_avatar)  											// Set an author with icon
-        ->addField("Uncached Message Update", "$log_message")				// New line after this
+        ->addFieldValues("Uncached Message Update", "$log_message")				// New line after this
         
 //				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)

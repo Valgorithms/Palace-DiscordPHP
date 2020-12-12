@@ -6,7 +6,7 @@ $log_message = "Message with id $message_id was deleted from <#$channel_id>\n" .
 //		Build the embed
 $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 $embed
-	->setColor("a7c5fd")																	// Set a color (the thing on the left side)
+	->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
 	->setDescription("$log_message")														// Set a description (below title, above fields)
 	->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
 	->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
