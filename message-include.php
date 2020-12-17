@@ -3287,55 +3287,53 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         if ($message_content_lower == 'get unregistered') { //;get unregistered
             echo "[GET UNREGISTERED START]" . PHP_EOL;
             $GLOBALS["UNREGISTERED"] = null;
-            $author_guild->fetchMembers()->then(function ($fetched_guild) use ($message, $author_guild) {	//Promise
-                $members = $fetched_guild->members->all(); //array
-                foreach ($members as $target_member) { //GuildMember
-                    $target_skip = false;
-                    //get roles of member
-                    $target_guildmember_role_collection = $target_member->roles;
-                    foreach ($target_guildmember_role_collection as $role) {
-                        if ($role->name == "Cadet") {
-                            $target_skip = true;
-                        }
-                        if ($role->name == "Bots") {
-                            $target_skip = true;
-                        }
-                    }
-                    if ($target_skip === false) {
-                        //Query SQL for ss13 where discord =
-                        $mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
-                        $active_member = $author_guild->members->get('id', $mention_id);
-                        include "../connect.php";
-                        $sqlgettargetinfo = "
-							SELECT
-								`ss13`
-							FROM
-								`users`
-							WHERE
-								`discord` = '$mention_id'";
-                        $resultsqlgettargetinfo = mysqli_query($con, $sqlgettargetinfo);
-                        if ($resultsqlgettargetinfo) {
-                            $rowselect = mysqli_fetch_array($resultsqlgettargetinfo);
-                            $ckey = $rowselect['ss13'];
-                            if (!$ckey) {
-                                //echo "$mention_id: No ckey found" . PHP_EOL;
-                                $GLOBALS["UNREGISTERED"][] = $mention_id;
-                            } else {
-                                //echo "$mention_id: $ckey" . PHP_EOL;
-                            }
-                        } else {
-                            //echo "$mention_id: No registration found" . PHP_EOL;
-                            $GLOBALS["UNREGISTERED"][] = $mention_id;
-                        }
-                    }
-                }
-                if ($react) {
-                    $message->react("👍");
-                }
-                echo count($GLOBALS["UNREGISTERED"]) . " UNREGISTERED ACCOUNTS" . PHP_EOL;
-                echo "[GET UNREGISTERED DONE]" . PHP_EOL;
-                return true;
-            });
+			$author_guild->members->freshen()->then(
+				function ($members) use ($message, $author_guild) {
+					foreach ($members as $target_member) { //GuildMember
+						$target_skip = false;
+						//get roles of member
+						$target_guildmember_role_collection = $target_member->roles;
+						foreach ($target_guildmember_role_collection as $role) {
+							if ($role->name == "Cadet") {
+								$target_skip = true;
+							}
+							if ($role->name == "Bots") {
+								$target_skip = true;
+							}
+						}
+						if ($target_skip === false) {
+							//Query SQL for ss13 where discord =
+							$target_id = $target_member->id; //echo "target_id: " . $target_id . PHP_EOL;
+							include "../connect.php";
+							$sqlgettargetinfo = "
+								SELECT
+									`ss13`
+								FROM
+									`users`
+								WHERE
+									`discord` = '$target_id'";
+							$resultsqlgettargetinfo = mysqli_query($con, $sqlgettargetinfo);
+							if ($resultsqlgettargetinfo) {
+								$rowselect = mysqli_fetch_array($resultsqlgettargetinfo);
+								$ckey = $rowselect['ss13'];
+								if (!$ckey) {
+									//echo "$target_id: No ckey found" . PHP_EOL;
+									$GLOBALS["UNREGISTERED"][] = $target_id;
+								} else {
+									//echo "$target_id: $ckey" . PHP_EOL;
+								}
+							} else {
+								//echo "$target_id: No registration found" . PHP_EOL;
+								$GLOBALS["UNREGISTERED"][] = $target_id;
+							}
+						}
+					}
+					$message->react("👍");
+					echo count($GLOBALS["UNREGISTERED"]) . " UNREGISTERED ACCOUNTS" . PHP_EOL;
+					echo "[GET UNREGISTERED DONE]" . PHP_EOL;
+					return true;
+				}
+			);
         }
         if ($message_content_lower == 'unverify unregistered') { //;unverify unregistered
             echo "[UNVERIFY UNREGISTERED START]" . PHP_EOL;
@@ -3348,14 +3346,11 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     //FIX THIS
                     if ($GLOBALS["UNREGISTERED_X"] < $GLOBALS["UNREGISTERED_COUNT"]) {
                         $target_id = $GLOBALS["UNREGISTERED"][$GLOBALS["UNREGISTERED_X"]]; //GuildMember
-                        //echo "author_guild_id: " . $author_guild_id;
                         //echo "UNREGISTERED ID: $target_id" . PHP_EOL;
                         if ($target_id) {
                             echo "UNVERIFYING $target_id" . PHP_EOL;
-                            $target_guild = $discord->guilds->get('id', $author_guild_id);
-                            echo "target_guild: " . get_class($target_guild) . PHP_EOL;
-                            $target_member = $target_guild->members->get('id', $target_id);
-                            echo "target_member: " . get_class($target_member) . PHP_EOL;
+                            $target_guild = $discord->guilds->get('id', $author_guild_id); //echo "target_guild: " . get_class($target_guild) . PHP_EOL;
+                            $target_member = $target_guild->members->get('id', $target_id); //echo "target_member: " . get_class($target_member) . PHP_EOL;
                             $target_member->removeRole("468982790772228127");
                             $target_member->removeRole("468983261708681216");
                             $target_member->addRole("469312086766518272");
@@ -3371,13 +3366,9 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         }
                     }
                 });
-                if ($react) {
-                    $message->react("👍");
-                }
+				$message->react("👍");
             } else {
-                if ($react) {
-                    $message->react("👎");
-                }
+				$message->react("👎");
             }
             echo "[CHECK UNREGISTERED DONE]" . PHP_EOL;
             return true;
@@ -3385,41 +3376,42 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         if ($message_content_lower == 'get unverified') { //;get unverified
             echo "[GET UNVERIFIED START]" . PHP_EOL;
             $GLOBALS["UNVERIFIED"] = null;
-            $author_guild->fetchMembers()->then(function ($fetched_guild) use ($message, $author_guild) {	//Promise
-                $members = $fetched_guild->members->all(); //array
-                foreach ($members as $target_member) { //GuildMember
-                    $target_skip = false;
-                    //get roles of member
-                    $target_guildmember_role_collection = $target_member->roles;
-                    foreach ($target_guildmember_role_collection as $role) {
-                        if ($role->name == "Cadet") {
-                            $target_get = true;
-                        }
-                        if ($role->name == "Private") {
-                            $target_skip = true;
-                        }
-                        if ($role->name == "Veteran") {
-                            $target_skip = true;
-                        }
-                        if ($role->name == "Bots") {
-                            $target_skip = true;
-                        }
-                        if ($role->name == "BANNED") {
-                            $target_skip = true;
-                        }
-                    }
-                    if (($target_skip === false) && ($target_get === true)) {
-                        $mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
-                        $GLOBALS["UNVERIFIED"][] = $mention_id;
-                    }
-                }
-                if ($react) {
-                    $message->react("👍");
-                }
-                echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
-                echo "[GET UNVERIFIED DONE]" . PHP_EOL;
-                return true;
-            });
+
+            $author_guild->members->freshen()->then(
+				function ($members) use ($message, $author_guild){
+					//$members = $fetched_guild->members->all(); //array
+					foreach ($members as $target_member) { //GuildMember
+						$target_skip = false;
+						//get roles of member
+						$target_guildmember_role_collection = $target_member->roles;
+						foreach ($target_guildmember_role_collection as $role) {
+							if ($role->name == "Cadet") {
+								$target_get = true;
+							}
+							if ($role->name == "Private") {
+								$target_skip = true;
+							}
+							if ($role->name == "Veteran") {
+								$target_skip = true;
+							}
+							if ($role->name == "Bots") {
+								$target_skip = true;
+							}
+							if ($role->name == "BANNED") {
+								$target_skip = true;
+							}
+						}
+						if (($target_skip === false) && ($target_get === true)) {
+							$mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
+							$GLOBALS["UNVERIFIED"][] = $mention_id;
+						}
+					}
+					$message->react("👍");
+					echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+					echo "[GET UNVERIFIED DONE]" . PHP_EOL;
+				}
+            );
+			return true;
         }
         if ($message_content_lower == 'purge unverified') { //;purge unverified
             echo "[PURGE UNVERIFIED START]" . PHP_EOL;
@@ -3436,10 +3428,10 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         //echo "UNVERIFIED ID: $target_id" . PHP_EOL;
                         if ($target_id) {
                             echo "PURGING $target_id" . PHP_EOL;
-                            $target_guild = $discord->guilds->fetch('id', $author_guild_id); //echo "target_guild: " . get_class($target_guild) . PHP_EOL;
-                            $target_member = $target_guild->members->get('id', $target_id); //echo "target_member: " . get_class($target_member) . PHP_EOL;
-                            $target_member->kick("unverified purge");
-                            $GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
+                            $target_guild = $discord->guilds->get('id', $author_guild_id);
+							$target_member = $target_guild->members->get('id', $target_id); //echo "target_member: " . get_class($target_member) . PHP_EOL;
+							$target_guild->members->kick($target_member); //$target_member->kick("unverified purge");
+							$GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
                             return true;
                         } else {
                             $loop->cancelTimer($GLOBALS['UNVERIFIED_TIMER']);
@@ -4105,8 +4097,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     $mention_joinedDate			= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
                     $mention_joinedDateTime		= new \Carbon\Carbon('@' . $mention_joinedTimestamp);
                     //$mention_created			= $mention_user->createdAt;
-                    $mention_createdTimestamp	= $mention_user->createdTimestamp();
-                    echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
+                    $mention_createdTimestamp	= $mention_user->createdTimestamp(); //echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
                     $mention_createdDate		= date("D M j H:i:s Y", $mention_createdTimestamp);
                     $mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
                     $mention_createdAge = \Carbon\Carbon::now()->diffInDays($mention_createdDate) . " days";
@@ -5038,34 +5029,10 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
     if ($user_perms['kick_members'] && substr($message_content_lower, 0, 5) == 'kick ') { //;kick
         echo "[KICK]" . PHP_EOL;
         //Get an array of people mentioned
-        $mentions_arr 	= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+        $mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
         $GetMentionResult = GetMention([&$author_guild, $message_content_lower, "kick ", 1, &$restcord]);
         if (!(is_array($GetMentionResult))) {
             return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-        }
-        if ($GetMentionResult[1] == null) {
-            echo "GetMentionResult['restcord_user']: ";
-            echo PHP_EOL;
-            print_r($GetMentionResult['restcord_user']);
-            echo PHP_EOL;
-            if ($GetMentionResult['restcord_user_found'] === true) {
-                echo "[RESTCORD KICK]" . PHP_EOL;
-                try {
-                    $restcord->guild->removeGuildMember(['guild.id' => intval($author_guild_id), 'user.id' => intval($GetMentionResult['restcord_user']->id)]);
-                    echo "[RESTCORD KICK DONE]" . PHP_EOL;
-                    if ($react) {
-                        $message->react("🥾");
-                    }
-                } catch (Throwable $e) {
-                    if ($react) {
-                        $message->react("👎");
-                    }
-                    echo "[RESTCORD] Unable to kick user!" . PHP_EOL;
-                }
-            } else {
-                return $message->reply("User not found in the guild!");
-            }
-            return $message->reply("User not found in the guild!");
         }
         $mention_user = GetMentionResult[0];
         $mention_member = GetMentionResult[1];
@@ -5077,19 +5044,11 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             $mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
             $mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
             $mention_check 											= $mention_username ."#".$mention_discriminator;
-            
-            
+             
             if ($author_id != $mention_id) { //Don't let anyone kick themselves
                 //Get the roles of the mentioned user
                 $target_guildmember 								= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
                 $target_guildmember_role_collection 				= $target_guildmember->roles;					//This is the Role object for the GuildMember
-                
-    //  				Get the avatar URL of the mentioned user
-                //					$target_guildmember_user							= $target_guildmember->user;									//echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
-                //					$mention_avatar 									= "{$target_guildmember_user->avatar}";					//echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
-                
-                //  				Populate arrays of the info we need
-                //  				$target_guildmember_roles_names 					= array();
                 
                 $target_dev = false;
                 $target_owner = false;
@@ -5098,38 +5057,36 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $target_vzgbot = false;
                 $target_guildmember_roles_ids = array();
                 foreach ($target_guildmember_role_collection as $role) {
-                    
-                        $target_guildmember_roles_ids[] 						= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-                        if ($role->id == $role_18_id) {
-                            $target_adult 		= true;
-                        }							//Author has the 18+ role
-                        if ($role->id == $role_dev_id) {
-                            $target_dev 		= true;
-                        }							//Author has the dev role
-                        if ($role->id == $role_owner_id) {
-                            $target_owner	 	= true;
-                        }							//Author has the owner role
-                        if ($role->id == $role_admin_id) {
-                            $target_admin 		= true;
-                        }							//Author has the admin role
-                        if ($role->id == $role_mod_id) {
-                            $target_mod 		= true;
-                        }							//Author has the mod role
-                        if ($role->id == $role_verified_id) {
-                            $target_verified 	= true;
-                        }							//Author has the verified role
-                        if ($role->id == $role_bot_id) {
-                            $target_bot 		= true;
-                        }							//Author has the bot role
-                        if ($role->id == $role_vzgbot_id) {
-                            $target_vzgbot 		= true;
-                        }							//Author is this bot
-                        if ($role->id == $role_muted_id) {
-                            $target_muted 		= true;
-                        }							//Author is this bot
-
+					$target_guildmember_roles_ids[] = $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+					if ($role->id == $role_18_id) {
+						$target_adult = true; //Author has the 18+ role
+					}
+					if ($role->id == $role_dev_id) {
+						$target_dev = true; //Author has the dev role
+					}
+					if ($role->id == $role_owner_id) {
+						$target_owner = true; //Author has the owner role
+					}
+					if ($role->id == $role_admin_id) {
+						$target_admin = true; //Author has the admin role
+					}
+					if ($role->id == $role_mod_id) {
+						$target_mod = true; //Author has the mod role
+					}
+					if ($role->id == $role_verified_id) {
+						$target_verified = true; //Author has the verified role
+					}
+					if ($role->id == $role_bot_id) {
+						$target_bot = true; //Author has the bot role
+					}
+					if ($role->id == $role_vzgbot_id) {
+						$target_vzgbot = true; //Author is this bot
+					}
+					if ($role->id == $role_muted_id) {
+						$target_muted = true; //Author is this bot
+					}
                 }
-                if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Guild owner and bot creator can kick anyone
+                if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Bot creator, guild owner, and devs can kick anyone
                     if ($mention_id == $creator_id) {
                         return true;
                     } //Don't kick the creator
@@ -5140,9 +5097,12 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 					**🗓️Date:** $warndate
 					**📝Reason:** " . str_replace($filter, "", $message_content);
                     //Kick the user
-                    $target_guildmember->kick($reason)->done(null, function ($error) {
+					$message->channel->guild->members->kick($target_guildmember);
+                    /*
+					$target_guildmember->kick($reason)->done(null, function ($error) {
                         var_dump($error->getMessage()); //Echo any errors
                     });
+					*?
                     if ($react) {
                         $message->react("🥾");
                     } //Boot
@@ -5170,16 +5130,12 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     return true;
                 }
             } else {
-                if ($react) {
-                    $message->react("👎");
-                }
+                $message->react("👎");
                 $author_channel->sendMessage("<@$author_id>, you can't kick yourself!");
                 return true;
             }
         } //foreach method didn't return, so nobody was mentioned
-        if ($react) {
-            $message->react("👎");
-        }
+        $message->react("👎");
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         return true;
     }
