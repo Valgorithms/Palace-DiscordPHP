@@ -2244,7 +2244,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
             $tip_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
-                $new_message->react("👍")->then(function ($result){
+                $new_message->react("👍")->then(function ($new_message){
 					$new_message->react("👎");
 				});
                 //Save the tip somewhere
