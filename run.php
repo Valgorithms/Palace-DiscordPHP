@@ -13,12 +13,19 @@ $vm = false; //Set this to true if using a VM that can be paused
 include __DIR__ . '/vendor/autoload.php';
 define('MAIN_INCLUDED', 1); //Token and SQL credential files are protected, this must be defined to access
 ini_set('memory_limit', '-1'); //Unlimited memory usage
+use RestCord\DiscordClient;
+use Discord\Discord;
+use Discord\Parts\Embed\Embed;
+use Discord\Parts\User\User;
+use Discord\Parts\Guild\Role;
+use Carbon\Carbon;
+use React\Http\Server;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ServerRequestInterface;
 
-function execInBackground($cmd)
-{
+function execInBackground($cmd){
     if (substr(php_uname(), 0, 7) == "Windows") {
-        //pclose(popen("start /B ". $cmd, "r"));
-        pclose(popen("start ". $cmd, "r"));
+        pclose(popen("start ". $cmd, "r")); //pclose(popen("start /B ". $cmd, "r"));
     }//else exec($cmd . " > /dev/null &");
 }
 
@@ -34,25 +41,82 @@ include 'blacklisted_guilds.php'; //Array of Guilds that are not allowed to use 
 include 'whitelisted_guilds.php'; //Only guilds in the $whitelisted_guilds array should be allowed to access the bot.
 
 require '../token.php';
-use Discord\Discord;
-use Discord\Parts\Embed\Embed;
-use Discord\Parts\User\User;
-use Discord\Parts\Guild\Role;
-use Carbon\Carbon;
-
 $logger = new Monolog\Logger('HTTPLogger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
-
 $discord = new Discord([
     'token' => "$token",
     'loadAllMembers' => true,
     'storeMessages' => true,
 	//'httpLogger' => $logger
 ]);
-
 $loop = $discord->getLoop();
 
-use RestCord\DiscordClient;
+function webapiFail($part, $id)
+{
+	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
+	return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
+}
+function webapiSnow($string)
+{
+	return preg_match('/^[0-9]{16,18}$/', $string);
+}
+$webapi = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($discord) {
+	$path = explode('/', $request->getUri()->getPath());
+	$sub = (isset($path[1]) ? (string) $path[1] : false);
+	$id = (isset($path[2]) ? (string) $path[2] : false);
+	$id2 = (isset($path[3]) ? (string) $path[3] : false);
+
+	//logInfo('[webapi] Request', ['path' => $path]);
+
+	switch ($sub)
+	{
+		case 'channel':
+			if (!$id || !webapiSnow($id) || !$return = $discord->getChannel($id))
+				return webapiFail('channel_id', $id);
+			break;
+
+		case 'guild':
+			if (!$id || !webapiSnow($id) || !$return = $discord->guilds->offsetGet($id))
+				return webapiFail('guild_id', $id);
+			break;
+
+		case 'guildMember':
+			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->offsetGet($id))
+				return webapiFail('guild_id', $id);
+			if (!$id2 || !webapiSnow($id2) || !$return = $guild->members->offsetGet($id2))
+				return webapiFail('user_id', $id2);
+			break;
+
+		case 'user':
+			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id))
+				return webapiFail('user_id', $id);
+			break;
+
+		case 'userName':
+			if (!$id || !$return = $discord->users->get('name', $id))
+				return webapiFail('user_name', $id);
+			break;
+
+		case 'restart':
+			$return = 'restarting';
+			//exec('/home/outsider/bin/stfc restart');
+			//execInBackground('cmd /c "'. __DIR__  . '\run.bat"');
+			break;
+
+		default:
+			return new Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
+	}
+
+	return new Response(200, ['Content-Type' => 'text/json'], json_encode($return));
+});
+$socket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55555'), $discord->getLoop());
+$webapi->listen($socket);
+$webapi->on('error', function ($e) {
+	logDebug('[webapi] Error', [
+		'msg' => $e->getMessage(),
+		'prv' => ($e->getPrevious() ? $e->getPrevious()->getMessage() : null)
+	]);
+});
 
 $restcord = new DiscordClient(['token' => "{$token}"]); // Token is required
 //var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));

