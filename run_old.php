@@ -320,9 +320,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 //		Populate arrays of the info we need
 		$author_member_roles_names 										= array();
 		$author_member_roles_ids 										= array();
-		$x=0;
 		foreach ($author_member_roles as $role){
-			if ($x!=0){ //0 is always @everyone so skip it
 				$author_member_roles_names[] 							= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
 				$author_member_roles_ids[]								= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 				if ($role->id == $role_18_id)			$adult 			= true;							//Author has the 18+ role
@@ -334,8 +332,6 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 				if ($role->id == $role_bot_id)			$bot 			= true;							//Author has the bot role
 				if ($role->id == $role_vzgbot_id)		$vzgbot 		= true;							//Author is this bot
 				if ($role->id == $role_muted_id)		$muted 			= true;							//Author is this bot
-			}
-			$x++;
 		}
 		if ($creator || $owner)	$bypass = true;
 		else					$bypass = false;
