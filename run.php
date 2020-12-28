@@ -53,13 +53,11 @@ $loop = $discord->getLoop();
 $restcord = new DiscordClient(['token' => "{$token}"]); // Token is required
 //var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
 
-function webapiFail($part, $id)
-{
+function webapiFail($part, $id){
 	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
 	return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
 }
-function webapiSnow($string)
-{
+function webapiSnow($string){
 	return preg_match('/^[0-9]{16,18}$/', $string);
 }
 $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($discord, $restcord) {
@@ -67,11 +65,16 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 	$sub = (isset($path[1]) ? (string) $path[1] : false);
 	$id = (isset($path[2]) ? (string) $path[2] : false);
 	$id2 = (isset($path[3]) ? (string) $path[3] : false);
-
+	
+	echo "REMOTE_ADDR:" . $request->getServerParams()['REMOTE_ADDR'].PHP_EOL;
+	if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){
+		echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+		return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+	}
+	
 	//logInfo('[webapi] Request', ['path' => $path]);
 
-	switch ($sub)
-	{
+	switch ($sub){
 		case 'channel':
 			if (!$id || !webapiSnow($id) || !$return = $discord->getChannel($id))
 				return webapiFail('channel_id', $id);
@@ -109,8 +112,21 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 				return webapiFail('user_id', $id);
 			break;
 		case 'avatar':
-			if (!$id || !webapiSnow($id) || !$return = $restcord->user->getUser(['user.id' => intval($id)])->getAvatar())
-				return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($'').PHP_EOL);
+			if (!$id || !webapiSnow($id)){
+				return webapiFail('user_id', $id);
+			}
+			if (!$user = $discord->users->offsetGet($id)){
+				$discord->users->fetch($id); //async so use Restcord once
+				try{
+					$return = $restcord->user->getUser(['user.id' => intval($id)])->getAvatar();
+				}catch(Exception $e){
+					echo ($e->getMessage());
+					return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
+				}
+			}else{
+				$return = $user->avatar;
+			}
+			if (!$return) return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
 			break;
 		default:
 			return new Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
@@ -125,6 +141,13 @@ $webapi->on('error', function ($e) {
 		'prv' => ($e->getPrevious() ? $e->getPrevious()->getMessage() : null)
 	]);
 });
+
+/*
+$socket->on('connection', function (React\Socket\ConnectionInterface $connection) {
+    echo $connection->getRemoteAddress() . PHP_EOL;
+	if (substr($connection->getRemoteAddress(), 0, 12) != "tcp://10.0.0") return true;
+});
+*/
 
 /*
 set_exception_handler(function (Throwable $e) { //stops execution completely
