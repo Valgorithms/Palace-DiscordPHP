@@ -3478,7 +3478,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return true;
                 break;
         }
-    
+		/*VMWare
         if ($creator || $owner || $dev || $tech || $assistant) {
             switch ($message_content_lower) {
                 case 'resume': //;resume
@@ -3656,7 +3656,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     break;
             }
         }
-        if ($creator || $owner || $dev || $tech) {
+		if ($creator || $owner || $dev || $tech) {
             switch ($message_content_lower) {
                 case 'load 1': //;load 1
                     echo "[LOAD SLOT 1] $author_check" . PHP_EOL;
@@ -3841,11 +3841,11 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         curl_exec($ch);
                         curl_close($ch);
                         
-                        /*
-                        $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
-                        $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
-                        $message->reply("$time EST");
-                        */
+                        
+                        //$dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
+                        //$time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
+                        //$message->reply("$time EST");
+                        
                         if ($react) {
                             $message->react("👍");
                         }
@@ -3875,11 +3875,11 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         
                         curl_exec($ch);
                         curl_close($ch);
-                        /*
-                        $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
-                        $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
-                        $message->reply("$time EST");
-                        */
+                        
+                        //$dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
+                        //$time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
+                        //$message->reply("$time EST");
+                        
                         if ($react) {
                             $message->react("👍");
                         }
@@ -3890,35 +3890,35 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 case 'update persistence':
                 case 'update pers':
                     echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
-                    /*
-                    $message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    
+                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
-                        $ch = curl_init(); //create curl resource
-                        curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/update.php"); // set url
-                        curl_setopt($ch, CURLOPT_POST, true);
+                        //$ch = curl_init(); //create curl resource
+                        //curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/update.php"); // set url
+                        //curl_setopt($ch, CURLOPT_POST, true);
 
-                        curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
+                        //curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
 
-                        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-                        curl_setopt($ch, CURLOPT_HEADER, 0);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
-                        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-                        curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 10);
+                        //curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+                        //curl_setopt($ch, CURLOPT_HEADER, 0);
+                        //curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        //curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+                        //curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+                        //curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 10);
 
-                        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+                        //curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
 
-                        curl_exec($ch);
-                        curl_close($ch);
+                        //curl_exec($ch);
+                        //curl_close($ch);
 
-                        $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
-                        $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
-                        $message->reply("$time EST");
+                        //$dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
+                        //$time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
+                        //$message->reply("$time EST");
 
-                        if($react) $message->react("👍");
-                        return true;
-                    });
-                    */
+                        //if($react) $message->react("👍");
+                        //return true;
+                    //});
+                    
                     if ($react) {
                         $message->react("👎");
                     }
@@ -3971,6 +3971,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                     break;
             }
         }
+		*/
         if ($creator) {
             switch ($message_content_lower) {
                 case 'crash': //;crash
