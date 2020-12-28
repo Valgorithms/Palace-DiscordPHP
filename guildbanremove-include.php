@@ -3,19 +3,16 @@ include_once "custom_functions.php";
 
 $guild_id = $ban->guild_id;
 $guild = $ban->guild;
-$user_id = $user_id;
 $user = $ban->user;
+$user_id = $ban->user_id;
 $reason = $ban->reason;
 
 echo "[guildBanRemove] ($guild_id)" . PHP_EOL;
-$author_user = $user;
-//
-
 $author_guild = $guild;
 $author_guild_id = $guild_id; //$guild->id;
 $author_guild_name = $guild->name;
-$author_guild_avatar = $guild->icon;
-//$author_user = $user;
+//$author_guild_avatar = $guild->icon;
+$author_user = $user;
 $author_username = $author_user->username;
 $author_discriminator = $author_user->discriminator;
 $author_id = $user_id; //$author_user->id;
@@ -64,6 +61,7 @@ if ($modlog_channel_id && $author_guild) {
             ->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
             ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
             ->setURL("");                             												// Set the URL
+		if ($reason) $embed->addFieldValues("Reason", $reason);
         $modlog_channel->sendEmbed($embed);
     }
 }
