@@ -50,6 +50,8 @@ $discord = new Discord([
 	//'httpLogger' => $logger
 ]);
 $loop = $discord->getLoop();
+$restcord = new DiscordClient(['token' => "{$token}"]); // Token is required
+//var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
 
 function webapiFail($part, $id)
 {
@@ -60,7 +62,7 @@ function webapiSnow($string)
 {
 	return preg_match('/^[0-9]{16,18}$/', $string);
 }
-$webapi = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($discord) {
+$webapi = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($discord, $restcord) {
 	$path = explode('/', $request->getUri()->getPath());
 	$sub = (isset($path[1]) ? (string) $path[1] : false);
 	$id = (isset($path[2]) ? (string) $path[2] : false);
@@ -99,14 +101,20 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 
 		case 'restart':
 			$return = 'restarting';
-			//exec('/home/outsider/bin/stfc restart');
 			//execInBackground('cmd /c "'. __DIR__  . '\run.bat"');
+			//exec('/home/outsider/bin/stfc restart');
 			break;
-
+		case 'lookup':
+			if (!$id || !webapiSnow($id) || !$return = $restcord->user->getUser(['user.id' => intval($id)]))
+				return webapiFail('user_id', $id);
+			break;
+		case 'avatar':
+			if (!$id || !webapiSnow($id) || !$return = $restcord->user->getUser(['user.id' => intval($id)])->getAvatar())
+				return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($'').PHP_EOL);
+			break;
 		default:
 			return new Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
 	}
-
 	return new Response(200, ['Content-Type' => 'text/json'], json_encode($return));
 });
 $socket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55555'), $discord->getLoop());
@@ -117,9 +125,6 @@ $webapi->on('error', function ($e) {
 		'prv' => ($e->getPrevious() ? $e->getPrevious()->getMessage() : null)
 	]);
 });
-
-$restcord = new DiscordClient(['token' => "{$token}"]); // Token is required
-//var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
 
 /*
 set_exception_handler(function (Throwable $e) { //stops execution completely
