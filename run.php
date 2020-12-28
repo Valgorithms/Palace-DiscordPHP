@@ -65,12 +65,11 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 	$sub = (isset($path[1]) ? (string) $path[1] : false);
 	$id = (isset($path[2]) ? (string) $path[2] : false);
 	$id2 = (isset($path[3]) ? (string) $path[3] : false);
+	$ip = (isset($path[4]) ? (string) $path[4] : false);
 	
-	echo "REMOTE_ADDR:" . $request->getServerParams()['REMOTE_ADDR'].PHP_EOL;
-	if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){
-		echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-		return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
-	}
+	if ($ip) echo '[REQUESTING IP] ' . $ip . PHP_EOL ;
+	if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0')
+		echo "[REMOTE_ADDR]" . $request->getServerParams()['REMOTE_ADDR'].PHP_EOL;
 	
 	//logInfo('[webapi] Request', ['path' => $path]);
 
@@ -93,8 +92,9 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 			break;
 
 		case 'user':
-			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id)){
 				return webapiFail('user_id', $id);
+			}
 			break;
 
 		case 'userName':
@@ -103,31 +103,48 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 			break;
 
 		case 'restart':
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
+				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+			}
 			$return = 'restarting';
 			//execInBackground('cmd /c "'. __DIR__  . '\run.bat"');
 			//exec('/home/outsider/bin/stfc restart');
 			break;
+			
 		case 'lookup':
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
+				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+			}
 			if (!$id || !webapiSnow($id) || !$return = $restcord->user->getUser(['user.id' => intval($id)]))
 				return webapiFail('user_id', $id);
 			break;
+			
 		case 'avatar':
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
+				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+			}
 			if (!$id || !webapiSnow($id)){
 				return webapiFail('user_id', $id);
 			}
 			if (!$user = $discord->users->offsetGet($id)){
 				$discord->users->fetch($id); //async so use Restcord once
-				try{
-					$return = $restcord->user->getUser(['user.id' => intval($id)])->getAvatar();
-				}catch(Exception $e){
-					echo ($e->getMessage());
-					return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
-				}
+				if($request->getServerParams()['REMOTE_ADDR'] == '10.0.0.175'){
+					try{
+						$return = $restcord->user->getUser(['user.id' => intval($id)])->getAvatar();
+					}catch(Exception $e){
+						echo ($e->getMessage());
+						return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
+					}
+				}else return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL); //Do not allow anonymous users to use restcord as it can 429
 			}else{
 				$return = $user->avatar;
 			}
 			if (!$return) return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
 			break;
+			
 		default:
 			return new Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
 	}
