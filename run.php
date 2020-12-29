@@ -60,7 +60,7 @@ function webapiFail($part, $id){
 function webapiSnow($string){
 	return preg_match('/^[0-9]{16,18}$/', $string);
 }
-$webapi = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($discord, $restcord) {
+$webapi = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($discord) {
 	$path = explode('/', $request->getUri()->getPath());
 	$sub = (isset($path[1]) ? (string) $path[1] : false);
 	$id = (isset($path[2]) ? (string) $path[2] : false);
@@ -103,7 +103,7 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 			break;
 
 		case 'restart':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //Restricted for obvious reasons
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
@@ -122,23 +122,19 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 			break;
 			
 		case 'avatar':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
-				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
-			}
 			if (!$id || !webapiSnow($id)){
 				return webapiFail('user_id', $id);
 			}
 			if (!$user = $discord->users->offsetGet($id)){
-				$discord->users->fetch($id); //async so use Restcord once
-				if($request->getServerParams()['REMOTE_ADDR'] == '10.0.0.175'){
-					try{
-						$return = $restcord->user->getUser(['user.id' => intval($id)])->getAvatar();
-					}catch(Exception $e){
-						echo ($e->getMessage());
-						return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
+				$discord->users->fetch($id)->then(
+					function ($user){
+						$return = $user->avatar;
+						return new Response(200, ['Content-Type' => 'text/json'], json_encode($return));
+					}, function ($error){
+						return webapiFail('user_id', $id);
 					}
-				}else return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL); //Do not allow anonymous users to use restcord as it can 429
+				);
+				return;
 			}else{
 				$return = $user->avatar;
 			}
