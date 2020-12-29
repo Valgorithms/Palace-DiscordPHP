@@ -3294,7 +3294,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 						//get roles of member
 						$target_guildmember_role_collection = $target_member->roles;
 						foreach ($target_guildmember_role_collection as $role) {
-							if ($role->name == "Peasent") {
+							if ($role->name == "Peasant") {
 								$target_skip = true;
 							}
 							if ($role->name == "Bots") {
@@ -3385,7 +3385,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 						//get roles of member
 						$target_guildmember_role_collection = $target_member->roles;
 						foreach ($target_guildmember_role_collection as $role) {
-							if ($role->name == "Peasent") {
+							if ($role->name == "Peasant") {
 								$target_get = true;
 							}
 							if ($role->name == "Footman") {
