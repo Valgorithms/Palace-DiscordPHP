@@ -36,6 +36,10 @@ $is_dm															= false; //echo "author_channel_class: " . $author_channel_
 //echo "[CLASS] " . get_class($message->author) . PHP_EOL;
 if (get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
     $is_dm = true;
+	ob_flush();
+	ob_start();
+	var_dump($message);
+	file_put_contents("usermessagedump.txt", ob_get_flush());
 }
 $author_username 												= $author_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
 $author_discriminator 											= $author_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
