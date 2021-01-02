@@ -3997,6 +3997,13 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 						echo $error->getMessage() . PHP_EOL;
 					});
 					return true;
+				case 'freshen';
+					$message->channel->guild->members->freshen()->done(
+						function ($members){
+							//Do stuff 
+						}
+					);
+					return true;
             }
         }
     }
