@@ -1,7 +1,6 @@
 <?php
 //uses discord snowflake as a parameter
-function snowflake_timestamp($snowflake)
-function snowlflake_timestamp(string $snowflake)
+function snowflake_timestamp(string $snowflake)
 {
     if (\PHP_INT_SIZE === 4) { //x86
         $binary = \str_pad(\base_convert($snowflake, 10, 2), 64, 0, \STR_PAD_LEFT);
