@@ -44,6 +44,9 @@ require '../token.php';
 $logger = new Monolog\Logger('HTTPLogger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
 $discord = new Discord([
+	'socket_options' => [
+        'dns' => '8.8.8.8', // can change dns
+	],
     'token' => "$token",
     'loadAllMembers' => true,
     'storeMessages' => true,
