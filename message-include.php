@@ -2508,7 +2508,6 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                         VarSave($guild_folder."/".$mention_id, "vanity_get_count.php", $vanity_get_count);
                         $kissed_count++;
                         VarSave($guild_folder."/".$mention_id, "kissed_count.php", $kissed_count);
-                        \
     //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
@@ -3976,6 +3975,10 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 		*/
         if ($creator) {
             switch ($message_content_lower) {
+				case "php": //;php
+					echo '[PHP]' . PHP_EOL;
+					$message->reply('Current PHP version: ' . phpversion());
+					return true;
                 case 'crash': //;crash
                     $message->react("☠️");
                     throw new \CharlotteDunois\Events\UnhandledErrorException('Unhandled error event', 0, (($arguments[0] ?? null) instanceof \Throwable ? $arguments[0] : null));
