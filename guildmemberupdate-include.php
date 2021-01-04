@@ -32,7 +32,7 @@ if ($whitelisted_guilds) {
 }
 
 if($member){
-	if (get_class($member) != "Discord\Parts\User\Member") { //Load author info
+	if ( is_object($member) && get_class($member) != "Discord\Parts\User\Member") { //Load author info
 		ob_flush();
 		ob_start();
 		var_dump($member);

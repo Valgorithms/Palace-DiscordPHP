@@ -1,6 +1,7 @@
 <?php
 $author	= $message->author; //Member OR User object
-if (get_class($author) == "Discord\Parts\User\Member") {
+
+if ( is_object($author) && get_class($author) == "Discord\Parts\User\Member") {
     $author_user = $author->user;
     $author_member = $author;
 } else {

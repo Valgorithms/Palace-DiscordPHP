@@ -425,8 +425,7 @@ function GetMention($array)
     //echo "array[2] = " . $array[2] . PHP_EOL;
     $size = count($array); //echo "Array size $size" . PHP_EOL;
     //Exit conditions
-    echo get_class($array[0]) . PHP_EOL;
-    if (get_class($array[0]) != "Discord\Parts\Guild\Guild") {
+    if ( is_object($array[0]) && get_class($array[0]) != "Discord\Parts\Guild\Guild") {
         //echo "No guild passed!" . PHP_EOL;
         if (is_numeric($array[0])) {
             //Try to get the guild by ID
@@ -446,7 +445,7 @@ function GetMention($array)
     switch ($size) {
         case 5:
             //Check if an instance of restcord
-            if (get_class($array[4]) == "RestCord\DiscordClient") {
+            if ( is_object($array[4]) && get_class($array[4]) == "RestCord\DiscordClient") {
                 //echo "Restcord included!" . PHP_EOL;
                 $restcord = &$array[4];
             } else {

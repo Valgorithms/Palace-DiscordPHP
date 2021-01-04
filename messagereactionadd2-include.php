@@ -24,7 +24,7 @@ $guild						= $reaction->guild;
 $author_guild_id			= $reaction->guild_id; //echo "author_guild_id: $author_guild_id" . PHP_EOL;
 $author_guild				= $discord->guilds->get('id', $author_guild_id);
 
-if (get_class($message->author) == "Discord\Parts\User\Member") { //Load author info
+if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\Member") { //Load author info
     $author_user = $message->author->user;
     $author_member = $message->author;
 } else {
@@ -32,7 +32,6 @@ if (get_class($message->author) == "Discord\Parts\User\Member") { //Load author 
 }
 $author_channel 			= $message->channel;
 $author_channel_id			= $author_channel->id; 												//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
-$author_channel_class		= get_class($author_channel);
 
 /*
 if ("{$discord->id}" == $reaction->user->id)
@@ -40,7 +39,7 @@ if ("{$discord->id}" == $reaction->user->id)
 */
 
 $is_dm = false;
-if (get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
+if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
     echo '[MESSAGE REACT DM]' . PHP_EOL;
     $is_dm = true;
     return true; //Don't try and process direct messages

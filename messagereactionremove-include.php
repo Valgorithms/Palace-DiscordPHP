@@ -35,9 +35,8 @@ $message_content_lower = strtolower($message_content);
 $author_user				= $message->author; //User object
 $author_channel 			= $message->channel;
 $author_channel_id			= $author_channel->id; 												//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
-$author_channel_class		= get_class($author_channel);
 $is_dm = false;
-if (get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
+if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
     $is_dm = true;
     return true; //Don't try and process direct messages
 }

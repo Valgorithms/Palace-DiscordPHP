@@ -48,9 +48,8 @@ $author_guild_id = $guild->id;
 $author_user				= $message_new->author; //User object
 $author_channel 			= $message_new->channel;
 $author_channel_id			= $author_channel->id; 												//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
-$author_channel_class		= get_class($author_channel);
 $is_dm = false;
-if (get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
+if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
     $is_dm = true;
     return true; //Don't try to process direct messages
 }

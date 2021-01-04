@@ -30,11 +30,10 @@ include "constants.php"; //Redeclare $now every time
 
 $author_channel 												= $message->channel;
 $author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
-$author_channel_class											= get_class($author_channel);
 $is_dm															= false; //echo "author_channel_class: " . $author_channel_class . PHP_EOL;
 
 //echo "[CLASS] " . get_class($message->author) . PHP_EOL;
-if (get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
+if ( is_object($message->author) && (get_class($message->author) == "Discord\Parts\User\User") ) { //True if direct message
     $is_dm = true;
 	ob_flush();
 	ob_start();
