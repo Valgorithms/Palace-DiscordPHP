@@ -3316,11 +3316,9 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 									`users`
 								WHERE
 									`discord` = '$target_id'";
-							$resultsqlgettargetinfo = mysqli_query($con, $sqlgettargetinfo);
-							if ($resultsqlgettargetinfo) {
+							if ($resultsqlgettargetinfo = mysqli_query($con, $sqlgettargetinfo)) {
 								$rowselect = mysqli_fetch_array($resultsqlgettargetinfo);
-								$ckey = $rowselect['ss13'];
-								if (!$ckey) {
+								if (!$ckey = $rowselect['ss13']) {
 									//echo "$target_id: No ckey found" . PHP_EOL;
 									$GLOBALS["UNREGISTERED"][] = $target_id;
 								} else {
