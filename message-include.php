@@ -2007,10 +2007,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     }
                     if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
-                        $suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($message) use ($guild_folder, $embed) {
+                        $suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
                             //Repost the suggestion
-                            $message->react("👍")->then(function($result) use ($message){
-								$message->react("👎");
+                            $new_message->react("👍")->then(function($result) use ($new_message){
+								$new_message->react("👎");
 							});
                         });
                         //Clear the value stored in the array
@@ -2103,9 +2103,14 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
             $suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
-                $new_message->react("👍")->then(function($result) use ($new_message){
+                $new_message->react("👍")->then(
+					function($result) use ($new_message){
 						$new_message->react("👎");
-				});
+					},
+					function ($error) use ($new_message){
+						var_dump($error->getMessage());
+					}
+				);
                 //Save the suggestion somewhere
                 $array = VarLoad($guild_folder, "guild_suggestions.php");
                 $array[] = $embed->getRawAttributes();

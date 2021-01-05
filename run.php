@@ -50,7 +50,7 @@ $discord = new Discord([
     'token' => "$token",
     'loadAllMembers' => true,
     'storeMessages' => true,
-	//'httpLogger' => $logger
+	'httpLogger' => $logger
 ]);
 $loop = $discord->getLoop();
 $restcord = new DiscordClient(['token' => "{$token}"]); // Token is required
