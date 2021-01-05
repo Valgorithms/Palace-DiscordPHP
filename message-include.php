@@ -459,10 +459,10 @@ global $customroles, $customroles_message_text;
 
 
 //Early break
-if (substr($message_content_lower, 0, 1) == $command_symbol) {
+if (str_starts_with($message_content_lower,  $command_symbol)) {
     $message_content_lower = trim(substr($message_content_lower, 1));
     $message_content = trim(substr($message_content, 1));
-} elseif (substr($message_content_lower, 0, 2) == '!s') {
+} elseif (str_starts_with($message_content_lower, '!s')) {
     $message_content_lower = trim(substr($message_content_lower, 2));
     $message_content = trim(substr($message_content, 2));
 } else { //Expected prefix is missing
@@ -937,7 +937,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         }
         //End switch
         //Roles
-        if (substr($message_content_lower, 0, 10) == 'setup dev ') {
+        if (str_starts_with($message_content_lower, 'setup dev ')) {
             $filter = "setup dev ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@&", "", $value);
@@ -951,7 +951,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 12) == 'setup admin ') {
+        if (str_starts_with($message_content_lower, 'setup admin ')) {
             $filter = "setup admin ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@&", "", $value);
@@ -965,7 +965,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 10) == 'setup mod ') {
+        if (str_starts_with($message_content_lower, 'setup mod ')) {
             $filter = "setup mod ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@&", "", $value);
@@ -979,7 +979,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 10) == 'setup bot ') {
+        if (str_starts_with($message_content_lower, 'setup bot ')) {
             $filter = "setup bot ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@&", "", $value);
@@ -993,7 +993,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 13) == 'setup vzgbot ') {
+        if (str_starts_with($message_content_lower, 'setup vzgbot ')) {
             $filter = "setup vzgbot ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@&", "", $value);
@@ -1007,7 +1007,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 12) == 'setup muted ') {
+        if (str_starts_with($message_content_lower, 'setup muted ')) {
             $filter = "setup muted ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@&", "", $value);
@@ -1021,7 +1021,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 15) == 'setup verified ') {
+        if (str_starts_with($message_content_lower, 'setup verified ')) {
             $filter = "setup verified ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@&", "", $value);
@@ -1035,7 +1035,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 12) == 'setup adult ') {
+        if (str_starts_with($message_content_lower, 'setup adult ')) {
             $filter = "setup adult ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@&", "", $value);
@@ -1050,7 +1050,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             return true;
         }
         //Channels
-        if (substr($message_content_lower, 0, 14) == 'setup general ') {
+        if (str_starts_with($message_content_lower,  'setup general ')) {
             $filter = "setup general ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1064,7 +1064,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 14) == 'setup welcome ') {
+        if (str_starts_with($message_content_lower, 'setup welcome ')) {
             $filter = "setup welcome ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1078,7 +1078,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 17) == 'setup welcomelog ') {
+        if (str_starts_with($message_content_lower, 'setup welcomelog ')) {
             $filter = "setup welcomelog ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1092,7 +1092,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 10) == 'setup log ') {
+        if (str_starts_with($message_content_lower, 'setup log ')) {
             $filter = "setup log ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1106,7 +1106,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 21) == 'setup verify channel ') {
+        if (str_starts_with($message_content_lower, 'setup verify channel ')) {
             $filter = "setup verify channel ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1120,7 +1120,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 16) == 'setup verifylog ') {
+        if (str_starts_with($message_content_lower, 'setup verifylog ')) {
             $filter = "setup verifylog ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1134,7 +1134,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 12) == 'setup watch ') {
+        if (str_starts_with($message_content_lower, 'setup watch ')) {
             $filter = "setup watch ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1148,7 +1148,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 25) == 'setup rolepicker channel ') {
+        if (str_starts_with($message_content_lower, 'setup rolepicker channel ')) {
             $filter = "setup rolepicker channel ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1162,7 +1162,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 12) == 'setup games ') {
+        if (str_starts_with($message_content_lower, 'setup games ')) {
             $filter = "setup games ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1176,7 +1176,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 25) == 'setup suggestion pending ') {
+        if (str_starts_with($message_content_lower, 'setup suggestion pending ')) {
             $filter = "setup suggestion pending ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1190,7 +1190,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 26) == 'setup suggestion approved ') {
+        if (str_starts_with($message_content_lower, 'setup suggestion approved ')) {
             $filter = "setup suggestion approved ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1204,7 +1204,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 18) == 'setup tip pending ') {
+        if (str_starts_with($message_content_lower, 'setup tip pending ')) {
             $filter = "setup tip pending ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1218,7 +1218,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 19) == 'setup tip approved ') {
+        if (str_starts_with($message_content_lower, 'setup tip approved ')) {
             $filter = "setup tip approved ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1234,7 +1234,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         }
         
 		//Users
-        if (substr($message_content_lower, 0, 17) == 'setup rolepicker ') {
+        if (str_starts_with($message_content_lower, 'setup rolepicker ')) {
             $filter = "setup rolepicker ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@!", "", $value);
@@ -1251,7 +1251,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             return true;
         }
         //Messages
-        if (substr($message_content_lower, 0, 14) == 'setup species ') {
+        if (str_starts_with($message_content_lower, 'setup species ')) {
             $filter = "setup species ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = trim($value);
@@ -1263,7 +1263,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 15) == 'setup species2 ') {
+        if (str_starts_with($message_content_lower, 'setup species2 ')) {
             $filter = "setup species2 ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = trim($value);
@@ -1275,7 +1275,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 15) == 'setup species3 ') {
+        if (str_starts_with($message_content_lower, 'setup species3 ')) {
             $filter = "setup species3 ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = trim($value);
@@ -1287,7 +1287,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 13) == 'setup gender ') {
+        if (str_starts_with($message_content_lower, 'setup gender ')) {
             $filter = "setup gender ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = trim($value);
@@ -1299,7 +1299,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 16) == 'setup sexuality ') {
+        if (str_starts_with($message_content_lower, 'setup sexuality ')) {
             $filter = "setup sexuality ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = trim($value);
@@ -1311,7 +1311,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 18) == 'setup customroles ') {
+        if (str_starts_with($message_content_lower, 'setup customroles ')) {
             $filter = "setup customroles ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = trim($value);
@@ -1710,7 +1710,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         return true;
     }
     /*
-    if (substr($message_content_lower, 0, 10) == 'remindme '){ //;remindme
+    if (str_starts_with($message_content_lower, 'remindme ')){ //;remindme
         echo "[REMINDER]" . PHP_EOL;
         $filter = "remindme ";
         $value = str_replace($filter, "", $message_content_lower);
@@ -1759,7 +1759,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         $author_channel->sendEmbed($embed);
         return true;
     }
-    if (substr($message_content_lower, 0, 6) == 'roles ') {//;roles @
+    if (str_starts_with($message_content_lower, 'roles ')) {//;roles @
         echo "[GET MENTIONED ROLES]" . PHP_EOL;
         //	Get an array of people mentioned
         $mentions_arr 						= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -1908,7 +1908,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             return true;
         }
     }
-    if (substr($message_content_lower, 0, 7) == 'avatar ') {//;avatar @
+    if (str_starts_with($message_content_lower, 'avatar ')) {//;avatar @
         echo "GETTING AVATAR FOR MENTIONED" . PHP_EOL;
         //$cooldown = CheckCooldown($author_folder, "avatar_time.php", $avatar_limit); //Check Cooldown Timer
         $cooldown = CheckCooldownMem($author_id, "avatar", $avatar_limit);
@@ -1983,7 +1983,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
 
     if ($suggestion_approved_channel != null) {
         if ($creator || $owner || $dev || $admin || $mod) {
-            if ((substr($message_content_lower, 0, 19) == 'suggestion approve ') || (substr($message_content_lower, 0, 17) == 'suggest approve ')) { //;suggestion
+            if ( (str_starts_with($message_content_lower, 'suggestion approve ')) || (str_starts_with($message_content_lower, 'suggest approve ')) ) { //;suggestion
                 $filter = "suggestion approve ";
                 $value = str_replace($filter, "", $message_content_lower);
                 $filter = "suggest approve ";
@@ -2028,7 +2028,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 }
                 return true; //catch
             }
-            if ((substr($message_content_lower, 0, 16) == 'suggestion deny ') || (substr($message_content_lower, 0, 13) == 'suggest deny ')) { //;suggestion
+            if ( (str_starts_with($message_content_lower, 'suggestion deny ')) || (str_starts_with($message_content_lower, 'suggest deny ')) ) { //;suggestion
                 //return true;
                 $filter = "suggestion deny ";
                 $value = str_replace($filter, "", $message_content_lower);
@@ -2069,7 +2069,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         }
     }
 	if ($suggestion_pending_channel != null) {
-         if ((substr($message_content_lower, 0, 11) == 'suggestion ') || (substr($message_content_lower, 0, 8) == 'suggest ')) { //;suggestion
+         if ( (str_starts_with($message_content_lower, 'suggestion ')) || (str_starts_with($message_content_lower, 'suggest ')) ) { //;suggestion
             //return true;
 			$filter = "suggestion ";
             $value = str_replace($filter, "", $message_content_lower);
@@ -2130,7 +2130,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
     }
 	if ($tip_approved_channel != null) {
         if ($creator || $owner || $dev || $admin || $mod) {
-            if (substr($message_content_lower, 0, 12) == 'tip approve ') { //;tip approve
+            if (str_starts_with($message_content_lower, 'tip approve ')) { //;tip approve
                 $filter = "tip approve ";
 				$value = str_replace($filter, "", $message_content_lower);
                 $pieces = explode(" ", $value); echo "pieces: "; var_dump($pieces); echo PHP_EOL;
@@ -2173,7 +2173,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 }
                 return true; //catch
             }
-            if (substr($message_content_lower, 0, 9) == 'tip deny ') { //;tip deny
+            if (str_starts_with($message_content_lower, 'tip deny ')) { //;tip deny
                 //return true;
                 $filter = "tip deny ";
                 $value = str_replace($filter, "", $message_content_lower);
@@ -2212,7 +2212,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         }
     }
     if ($tip_pending_channel != null) {
-        if (substr($message_content_lower, 0, 4) == 'tip ') { //;tip
+        if (str_starts_with($message_content_lower, 'tip ')) { //;tip
             //return true;
             $filter = "tip ";
             $value = str_replace($filter, "", $message_content_lower);
@@ -2383,7 +2383,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return $message->reply("You must wait $formattime before using this command again.");
             }
         }
-        if ((substr($message_content_lower, 0, 4) == 'hug ') || (substr($message_content_lower, 0, 8) == 'snuggle ')) { //;hug ;snuggle
+        if ( (str_starts_with($message_content_lower, 'hug ')) || (str_starts_with($message_content_lower, 'snuggle ')) ) { //;hug ;snuggle
             echo "[HUG/SNUGGLE]" . PHP_EOL;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
@@ -2463,7 +2463,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return true;
             }
         }
-        if ((substr($message_content_lower, 0, 5) == 'kiss ') || (substr($message_content_lower, 0, 7)) == 'smooch ') { //;kiss ;smooch
+        if ( (str_starts_with($message_content_lower, 'kiss ')) || (str_starts_with($message_content_lower, 'smooch ')) ) { //;kiss ;smooch
             echo "[KISS]" . PHP_EOL;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
@@ -2544,7 +2544,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return true;
             }
         }
-        if (substr($message_content_lower, 0, 7) == 'nuzzle ') { //;nuzzle @
+        if (str_starts_with($message_content_lower, 'nuzzle ')) { //;nuzzle @
             echo "[NUZZLE]" . PHP_EOL;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
@@ -2626,7 +2626,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return true;
             }
         }
-        if (substr($message_content_lower, 0, 5) == 'boop ') { //;boop @
+        if (str_starts_with($message_content_lower, 'boop ')) { //;boop @
             echo "[BOOP]" . PHP_EOL;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
@@ -2705,7 +2705,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return true;
             }
         }
-        if (substr($message_content_lower, 0, 4) == 'bap ') { //;bap @
+        if (str_starts_with($message_content_lower, 'bap ')) { //;bap @
             echo "[BAP]" . PHP_EOL;
             //				Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
@@ -2785,7 +2785,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return true;
             }
         }
-        if (substr($message_content_lower, 0, 4) == 'pet ') { //;pet @
+        if (str_starts_with($message_content_lower, 'pet ')) { //;pet @
             echo "[PET]" . PHP_EOL;
             //				Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
@@ -2929,7 +2929,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
         }
         
-        if (substr($message_content_lower, 0, 7) == 'vstats ') { //;vstats @
+        if (str_starts_with($message_content_lower, 'vstats ')) { //;vstats @
             echo "[GET MENTIONED VANITY STATS]" . PHP_EOL;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vstats_limit.php", $vstats_limit);
@@ -3116,7 +3116,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             $message->channel->sendMessage("Pong!");
             $message->channel->sendMessage("Pong!");
         }
-        if (substr($message_content_lower, 0, 7) == 'mention') { //;mention
+        if (str_starts_with($message_content_lower, 'mention')) { //;mention
             //Get an array of people mentioned
             $GetMentionResult = GetMention([&$author_guild, substr($message_content_lower, 8, strlen($message_content_lower)), null, 1, &$restcord]);
             if ($GetMentionResult === false) {
@@ -3214,7 +3214,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             //$loop->run();
             echo "[LOOP RESTARTED]" . PHP_EOL;
         }
-        if (substr($message_content_lower, 0, 6) == 'timer ') { //;timer
+        if (str_starts_with($message_content_lower, 'timer ')) { //;timer
             echo "[TIMER]" . PHP_EOL;
             $filter = "timer ";
             $value = str_replace($filter, "", $message_content_lower);
@@ -3227,7 +3227,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 10) == 'resolveid ') { //;timer
+        if (str_starts_with($message_content_lower, 'resolveid ')) { //;timer
             echo "[RESOLVEID]" . PHP_EOL;
             $filter = "resolveid ";
             $value = str_replace($filter, "", $message_content_lower);
@@ -4037,7 +4037,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
     */
 
     if ($creator || $owner || $dev || $admin || $mod) { //Only allow these roles to use this
-        if (substr($message_content_lower, 0, 5) == 'poll ') { //;poll\
+        if (str_starts_with($message_content_lower, 'poll ')) { //;poll\
             //return; //Reactions are bugged?!
             echo "[POLL] $author_check" . PHP_EOL;
             $filter = "poll ";
@@ -4096,7 +4096,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return $message->reply("Invalid input!");
             }
         }
-        if (substr($message_content_lower, 0, 6) == 'whois ') { //;whois
+        if (str_starts_with($message_content_lower, 'whois ')) { //;whois
             echo "[WHOIS] $author_check" . PHP_EOL;
             $filter = "whois ";
             $value = str_replace($filter, "", $message_content_lower);
@@ -4278,7 +4278,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 7) == 'lookup ') { //;lookup
+        if (str_starts_with($message_content_lower, 'lookup ')) { //;lookup
             echo "[WHOIS] $author_check" . PHP_EOL;
             $filter = "lookup ";
             $value = str_replace($filter, "", $message_content_lower);
@@ -4299,7 +4299,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 $message->reply($restcord_result);
             }
         }
-        if (substr($message_contaent_lower, 0, 6) == 'watch ') { //;watch @
+        if (str_starts_with($message_content_lower, 'watch ')) { //;watch @
             echo "[WATCH] $author_check" . PHP_EOL;
             //			Get an array of people mentioned
             $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4364,7 +4364,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             //
         }
-        if (substr($message_content_lower, 0, 8) == 'unwatch ') { //;unwatch @
+        if (str_starts_with($message_content_lower, 'unwatch ')) { //;unwatch @
             echo "[UNWATCH] $author_check" . PHP_EOL;
             //	Get an array of people mentioned
             $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4415,7 +4415,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             }
             return true;
         }
-        if (substr($message_content_lower, 0, 5) == 'warn ') { //;warn @
+        if (str_starts_with($message_content_lower, 'warn ')) { //;warn @
             echo "[WARN] $author_check" . PHP_EOL;
             //$message->reply("Not yet implemented!");
     //		Get an array of people mentioned
@@ -4467,7 +4467,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
                 return true;
             }
         }
-        if (substr($message_content_lower, 0, 12) == 'infractions ') { //;infractions @
+        if (str_starts_with($message_content_lower, 'infractions ')) { //;infractions @
             echo "[INFRACTIONS] $author_check" . PHP_EOL;
             //		Get an array of people mentioned
             $mentions_arr 													= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4577,7 +4577,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         });
         return true;
     };
-    if ($user_perms['manage_messages'] && substr($message_content_lower, 0, 6) == 'clear ') { //;clear #
+    if ($user_perms['manage_messages'] && str_starts_with($message_content_lower, 'clear ')) { //;clear #
         echo "[CLEAR #] $author_check" . PHP_EOL;
         $filter = "clear ";
         $value = str_replace($filter, "", $message_content_lower);
@@ -4619,7 +4619,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         });
         return true;
     };
-    if ($user_perms['manage_roles'] && ((substr($message_content_lower, 0, 7) == 'vwatch ') || (substr($message_content_lower, 0, 3) == 'vw '))) { //;vwatch @
+    if ($user_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'vwatch ')) || (str_starts_with($message_content_lower, 'vw ')))) { //;vwatch @
         echo "[VWATCH] $author_check" . PHP_EOL;
         //		Get an array of people mentioned
         $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4730,7 +4730,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         }
     }
     
-    if ($user_perms['ban_members'] && substr($message_content_lower, 0, 4) == 'ban ') { //;ban
+    if ($user_perms['ban_members'] && str_starts_with($message_content_lower, 'ban ')) { //;ban
         echo "[BAN]" . PHP_EOL;
         //Get an array of people mentioned
         $mentions_arr 	= $message->mentions; //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4874,7 +4874,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         }
         return true;
     }
-    if ($user_perms['ban_members'] && substr($message_content_lower, 0, 6) == 'unban ') { //;ban
+    if ($user_perms['ban_members'] && str_starts_with($message_content_lower, 'unban ')) { //;ban
         echo "[UNBAN]" . PHP_EOL;
         //Get an array of people mentioned
         $mentions_arr 	= $message->mentions; //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4973,7 +4973,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         }
         return true;
     }
-    if ($user_perms['kick_members'] && substr($message_content_lower, 0, 17) == 'removeinfraction ') { //;removeinfractions @mention #
+    if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions @mention #
         echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
         //	Get an array of people mentioned
         $mentions_arr 													= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5054,7 +5054,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
             $x++;
         }
     }
-    if ($user_perms['kick_members'] && substr($message_content_lower, 0, 5) == 'kick ') { //;kick
+    if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'kick ')) { //;kick
         echo "[KICK]" . PHP_EOL;
         //Get an array of people mentioned
         $mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5167,7 +5167,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         return true;
     }
-    if ($user_perms['manage_roles'] && substr($message_content_lower, 0, 5) == 'mute ') { //;mute
+    if ($user_perms['manage_roles'] && str_starts_with($message_content_lower, 'mute ')) { //;mute
         echo "[MUTE]" . PHP_EOL;
         //			Get an array of people mentioned
         $mentions_arr 												= $message->mentions;
@@ -5292,7 +5292,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         return true;
     }
-    if ($user_perms['manage_roles'] && substr($message_content_lower, 0, 7) == 'unmute ') { //;unmute
+    if ($user_perms['manage_roles'] && str_starts_with($message_content_lower, 'unmute ')) { //;unmute
         echo "[UNMUTE]" . PHP_EOL;
         //			Get an array of people mentioned
         $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5418,7 +5418,7 @@ if (substr($message_content_lower, 0, 1) == $command_symbol) {
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         return true;
     }
-    if ($user_perms['manage_roles'] && ((substr($message_content_lower, 0, 2) == 'v ') || (substr(($message_content), 0, 7) == 'verify '))) { //Verify ;v ;verify
+    if ($user_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'v ')) || (str_starts_with($message_content_lower, 'verify ')))) { //Verify ;v ;verify
         if (($role_verified_id != "") || ($role_verified_id != null)) { //This command only works if the Verified Role is setup
             echo "[VERIFY] $author_check" . PHP_EOL;
             //	Get an array of people mentioned

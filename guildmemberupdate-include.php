@@ -271,7 +271,7 @@ if (($modlog_channel_id != null) && ($modlog_channel_id != "")) {
             $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
             $embed
 //					->setTitle("Commands")																	// Set a title
-            ->setColor(a7c5fd)																	// Set a color (the thing on the left side)
+            ->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
             ->setDescription("<@$member_id>\n**User Update**\n$changes")									// Set a description (below title, above fields)
 //					->addFieldValues("**User Update**", "$changes")												// New line after this
             
