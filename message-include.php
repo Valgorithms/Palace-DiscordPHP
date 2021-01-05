@@ -638,9 +638,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $documentation_sanitized = str_replace("\n", "", $documentation);
                 $doc_length = strlen($documentation_sanitized); echo "doc_length: " . $doc_length . PHP_EOL;
                 if ($doc_length < 1024) {
-                    echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
                     $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
-                    echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
                     $embed
                         ->setTitle("Current setup for $author_guild_name")														// Set a title
                         ->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -2009,7 +2007,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     }
                     if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
-                        echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
                         $suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($message) use ($guild_folder, $embed) {
                             //Repost the suggestion
                             $message->react("👍")->then(function($result) use ($message){
@@ -2154,7 +2151,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     }
                     if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
-                        echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
                         $tip_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
                             //Repost the tip
 							$new_message->react("👍")->then(function($result) use ($new_message){
@@ -4900,14 +4896,12 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         /*
         $mentions_arr = $mentions_arr ?? GetMentionResult[2];
         foreach ( $mentions_arr as $mention_param ){ //This should skip because there is no member object
-            echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
             $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
             $mention_json 											= json_decode($mention_param_encode, true); 				//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
             $mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
             $mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
             $mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
             $mention_check 											= $mention_username ."#".$mention_discriminator;
-            echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
             //Build the string to log
             $filter = "unban <@!$mention_id>";
             $warndate = date("m/d/Y");
@@ -4915,7 +4909,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             **🗓️Date:** $warndate
             **📝Reason:** $reason_text";
             //$target_guildmember->ban(1, $reason);
-            echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
             $author_guild->unban($mention_id)->done(function ($r) {
               var_dump($r);
             }, function ($error) {
