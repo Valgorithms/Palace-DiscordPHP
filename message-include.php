@@ -139,41 +139,41 @@ if ($is_dm === false) { //Guild message
     
     include "$guild_config_path"; //Configurable channel IDs, role IDs, and message IDs used in the guild for special functions
     
-    $author_guild_avatar 										= $author_guild->icon;
-    $author_guild_roles 										= $author_guild->roles;
+    $author_guild_avatar = $author_guild->icon;
+    $author_guild_roles = $author_guild->roles;
     if ($getverified_channel_id) {
-        $getverified_channel 		= $author_guild->channels->get('id', $getverified_channel_id);
+        $getverified_channel  = $author_guild->channels->get('id', $getverified_channel_id);
     } else {
         $getverified_channel = null;
     }
     if ($verifylog_channel_id) {
-        $verifylog_channel 			= $author_guild->channels->get('id', $verifylog_channel_id);
+        $verifylog_channel  = $author_guild->channels->get('id', $verifylog_channel_id);
     } //Modlog is used if this is not declared
     else {
         $verifylog_channel = null;
     }
     if ($watch_channel_id) {
-        $watch_channel 				= $author_guild->channels->get('id', $watch_channel_id);
+        $watch_channel  = $author_guild->channels->get('id', $watch_channel_id);
     } else {
         $watch_channel = null;
     }
     if ($modlog_channel_id) {
-        $modlog_channel 			= $author_guild->channels->get('id', $modlog_channel_id);
+        $modlog_channel  = $author_guild->channels->get('id', $modlog_channel_id);
     } else {
         $modlog_channel = null;
     }
     if ($general_channel_id) {
-        $general_channel			= $author_guild->channels->get('id', $general_channel_id);
+        $general_channel = $author_guild->channels->get('id', $general_channel_id);
     } else {
         $general_channel = null;
     }
     if ($rolepicker_channel_id) {
-        $rolepicker_channel			= $author_guild->channels->get('id', $rolepicker_channel_id);
+        $rolepicker_channel = $author_guild->channels->get('id', $rolepicker_channel_id);
     } else {
         $rolepicker_channel = null;
     }
     if ($games_channel_id) {
-        $games_channel				= $author_guild->channels->get('id', $games_channel_id);
+        $games_channel = $author_guild->channels->get('id', $games_channel_id);
     } else {
         $games_channel = null;
     }
@@ -575,10 +575,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $documentation = $documentation . "**Channels:**\n";
                 $documentation = $documentation . "`general #channel` <#{$general_channel->id}>\n";
                 if ($welcome_public_channel_id) {
-                    $welcome_public_channel			= $author_guild->channels->get('id', $welcome_public_channel_id);
+                    $welcome_public_channel = $author_guild->channels->get('id', $welcome_public_channel_id);
                 }
                 if ($welcome_log_channel_id) {
-                    $welcome_log_channel			= $author_guild->channels->get('id', $welcome_log_channel_id);
+                    $welcome_log_channel = $author_guild->channels->get('id', $welcome_log_channel_id);
                 }
                 if ($welcome_public_channel_id) {
                     $documentation = $documentation . "`welcome #channel` <#{$welcome_public_channel->id}>\n";
@@ -4191,88 +4191,91 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     if ($embed) {
                         $author_channel->sendEmbed($embed);
                     }
-                } else {
-                    $restcord_timestamp = snowflake_timestamp($value);
-                    $restcord_date = date("D M j H:i:s Y", $restcord_timestamp);
-                    $restcord_DateTime = new DateTime();
-                    $restcord_DateTime->setTimestamp($restcord_timestamp);
-                    $restcord_Age = $restcord_DateTime->diff($now)->days . " days"; //fails
-                    try {
-                        $restcord_user = $restcord->user->getUser(['user.id' => intval($value)]);
-                        $restcord_nick = $restcord_user->username;
-                        $restcord_discriminator = $restcord_user->discriminator;
-                        $restcord_avatar = $restcord_user->getAvatar();
-                        //$date = new DateTime("$restcord_timestamp");
-                        //echo "date: " . $date;
-                        //$restcord_result = "Discord ID is registered to $restcord_nick#$restcord_discriminator created on $restcord_timestamp";
-                    } catch (Exception $e) {
-                        $restcord_result = "Unable to locate user for ID $value";
-                    }
-                    $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
-                    $embed
-                        ->setTitle("$restcord_nick#$restcord_discriminator")																// Set a title
-                        ->setColor(0xe1452d)																	// Set a color (the thing on the left side)
-                        //->setDescription("$author_guild_name")									// Set a description (below title, above fields)
-                        ->addFieldValues("ID", "$value", true)
-                        ->addFieldValues("Avatar", "[Link]($restcord_avatar)", true)
-                        ->addFieldValues("Account Created", "$restcord_date", true)
-                        ->addFieldValues("Account Age", "$restcord_Age", true)
-                        //->addFieldValues("Tag history (last 5)", "`$mention_tags`")
-                        //->addFieldValues("Nickname history (last 5)", "`$mention_nicknames`")
+                }
+				else {
+					//attempt to fetch user info
+					$discord->users->fetch($value)->then(
+						function ($user) use ($author_channel){
+							$mention_username			= $mention_user->username;
+							$mention_id					= $mention_user->id;
+							$mention_discriminator		= $mention_user->discriminator;
+							$mention_check				= $mention_username."#".$mention_discriminator;
+							$mention_nickname			= $mention_user->nick;
+							$mention_avatar 			= $mention_user->avatar;
+							
+							$mention_joinedTimestamp	= $mention_member->joined_at->timestamp;
+							$mention_joinedDate			= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
+							$mention_joinedDateTime		= new \Carbon\Carbon('@' . $mention_joinedTimestamp);
+							//$mention_created			= $mention_user->createdAt;
+							$mention_createdTimestamp	= $mention_user->createdTimestamp(); //echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
+							$mention_createdDate		= date("D M j H:i:s Y", $mention_createdTimestamp);
+							$mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
+							$mention_createdAge = \Carbon\Carbon::now()->diffInDays($mention_createdDate) . " days";
+							
+							//Load history
+							$mention_folder = "\\users\\$mention_id";
+							CheckDir($mention_folder);
+							$mention_nicknames_array = VarLoad($mention_folder, "nicknames.php");
+							$mention_nicknames = "";
+							if (is_array($mention_nicknames_array)) {
+								$mention_nicknames_array = array_reverse($mention_nicknames_array);
+								$x=0;
+								foreach ($mention_nicknames_array as $nickname) {
+									if ($x<5) {
+										$mention_nicknames = $mention_nicknames . $nickname . "\n";
+									}
+									$x++;
+								}
+							}
+							if ($mention_nicknames == "") {
+								$mention_nicknames = "No nicknames tracked";
+							}
+							//echo "mention_nicknames: " . $mention_nicknames . PHP_EOL;
+							
+							$mention_tags_array = VarLoad($mention_folder, "tags.php");
+							$mention_tags = "";
+							if (is_array($mention_tags_array)) {
+								$mention_tags_array = array_reverse($mention_tags_array);
+								$x=0;
+								foreach ($mention_tags_array as $tag) {
+									if ($x<5) {
+										$mention_tags = $mention_tags . $tag . "\n";
+									}
+									$x++;
+								}
+							}
+							if ($mention_tags == "") {
+								$mention_tags = "No tags tracked";
+							}
+							//var_dump(\Discord\Parts\Embed\Embed::class);
+							$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+							$embed
+								->setTitle("$mention_check ($mention_id)")																// Set a title
+								->setColor(0xe1452d)																	// Set a color (the thing on the left side)
+					//					->setDescription("$author_guild_name")									// Set a description (below title, above fields)
+								->addFieldValues("ID", "$mention_id", true)
+								->addFieldValues("Avatar", "[Link]($mention_avatar)", true)
+								->addFieldValues("Account Created", "$mention_createdDate", true)
+								->addFieldValues("Account Age", "$mention_createdAge", true)
+								->addFieldValues("Joined Server", "$mention_joinedDate", true)
+								->addFieldValues("Server Age", "$mention_joinedAge", true)
+								->addFieldValues("Tag history (last 5)", "`$mention_tags`")
+								->addFieldValues("Nickname history (last 5)", "`$mention_nicknames`")
 
-                        ->setThumbnail("$restcord_avatar")														// Set a thumbnail (the image in the top right corner)
-                        //->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
-                        //	->setImage("$image_path")             													// Set an image (below everything except footer)
-                        ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-                        //->setAuthor("$author_check", "$author_guild_avatar")  									// Set an author with icon
-                        ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-                        ->setURL("");                             												// Set the URL
-                    
-                    //Load history
-                    $mention_folder = "\\users\\$value";
-                    CheckDir($mention_folder);
-                    $mention_nicknames_array = VarLoad($mention_folder, "nicknames.php");
-                    
-                    if (is_array($mention_nicknames_array)) {
-                        $mention_nicknames_array = array_reverse($mention_nicknames_array);
-                        $x=0;
-                        foreach ($mention_nicknames_array as $nickname) {
-                            if ($x<5) {
-                                $mention_nicknames = $mention_nicknames . $nickname . "\n";
-                            }
-                            $x++;
-                        }
-                    }
-                    if ($mention_nicknames == "") {
-                        $mention_nicknames = "No nicknames tracked";
-                    }
-                    
-                    $mention_tags = "";
-                    $mention_tags_array = VarLoad($mention_folder, "tags.php");
-                    $x=0;
-                    if (is_array($mention_tags_array)) {
-                        $mention_tags_array = array_reverse($mention_tags_array);
-                        foreach ($mention_tags_array as $tag) {
-                            if ($x<5) {
-                                $mention_tags = $mention_tags . $tag . "\n";
-                            }
-                            $x++;
-                        }
-                    }
-                    if ($mention_tags == "") {
-                        $mention_tags = "No tags tracked";
-                    }
-                    
-                    $embed->addFieldValues("Tag history (last 5)", "`$mention_tags`");
-                    $embed->addFieldValues("Nickname history (last 5)", "`$mention_nicknames`");
-                    
-                    $restcord_result = $restcord_result ?? '';
-                    /*
-                    $message->channel->sendMessage( $restcord_result, array('embed' => $embed))->done(null, function ($error){
-                        var_dump($error->getMessage()); //Echo any errors
-                    });
-                    */
-                    $message->channel->sendEmbed($embed);
+								->setThumbnail("$mention_avatar")														// Set a thumbnail (the image in the top right corner)
+					//			->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
+					//			->setImage("$image_path")             													// Set an image (below everything except footer)
+								->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
+					//			->setAuthor("$author_check", "$author_guild_avatar")  									// Set an author with icon
+								->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
+								->setURL("");
+							if ($embed) {
+								$author_channel->sendEmbed($embed);
+							}
+						}, function ($error) use ($author_channel){
+							$author_channel->send("Unable to fetch user from Discord!");
+						}
+					);
                 }
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the user");
@@ -4280,15 +4283,16 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             return true;
         }
         if (str_starts_with($message_content_lower, 'lookup ')) { //;lookup
-            echo "[WHOIS] $author_check" . PHP_EOL;
+            echo "[LOOKUP] $author_check" . PHP_EOL;
             $filter = "lookup ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<@!", "", $value);
             $value = str_replace("<@", "", $value);
-            $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value);
             $value = trim($value);
             if (is_numeric($value)) {
+				echo '[VALID] ' . $value . PHP_EOL;
+				/*
                 try {
                     $restcord_user = $restcord->user->getUser(['user.id' => intval($value)]);
                     $restcord_nick = $restcord_user->username;
@@ -4298,6 +4302,20 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     $restcord_result = "Unable to locate user for ID $value";
                 }
                 $message->reply($restcord_result);
+				*/
+				$discord->users->fetch($value)->then(
+					function ($target_user) use ($message, $value){
+						$target_username = $target_user->username;
+						$target_discriminator = $target_user->discriminator;
+						$target_id = $target_user->id;
+						$target_avatar = $target_user->avatar;
+						$message->reply("Discord ID is registered to $target_check (<@$value>");
+					},
+					function ($error) use ($messaage, $value){
+						$message->reply("Unable to locate user for ID $value");
+					}
+				);
+				return;
             }
         }
         if (str_starts_with($message_content_lower, 'watch ')) { //;watch @
@@ -4498,7 +4516,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             
             //update
             $x = 0;
-            
             $mention_user = GetMentionResult[0];
             $mention_member = GetMentionResult[1];
             $mentions_arr = $mentions_arr ?? GetMentionResult[2];
@@ -4569,7 +4586,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         echo "[CLEARALL] $author_check" . PHP_EOL;
         $author_channel->limitDelete(100);
         $author_channel->getMessageHistory()->then(function ($message_collection) use ($author_channel) {
-            $author_channel->message->delete();
+            //$author_channel->message->delete();
             /*
             foreach ($message_collection as $message){
                 //limitDelete handles this
@@ -4608,12 +4625,11 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 ->setURL("");
             $modlog_channel->sendEmbed($embed);
         }
-        //Send message to channel confirming the message deletions
+        
         $duration = 3;
-        $author_channel->sendMessage("$author_check ($author_id) deleted $value messages!")->then(function ($new_message) use ($discord, $message, $duration) {
-            $message->delete(); //Delete the original ;clear message
+        $author_channel->sendMessage("$author_check ($author_id) deleted $value messages!")->then(function ($new_message) use ($discord, $message, $duration) { //Send message to channel confirming the message deletions then delete the new message after 3 seconds
             $discord->getLoop()->addTimer($duration, function () use ($new_message) {
-                $new_message->delete(); //Delete message confirming the deletion of messages
+                $new_message->delete();
                 return true;
             });
             return true;

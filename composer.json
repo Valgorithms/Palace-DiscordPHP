@@ -1,7 +1,6 @@
 {
     "require": {
         "php": "^8.0",
-        "team-reflex/discord-php": "dev-master",
-        "restcord/restcord": "^0.4.0"
+        "team-reflex/discord-php": "dev-master"
     }
 }

@@ -1,5 +1,5 @@
 <?php
-
+ini_set('max_execution_time', 0);
 //This file was written by Valithor#5947 <@116927250145869826>
 //Special thanks to keira#7829 <@297969955356540929> for helping me get this behemoth working after converting from DiscordPHP
 
@@ -13,7 +13,7 @@ $vm = false; //Set this to true if using a VM that can be paused
 include __DIR__ . '/vendor/autoload.php';
 define('MAIN_INCLUDED', 1); //Token and SQL credential files are protected, this must be defined to access
 ini_set('memory_limit', '-1'); //Unlimited memory usage
-use RestCord\DiscordClient;
+//use RestCord\DiscordClient;
 use Discord\Discord;
 use Discord\Parts\Embed\Embed;
 use Discord\Parts\User\User;
@@ -53,7 +53,7 @@ $discord = new Discord([
 	'httpLogger' => $logger
 ]);
 $loop = $discord->getLoop();
-$restcord = new DiscordClient(['token' => "{$token}"]); // Token is required
+$restcord = null;//new DiscordClient(['token' => "{$token}"]); // Token is required
 //var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
 
 function webapiFail($part, $id){
@@ -63,19 +63,21 @@ function webapiFail($part, $id){
 function webapiSnow($string){
 	return preg_match('/^[0-9]{16,18}$/', $string);
 }
+$GLOBALS['querycount'] = 0;
 $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($discord) {
 	$path = explode('/', $request->getUri()->getPath());
 	$sub = (isset($path[1]) ? (string) $path[1] : false);
 	$id = (isset($path[2]) ? (string) $path[2] : false);
 	$id2 = (isset($path[3]) ? (string) $path[3] : false);
 	$ip = (isset($path[4]) ? (string) $path[4] : false);
+	$idarray = array(); //get from post data
 	
 	if ($ip) echo '[REQUESTING IP] ' . $ip . PHP_EOL ;
 	if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0')
 		echo "[REMOTE_ADDR]" . $request->getServerParams()['REMOTE_ADDR'].PHP_EOL;
-	
+	$GLOBALS['querycount'] = $GLOBALS['querycount'] + 1;
+	echo 'querycount:' . $GLOBALS['querycount'] . PHP_EOL;
 	//logInfo('[webapi] Request', ['path' => $path]);
-
 	switch ($sub){
 		case 'channel':
 			if (!$id || !webapiSnow($id) || !$return = $discord->getChannel($id))
@@ -120,7 +122,7 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
-			if (!$id || !webapiSnow($id) || !$return = $restcord->user->getUser(['user.id' => intval($id)]))
+			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id))
 				return webapiFail('user_id', $id);
 			break;
 			
@@ -143,7 +145,28 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 			}
 			if (!$return) return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
 			break;
+		case 'avatars':
+			$idarray = $data ?? array(); // $data contains POST data
+			$results = [];
+			$promise = $discord->users->fetch($idarray[0])->then(function ($user) use (&$results) {
+			  $results[$user->id] = $user->avatar;
+			});
 			
+			for ($i = 1; $i < count($idarray); $i++) {
+			  $promise->then(function () use (&$results, $idarray, $i, $discord) {
+				return $discord->users->fetch($idarray[$i])->then(function ($user) use (&$results) {
+				  $results[$user->id] = $user->avatar;
+				});
+			  });
+			}
+
+			$promise->then(function () use ($results) {
+			  return new Response(200, ['Content-Type' => 'application/json'], json_encode($results));
+			}, function () use ($results) {
+			  // return with error ?
+			  return new Response(200, ['Content-Type' => 'application/json'], json_encode($results));
+			});
+			break;
 		default:
 			return new Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
 	}
@@ -152,10 +175,7 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 $socket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55555'), $discord->getLoop());
 $webapi->listen($socket);
 $webapi->on('error', function ($e) {
-	logDebug('[webapi] Error', [
-		'msg' => $e->getMessage(),
-		'prv' => ($e->getPrevious() ? $e->getPrevious()->getMessage() : null)
-	]);
+	echo('[webapi] ' . $e->getMessage());
 });
 
 /*
