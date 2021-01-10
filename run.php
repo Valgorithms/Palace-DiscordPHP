@@ -139,12 +139,13 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 						return webapiFail('user_id', $id);
 					}
 				);
-				return;
+				$return = 'https://cdn.discordapp.com/embed/avatars/'.rand(0,4).'.png';
 			}else{
 				$return = $user->avatar;
 			}
-			if (!$return) return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
+			//if (!$return) return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
 			break;
+			
 		case 'avatars':
 			$idarray = $data ?? array(); // $data contains POST data
 			$results = [];
