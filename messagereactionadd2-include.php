@@ -82,7 +82,13 @@ include "$guild_config_path";
 
 //Role picker stuff
 $message_id	= $message->id;														//echo "message_id: " . $message_id . PHP_EOL;
-global $species, $species2, $species3, $sexualities, $gender, $nsfwarray, $customroles;
+global $species, $species2, $species3, $sexualities, $gender, $nsfwarray;
+$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
+if (CheckFile($guild_folder."/", 'custom_roles.php')){
+	include "$guild_custom_roles_path"; //Overwrite default custom_roles
+}else{
+	global $customroles;
+}
 
 //Load emoji info
 //guild, user

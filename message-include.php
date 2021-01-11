@@ -198,6 +198,12 @@ if ($is_dm === false) { //Guild message
         $tip_approved_channel = null;
     }
 	
+	$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
+	if (CheckFile($guild_folder."/", 'custom_roles.php')){
+		include "$guild_custom_roles_path"; //Overwrite default custom_roles
+	}else{
+		global $customroles, $customroles_message_text;
+	}
 } else { //Direct message
     if ($author_id != $discord->user->id) { //Don't trigger on messages sent by this bot
         global $server_invite;
@@ -468,7 +474,6 @@ global $species, $species2, $species3, $species_message_text, $species2_message_
 global $gender, $gender_message_text;
 global $sexualities, $sexuality_message_text;
 global $nsfwarray, $nsfw_message_text;
-global $customroles, $customroles_message_text;
 
 
 //Early break
