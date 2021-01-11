@@ -719,10 +719,23 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($species_message_text)->done(function ($new_message) use ($guild_folder, $species, $message) {
                     VarSave($guild_folder, "species_message_id.php", strval($new_message->id));
+					/*
                     foreach ($species as $var_name => $value) {
                         $new_message->react($value);
                     }
-                    $message->delete();
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($species))->done(function () use ($species, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($species); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($species); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
+					$message->delete();
                     return true;
                 });
                 return true;
@@ -731,9 +744,22 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($species2_message_text)->done(function ($new_message) use ($guild_folder, $species2, $message) {
                     VarSave($guild_folder, "species2_message_id.php", strval($new_message->id));
+					/*
                     foreach ($species2 as $var_name => $value) {
                         $new_message->react($value);
                     }
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($species2))->done(function () use ($species2, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($species2); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($species2); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
                     $message->delete();
                     return true;
                 });
@@ -743,9 +769,22 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($species3_message_text)->done(function ($new_message) use ($guild_folder, $species3, $message) {
                     VarSave($guild_folder, "species3_message_id.php", strval($new_message->id));
+					/*
                     foreach ($species3 as $var_name => $value) {
                         $new_message->react($value);
                     }
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($species3))->done(function () use ($species3, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($species3); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($species3); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
                     $message->delete();
                     return true;
                 });
@@ -756,9 +795,22 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($gender_message_text)->done(function ($new_message) use ($guild_folder, $gender, $message) {
                     VarSave($guild_folder, "gender_message_id.php", strval($new_message->id));
+					/*
                     foreach ($gender as $var_name => $value) {
                         $new_message->react($value);
                     }
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($gender))->done(function () use ($gender, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($gender); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($gender); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
                     $message->delete();
                     return true;
                 });
@@ -769,9 +821,22 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($sexuality_message_text)->done(function ($new_message) use ($guild_folder, $sexualities, $message) {
                     VarSave($guild_folder, "sexuality_message_id.php", strval($new_message->id));
+					/*
                     foreach ($sexualities as $var_name => $value) {
                         $new_message->react($value);
                     }
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($sexualities))->done(function () use ($sexualities, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($sexualities); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($sexualities); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
                     $message->delete();
                     return true;
                 });
@@ -791,12 +856,64 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 				return true;
 				break;
             case 'message customroles': //;message customroles
+				echo '[MESSAGE CUSTOMROLES]' . PHP_EOL;
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-                $author_channel->sendMessage($customroles_message_text)->done(function ($new_message) use ($guild_folder, $customroles, $message) {
+                $author_channel->sendMessage($customroles_message_text)->done(function ($new_message) use ($guild_folder, $customroles, $message) { //React in order
                     VarSave($guild_folder, "customroles_message_id.php", strval($new_message->id));
-                    foreach ($customroles as $var_name => $value) {
+                    /*
+					foreach ($customroles as $var_name => $value) {
                         $new_message->react($value);
                     }
+					*/
+					
+					/*
+					echo "customroles[0]:" . $customroles[array_key_first($customroles)] . PHP_EOL;
+					$promise = $new_message->react($customroles[array_key_first($customroles)])->then(function ($result) {
+						//
+					});
+					
+					$new_promise = $new_promise ?? $promise;
+					$customroles = array_reverse($customroles);
+					for ($i = 1; $i < count($customroles); $i++) {
+					  $new_promise = $new_promise->then(function () use ($customroles, $i, $new_message) {
+						echo array_key_first($customroles);
+						for($j = $i+1; $j < count($customroles); $j++)
+							next($customroles);
+						return $new_message->react(next($customroles))->then(function ($result){
+						  //
+						});
+					  });
+					  $new_promise = $new_promise ?? $promise;
+					}
+					$customroles = array_reverse($customroles);
+					$new_message->react(array_key_last($customroles))->done(
+						function ($result){
+							//
+						}
+					);
+					
+					
+					$promise = $new_promise ?? $promise;
+					$promise->done(
+						function ($result){
+							//
+						}, function ($error) { // return with error ?
+						  return;
+						}
+					);
+					*/
+
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($customroles))->done(function () use ($customroles, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($customroles); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($customroles); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
                     $message->delete();
                     return true;
                 });
