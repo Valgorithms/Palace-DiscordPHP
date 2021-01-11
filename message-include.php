@@ -4516,9 +4516,9 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             
             //update
             $x = 0;
-            $mention_user = GetMentionResult[0];
-            $mention_member = GetMentionResult[1];
-            $mentions_arr = $mentions_arr ?? GetMentionResult[2];
+            $mention_user = $GetMentionResult[0];
+            $mention_member = $GetMentionResult[1];
+            $mentions_arr = $mentions_arr ?? $GetMentionResult[2];
             foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
                 if ($x == 0) { //We only want the first person mentioned
     //				id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
@@ -4768,9 +4768,9 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             }
         }
 
-        $mention_user = GetMentionResult[0];
-        $mention_member = GetMentionResult[1];
-        $mentions_arr = $mentions_arr ?? GetMentionResult[2];
+        $mention_user = $GetMentionResult[0];
+        $mention_member = $GetMentionResult[1];
+        $mentions_arr = $mentions_arr ?? $GetMentionResult[2];
         foreach ($mentions_arr as $mention_param) {
             $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
             $mention_json 											= json_decode($mention_param_encode, true); 				//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
@@ -4911,10 +4911,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 }
             }
         }
-        $mention_user = GetMentionResult[0];
-        $mention_member = GetMentionResult[1];
+        $mention_user = $GetMentionResult[0];
+        $mention_member = $GetMentionResult[1];
         /*
-        $mentions_arr = $mentions_arr ?? GetMentionResult[2];
+        $mentions_arr = $mentions_arr ?? $GetMentionResult[2];
         foreach ( $mentions_arr as $mention_param ){ //This should skip because there is no member object
             $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
             $mention_json 											= json_decode($mention_param_encode, true); 				//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
@@ -5075,9 +5075,9 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         if (!(is_array($GetMentionResult))) {
             return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
         }
-        $mention_user = GetMentionResult[0];
-        $mention_member = GetMentionResult[1];
-        $mentions_arr = $mentions_arr ?? GetMentionResult[2];
+        $mention_user = $GetMentionResult[0];
+        $mention_member = $GetMentionResult[1];
+        $mentions_arr = $mentions_arr ?? $GetMentionResult[2];
         foreach ($mentions_arr as $mention_param) {
             $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
             $mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
