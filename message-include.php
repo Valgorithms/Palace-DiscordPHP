@@ -700,15 +700,127 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                         $author_dmchannel->sendEmbed($embed);
                         return true;
                     });
-                    return true;
                 } else {
                     $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
                         echo "[;CURRENTSETUP MESSAGE]" . PHP_EOL;
                         $author_dmchannel->sendMessage($documentation);
                     });
-                    return true;
                 }
-                break;
+			case 'settings':
+				    $documentation = "Command symbol: $command_symbol\n";
+					$documentation = $documentation . "\nBot options:\n";
+					//react
+					$documentation = $documentation . "`react:` ";
+					if ($react) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					//vanity
+					$documentation = $documentation . "`vanity:` ";
+					if ($vanity) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					//nsfw
+					$documentation = $documentation . "`nsfw:` ";
+					if ($nsfw) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					//games
+					$documentation = $documentation . "`games:` ";
+					if ($games) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					//rolepicker
+					$documentation = $documentation . "`\nrolepicker:` ";
+					if ($rp0) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+				
+					//Strikeout invalid options
+					if (!$rp0) {
+						$documentation = $documentation . "~~";
+					} //Strikeout invalid options
+					
+					//species
+					$documentation = $documentation . "`species:` ";
+					if ($rp1) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					//gender
+					$documentation = $documentation . "`gender:` ";
+					if ($rp2) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					//prnouns
+					$documentation = $documentation . "`pronouns:` ";
+					if ($rp5) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					
+					//sexuality
+					$documentation = $documentation . "`sexuality:` ";
+					if ($rp3) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					//customrole
+					$documentation = $documentation . "`customrole:` ";
+					if ($rp4) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+				
+					//Strikeout invalid options
+				if (!$rp0) {
+					$documentation = $documentation . "~~";
+				} //Strikeout invalid options
+				
+				$doc_length = strlen($documentation);
+				if ($doc_length < 1024) {
+					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed
+					->setTitle("Settings for $author_guild_name")											// Set a title
+					->setColor(0xe1452d)																	// Set a color (the thing on the left side)
+					->setDescription("$documentation")														// Set a description (below title, above fields)
+		//					->addFieldValues("⠀", "$documentation")														// New line after this
+					
+		//					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
+		//					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
+		//					->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
+		//					->setAuthor("$author_check", "$author_guild_avatar")  									// Set an author with icon
+					->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
+					->setURL("");                             												// Set the URL
+		//				Open a DM channel then send the rich embed message
+				$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
+					echo "[;SETTINGS EMBED]" . PHP_EOL;
+					return $author_dmchannel->sendEmbed($embed);
+				});
+					return true;
+				} else {
+					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
+						echo "[;SETTINGS MESSAGE]" . PHP_EOL;
+						$author_dmchannel->sendMessage($documentation);
+					});
+					return true;
+				}
+				break;
             case 'updateconfig': //;updateconfig
                 $file = 'guild_config_template.php';
                 if (sha1_file($guild_config_path) == sha1_file('guild_config_template.php')) {
@@ -1757,124 +1869,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $author_dmchannel->sendMessage($documentation);
             });
             return true;
-        }
-    }
-
-    if ($creator || $owner || $dev || $admin) {
-        if ($message_content_lower == 'settings') { //;settings
-            $documentation = "Command symbol: $command_symbol\n";
-            $documentation = $documentation . "\nBot options:\n";
-            //react
-            $documentation = $documentation . "`react:` ";
-            if ($react) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-            //vanity
-            $documentation = $documentation . "`vanity:` ";
-            if ($vanity) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-            //nsfw
-            $documentation = $documentation . "`nsfw:` ";
-            if ($nsfw) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-            //games
-            $documentation = $documentation . "`games:` ";
-            if ($games) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-            //rolepicker
-            $documentation = $documentation . "`\nrolepicker:` ";
-            if ($rp0) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-        
-            //Strikeout invalid options
-        if (!$rp0) {
-            $documentation = $documentation . "~~";
-        } //Strikeout invalid options
-        
-        //species
-            $documentation = $documentation . "`species:` ";
-            if ($rp1) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-            //gender
-            $documentation = $documentation . "`gender:` ";
-            if ($rp2) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-			//prnouns
-            $documentation = $documentation . "`pronouns:` ";
-            if ($rp5) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-			
-            //sexuality
-            $documentation = $documentation . "`sexuality:` ";
-            if ($rp3) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-            //customrole
-            $documentation = $documentation . "`customrole:` ";
-            if ($rp4) {
-                $documentation = $documentation . "**Enabled**\n";
-            } else {
-                $documentation = $documentation . "**Disabled**\n";
-            }
-        
-            //Strikeout invalid options
-        if (!$rp0) {
-            $documentation = $documentation . "~~";
-        } //Strikeout invalid options
-        
-        $doc_length = strlen($documentation);
-            if ($doc_length < 1024) {
-                $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
-                $embed
-                ->setTitle("Settings for $author_guild_name")											// Set a title
-                ->setColor(0xe1452d)																	// Set a color (the thing on the left side)
-                ->setDescription("$documentation")														// Set a description (below title, above fields)
-    //					->addFieldValues("⠀", "$documentation")														// New line after this
-                
-    //					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
-    //					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
-    //					->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-    //					->setAuthor("$author_check", "$author_guild_avatar")  									// Set an author with icon
-                ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-                ->setURL("");                             												// Set the URL
-    //				Open a DM channel then send the rich embed message
-            $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
-                echo "[;SETTINGS EMBED]" . PHP_EOL;
-                return $author_dmchannel->sendEmbed($embed);
-            });
-                return true;
-            } else {
-                $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
-                    echo "[;SETTINGS MESSAGE]" . PHP_EOL;
-                    $author_dmchannel->sendMessage($documentation);
-                });
-                return true;
-            }
         }
     }
 
