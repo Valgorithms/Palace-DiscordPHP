@@ -131,7 +131,7 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 				return webapiFail('user_id', $id);
 			}
 			if (!$user = $discord->users->offsetGet($id)){
-				$discord->users->fetch($id)->then(
+				$discord->users->fetch($id)->done(
 					function ($user){
 						$return = $user->avatar;
 						return new Response(200, ['Content-Type' => 'text/json'], json_encode($return));
@@ -161,7 +161,7 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 			  });
 			}
 
-			$promise->then(function () use ($results) {
+			$promise->done(function () use ($results) {
 			  return new Response(200, ['Content-Type' => 'application/json'], json_encode($results));
 			}, function () use ($results) {
 			  // return with error ?

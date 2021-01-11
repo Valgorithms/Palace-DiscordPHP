@@ -52,8 +52,8 @@ if ($message_content_lower == ';invite') {
     //$author_channel->sendMessage($discord->application->getInviteURLAttribute('8&redirect_uri=https%3A%2F%2Fdiscord.com%2Foauth2%2Fauthorize%3Fclient_id%3D586694030553776242%26permissions%3D8%26scope%3Dbot&response_type=code&scope=identify%20email%20connections%20guilds.join%20gdm.join%20guilds%20applications.builds.upload%20messages.read%20bot%20webhook.incoming%20rpc.notifications.read%20rpc%20applications.builds.read%20applications.store.update%20applications.entitlements%20activities.read%20activities.write%20relationships.read'));
     $author_channel->sendMessage($discord->application->getInviteURLAttribute('8'));
     /*
-    $author_user->getPrivateChannel()->then(function($author_dmchannel) use ($discord){
-        $discord->generateOAuthInvite(8)->then(function($BOTINVITELINK) use ($author_dmchannel){
+    $author_user->getPrivateChannel()->done(function($author_dmchannel) use ($discord){
+        $discord->generateOAuthInvite(8)->done(function($BOTINVITELINK) use ($author_dmchannel){
             $author_dmchannel->sendMessage($BOTINVITELINK);
         });
     });
@@ -335,7 +335,7 @@ if (CheckFile($author_folder, "watchers.php")) {
             try { //Get objects for the watcher
                 $watcher_member = $author_guild->members->get('id', $watcher);													//echo "watcher_member class: " . get_class($watcher_member) . PHP_EOL;
                 $watcher_user = $watcher_member->user;																		//echo "watcher_user class: " . get_class($watcher_user) . PHP_EOL;
-                $watcher_user->getPrivateChannel()->then(function ($watcher_dmchannel) use ($message) {	//Promise
+                $watcher_user->getPrivateChannel()->done(function ($watcher_dmchannel) use ($message) {	//Promise
 //					echo "watcher_dmchannel class: " . get_class($watcher_dmchannel) . PHP_EOL; //DMChannel
                     if ($watch_channel) {
                         $watch_channel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
@@ -549,7 +549,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     $author_user->sendEmbed($embed);
                     return true;
                 } else {
-                    $author_user->getPrivateChannel()->then(function ($author_dmchannel) use ($message, $documentation) {	//Promise
+                    $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
                         echo "[;SETUP MESSAGE]" . PHP_EOL;
                         $author_dmchannel->sendMessage($documentation);
                     });
@@ -652,14 +652,14 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                         ->setURL("");                             												// Set the URL
             //				Open a DM channel then send the rich embed message
                     echo "embed class: " . get_class($embed) . PHP_EOL;
-                    $author_user->getPrivateChannel()->then(function ($author_dmchannel) use ($message, $embed) {	//Promise
+                    $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
                         echo "[;CURRENTSETUP EMBED]" . PHP_EOL;
                         $author_dmchannel->sendEmbed($embed);
                         return true;
                     });
                     return true;
                 } else {
-                    $author_user->getPrivateChannel()->then(function ($author_dmchannel) use ($message, $documentation) {	//Promise
+                    $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
                         echo "[;CURRENTSETUP MESSAGE]" . PHP_EOL;
                         $author_dmchannel->sendMessage($documentation);
                     });
@@ -692,7 +692,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             //Role Messages Setup
             case 'message species': //;message species
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-                $author_channel->sendMessage($species_message_text)->then(function ($new_message) use ($guild_folder, $species, $message) {
+                $author_channel->sendMessage($species_message_text)->done(function ($new_message) use ($guild_folder, $species, $message) {
                     VarSave($guild_folder, "species_message_id.php", strval($new_message->id));
                     foreach ($species as $var_name => $value) {
                         $new_message->react($value);
@@ -704,7 +704,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 break;
             case 'message species2': //;message species2
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-                $author_channel->sendMessage($species2_message_text)->then(function ($new_message) use ($guild_folder, $species2, $message) {
+                $author_channel->sendMessage($species2_message_text)->done(function ($new_message) use ($guild_folder, $species2, $message) {
                     ;
                     VarSave($guild_folder, "species2_message_id.php", strval($new_message->id));
                     foreach ($species2 as $var_name => $value) {
@@ -717,7 +717,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 break;
             case 'message species3': //;message species3
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-                $author_channel->sendMessage($species3_message_text)->then(function ($new_message) use ($guild_folder, $species3, $message) {
+                $author_channel->sendMessage($species3_message_text)->done(function ($new_message) use ($guild_folder, $species3, $message) {
                     ;
                     VarSave($guild_folder, "species3_message_id.php", strval($new_message->id));
                     foreach ($species3 as $var_name => $value) {
@@ -731,7 +731,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             case 'message gender': //;message gender
                 echo '[GENDER MESSAGE GEN]' . PHP_EOL;
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-                $author_channel->sendMessage($gender_message_text)->then(function ($new_message) use ($guild_folder, $gender, $message) {
+                $author_channel->sendMessage($gender_message_text)->done(function ($new_message) use ($guild_folder, $gender, $message) {
                     ;
                     VarSave($guild_folder, "gender_message_id.php", strval($new_message->id));
                     foreach ($gender as $var_name => $value) {
@@ -745,7 +745,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             case 'message sexuality':
             case 'message sexualities':
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-                $author_channel->sendMessage($sexuality_message_text)->then(function ($new_message) use ($guild_folder, $sexualities, $message) {
+                $author_channel->sendMessage($sexuality_message_text)->done(function ($new_message) use ($guild_folder, $sexualities, $message) {
                     ;
                     VarSave($guild_folder, "sexuality_message_id.php", strval($new_message->id));
                     foreach ($sexualities as $var_name => $value) {
@@ -758,7 +758,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 break;
             case 'message customroles': //;message customroles
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-                $author_channel->sendMessage($customroles_message_text)->then(function ($new_message) use ($guild_folder, $customroles, $message) {
+                $author_channel->sendMessage($customroles_message_text)->done(function ($new_message) use ($guild_folder, $customroles, $message) {
                     ;
                     VarSave($guild_folder, "customroles_message_id.php", strval($new_message->id));
                     foreach ($customroles as $var_name => $value) {
@@ -1532,13 +1532,13 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
     //				Open a DM channel then send the rich embed message
-            $author_user->getPrivateChannel()->then(function ($author_dmchannel) use ($message, $embed) {	//Promise
+            $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
                 echo "[;HELP EMBED]" . PHP_EOL;
                 return $author_dmchannel->sendEmbed($embed);
             });
             return true;
         } else {
-            $author_user->getPrivateChannel()->then(function ($author_dmchannel) use ($message, $documentation) {	//Promise
+            $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
                 echo "[;HELP MESSAGE]" . PHP_EOL;
                 $author_dmchannel->sendMessage($documentation);
             });
@@ -1641,13 +1641,13 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
     //				Open a DM channel then send the rich embed message
-            $author_user->getPrivateChannel()->then(function ($author_dmchannel) use ($message, $embed) {	//Promise
+            $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
                 echo "[;SETTINGS EMBED]" . PHP_EOL;
                 return $author_dmchannel->sendEmbed($embed);
             });
                 return true;
             } else {
-                $author_user->getPrivateChannel()->then(function ($author_dmchannel) use ($message, $documentation) {	//Promise
+                $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
                     echo "[;SETTINGS MESSAGE]" . PHP_EOL;
                     $author_dmchannel->sendMessage($documentation);
                 });
@@ -1714,7 +1714,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         $value = str_replace($filter, "", $message_content_lower);
         if(is_numeric($value)){
             $discord->getLoop()->addTimer($value, function() use ($author_user) {
-                $author_user->getPrivateChannel()->then(function($author_dmchannel) use ($message){	//Promise
+                $author_user->getPrivateChannel()->done(function($author_dmchannel) use ($message){	//Promise
                     if($author_dmchannel) $author_dmchannel->sendMessage( "This is your requested reminder!");
                     return true;
                 });
@@ -2007,9 +2007,9 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     }
                     if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
-                        $suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
+                        $suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
                             //Repost the suggestion
-                            $new_message->react("👍")->then(function($result) use ($new_message){
+                            $new_message->react("👍")->done(function($result) use ($new_message){
 								$new_message->react("👎");
 							});
                         });
@@ -2102,8 +2102,8 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 ->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
-            $suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
-                $new_message->react("👍")->then(
+            $suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
+                $new_message->react("👍")->done(
 					function($result) use ($new_message){
 						$new_message->react("👎");
 					},
@@ -2119,7 +2119,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             } else {
                 $message->reply("Please shorten your suggestion!");
             }
-            $message->reply("Your suggestion has been logged and is pending approval!")->then(function ($new_message) use ($discord, $message) {
+            $message->reply("Your suggestion has been logged and is pending approval!")->done(function ($new_message) use ($discord, $message) {
                 $message->delete(); //Delete the original ;suggestion message
                 $discord->getLoop()->addTimer(10, function () use ($new_message) {
                     $new_message->delete(); //Delete message confirming the suggestion was logged
@@ -2156,9 +2156,9 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     }
                     if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
-                        $tip_approved_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
+                        $tip_approved_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
                             //Repost the tip
-							$new_message->react("👍")->then(function($result) use ($new_message){
+							$new_message->react("👍")->done(function($result) use ($new_message){
 								$new_message->react("👎");
 							});
                         });
@@ -2247,8 +2247,8 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 ->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
                 ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                 ->setURL("");                             												// Set the URL
-            $tip_pending_channel->sendMessage("{$embed->title}", false, $embed)->then(function ($new_message) use ($guild_folder, $embed) {
-                $new_message->react("👍")->then(function ($result) use ($new_message){
+            $tip_pending_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
+                $new_message->react("👍")->done(function ($result) use ($new_message){
 					$new_message->react("👎");
 				});
                 //Save the tip somewhere
@@ -2259,7 +2259,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             } else {
                 $message->reply("Please shorten your tip!");
             }
-            $message->reply("Your tip has been logged and is pending approval!")->then(function ($new_message) use ($discord, $message) {
+            $message->reply("Your tip has been logged and is pending approval!")->done(function ($new_message) use ($discord, $message) {
                 $message->delete(); //Delete the original ;tip message
                 $discord->getLoop()->addTimer(10, function () use ($new_message) {
                     $new_message->delete(); //Delete message confirming the tip was logged
@@ -3159,7 +3159,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 ->setURL("");                             												// Set the URL
         //		Open a DM channel then send the rich embed message
             /*
-            $author_user->getPrivateChannel()->then(function($author_dmchannel) use ($message, $embed){	//Promise
+            $author_user->getPrivateChannel()->done(function($author_dmchannel) use ($message, $embed){	//Promise
                 echo 'SEND GENIMAGE EMBED' . PHP_EOL;
                 $author_dmchannel->sendEmbed($embed);
             });
@@ -3187,12 +3187,12 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             //$verifylog_channel																				//TextChannel				//echo "channel_messages class: " . get_class($verifylog_channel) . PHP_EOL;
             //$author_messages = $verifylog_channel->fetchMessages(); 											//Promise
             //echo "author_messages class: " . get_class($author_messages) . PHP_EOL; 							//Promise
-            $verifylog_channel->getMessageHistory()->then(function ($message_collection) use ($verifylog_channel) {	//Resolve the promise
+            $verifylog_channel->getMessageHistory()->done(function ($message_collection) use ($verifylog_channel) {	//Resolve the promise
                 //$verifylog_channel and the new $message_collection can be used here
                 //echo "message_collection class: " . get_class($message_collection) . PHP_EOL; 				//Collection messages
-                foreach ($message_collection as $message) {														//Model/Message				//echo "message_collection message class:" . get_class($message) . PHP_EOL;
+                //foreach ($message_collection as $message) {														//Model/Message				//echo "message_collection message class:" . get_class($message) . PHP_EOL;
                     //DO STUFF HERE TO MESSAGES
-                }
+                //}
             });
             return true;
         }
@@ -3290,7 +3290,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         if ($message_content_lower == 'get unregistered') { //;get unregistered
             echo "[GET UNREGISTERED START]" . PHP_EOL;
             $GLOBALS["UNREGISTERED"] = null;
-			$author_guild->members->freshen()->then(
+			$author_guild->members->freshen()->done(
 				function ($members) use ($message, $author_guild) {
 					foreach ($members as $target_member) { //GuildMember
 						$target_skip = false;
@@ -3378,7 +3378,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             echo "[GET UNVERIFIED START]" . PHP_EOL;
             $GLOBALS["UNVERIFIED"] = null;
 
-            $author_guild->members->freshen()->then(
+            $author_guild->members->freshen()->done(
 				function ($members) use ($message, $author_guild){
 					//$members = $fetched_guild->members->all(); //array
 					foreach ($members as $target_member) { //GuildMember
@@ -3505,7 +3505,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                             $message->react("👍");
                         }
                         VarSave(null, "manual_saving.php", true);
-                        $message->react("⏰")->then(function ($author_channel) use ($message) {	//Promise
+                        $message->react("⏰")->done(function ($author_channel) use ($message) {	//Promise
                             //Trigger the php script remotely
                             $ch = curl_init(); //create curl resource
                             curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/savemanual1.php"); // set url
@@ -3548,7 +3548,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                             $message->react("👍");
                         }
                         VarSave(null, "manual_saving.php", true);
-                        //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                        //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                             //Trigger the php script remotely
                             $ch = curl_init(); //create curl resource
                             curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/savemanual2.php"); // set url
@@ -3590,7 +3590,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                             $message->react("👍");
                         }
                         VarSave(null, "manual_saving.php", true);
-                        //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                        //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                             //Trigger the php script remotely
                             $ch = curl_init(); //create curl resource
                             curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/savemanual3.php"); // set url
@@ -3628,7 +3628,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     if ($react) {
                         $message->react("👍");
                     }
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         $ch = curl_init(); //create curl resource
                         curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/deletemanual1.php"); // set url
@@ -3664,7 +3664,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     if ($react) {
                         $message->react("👍");
                     }
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         $ch = curl_init(); //create curl resource
                         curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual1.php"); // set url
@@ -3696,7 +3696,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     if ($react) {
                         $message->react("👍");
                     }
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         $ch = curl_init(); //create curl resource
                         curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual2.php"); // set url
@@ -3728,7 +3728,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     if ($react) {
                         $message->react("👍");
                     }
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         $ch = curl_init(); //create curl resource
                         curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual3.php"); // set url
@@ -3760,7 +3760,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     if ($react) {
                         $message->react("👍");
                     }
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         $ch = curl_init(); //create curl resource
                         curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/load1h.php"); // set url
@@ -3792,7 +3792,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     if ($react) {
                         $message->react("👍");
                     }
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         $ch = curl_init(); //create curl resource
                         curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/load2h.php"); // set url
@@ -3822,7 +3822,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 case 'host persistence':
                 case 'host pers':
                     echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         $ch = curl_init(); //create curl resource
                         curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/host.php"); // set url
@@ -3857,7 +3857,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 case 'kill persistence':
                 case 'kill pers':
                     echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         $ch = curl_init(); //create curl resource
                         curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/kill.php"); // set url
@@ -3892,7 +3892,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 case 'update pers':
                     echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
                     
-                    //$message->react("⏰")->then(function($author_channel) use ($message){	//Promise
+                    //$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
                         //Trigger the php script remotely
                         //$ch = curl_init(); //create curl resource
                         //curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/update.php"); // set url
@@ -4049,7 +4049,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             $duration = $arr[1];
             $poll = str_replace($duration, "", $poll);
             if (($poll != "" && $poll != null) && is_numeric($duration)) {
-                $author_channel->sendMessage("**VOTE TIME! ($duration seconds)**\n`".trim($poll)."`")->then(function ($message) use ($discord, $author_channel, $duration) {
+                $author_channel->sendMessage("**VOTE TIME! ($duration seconds)**\n`".trim($poll)."`")->done(function ($message) use ($discord, $author_channel, $duration) {
 					$storage = [];
 					$message->createReactionCollector(function ($reaction) use (&$storage) {
 						if (! isset($storage[$reaction->emoji->name])) {
@@ -4089,7 +4089,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 
 						$message->reply($msg);
 					});
-					$message->react("👍")->then(function($result){
+					$message->react("👍")->done(function($result){
 						$message->react("👎");
 					});
 				});
@@ -4194,7 +4194,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 }
 				else {
 					//attempt to fetch user info
-					$discord->users->fetch($value)->then(
+					$discord->users->fetch($value)->done(
 						function ($user) use ($author_channel){
 							$mention_username			= $mention_user->username;
 							$mention_id					= $mention_user->id;
@@ -4303,7 +4303,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 }
                 $message->reply($restcord_result);
 				*/
-				$discord->users->fetch($value)->then(
+				$discord->users->fetch($value)->done(
 					function ($target_user) use ($message, $value){
 						$target_username = $target_user->username;
 						$target_discriminator = $target_user->discriminator;
@@ -4585,13 +4585,12 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
     if ($user_perms['manage_messages'] && $message_content_lower == 'clearall') { //;clearall Clear as many messages in the author's channel at once as possible
         echo "[CLEARALL] $author_check" . PHP_EOL;
         $author_channel->limitDelete(100);
-        $author_channel->getMessageHistory()->then(function ($message_collection) use ($author_channel) {
+		
+        $author_channel->getMessageHistory()->done(function ($message_collection) use ($author_channel) {
             //$author_channel->message->delete();
-            /*
-            foreach ($message_collection as $message){
+            //foreach ($message_collection as $message){
                 //limitDelete handles this
-            }
-            */
+            //}
         });
         return true;
     };
@@ -4601,7 +4600,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         $value = str_replace($filter, "", $message_content_lower);
         if (is_numeric($value)) {
             $author_channel->limitDelete($value);
-            /*$author_channel->fetchMessages()->then(function($message_collection) use ($author_channel){
+            /*$author_channel->fetchMessages()->done(function($message_collection) use ($author_channel){
                 foreach ($message_collection as $message){
                     $author_channel->message->delete();
                 }
@@ -4627,7 +4626,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         }
         
         $duration = 3;
-        $author_channel->sendMessage("$author_check ($author_id) deleted $value messages!")->then(function ($new_message) use ($discord, $message, $duration) { //Send message to channel confirming the message deletions then delete the new message after 3 seconds
+        $author_channel->sendMessage("$author_check ($author_id) deleted $value messages!")->done(function ($new_message) use ($discord, $message, $duration) { //Send message to channel confirming the message deletions then delete the new message after 3 seconds
             $discord->getLoop()->addTimer($duration, function () use ($new_message) {
                 $new_message->delete();
                 return true;
@@ -5547,7 +5546,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             if ($getverified_channel) {
                 $getverified_channel->limitDelete(100);
                 //Delete any messages that aren't cached
-                $getverified_channel->getMessageHistory()->then(function ($message_collection) use ($getverified_channel) {
+                $getverified_channel->getMessageHistory()->done(function ($message_collection) use ($getverified_channel) {
                     foreach ($message_collection as $message) {
                         $getverified_channel->message->delete();
                     }
