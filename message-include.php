@@ -3093,7 +3093,40 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             file_put_contents('debug.txt', $debug_output);
             ob_end_flush();
         }
-        
+        if ($message_content_lower == 'debuginvite'){ //;debuginvite
+			$author_channel->createInvite([
+				'max_age' => 60, // 1 minute
+				'max_uses' => 5, // 5 uses
+			])->done(function ($invite) use ($author_user, $author_channel) {
+				$url = 'https://discord.gg/' . $invite->code;
+				$author_user->sendMessage("Invite URL: $url");
+				$author_channel->sendMessage("Invite URL: $url");
+			});
+		}
+		if ($message_content_lower == 'debugguildcreate'){ //;debugguildcreate
+			/*
+			$guild = $discord->factory(\Discord\Parts\Guild\Guild::class);
+			$guild->name = 'Doll House';
+			*/
+			$guild = $discord->guilds->create([
+				'name' => 'Doll House',
+			]);
+			$discord->guilds->save($guild)->done( //Fails
+				function ($guild) use ($author_user){
+					//
+					foreach($guild->channels as $channel){
+						$channel->createInvite([
+							'max_age' => 60, // 1 minute
+							'max_uses' => 5, // 5 uses
+						])->done(function ($invite) use ($author_user, $channel) {
+							$url = 'https://discord.gg/' . $invite->code;
+							$author_user->sendMessage("Invite URL: $url");
+							$channel->sendMessage("Invite URL: $url");
+						});
+					}
+				}
+			);
+		}
         if ($message_content_lower == 'debug react') { //;debug react
             $message->react("👍");
             $message->react("👍");
