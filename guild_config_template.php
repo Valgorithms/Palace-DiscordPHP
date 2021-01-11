@@ -213,6 +213,13 @@ if (!CheckFile($guild_folder, "gender_message_id.php")) {
     $gender_message_id = strval(VarLoad($guild_folder, "gender_message_id.php"));
 }
 
+if (!CheckFile($guild_folder, "pronouns_message_id.php")) {
+    $pronouns_message_id = ""; //id of the Gender Menu message
+    VarSave($guild_folder, "pronouns_message_id.php", strval($pronouns_message_id));
+} else {
+    $pronouns_message_id = strval(VarLoad($guild_folder, "pronouns_message_id.php"));
+}
+
 if (!CheckFile($guild_folder, "nsfw_message_id.php")) {
     $nsfw_message_id = ""; //id of the NSFW Menu message
     VarSave($guild_folder, "nsfw_message_id.php", strval($nsfw_message_id));

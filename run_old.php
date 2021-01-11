@@ -840,6 +840,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 				GLOBAL $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
 				GLOBAL $sexualities, $sexuality_message_text;
 				GLOBAL $gender, $gender_message_text;
+				GLOBAL $pronouns, $pronouns_message_text;
 				GLOBAL $nsfwarray, $nsfw_message_text;
 				GLOBAL $customroles, $customroles_message_text;
 				

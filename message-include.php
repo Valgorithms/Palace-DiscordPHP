@@ -257,7 +257,7 @@ else {
 }				//Load saved option file
 
 //Role picker options
-global $rolepicker_option, $species_option, $gender_option, $sexuality_option, $custom_option;
+global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $custom_option;
 if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     if (!CheckFile($guild_folder, "rolepicker_option.php")) {
         $rp0	= $rolepicker_option;							//Allow Rolepicker
@@ -282,6 +282,16 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     } else {
         $rp2 	= false;
     }
+	if (($pronouns_message_id != "") || ($pronouns_message_id != null)) {
+        if (!CheckFile($guild_folder, "pronouns_option.php")) {
+            $rp5	= $pronouns_option;
+        }								//Custom role picker
+        else {
+            $rp5	= VarLoad($guild_folder, "pronouns_option.php");
+        }
+    } else {
+        $rp5	= false;
+    }
     if (($sexuality_message_id != "") || ($species_message_id != null)) {
         if (!CheckFile($guild_folder, "sexuality_option.php")) {
             $rp3	= $sexuality_option;							//Sexuality role picker
@@ -301,6 +311,7 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     } else {
         $rp4	= false;
     }
+	
 	if (($nsfw_message_id != "") || ($nsfw_message_id != null)) {
         if (!CheckFile($guild_folder, "nsfw_option.php")) {
             $nsfw	= $custom_option;
@@ -318,6 +329,7 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     $rp3 	= false;
     $rp2 	= false;
     $rp4 	= false;
+	$rp5 	= false;
 	$nsfw	= false;
 }
 
@@ -472,6 +484,7 @@ if (($rolepicker_id == "") || ($rolepicker_id == "0") || ($rolepicker_id === nul
 }
 global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
 global $gender, $gender_message_text;
+global $pronouns, $pronouns_message_text;
 global $sexualities, $sexuality_message_text;
 global $nsfwarray, $nsfw_message_text;
 
@@ -643,6 +656,11 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 } else {
                     $documentation = $documentation . "`gender messageid` Message not yet sent!\n";
                 }
+				if ($pronouns_message_id) {
+                    $documentation = $documentation . "`prnouns messageid` $pronouns_message_id\n";
+                } else {
+                    $documentation = $documentation . "`pronouns messageid` Message not yet sent!\n";
+                }				
                 if ($sexuality_message_id) {
                     $documentation = $documentation . "`sexuality messageid` $sexuality_message_id\n";
                 } else {
@@ -808,6 +826,33 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 					  $string .= $string1;
 					}
 					for ($i = 0; $i < count($gender); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
+                    $message->delete();
+                    return true;
+                });
+                return true;
+                break;
+			case 'message pronoun': //;message pronoun
+			case 'message pronouns': //;message pronouns
+                echo '[GENDER MESSAGE GEN]' . PHP_EOL;
+                VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
+                $author_channel->sendMessage($pronouns_message_text)->done(function ($new_message) use ($guild_folder, $pronouns, $message) {
+                    VarSave($guild_folder, "pronouns_message_id.php", strval($new_message->id));
+					/*
+                    foreach ($pronouns as $var_name => $value) {
+                        $new_message->react($value);
+                    }
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($pronouns))->done(function () use ($pronouns, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($pronouns); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($pronouns); $i++) {
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
@@ -1043,6 +1088,25 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     $message->reply("Gender roles enabled!");
                 } else {
                     $message->reply("Gender roles disabled!");
+                }
+                return true;
+                break;
+			case 'pronoun':
+			case 'pronouns':
+                if (!CheckFile($guild_folder, "pronouns_option.php")) {
+                    VarSave($guild_folder, "pronouns_option.php", $pronouns_option);
+                    echo "[NEW pronouns FILE]" . PHP_EOL;
+                }
+                $pronouns_var = VarLoad($guild_folder, "pronouns_option.php");
+                $pronouns_flip = !$pronouns_var;
+                VarSave($guild_folder, "pronouns_option.php", $pronouns_flip);
+                if ($react) {
+                    $message->react("👍");
+                }
+                if ($pronouns_flip === true) {
+                    $message->reply("Pronoun roles enabled!");
+                } else {
+                    $message->reply("Pronoun roles disabled!");
                 }
                 return true;
                 break;
@@ -1755,6 +1819,14 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             } else {
                 $documentation = $documentation . "**Disabled**\n";
             }
+			//prnouns
+            $documentation = $documentation . "`pronouns:` ";
+            if ($rp5) {
+                $documentation = $documentation . "**Enabled**\n";
+            } else {
+                $documentation = $documentation . "**Disabled**\n";
+            }
+			
             //sexuality
             $documentation = $documentation . "`sexuality:` ";
             if ($rp3) {

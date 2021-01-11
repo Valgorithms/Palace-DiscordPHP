@@ -34,6 +34,7 @@ include 'config.php'; //Global config variables
 include 'species.php'; //Used by the species role picker function
 include 'sexualities.php'; //Used by the sexuality role picker function
 include 'gender.php'; //Used by the gender role picker function
+include 'pronouns.php'; //Used by the pronouns role picker function
 include 'nsfw_roles.php'; //Used by the NSFW role picker function
 include 'custom_roles.php'; //Create your own roles with this template!
 
