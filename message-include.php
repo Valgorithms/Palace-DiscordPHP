@@ -591,7 +591,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             case 'currentsetup': //;currentsetup
                 //Send DM with current settings
                 //Roles
-                $documentation = "\n**Roles:**\n";
+                $documentation = "⠀\n**Roles:**\n";
                 $documentation = $documentation . "`dev @role` $role_dev_id\n";
                 $documentation = $documentation . "`admin @role` $role_admin_id\n";
                 $documentation = $documentation . "`mod @role` $role_mod_id\n";
