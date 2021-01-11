@@ -6,7 +6,7 @@ $pronouns = array(
     "She/Her" => "2️⃣",
 	"He/Him" => "3️⃣",
 	"Any Pronouns" => "4️⃣",
-	"Ask For Pronouns" => "5️⃣"
+	"Ask For Pronouns" => "💬"
 );
 
 //Message copy-pasta:

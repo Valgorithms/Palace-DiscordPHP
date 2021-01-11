@@ -33,7 +33,7 @@ if (is_object($message->author) && get_class($message->author) == "Discord\Parts
 $author_channel 			= $message->channel;
 $author_channel_id			= $author_channel->id; 												//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 
-/*
+/*Disabling this so that the bot will automatically create the roles the first time they are added. They can be manually removed later.
 if ("{$discord->id}" == $reaction->user->id)
     return true; //Don't process reactions made by this bot
 */
