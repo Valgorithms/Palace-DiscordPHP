@@ -105,14 +105,14 @@ if (!CheckFile($guild_folder, "tip_approved_channel_id.php")) {
 //Optional Role IDs
 if (!CheckFile($guild_folder, "role_18_id.php")) {
     $role_18_id = ""; //Someone being watched has their messages duplicated to this channel instead of a DM (Leave commented to use DMs)
-    VarSave($guild_folder, "role_18_id.php", strval($role_18_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_18_id.php", strval($role_18_id));
 } else {
     $role_18_id = strval(VarLoad($guild_folder, "role_18_id.php"));
 }
 
 if (!CheckFile($guild_folder, "role_verified_id.php")) {
     $role_verified_id = ""; //Verified role that gives people access to channels
-    VarSave($guild_folder, "role_verified_id.php", strval($role_verified_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_verified_id.php", strval($role_verified_id));
 } else {
     $role_verified_id = strval(VarLoad($guild_folder, "role_verified_id.php"));
 }
@@ -120,49 +120,49 @@ if (!CheckFile($guild_folder, "role_verified_id.php")) {
 //Required Role IDs
 if (!CheckFile($guild_folder, "role_dev_id.php")) {
     $role_dev_id = ""; //Developer role (overrides certain restrictions)
-    VarSave($guild_folder, "role_dev_id.php", strval($role_dev_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_dev_id.php", strval($role_dev_id));
 } else {
     $role_dev_id = strval(VarLoad($guild_folder, "role_dev_id.php"));
 }
 
 if (!CheckFile($guild_folder, "role_owner_id.php")) {
     $role_owner_id = ""; //Owner of the guild
-    VarSave($guild_folder, "role_owner_id.php", strval($role_owner_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_owner_id.php", strval($role_owner_id));
 } else {
     $role_owner_id = strval(VarLoad($guild_folder, "role_owner_id.php"));
 }
 
 if (!CheckFile($guild_folder, "role_admin_id.php")) {
     $role_admin_id = ""; //Admins
-    VarSave($guild_folder, "role_admin_id.php", strval($role_admin_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_admin_id.php", strval($role_admin_id));
 } else {
     $role_admin_id = strval(VarLoad($guild_folder, "role_admin_id.php"));
 }
 
 if (!CheckFile($guild_folder, "role_mod_id.php")) {
     $role_mod_id = ""; //Moderators
-    VarSave($guild_folder, "role_mod_id.php", strval($role_mod_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_mod_id.php", strval($role_mod_id));
 } else {
     $role_mod_id = strval(VarLoad($guild_folder, "role_mod_id.php"));
 }
 
 if (!CheckFile($guild_folder, "role_bot_id.php")) {
     $role_bot_id = ""; //Bots
-    VarSave($guild_folder, "role_bot_id.php", strval($role_bot_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_bot_id.php", strval($role_bot_id));
 } else {
     $role_bot_id = strval(VarLoad($guild_folder, "role_bot_id.php"));
 }
 
 if (!CheckFile($guild_folder, "role_vzgbot_id.php")) {
     $role_vzgbot_id = ""; //Palace Bot: THIS ROLE MUST HAVE ADMINISTRATOR PRIVILEGES!
-    VarSave($guild_folder, "role_vzgbot_id.php", strval($role_vzgbot_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_vzgbot_id.php", strval($role_vzgbot_id));
 } else {
     $role_vzgbot_id = strval(VarLoad($guild_folder, "role_vzgbot_id.php"));
 }
 
 if (!CheckFile($guild_folder, "role_muted_id.php")) {
     $role_muted_id = ""; //This role should not be allowed access any channels
-    VarSave($guild_folder, "role_muted_id.php", strval($role_muted_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "role_muted_id.php", strval($role_muted_id));
 } else {
     $role_muted_id = strval(VarLoad($guild_folder, "role_muted_id.php"));
 }
@@ -170,7 +170,7 @@ if (!CheckFile($guild_folder, "role_muted_id.php")) {
 //Rolepicker user ID
 if (!CheckFile($guild_folder, "rolepicker_id.php")) {
     $rolepicker_id = $discord->user->id; //id of the user that posted the role picker messages
-    VarSave($guild_folder, "rolepicker_id.php", strval($rolepicker_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "rolepicker_id.php", strval($rolepicker_id));
 } else {
     $rolepicker_id = strval(VarLoad($guild_folder, "rolepicker_id.php"));
 }
@@ -178,7 +178,7 @@ if (!CheckFile($guild_folder, "rolepicker_id.php")) {
 //Rolepicker message IDs
 if (!CheckFile($guild_folder, "species_message_id.php")) {
     $species_message_id = ""; //id of the Species Menu message
-    VarSave($guild_folder, "species_message_id.php", strval($species_message_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "species_message_id.php", strval($species_message_id));
 } else {
     $species_message_id = strval(VarLoad($guild_folder, "species_message_id.php"));
 }
@@ -186,7 +186,7 @@ if (!CheckFile($guild_folder, "species_message_id.php")) {
 //Rolepicker message IDs
 if (!CheckFile($guild_folder, "species2_message_id.php")) {
     $species2_message_id = ""; //id of the Species Menu message
-    VarSave($guild_folder, "species2_message_id.php", strval($species2_message_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "species2_message_id.php", strval($species2_message_id));
 } else {
     $species2_message_id = strval(VarLoad($guild_folder, "species2_message_id.php"));
 }
@@ -194,29 +194,36 @@ if (!CheckFile($guild_folder, "species2_message_id.php")) {
 //Rolepicker message IDs
 if (!CheckFile($guild_folder, "species3_message_id.php")) {
     $species3_message_id = ""; //id of the Species Menu message
-    VarSave($guild_folder, "species3_message_id.php", strval($species3_message_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "species3_message_id.php", strval($species3_message_id));
 } else {
     $species3_message_id = strval(VarLoad($guild_folder, "species3_message_id.php"));
 }
 
 if (!CheckFile($guild_folder, "sexuality_message_id.php")) {
     $sexuality_message_id = ""; //id of the Sexualities Menu message
-    VarSave($guild_folder, "sexuality_message_id.php", strval($sexuality_message_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "sexuality_message_id.php", strval($sexuality_message_id));
 } else {
     $sexuality_message_id = strval(VarLoad($guild_folder, "sexuality_message_id.php"));
 }
 
 if (!CheckFile($guild_folder, "gender_message_id.php")) {
     $gender_message_id = ""; //id of the Gender Menu message
-    VarSave($guild_folder, "gender_message_id.php", strval($gender_message_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "gender_message_id.php", strval($gender_message_id));
 } else {
     $gender_message_id = strval(VarLoad($guild_folder, "gender_message_id.php"));
+}
+
+if (!CheckFile($guild_folder, "nsfw_message_id.php")) {
+    $nsfw_message_id = ""; //id of the NSFW Menu message
+    VarSave($guild_folder, "nsfw_message_id.php", strval($nsfw_message_id));
+} else {
+    $nsfw_message_id = strval(VarLoad($guild_folder, "nsfw_message_id.php"));
 }
 
 //You can add your own custom roles too! Locate the Discord emoji on https://emojipedia.org/discord/ and use it as the unicode in custom_roles.php
 if (!CheckFile($guild_folder, "customroles_message_id.php")) {
     $customroles_message_id = ""; //id of the Gender Menu message
-    VarSave($guild_folder, "customroles_message_id.php", strval($customroles_message_id)); //Leave blank if 18+ commands are not being used
+    VarSave($guild_folder, "customroles_message_id.php", strval($customroles_message_id));
 } else {
     $customroles_message_id = strval(VarLoad($guild_folder, "customroles_message_id.php"));
 }

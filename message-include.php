@@ -295,12 +295,24 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     } else {
         $rp4	= false;
     }
+	if (($nsfw_message_id != "") || ($nsfw_message_id != null)) {
+        if (!CheckFile($guild_folder, "nsfw_option.php")) {
+            $nsfw	= $custom_option;
+        }								//NSFW/Adult role picker
+        else {
+            $nsfw	= VarLoad($guild_folder, "customrole_option.php");
+        }
+    } else {
+        $nsfw	= false;
+    }
+	
 } else { //All functions are disabled
     $rp0 	= false;
     $rp1 	= false;
     $rp3 	= false;
     $rp2 	= false;
     $rp4 	= false;
+	$nsfw	= false;
 }
 
 //echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
@@ -455,6 +467,7 @@ if (($rolepicker_id == "") || ($rolepicker_id == "0") || ($rolepicker_id === nul
 global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
 global $gender, $gender_message_text;
 global $sexualities, $sexuality_message_text;
+global $nsfwarray, $nsfw_message_text;
 global $customroles, $customroles_message_text;
 
 
@@ -528,6 +541,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $documentation = $documentation . "`message species3`\n";
                 $documentation = $documentation . "`message gender`\n";
                 $documentation = $documentation . "`message sexuality`\n";
+				$documentation = $documentation . "`message adult`\n";
                 $documentation = $documentation . "`message customroles`\n";
                 
                 $documentation_sanitized = str_replace("\n", "", $documentation);
@@ -629,6 +643,12 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 } else {
                     $documentation = $documentation . "`sexuality messageid` Message not yet sent!\n";
                 }
+				if ($nsfw_message_id) {
+                    $documentation = $documentation . "`nsfw messageid` $nsfw_message_id\n";
+                } else {
+                    $documentation = $documentation . "`nsfw messageid` Message not yet sent!\n";
+                }
+				
                 if ($customroles_message_id) {
                     $documentation = $documentation . "`customroles messageid` $customroles_message_id\n";
                 } else {
@@ -705,7 +725,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             case 'message species2': //;message species2
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($species2_message_text)->done(function ($new_message) use ($guild_folder, $species2, $message) {
-                    ;
                     VarSave($guild_folder, "species2_message_id.php", strval($new_message->id));
                     foreach ($species2 as $var_name => $value) {
                         $new_message->react($value);
@@ -718,7 +737,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             case 'message species3': //;message species3
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($species3_message_text)->done(function ($new_message) use ($guild_folder, $species3, $message) {
-                    ;
                     VarSave($guild_folder, "species3_message_id.php", strval($new_message->id));
                     foreach ($species3 as $var_name => $value) {
                         $new_message->react($value);
@@ -732,7 +750,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 echo '[GENDER MESSAGE GEN]' . PHP_EOL;
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($gender_message_text)->done(function ($new_message) use ($guild_folder, $gender, $message) {
-                    ;
                     VarSave($guild_folder, "gender_message_id.php", strval($new_message->id));
                     foreach ($gender as $var_name => $value) {
                         $new_message->react($value);
@@ -746,7 +763,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             case 'message sexualities':
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($sexuality_message_text)->done(function ($new_message) use ($guild_folder, $sexualities, $message) {
-                    ;
                     VarSave($guild_folder, "sexuality_message_id.php", strval($new_message->id));
                     foreach ($sexualities as $var_name => $value) {
                         $new_message->react($value);
@@ -756,10 +772,22 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 });
                 return true;
                 break;
+			case 'message nsfw': //;message nsfw
+			case 'message adult': //;message adult
+				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
+                $author_channel->sendMessage($nsfw_message_text)->done(function ($new_message) use ($guild_folder, $nsfwarray, $message) {
+                    VarSave($guild_folder, "nsfw_message_id.php", strval($new_message->id));
+                    foreach ($nsfwarray as $var_name => $value) {
+                        $new_message->react($value);
+                    }
+                    $message->delete();
+                    return true;
+                });
+				return true;
+				break;
             case 'message customroles': //;message customroles
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($customroles_message_text)->done(function ($new_message) use ($guild_folder, $customroles, $message) {
-                    ;
                     VarSave($guild_folder, "customroles_message_id.php", strval($new_message->id));
                     foreach ($customroles as $var_name => $value) {
                         $new_message->react($value);
