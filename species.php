@@ -20,7 +20,7 @@ $species2 = array(
     "mouse" => "🐭", //:mouse:
     "kangaroo" => "🏀", //:basketball:
     "pokemon" => "🍎", //:apple:
-    "protogen" => "🤖", //:robot:
+    "protogen" => "🦾", //:robot:
     "rabbit" => "🐰", //:rabbit:
     "reptile" => "🦎", //:lizard:
     "sergal" => "🧀", //:cheese:
@@ -38,6 +38,7 @@ $species3 = array(
     "raccoon" => "🕳️", //:hole:
     "shark" => "🦈", //:shark:
     "squirrel" => "🌰", //:chestnut:
+	"robot" => "🦾", //:mechanical_arm:
     "misc/Unlisted Species" => "🤷" //:person_shrugging: ///Unlisted Species
 );
 
@@ -77,4 +78,5 @@ $species3_message_text = "**Role Menu: Species3**
 :hole: : `Raccoon`
 :shark: : `Shark` 
 :chestnut: : `Squirrel`
+:mechanical_arm: : `Robot`
 :person_shrugging: : `Misc/Unlisted Species`";
