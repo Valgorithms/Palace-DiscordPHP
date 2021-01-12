@@ -131,6 +131,39 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 				return webapiFail('user_id', $id);
 			break;
 			
+		case 'whitelist':
+			return new Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL); //Test pilot is being done with VZG Verifier
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){
+				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+			}
+			if (!$id || !webapiSnow($id))
+				return webapiFail('user_id', $id);
+			$return = false;
+			$result = array();
+			if ($user = $discord->users->offsetGet($id)){ //If they're not actively in a discord server shared with the bot they probably shouldn't have access to this
+				foreach ($discord->guilds as $guild){
+					$target_folder = "\\guilds\\".$guild->id;
+					$whitelist_array = array();
+					if(!CheckFile($target_folder, "ownerwhitelist.php")) {
+						VarSave($target_folder, "ownerwhitelist.php", array());
+					}else{
+						$whitelist_array = VarLoad($target_folder, "ownerwhitelist.php");
+					}
+					if ($id == $guild->owner_id){
+						$result[] = $guild->id;
+					}elseif(!empty($whitelist_array)){ //Check array stored in guild folder to see if they've been added as whitelisted
+						foreach ($whitelist_array as $target_id){ //Add the guild ID to an array if access is whitelisted
+							if($target_id == $id) $result[] = $guild->id;
+						}
+					}
+				}
+				if (!empty($result)){ //Guild IDs
+					$return = $result;
+				}
+			}
+			break;
+			
 		case 'avatar':
 			if (!$id || !webapiSnow($id)){
 				return webapiFail('user_id', $id);
