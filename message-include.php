@@ -314,13 +314,23 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
 	
 	if (($nsfw_message_id != "") || ($nsfw_message_id != null)) {
         if (!CheckFile($guild_folder, "nsfw_option.php")) {
-            $nsfw	= $custom_option;
+            $nsfw	= $nsfw_option;
         }								//NSFW/Adult role picker
         else {
-            $nsfw	= VarLoad($guild_folder, "customrole_option.php");
+            $nsfw	= VarLoad($guild_folder, "nsfw_option.php");
         }
     } else {
         $nsfw	= false;
+    }
+	if (($channelrole_message_id != "") || ($channelrole_message_id != null)) {
+        if (!CheckFile($guild_folder, "channelrole_option.php")) {
+            $channeloption	= $channelrole_option;
+        }
+        else {
+            $channeloption	= VarLoad($guild_folder, "channelrole_option.php");
+        }
+    } else {
+        $channeloption	= false;
     }
 	
 } else { //All functions are disabled
@@ -331,6 +341,7 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     $rp4 	= false;
 	$rp5 	= false;
 	$nsfw	= false;
+	$channeloption = false;
 }
 
 //echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;

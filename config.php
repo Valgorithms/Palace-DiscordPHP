@@ -23,4 +23,5 @@ $species_option = false;
 $sexuality_option = false;
 $gender_option = false;
 $pronouns_option = false;
+$channel_option = false;
 $custom_option = false; //Edit custom_roles.php before changing this to true!
