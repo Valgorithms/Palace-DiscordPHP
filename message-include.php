@@ -230,7 +230,7 @@ if (!CheckFile($guild_folder, "command_symbol.php")) {
 }			//Load saved option file (Not used yet, but might be later)
 
 //Chat options
-global $react_option, $vanity_option, $nsfw_option, $games_option;
+global $react_option, $vanity_option, $nsfw_option, $channel_option, $games_option;
 if (!CheckFile($guild_folder, "react_option.php")) {
     $react	= $react_option;
 }								//Bot will not react to messages if false
@@ -249,6 +249,13 @@ if (!CheckFile($guild_folder, "nsfw_option.php")) {
 else {
     $nsfw 	= VarLoad($guild_folder, "nsfw_option.php");
 }				//Load saved option file
+if (!CheckFile($guild_folder, "channel_option.php")) {
+    $channeloption	= $channel_option;
+}									//Allow channelrole reactions
+else {
+    $channeloption 	= VarLoad($guild_folder, "channel_option.php");
+}				//Load saved option file
+
 if (!CheckFile($guild_folder, "games_option.php")) {
     $games	= $games_option;
 }									//Allow games like Yahtzee
@@ -257,7 +264,7 @@ else {
 }				//Load saved option file
 
 //Role picker options
-global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $custom_option;
+global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $channel_option, $custom_option;
 if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     if (!CheckFile($guild_folder, "rolepicker_option.php")) {
         $rp0	= $rolepicker_option;							//Allow Rolepicker
@@ -302,16 +309,15 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
         $rp3	= false;
     }
     if (($customroles_message_id != "") || ($customroles_message_id != null)) {
-        if (!CheckFile($guild_folder, "customrole_option.php")) {
+        if (!CheckFile($guild_folder, "custom_option.php")) {
             $rp4	= $custom_option;
         }								//Custom role picker
         else {
-            $rp4	= VarLoad($guild_folder, "customrole_option.php");
+            $rp4	= VarLoad($guild_folder, "custom_option.php");
         }
     } else {
         $rp4	= false;
     }
-	
 	if (($nsfw_message_id != "") || ($nsfw_message_id != null)) {
         if (!CheckFile($guild_folder, "nsfw_option.php")) {
             $nsfw	= $nsfw_option;
@@ -322,12 +328,12 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     } else {
         $nsfw	= false;
     }
-	if (($channelrole_message_id != "") || ($channelrole_message_id != null)) {
-        if (!CheckFile($guild_folder, "channelrole_option.php")) {
-            $channeloption	= $channelrole_option;
+	if (($channelroles_message_id != "") || ($channelroles_message_id != null)) {
+        if (!CheckFile($guild_folder, "channel_option.php")) {
+            $channeloption	= $channel_option;
         }
         else {
-            $channeloption	= VarLoad($guild_folder, "channelrole_option.php");
+            $channeloption	= VarLoad($guild_folder, "channel_option.php");
         }
     } else {
         $channeloption	= false;
@@ -498,6 +504,8 @@ global $gender, $gender_message_text;
 global $pronouns, $pronouns_message_text;
 global $sexualities, $sexuality_message_text;
 global $nsfwarray, $nsfw_message_text;
+global $channelroles, $channelroles_message_text;
+global $customroles, $customroles_message_text;
 
 
 //Early break
@@ -563,6 +571,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $documentation = $documentation . "`setup species3 messageid`\n";
                 $documentation = $documentation . "`setup sexuality messageid`\n";
                 $documentation = $documentation . "`setup gender messageid`\n";
+				$documentation = $documentation . "`setup channelroles messageid`\n";
                 $documentation = $documentation . "`setup customroles messageid`\n";
                 */
                 $documentation = $documentation . "`message species`\n";
@@ -682,7 +691,11 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 } else {
                     $documentation = $documentation . "`nsfw messageid` Message not yet sent!\n";
                 }
-				
+				if ($channelroles_message_id) {
+                    $documentation = $documentation . "`channelroles messageid` $channelroles_message_id\n";
+                } else {
+                    $documentation = $documentation . "`channelroles messageid` Message not yet sent!\n";
+                }
                 if ($customroles_message_id) {
                     $documentation = $documentation . "`customroles messageid` $customroles_message_id\n";
                 } else {
@@ -786,6 +799,14 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 					//sexuality
 					$documentation = $documentation . "`sexuality:` ";
 					if ($rp3) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
+					
+					//channel roles
+					$documentation = $documentation . "`channel roles:` ";
+					if ($channeloption) {
 						$documentation = $documentation . "**Enabled**\n";
 					} else {
 						$documentation = $documentation . "**Disabled**\n";
@@ -1023,6 +1044,19 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 });
 				return true;
 				break;
+			case 'message channelroles': //;message channelroles
+				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
+                $author_channel->sendMessage($channelroles_message_text)->done(function ($new_message) use ($guild_folder, $channelroles, $message) {
+                    VarSave($guild_folder, "channelroles_message_id.php", strval($new_message->id));
+                    foreach ($channelroles as $var_name => $value) {
+                        $new_message->react($value);
+                    }
+                    $message->delete();
+                    return true;
+                });
+				return true;
+				break;
+				
             case 'message customroles': //;message customroles
 				echo '[MESSAGE CUSTOMROLES]' . PHP_EOL;
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
@@ -1233,7 +1267,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 }
                 return true;
                 break;
-            case 'sexuality':
+			case 'sexuality':
                 if (!CheckFile($guild_folder, "sexuality_option.php")) {
                     VarSave($guild_folder, "sexuality_option.php", $sexuality_option);
                     echo "[NEW SEXUALITY FILE]" . PHP_EOL;
@@ -1248,6 +1282,25 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     $message->reply("Sexuality roles enabled!");
                 } else {
                     $message->reply("Sexuality roles disabled!");
+                }
+                return true;
+                break;
+			case 'channelrole':
+			case 'channelroles':
+                if (!CheckFile($guild_folder, "channel_option.php")) {
+                    VarSave($guild_folder, "channel_option.php", $channel_option);
+                    echo "[NEW CHANNELROLE FILE]" . PHP_EOL;
+                }
+                $channel_var = VarLoad($guild_folder, "channel_option.php");
+                $channel_flip = !$channel_var;
+                VarSave($guild_folder, "channel_option.php", $channel_flip);
+                if ($react) {
+                    $message->react("👍");
+                }
+                if ($channel_flip === true) {
+                    $message->reply("Channel roles enabled!");
+                } else {
+                    $message->reply("Channel roles disabled!");
                 }
                 return true;
                 break;
@@ -1646,7 +1699,19 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             }
             return true;
         }
-        if (str_starts_with($message_content_lower, 'setup customroles ')) {
+		if (str_starts_with($message_content_lower, 'setup channelroles ')) {
+            $filter = "setup channelroles ";
+            $value = str_replace($filter, "", $message_content_lower);
+            $value = trim($value);
+            if (is_numeric($value)) {
+                VarSave($guild_folder, "channelroles_message_id.php", $value);
+                $message->reply("Channel roles message ID saved!");
+            } else {
+                $message->reply("Invalid input! Please enter a message ID");
+            }
+            return true;
+        }
+		if (str_starts_with($message_content_lower, 'setup customroles ')) {
             $filter = "setup customroles ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = trim($value);
@@ -1658,6 +1723,8 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             }
             return true;
         }
+		
+		
     }
 
     /*

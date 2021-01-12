@@ -25,5 +25,6 @@ $rolepicker_id = ""; //id of the user that posted the role picker messages
 $species_message_id = ""; //id of the Species Menu message
 $sexuality_message_id = ""; //id of the Sexualities Menu message
 $gender_message_id = ""; //id of the Gender Menu message
+$channelroles_message_id = ""; //id of the Channel Menu message
 //You can add your own custom roles too! Locate the Discord emoji on https://emojipedia.org/discord/ and use it as the unicode in custom_roles.php
 $customroles_message_id = ""; //Replace this with the message ID of your custom roles message

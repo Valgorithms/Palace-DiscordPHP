@@ -82,7 +82,7 @@ include "$guild_config_path";
 
 //Role picker stuff
 $message_id	= $message->id;														//echo "message_id: " . $message_id . PHP_EOL;
-global $species, $species2, $species3, $sexualities, $gender, $pronouns, $nsfwarray;
+global $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwarray;
 $guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
 if (CheckFile($guild_folder."/", 'custom_roles.php')){
 	include "$guild_custom_roles_path"; //Overwrite default custom_roles
@@ -167,12 +167,22 @@ if ($rp0) {
 		if (($pronouns_message_id != "") || ($pronouns_message_id != null)) {
             if (!CheckFile($guild_folder, "pronouns_option.php")) {
                 $rp5	= $pronouns_option;
-            }										//pronouns role picker
+            }										//Pronouns role picker
             else {
                 $rp5	= VarLoad($guild_folder, "pronouns_option.php");
             }
         } else {
             $rp5 = false;
+        }
+		if (($channelroles_message_id != "") || ($channelroles_message_id != null)) {
+            if (!CheckFile($guild_folder, "channel_option.php")) {
+                $channeloption	= $channel_option;
+            }										//Channel role picker
+            else {
+                $channeloption	= VarLoad($guild_folder, "channel_option.php");
+            }
+        } else {
+            $channeloption = false;
         }
 		
         if (($customroles_message_id != "") || ($customroles_message_id != null)) {
@@ -471,6 +481,50 @@ if ($rp0) {
                                 'name' => ucfirst($select_name),
                                 'permissions' => 0,
                                 'color' => 0x9b59b6,
+                                'hoist' => false,
+                                'mentionable' => false
+                                ]
+                            );
+                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+                                $respondent_member->addRole($role->id);
+                            }, static function ($error) {
+                                echo $e->getMessage() . PHP_EOL;
+                            });
+                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
+                        }
+                    }
+                }
+                //$message->clearReactions();
+                /*foreach ($pronouns as $var_name => $value){
+                    //$message->react($value);
+                }*/
+            }
+            break;
+		case ($channelroles_message_id):
+            if ($channeloption) {
+                echo "channel role reaction" . PHP_EOL;
+                foreach ($channelroles as $var_name => $value) {
+                    if (($value == $emoji_name) || ($value == $emoji_name)) {
+                        $select_name = $var_name;
+                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+                            //Create the role
+                            /*
+                            $new_role = array(
+                                'name' => ucfirst($select_name),
+                                'permissions' => 0,
+                                'color' => 3066993,
+                                'hoist' => false,
+                                'mentionable' => false
+                            );
+                            */
+                            
+                            $new_role = $discord->factory(
+                                Discord\Parts\Guild\Role::class,
+                                [
+                                'name' => ucfirst($select_name),
+                                'permissions' => 0,
+                                'color' => 0x1abc9c,
                                 'hoist' => false,
                                 'mentionable' => false
                                 ]

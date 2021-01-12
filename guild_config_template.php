@@ -227,6 +227,13 @@ if (!CheckFile($guild_folder, "nsfw_message_id.php")) {
     $nsfw_message_id = strval(VarLoad($guild_folder, "nsfw_message_id.php"));
 }
 
+if (!CheckFile($guild_folder, "channelroles_message_id.php")) {
+    $channelroles_message_id = ""; //id of the NSFW Menu message
+    VarSave($guild_folder, "channelroles_message_id.php", strval($channelroles_message_id));
+} else {
+    $channelroles_message_id = strval(VarLoad($guild_folder, "channelroles_message_id.php"));
+}
+
 //You can add your own custom roles too! Locate the Discord emoji on https://emojipedia.org/discord/ and use it as the unicode in custom_roles.php
 if (!CheckFile($guild_folder, "customroles_message_id.php")) {
     $customroles_message_id = ""; //id of the Gender Menu message
