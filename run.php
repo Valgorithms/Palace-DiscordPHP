@@ -36,8 +36,8 @@ include 'species.php'; //Used by the species role picker function
 include 'sexualities.php'; //Used by the sexuality role picker function
 include 'gender.php'; //Used by the gender role picker function
 include 'pronouns.php'; //Used by the pronouns role picker function
-include 'nsfw_role.php'; //Used by the NSFW role picker function; Required to use NSFW features
-include 'nsfw_roles.php'; //Used by the NSFW role picker function; TODO
+include 'nsfw_role.php'; //Required to use the NSFW role picker and to view channels marked as NSFW
+include 'nsfw_subroles.php'; //Used by the NSFW role picker function; TODO
 include 'channel_roles.php'; //Used by the channel role picker function
 include 'custom_roles.php'; //Create your own roles with this template!
 
