@@ -3413,6 +3413,11 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             file_put_contents('debug.txt', $debug_output);
             ob_end_flush();
         }
+		if ($message_content_lower == 'debugmember') { //;debugmember
+			echo '[DEBUGMEMBER]' . PHP_EOL;
+			echo 'ID:' . $author_member['id'] . PHP_EOL;
+			echo 'class:' . get_class($author_member) . PHP_EOL;
+		}
         if ($message_content_lower == 'debuginvite'){ //;debuginvite
 			$author_channel->createInvite([
 				'max_age' => 60, // 1 minute
