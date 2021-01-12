@@ -1,7 +1,7 @@
 <?php
 include_once 'custom_functions.php';
 
-$nsfwarray = array(
+$nsfwroles = array(
     "18+" => "🍆"
 );
 

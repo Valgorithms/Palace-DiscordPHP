@@ -841,7 +841,7 @@ $discord->once('ready', function () use ($discord){	// Listen for events here
 				GLOBAL $sexualities, $sexuality_message_text;
 				GLOBAL $gender, $gender_message_text;
 				GLOBAL $pronouns, $pronouns_message_text;
-				GLOBAL $nsfwarray, $nsfw_message_text;
+				GLOBAL $nsfwroles, $nsfw_message_text;
 				GLOBAL $customroles, $customroles_message_text;
 				
 				if ($creator || $owner)

@@ -503,7 +503,7 @@ global $species, $species2, $species3, $species_message_text, $species2_message_
 global $gender, $gender_message_text;
 global $pronouns, $pronouns_message_text;
 global $sexualities, $sexuality_message_text;
-global $nsfwarray, $nsfw_message_text;
+global $nsfwroles, $nsfw_message_text;
 global $channelroles, $channelroles_message_text;
 global $customroles, $customroles_message_text;
 
@@ -1034,11 +1034,24 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 			case 'message nsfw': //;message nsfw
 			case 'message adult': //;message adult
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-                $author_channel->sendMessage($nsfw_message_text)->done(function ($new_message) use ($guild_folder, $nsfwarray, $message) {
+                $author_channel->sendMessage($nsfw_message_text)->done(function ($new_message) use ($guild_folder, $nsfwroles, $message) {
                     VarSave($guild_folder, "nsfw_message_id.php", strval($new_message->id));
-                    foreach ($nsfwarray as $var_name => $value) {
+					/*
+                    foreach ($nsfwroles as $var_name => $value) {
                         $new_message->react($value);
                     }
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($nsfwroles))->done(function () use ($nsfwroles, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($nsfwroles); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($nsfwroles); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
                     $message->delete();
                     return true;
                 });
@@ -1048,9 +1061,22 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($channelroles_message_text)->done(function ($new_message) use ($guild_folder, $channelroles, $message) {
                     VarSave($guild_folder, "channelroles_message_id.php", strval($new_message->id));
+					/*
                     foreach ($channelroles as $var_name => $value) {
                         $new_message->react($value);
                     }
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($channelroles))->done(function () use ($channelroles, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($channelroles); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($channelroles); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
                     $message->delete();
                     return true;
                 });

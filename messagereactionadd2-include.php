@@ -82,7 +82,7 @@ include "$guild_config_path";
 
 //Role picker stuff
 $message_id	= $message->id;														//echo "message_id: " . $message_id . PHP_EOL;
-global $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwarray;
+global $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwroles;
 $guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
 if (CheckFile($guild_folder."/", 'custom_roles.php')){
 	include "$guild_custom_roles_path"; //Overwrite default custom_roles
@@ -596,7 +596,7 @@ if ($rp0) {
 			if ($nsfw) {
                 echo "NSFW roles reaction" . PHP_EOL;
                 //echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
-                foreach ($nsfwarray as $var_name => $value) {
+                foreach ($nsfwroles as $var_name => $value) {
                     if (($value == $emoji_name) || ($value == $emoji_name)) {
                         $select_name = $var_name;
                         echo "select_name: $select_name" . PHP_EOL;
@@ -623,7 +623,7 @@ if ($rp0) {
                     }
                 }
                 //$message->clearReactions();
-                /*foreach ($nsfwarray as $var_name => $value){
+                /*foreach ($nsfwroles as $var_name => $value){
                     //$message->react($value);
                 }*/
             }
