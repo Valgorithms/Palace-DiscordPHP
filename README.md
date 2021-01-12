@@ -6,7 +6,7 @@ DisccordPHP Github: https://github.com/teamreflex/DiiscordPHP
 
 Bot help: https://discord.gg/nQ5HxbkyyD / https://discord.gg/vNntRSe
 
-Discord template: https://discord.new/tE25rhUGsquD
+Discord template: https://discord.new/ttHsSykz5c6A
 
 # Before you start
 Before you start using this Library, you **need** to know how DiscordPHP works, how PHP works, and how ReactPHP Event Loops and Promises work. This is a fundamental requirement before you start. Without this knowledge, you will only suffer.
