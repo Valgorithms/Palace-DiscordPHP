@@ -7,6 +7,7 @@ $channelroles = array(
 	"Games" => "🎮",
 	"Music" => "🎵",
 	"Videos" => "📹",
+	"Code" => "⌨️",
 	"Bot Commands" => "🤖",
 	"Github" => "🖥️"
 );
@@ -18,6 +19,7 @@ $channelroles_message_text = "**Role Menu: Channels**
 :video_game: : `Games`
 :musical_note: : `Music`
 :video_camera: : `Videos`
-:robot: : 'Bot Commands'
+:keyboard: : `Code`
+:robot: : `Bot Commands`
 :desktop: : `Github`
 ";

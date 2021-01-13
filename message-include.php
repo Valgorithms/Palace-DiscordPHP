@@ -1057,6 +1057,8 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 });
 				return true;
 				break;
+			case 'message channel':
+			case 'message channels':
 			case 'message channelroles': //;message channelroles
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($channelroles_message_text)->done(function ($new_message) use ($guild_folder, $channelroles, $message) {
