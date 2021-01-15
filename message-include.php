@@ -507,17 +507,30 @@ global $nsfwroles, $nsfw_message_text;
 global $channelroles, $channelroles_message_text;
 global $customroles, $customroles_message_text;
 
-
 //Early break
+$called = false;
+//Allow calling commands by @mention
+if(str_starts_with($message_content_lower,  "<@662093882795753482>")) {
+	$message_content_lower = trim(substr($message_content_lower, 21));
+	$message_content = trim(substr($message_content, 21));
+	$called = true;
+}
+if(str_starts_with($message_content_lower,  "<@!662093882795753482>")) {
+	$message_content_lower = trim(substr($message_content_lower, 22));
+	$message_content = trim(substr($message_content, 22));
+	$called = true;
+}
+//Allow calling comamnds by command symbol
 if (str_starts_with($message_content_lower,  $command_symbol)) {
     $message_content_lower = trim(substr($message_content_lower, 1));
     $message_content = trim(substr($message_content, 1));
+	$called = true;
 } elseif (str_starts_with($message_content_lower, '!s')) {
     $message_content_lower = trim(substr($message_content_lower, 2));
     $message_content = trim(substr($message_content, 2));
-} else { //Expected prefix is missing
-    return true;
+	$called = true;
 }
+if(!$called) return;
     /*
     *********************
     *********************
@@ -2024,7 +2037,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
     }
     if ($message_content_lower == 'ping') { //;ping
         echo '[PING]' . PHP_EOL;
-		$pingdiff = $message->timestamp->floatDiffInRealSeconds();
+		//$pingdiff = $message->timestamp->floatDiffInRealSeconds();
         //$message->reply("your message took $pingdiff to arrive.");
         $message->reply("Pong!");
         return true;
