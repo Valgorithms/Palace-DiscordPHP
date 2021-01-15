@@ -6,7 +6,7 @@ if (($message_content == null) || ($message_content == "")) {
     return true;
 }
 $message_id = $message->id;
-$message_content_lower = strtolower($message_content);
+$message_content_lower = mb_strtolower($message_content);
 
 /*
 *********************
@@ -510,20 +510,20 @@ global $customroles, $customroles_message_text;
 //Early break
 $called = false;
 //Allow calling commands by @mention
-if(str_starts_with($message_content_lower,  "<@662093882795753482>")) {
-	$message_content_lower = trim(substr($message_content_lower, 21));
-	$message_content = trim(substr($message_content, 21));
+if(str_starts_with($message_content_lower,  "<@".$discord->id.">")) {
+	$message_content_lower = trim(substr($message_content_lower, (3+strlen($discord->id))));
+	$message_content = trim(substr($message_content, (3+strlen($discord->id))));
 	$called = true;
 }
-if(str_starts_with($message_content_lower,  "<@!662093882795753482>")) {
-	$message_content_lower = trim(substr($message_content_lower, 22));
-	$message_content = trim(substr($message_content, 22));
+if(str_starts_with($message_content_lower,  "<@!".$discord->id.">")) {
+	$message_content_lower = trim(substr($message_content_lower, (4+strlen($discord->id))));
+	$message_content = trim(substr($message_content, (4+strlen($discord->id))));
 	$called = true;
 }
 //Allow calling comamnds by command symbol
-if (str_starts_with($message_content_lower,  $command_symbol)) {
-    $message_content_lower = trim(substr($message_content_lower, 1));
-    $message_content = trim(substr($message_content, 1));
+if (str_starts_with($message_content_lower, $command_symbol)) {
+    $message_content_lower = trim(substr($message_content_lower, strlen($command_symbol)));
+    $message_content = trim(substr($message_content, strlen($command_symbol)));
 	$called = true;
 } elseif (str_starts_with($message_content_lower, '!s')) {
     $message_content_lower = trim(substr($message_content_lower, 2));
@@ -531,6 +531,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 	$called = true;
 }
 if(!$called) return;
+echo $message_content;
     /*
     *********************
     *********************
