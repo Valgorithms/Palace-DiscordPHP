@@ -2090,6 +2090,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
+				if (!preg_match('/^[0-9]{16,18}$/', $value)){
+					$message->react('❌');
+					return;
+				}
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
@@ -2241,6 +2245,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $value = str_replace("<@", "", $value);
                 $value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
                 if (is_numeric($value)) {
+					if (!preg_match('/^[0-9]{16,18}$/', $value)){
+						$message->react('❌');
+						return;
+					}
                     $mention_member				= $author_guild->members->get('id', $value);
                     $mention_user				= $mention_member->user;
                     $mentions_arr				= array($mention_user);
@@ -4467,6 +4475,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             $value = str_replace(">", "", $value);
             $value = trim($value);
             if (is_numeric($value)) {
+				if (!preg_match('/^[0-9]{16,18}$/', $value)){
+					$message->react('❌');
+					return;
+				}
                 $mention_member	= $author_guild->members->get('id', $value);
                 if ($mention_member != null) { //$message->reply("Invalid input! Please enter an ID or @mention the user");
                     if (get_class($mention_member) == "Discord\Parts\User\Member") {
@@ -4553,10 +4565,6 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     }
                 }
 				else {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)){
-						$message->react('❌');
-						return;
-					}
 					//attempt to fetch user info
 					$discord->users->fetch($value)->done(
 						function ($mention_user) use ($discord, $author_channel){
@@ -4704,6 +4712,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $value = str_replace("<@", "", $value);
                 $value = str_replace(">", "", $value);
                 if (is_numeric($value)) {
+					if (!preg_match('/^[0-9]{16,18}$/', $value)){
+						$message->react('❌');
+						return;
+					}
                     $mention_member				= $author_guild->members->get('id', $value);
                     $mention_user				= $mention_member->user;
                     $mentions_arr				= array($mention_user);
@@ -4766,6 +4778,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $value = str_replace("<@", "", $value);
                 $value = str_replace(">", "", $value);
                 if (is_numeric($value)) {
+					if (!preg_match('/^[0-9]{16,18}$/', $value)){
+						$message->react('❌');
+						return;
+					}
                     $mention_member				= $author_guild->members->get('id', $value);
                     $mention_user				= $mention_member->user;
                     $mentions_arr				= array($mention_user);
@@ -4871,6 +4887,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 $value = str_replace("<@", "", $value);
                 $value = str_replace(">", "", $value);
                 if (is_numeric($value)) {
+					if (!preg_match('/^[0-9]{16,18}$/', $value)){
+						$message->react('❌');
+						return;
+					}
                     $mention_member = $author_guild->members->get('id', $value);
                     $mention_user = $mention_member->user;
                     $mentions_arr = array($mention_user);
@@ -5027,6 +5047,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value);
             if (is_numeric($value)) {
+				if (!preg_match('/^[0-9]{16,18}$/', $value)){
+					$message->react('❌');
+					return;
+				}
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
@@ -5369,6 +5393,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         
             
         if (is_numeric($value)) {
+			if (!preg_match('/^[0-9]{16,18}$/', $value)){
+				$message->react('❌');
+				return;
+			}
             $mention_member				= $author_guild->members->get('id', $value);
             $mention_user				= $mention_member->user;
             $mentions_arr				= array($mention_user);
@@ -5559,6 +5587,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
+				if (!preg_match('/^[0-9]{16,18}$/', $value)){
+					$message->react('❌');
+					return;
+				}
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
@@ -5684,6 +5716,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
+				if (!preg_match('/^[0-9]{16,18}$/', $value)){
+					$message->react('❌');
+					return;
+				}
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
@@ -5817,6 +5853,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
             $value = str_replace(">", "", $value);
             
             if (is_numeric($value)) {
+				if (!preg_match('/^[0-9]{16,18}$/', $value)){
+					$message->react('❌');
+					return;
+				}
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
