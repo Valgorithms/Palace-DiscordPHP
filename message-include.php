@@ -3500,7 +3500,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
         }
         if ($message_content_lower == 'genimage') {
             include "imagecreate_include.php"; //Generates $img_output_path
-            $image_path = "http://www.valzargaming.com/discord%20-%20palace/" . $img_output_path;
+            $image_path = "https://www.valzargaming.com/discord%20-%20palace/" . $img_output_path;
             //echo "image_path: " . $image_path . PHP_EOL;
             //	Build the embed message
             $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
