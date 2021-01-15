@@ -4553,6 +4553,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                     }
                 }
 				else {
+					if (!preg_match('/^[0-9]{16,18}$/', $value)){
+						$message->react('❌');
+						return;
+					}
 					//attempt to fetch user info
 					$discord->users->fetch($value)->done(
 						function ($mention_user) use ($discord, $author_channel){
@@ -4632,8 +4636,8 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 							if ($embed) {
 								$author_channel->sendEmbed($embed);
 							}
-						}, function ($error) use ($author_channel){
-							$author_channel->send("Unable to fetch user from Discord!");
+						}, function ($error) use ($author_channel, $message){
+							$message->react("👎");
 						}
 					);
                 }
@@ -4663,6 +4667,10 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
                 }
                 $message->reply($restcord_result);
 				*/
+				if (!preg_match('/^[0-9]{16,18}$/', $value)){
+					$message->react('❌');
+					return;
+				}
 				$discord->users->fetch($value)->done(
 					function ($target_user) use ($message, $value){
 						$target_username = $target_user->username;
