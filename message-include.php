@@ -4555,7 +4555,7 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 				else {
 					//attempt to fetch user info
 					$discord->users->fetch($value)->done(
-						function ($user) use ($author_channel){
+						function ($mention_user) use ($discord, $author_channel){
 							$mention_username			= $mention_user->username;
 							$mention_id					= $mention_user->id;
 							$mention_discriminator		= $mention_user->discriminator;
@@ -4563,13 +4563,13 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 							$mention_nickname			= $mention_user->nick;
 							$mention_avatar 			= $mention_user->avatar;
 							
-							$mention_joinedTimestamp	= $mention_member->joined_at->timestamp;
-							$mention_joinedDate			= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
-							$mention_joinedDateTime		= new \Carbon\Carbon('@' . $mention_joinedTimestamp);
+							//$mention_joinedTimestamp	= $mention_member->joined_at->timestamp;
+							//$mention_joinedDate			= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
+							//$mention_joinedDateTime		= new \Carbon\Carbon('@' . $mention_joinedTimestamp);
 							//$mention_created			= $mention_user->createdAt;
 							$mention_createdTimestamp	= $mention_user->createdTimestamp(); //echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
 							$mention_createdDate		= date("D M j H:i:s Y", $mention_createdTimestamp);
-							$mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
+							//$mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
 							$mention_createdAge = \Carbon\Carbon::now()->diffInDays($mention_createdDate) . " days";
 							
 							//Load history
@@ -4617,8 +4617,8 @@ if (str_starts_with($message_content_lower,  $command_symbol)) {
 								->addFieldValues("Avatar", "[Link]($mention_avatar)", true)
 								->addFieldValues("Account Created", "$mention_createdDate", true)
 								->addFieldValues("Account Age", "$mention_createdAge", true)
-								->addFieldValues("Joined Server", "$mention_joinedDate", true)
-								->addFieldValues("Server Age", "$mention_joinedAge", true)
+								//->addFieldValues("Joined Server", "$mention_joinedDate", true)
+								//->addFieldValues("Server Age", "$mention_joinedAge", true)
 								->addFieldValues("Tag history (last 5)", "`$mention_tags`")
 								->addFieldValues("Nickname history (last 5)", "`$mention_nicknames`")
 
