@@ -259,7 +259,6 @@ if ($rp0) {
                             */
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
@@ -306,7 +305,6 @@ if ($rp0) {
                             );
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
@@ -353,7 +351,6 @@ if ($rp0) {
                             );
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
@@ -400,7 +397,6 @@ if ($rp0) {
                             );
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
@@ -443,7 +439,6 @@ if ($rp0) {
                             );
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
@@ -487,7 +482,6 @@ if ($rp0) {
                             );
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
@@ -531,7 +525,6 @@ if ($rp0) {
                             );
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
@@ -545,7 +538,48 @@ if ($rp0) {
                 }*/
             }
             break;
-		
+		case ($gameroles_message_id):
+            if ($gamerolesoption) {
+                echo "game role reaction" . PHP_EOL;
+                foreach ($gameroles as $var_name => $value) {
+                    if (($value == $emoji_name) || ($value == $emoji_name)) {
+                        $select_name = $var_name;
+                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+                            //Create the role
+                            /*
+                            $new_role = array(
+                                'name' => ucfirst($select_name),
+                                'permissions' => 0,
+                                'color' => 3066993,
+                                'hoist' => false,
+                                'mentionable' => false
+                            );
+                            */
+                            $new_role = $discord->factory(
+                                Discord\Parts\Guild\Role::class,
+                                [
+                                'name' => ucfirst($select_name),
+                                'permissions' => 0,
+                                'color' => 0x000ead,
+                                'hoist' => false,
+                                'mentionable' => false
+                                ]
+                            );
+                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+                            }, static function ($error) {
+                                echo $e->getMessage() . PHP_EOL;
+                            });
+                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
+                        }
+                    }
+                }
+                //$message->clearReactions();
+                /*foreach ($pronouns as $var_name => $value){
+                    //$message->react($value);
+                }*/
+            }
+            break;
         case ($customroles_message_id):
             if ($rp4) {
                 echo "Custom roles reaction" . PHP_EOL;
@@ -578,7 +612,6 @@ if ($rp0) {
                             );
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
@@ -614,7 +647,6 @@ if ($rp0) {
                             );
                             $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
                                 //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                                $respondent_member->addRole($role->id);
                             }, static function ($error) {
                                 echo $e->getMessage() . PHP_EOL;
                             });
