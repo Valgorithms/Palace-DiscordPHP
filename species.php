@@ -11,7 +11,7 @@ $species = array(
     "dolphin" => "🐬", //:dolphin:
     "dragon" => "🐉", //:dragon:
     "equine" => "🐴", //:horse:
-    "feline" => "😺", //:smiley_cat:
+    "feline" => "😺" //:smiley_cat:
 );
 
 $species2 = array(

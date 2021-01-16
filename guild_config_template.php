@@ -61,12 +61,6 @@ if (!CheckFile($guild_folder, "watch_channel_id.php")) {
 }
 
 if (!CheckFile($guild_folder, "rolepicker_channel_id.php")) {
-    $rolepicker_channel_id	= ""; //Channel where a detailed message about the user gets posted
-    VarSave($guild_folder, "rolepicker_channel_id.php", strval($rolepicker_channel_id));
-} else {
-    $rolepicker_channel_id = strval(VarLoad($guild_folder, "rolepicker_channel_id.php"));
-}
-
 if (!CheckFile($guild_folder, "games_channel_id.php")) {
     $games_channel_id = "";	//Channel where a detailed message about the user gets posted
     VarSave($guild_folder, "games_channel_id.php", strval($games_channel_id));
@@ -100,6 +94,18 @@ if (!CheckFile($guild_folder, "tip_approved_channel_id.php")) {
     VarSave($guild_folder, "tip_approved_channel_id.php", strval($tip_approved_channel_id));
 } else {
     $tip_approved_channel_id = strval(VarLoad($guild_folder, "tip_approved_channel_id.php"));
+}
+if (!CheckFile($guild_folder, "rolepicker_channel_id.php")) {
+    $rolepicker_channel_id = ""; //Channel where approved tips get reposted to for community voting
+    VarSave($guild_folder, "rolepicker_channel_id.php", strval($rolepicker_channel_id));
+} else {
+    $rolepicker_channel_id = strval(VarLoad($guild_folder, "rolepicker_channel_id.php"));
+}
+if (!CheckFile($guild_folder, "games_rolepicker_channel_id.php")) {
+    $games_rolepicker_channel_id = ""; //Channel where approved tips get reposted to for community voting
+    VarSave($guild_folder, "games_rolepicker_channel_id.php", strval($games_rolepicker_channel_id));
+} else {
+    $games_rolepicker_channel_id = strval(VarLoad($guild_folder, "games_rolepicker_channel_id.php"));
 }
 
 //Optional Role IDs
@@ -176,6 +182,13 @@ if (!CheckFile($guild_folder, "rolepicker_id.php")) {
 }
 
 //Rolepicker message IDs
+if (!CheckFile($guild_folder, "gameroles_message_id.php")) {
+    $gameroles_message_id = ""; //id of the Species Menu message
+    VarSave($guild_folder, "gameroles_message_id.php", strval($gameroles_message_id));
+} else {
+    $gameroles_message_id = strval(VarLoad($guild_folder, "gameroles_message_id.php"));
+}
+
 if (!CheckFile($guild_folder, "species_message_id.php")) {
     $species_message_id = ""; //id of the Species Menu message
     VarSave($guild_folder, "species_message_id.php", strval($species_message_id));
@@ -183,7 +196,6 @@ if (!CheckFile($guild_folder, "species_message_id.php")) {
     $species_message_id = strval(VarLoad($guild_folder, "species_message_id.php"));
 }
 
-//Rolepicker message IDs
 if (!CheckFile($guild_folder, "species2_message_id.php")) {
     $species2_message_id = ""; //id of the Species Menu message
     VarSave($guild_folder, "species2_message_id.php", strval($species2_message_id));

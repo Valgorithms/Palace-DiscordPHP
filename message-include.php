@@ -172,10 +172,21 @@ if ($is_dm === false) { //Guild message
     } else {
         $rolepicker_channel = null;
     }
+	if ($games_rolepicker_channel_id) {
+        $games_rolepicker_channel = $author_guild->channels->get('id', $games_rolepicker_channel_id);
+    } else {
+        $games_rolepicker_channel = null;
+    }
+	
     if ($games_channel_id) {
         $games_channel = $author_guild->channels->get('id', $games_channel_id);
     } else {
         $games_channel = null;
+    }
+	if ($gameroles_message_id) {
+        $gameroles_channel = $author_guild->channels->get('id', $gameroles_message_id);
+    } else {
+        $gameroles_channel = null;
     }
     if ($suggestion_pending_channel_id) {
         $suggestion_pending_channel	= $author_guild->channels->get('id', strval($suggestion_pending_channel_id));
@@ -230,7 +241,7 @@ if (!CheckFile($guild_folder, "command_symbol.php")) {
 }			//Load saved option file (Not used yet, but might be later)
 
 //Chat options
-global $react_option, $vanity_option, $nsfw_option, $channel_option, $games_option;
+global $react_option, $vanity_option, $nsfw_option, $channel_option, $games_option, $gameroles_option;
 if (!CheckFile($guild_folder, "react_option.php")) {
     $react	= $react_option;
 }								//Bot will not react to messages if false
@@ -255,16 +266,21 @@ if (!CheckFile($guild_folder, "channel_option.php")) {
 else {
     $channeloption 	= VarLoad($guild_folder, "channel_option.php");
 }				//Load saved option file
-
 if (!CheckFile($guild_folder, "games_option.php")) {
     $games	= $games_option;
 }									//Allow games like Yahtzee
 else {
     $games 	= VarLoad($guild_folder, "games_option.php");
 }				//Load saved option file
+if (!CheckFile($guild_folder, "gameroles_option.php")) {
+    $gamerole	= $gameroles_option;
+}									//Allow gameroles
+else {
+    $gamerole 	= VarLoad($guild_folder, "gameroles_option.php");
+}				//Load saved option file
 
 //Role picker options
-global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $channel_option, $custom_option;
+global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $channel_option, $gameroles_option, $custom_option;
 if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     if (!CheckFile($guild_folder, "rolepicker_option.php")) {
         $rp0	= $rolepicker_option;							//Allow Rolepicker
@@ -338,6 +354,17 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
     } else {
         $channeloption	= false;
     }
+	if (($gameroles_message_id != "") || ($gameroles_message_id != null)) {
+        if (!CheckFile($guild_folder, "gameroles_option.php")) {
+            $gamerole = $gameroles_option;
+        }
+        else {
+            $gamerole = VarLoad($guild_folder, "gameroles_option.php");
+        }
+    } else {
+        $gamerole = false;
+    }
+	
 	
 } else { //All functions are disabled
     $rp0 	= false;
@@ -348,6 +375,7 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
 	$rp5 	= false;
 	$nsfw	= false;
 	$channeloption = false;
+	$gamerole = false;
 }
 
 //echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
@@ -499,6 +527,7 @@ else {
 if (($rolepicker_id == "") || ($rolepicker_id == "0") || ($rolepicker_id === null)) { //Message rolepicker menus
     $rolepicker_id = $discord->id; //Default to Palace Bot
 }
+global $gameroles, $gameroles_message_text;
 global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
 global $gender, $gender_message_text;
 global $pronouns, $pronouns_message_text;
@@ -595,6 +624,7 @@ echo $message_content;
                 $documentation = $documentation . "`message sexuality`\n";
 				$documentation = $documentation . "`message adult`\n";
                 $documentation = $documentation . "`message customroles`\n";
+				//TODO REVIEW AND ADD MISSING
                 
                 $documentation_sanitized = str_replace("\n", "", $documentation);
                 $doc_length = strlen($documentation_sanitized);
@@ -663,6 +693,7 @@ echo $message_content;
                     $documentation = $documentation . "`watch #channel` (defaulted to direct message only)\n";
                 }
                 $documentation = $documentation . "`rolepicker channel #channel`  <#{$rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`games rolepicker channel #channel`  <#{$games_rolepicker_channel->id}>\n";
                 $documentation = $documentation . "`games #channel` <#{$games_channel->id}>\n";
                 $documentation = $documentation . "`suggestion pending #channel` <#{$suggestion_pending_channel->id}>\n";
                 $documentation = $documentation . "`suggestion approved #channel` <#{$suggestion_approved_channel->id}>\n";
@@ -670,10 +701,15 @@ echo $message_content;
                 $documentation = $documentation . "`tip approved #channel` <#{$tip_approved_channel->id}>\n";
                 //Messages
                 $documentation = $documentation . "**Messages:**\n";
-                if ($species_message_id) {
-                    $documentation = $documentation . "`species messageid` $species_message_id\n";
+                if ($gameroles_message_id) {
+                    $documentation = $documentation . "`gameroles messageid` $gameroles_message_id\n";
                 } else {
-                    $documentation = $documentation . "`species messageid` Message not yet sent!\n";
+                    $documentation = $documentation . "`gameroles messageid` Message not yet sent!\n";
+                }
+                if ($species_message_id) {
+                    $documentation = $documentation . "`spciese messageid` $species_message_id\n";
+                } else {
+                    $documentation = $documentation . "`spciese messageid` Message not yet sent!\n";
                 }
                 if ($species2_message_id) {
                     $documentation = $documentation . "`species2 messageid` $species2_message_id\n";
@@ -775,6 +811,7 @@ echo $message_content;
 					} else {
 						$documentation = $documentation . "**Disabled**\n";
 					}
+					
 					//rolepicker
 					$documentation = $documentation . "`\nrolepicker:` ";
 					if ($rp0) {
@@ -782,12 +819,18 @@ echo $message_content;
 					} else {
 						$documentation = $documentation . "**Disabled**\n";
 					}
-				
+					
 					//Strikeout invalid options
 					if (!$rp0) {
 						$documentation = $documentation . "~~";
 					} //Strikeout invalid options
-					
+					//gameroles
+					$documentation = $documentation . "`game roles:` ";
+					if ($gamerole) {
+						$documentation = $documentation . "**Enabled**\n";
+					} else {
+						$documentation = $documentation . "**Disabled**\n";
+					}
 					//species
 					$documentation = $documentation . "`species:` ";
 					if ($rp1) {
@@ -891,6 +934,33 @@ echo $message_content;
                 return true;
                 break;
             //Role Messages Setup
+			
+            case 'message gamerole': //;message gamerole
+			case 'message gameroles': //;message gameroles
+                VarSave($guild_folder, "games_rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
+                $author_channel->sendMessage($gameroles_message_text)->done(function ($new_message) use ($guild_folder, $gameroles, $message) {
+                    VarSave($guild_folder, "gameroles_message_id.php", strval($new_message->id));
+					/*
+                    foreach ($gameroles as $var_name => $value) {
+                        $new_message->react($value);
+                    }
+					*/
+					$promise = null;
+					$string = '';
+					$string1 = '$promise = $new_message->react(array_shift($gameroles))->done(function () use ($gameroles, $i, $new_message) {';
+					$string2 = '});';
+					for ($i = 0; $i < count($gameroles); $i++) {
+					  $string .= $string1;
+					}
+					for ($i = 0; $i < count($gameroles); $i++) {
+					  $string .= $string2;
+					}
+					eval($string); //I really hate this language sometimes
+					$message->delete();
+                    return true;
+                });
+                return true;
+                break;
             case 'message species': //;message species
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
                 $author_channel->sendMessage($species_message_text)->done(function ($new_message) use ($guild_folder, $species, $message) {
@@ -1218,7 +1288,7 @@ echo $message_content;
                 }
                 return true;
                 break;
-            case 'games':
+			case 'games':
                 if (!CheckFile($guild_folder, "games_option.php")) {
                     VarSave($guild_folder, "games_option.php", $games_option);
                     echo "[NEW GAMES OPTION FILE]" . PHP_EOL;
@@ -1236,6 +1306,7 @@ echo $message_content;
                 }
                 return true;
                 break;
+			            case 'gamerole':
             case 'rolepicker':
                 if (!CheckFile($guild_folder, "rolepicker_option.php")) {
                     VarSave($guild_folder, "rolepicker_option.php", $rolepicker_option);
@@ -1251,6 +1322,24 @@ echo $message_content;
                     $message->reply("Rolepicker enabled!");
                 } else {
                     $message->reply("Rolepicker disabled!");
+                }
+                return true;
+                break;
+			case 'gameroles':
+                if (!CheckFile($guild_folder, "gameroles_option.php")) {
+                    VarSave($guild_folder, "gameroles_option.php", $gameroles_option);
+                    echo "[NEW GAME ROLES OPTION FILE]" . PHP_EOL;
+                }
+                $gameroles_var = VarLoad($guild_folder, "gameroles_option.php");
+                $gameroles_flip = !$gameroles_var;
+                VarSave($guild_folder, "gameroles_option.php", $gameroles_flip);
+                if ($react) {
+                    $message->react("👍");
+                }
+                if ($gameroles_flip === true) {
+                    $message->reply("Game role functions enabled!");
+                } else {
+                    $message->reply("Game role functions disabled!");
                 }
                 return true;
                 break;
@@ -1592,7 +1681,22 @@ echo $message_content;
             }
             return true;
         }
-        if (str_starts_with($message_content_lower, 'setup games ')) {
+        if (str_starts_with($message_content_lower, 'setup games rolepicker channel ')) {
+            $filter = "setup games rolepicker channel ";
+            $value = str_replace($filter, "", $message_content_lower);
+            $value = str_replace("<#", "", $value);
+            $value = str_replace(">", "", $value);
+            $value = trim($value); //echo "value: " . $value . PHP_EOL;
+            if (is_numeric($value)) {
+                VarSave($guild_folder, "games_rolepicker_channel_id.php", $value);
+                $message->reply("Games Rolepicker channel ID saved!");
+            } else {
+                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
+            }
+            return true;
+        }
+        
+		if (str_starts_with($message_content_lower, 'setup games ')) {
             $filter = "setup games ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1601,6 +1705,20 @@ echo $message_content;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "games_channel_id.php", $value);
                 $message->reply("Games channel ID saved!");
+            } else {
+                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
+            }
+            return true;
+        }
+		if (str_starts_with($message_content_lower, 'setup gameroles ')) {
+            $filter = "setup gameroles ";
+            $value = str_replace($filter, "", $message_content_lower);
+            $value = str_replace("<#", "", $value);
+            $value = str_replace(">", "", $value);
+            $value = trim($value); //echo "value: " . $value . PHP_EOL;
+            if (is_numeric($value)) {
+                VarSave($guild_folder, "gameroles_message_id.php", $value);
+                $message->reply("Game roles channel ID saved!");
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
@@ -1790,10 +1908,12 @@ echo $message_content;
             $documentation = $documentation . "`vanity`\n";
             //nsfw
             $documentation = $documentation . "`nsfw`\n";
-            //gamnes
+            //games
             $documentation = $documentation . "`games`\n";
             //rolepicker
             $documentation = $documentation . "`rolepicker`\n";
+			//game roles
+            $documentation = $documentation . "`gameroles`\n";
             //species
             $documentation = $documentation . "`species`\n";
             /*

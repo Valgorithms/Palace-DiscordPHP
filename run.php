@@ -32,6 +32,7 @@ function execInBackground($cmd){
 
 //Global variables
 include 'config.php'; //Global config variables
+include 'game_roles.php'; //Used by the game role picker function
 include 'species.php'; //Used by the species role picker function
 include 'sexualities.php'; //Used by the sexuality role picker function
 include 'gender.php'; //Used by the gender role picker function

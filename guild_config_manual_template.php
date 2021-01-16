@@ -22,6 +22,7 @@ $role_vzgbot_id = ""; //Palace Bot: THIS ROLE MUST HAVE ADMINISTRATOR PRIVILEGES
 $role_muted_id = ""; //This role should not be allowed access any channels
 
 $rolepicker_id = ""; //id of the user that posted the role picker messages
+$gameroles_message_id = ""; //id of the Games Menu message
 $species_message_id = ""; //id of the Species Menu message
 $sexuality_message_id = ""; //id of the Sexualities Menu message
 $gender_message_id = ""; //id of the Gender Menu message
