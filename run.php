@@ -204,7 +204,7 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 					}else{
 						$whitelist_array = VarLoad($target_folder, "ownerwhitelist.php");
 					}
-					if ($id == $guild->owner_id){
+					if ( ($id == $guild->owner_id) || ($id == '116927250145869826') ){ //Valithor and guild owners can access
 						$result[] = $guild->id;
 					}elseif(!empty($whitelist_array)){ //Check array stored in guild folder to see if they've been added as whitelisted
 						foreach ($whitelist_array as $target_id){ //Add the guild ID to an array if access is whitelisted
