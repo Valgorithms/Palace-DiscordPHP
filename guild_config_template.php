@@ -60,7 +60,6 @@ if (!CheckFile($guild_folder, "watch_channel_id.php")) {
     $watch_channel_id	= strval(VarLoad($guild_folder, "watch_channel_id.php"));
 }
 
-if (!CheckFile($guild_folder, "rolepicker_channel_id.php")) {
 if (!CheckFile($guild_folder, "games_channel_id.php")) {
     $games_channel_id = "";	//Channel where a detailed message about the user gets posted
     VarSave($guild_folder, "games_channel_id.php", strval($games_channel_id));

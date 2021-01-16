@@ -134,7 +134,17 @@ if (($rolepicker_id != "") || ($rolepicker_id != null)) {
 if ($rp0) {
     if ($author_id == $rolepicker_id) {
         //Check options
-        if (($species_message_id != "") || ($species_messagwe_id != null)) {
+        if (($gameroles_message_id != "") || ($gameroles_message_id != null)) { //
+            if (!CheckFile($guild_folder, "gameroles_option.php")) {
+                $gamerole	= $gameroles_option;
+            }										//Species role picker
+            else {
+                $gamerole	= VarLoad($guild_folder, "gameroles_option.php");
+            }
+        } else {
+            $gamerole = false;
+        }
+        if (($species_message_id != "") || ($species_message_id != null)) {
             if (!CheckFile($guild_folder, "species_option.php")) {
                 $rp1	= $species_option;
             }										//Species role picker
@@ -230,7 +240,7 @@ if ($rp0) {
         $select_name = "";
         switch ($message_id) {
 		case ($gameroles_message_id):
-            if ($gameroles_option) { //Will eventually contain many games, so server owner should decide if they want it enabled
+            if ($gamerole) { //Will eventually contain many games, so server owner should decide if they want it enabled
                 echo "game role reaction" . PHP_EOL;
                 foreach ($gameroles as $var_name => $value) {
                     if (($value == $emoji_name) || ($value == $emoji_name)) {
