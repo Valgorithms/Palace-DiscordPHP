@@ -2,8 +2,8 @@
 include_once 'custom_functions.php';
 
 $gameroles = array(
-    "crusaders" => "⚔️",
-    "deep rock galactic" => "🍻"
+    "Crusaders of the Lost Idols" => "⚔️",
+    "Deep Rock Galactic" => "🍻"
 );
 //Message copy-pasta:
 $gameroles_message_text = "**Role Menu: Games**

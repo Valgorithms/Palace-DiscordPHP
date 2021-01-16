@@ -568,7 +568,9 @@ echo $message_content;
     *********************
     *********************
     */
-
+	if ($creator || $owner) { //BCP
+		//In development
+	}
     if ($creator || $owner || $dev) {
         switch ($message_content_lower) {
             case 'setup': //;setup
