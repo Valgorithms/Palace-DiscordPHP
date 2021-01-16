@@ -82,7 +82,7 @@ include "$guild_config_path";
 
 //Role picker stuff
 $message_id	= $message->id;														//echo "message_id: " . $message_id . PHP_EOL;
-global $gameroles, $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwroles;
+global $gameroles, $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwroles, $nsfwsubroles;
 $guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
 if (CheckFile($guild_folder."/", 'custom_roles.php')){
 	include "$guild_custom_roles_path"; //Overwrite default custom_roles
@@ -670,6 +670,42 @@ if ($rp0) {
                 }*/
             }
 			break;
+		case ($nsfwsubrole_message_id):
+			if ($nsfw) {
+                echo "NSFW subroles reaction" . PHP_EOL;
+                //echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
+                foreach ($nsfwsubroles as $var_name => $value) {
+                    if (($value == $emoji_name) || ($value == $emoji_name)) {
+                        $select_name = $var_name;
+                        echo "select_name: $select_name" . PHP_EOL;
+                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+                            //Create the role
+                            $new_role = $discord->factory(
+                                Discord\Parts\Guild\Role::class,
+                                [
+                                'name' => ucfirst($select_name),
+                                'permissions' => 0,
+                                'color' => 0xff0000,
+                                'hoist' => false,
+                                'mentionable' => false
+                                ]
+                            );
+                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+                            }, static function ($error) {
+                                echo $e->getMessage() . PHP_EOL;
+                            });
+                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
+                        }
+                    }
+                }
+                //$message->clearReactions();
+                /*foreach ($nsfwsubroles as $var_name => $value){
+                    //$message->react($value);
+                }*/
+            }
+			break;
+			
     }
         if ($select_name != "") { //A reaction role was found
             //Check if the member has a role of the same name
