@@ -283,6 +283,7 @@ set_exception_handler(function (Throwable $e) { //stops execution completely
 });
 */
 
+//$filesystem = \React\Filesystem\Filesystem::create($discord->getLoop()); //May be used in an future version of DPHP
 include_once "custom_functions.php";
 $rescue = VarLoad("_globals", "RESCUE.php"); //Check if recovering from a fatal crash
 $GLOBALS['presenceupdate'] = false;
