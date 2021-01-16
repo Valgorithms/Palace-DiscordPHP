@@ -560,7 +560,6 @@ if (str_starts_with($message_content_lower, $command_symbol)) {
 	$called = true;
 }
 if(!$called) return;
-echo $message_content;
     /*
     *********************
     *********************
@@ -569,7 +568,71 @@ echo $message_content;
     *********************
     */
 	if ($creator || $owner) { //BCP
-		//In development
+		if (str_starts_with($message_content_lower, 'bcp')) {
+			$whitelist_array = array();
+			if(!CheckFile($guild_folder, "ownerwhitelist.php")) {
+				$whitelist_array = array($guild_owner_id);
+				VarSave($guild_folder, "ownerwhitelist.php", $whitelist_array); //The original guildowner should be added to the whitelist in case they ever transfer ownership but still need access
+			}else{
+				$whitelist_array = VarLoad($guild_folder, "ownerwhitelist.php");
+			}
+			$subcommand = trim(substr($message_content_lower, 3));
+			echo "[SUBCOMMAND $subcommand]" . PHP_EOL;
+			
+			$switch = null;
+			if (str_starts_with($subcommand, 'add')) $switch = 'add';
+			if (str_starts_with($subcommand, 'rem')) $switch = 'rem';
+			if (str_starts_with($subcommand, 'remove')) $switch = 'remove';
+			if (str_starts_with($subcommand, 'list')) $switch = 'list';
+			if ($switch != null){
+				$value = trim(str_replace($switch, "", $subcommand));
+				$filter = "<@";
+				$value = str_replace($filter, "", $value);
+				$filter = "!";
+				$value = str_replace($filter, "", $value);
+				$filter = ">";
+				$value = str_replace($filter, "", $value);
+				if(is_numeric($value)){
+					if (!preg_match('/^[0-9]{16,18}$/', $value)){
+						$message->react('❌');
+						return;
+					}
+				}
+				if ($switch == 'add'){
+					if ($target_user = $discord->users->offsetGet($value)){ //Add to whitelist
+						if(!in_array($value, $whitelist_array)){
+							$whitelist_array[] = $value;
+							VarSave($guild_folder, "ownerwhitelist.php", $whitelist_array);
+							$message->react("👍");
+							return;
+						}
+					}
+				}
+				if ( ($switch == 'rem') || ($switch == 'remove')){ //TODO
+					if(in_array($value, $whitelist_array)){ //Remove from whitelist
+						$pruned_whitelist_array = array();
+						foreach ($whitelist_array as $id){
+							if ($id != $value)
+								$pruned_whitelist_array[] = $id;
+						}
+						VarSave($guild_folder, "ownerwhitelist.php", $pruned_whitelist_array);
+						$message->react("👍");
+						return;
+					}
+				}
+				if ($switch == 'list'){ //TODO
+					$string = "Whitelisted users: ";
+					foreach ($whitelist_array as $id){
+						$string .= "<@$id> ";
+					}
+					$message->channel->sendMessage($string);
+					return;
+				}
+				$message->react("👎");
+				return;
+			}
+			//check for empty subcommand and subcommands
+		}
 	}
     if ($creator || $owner || $dev) {
         switch ($message_content_lower) {
@@ -936,7 +999,7 @@ echo $message_content;
                 return true;
                 break;
             //Role Messages Setup
-			
+			case 'message games': //;message games
             case 'message gamerole': //;message gamerole
 			case 'message gameroles': //;message gameroles
                 VarSave($guild_folder, "games_rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
