@@ -8,12 +8,12 @@ $mention_avatar 			= $mention_user->avatar;
 
 $mention_joinedTimestamp	= $mention_member->joined_at->timestamp;
 $mention_joinedDate			= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
-$mention_joinedDateTime		= new \Carbon\Carbon('@' . $mention_joinedTimestamp);
+if (mention_joinedTimestamp) $mention_joinedDateTime = new \Carbon\Carbon('@' . $mention_joinedTimestamp);
 //$mention_created			= $mention_user->createdAt;
 $mention_createdTimestamp	= $mention_user->createdTimestamp(); //echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
 $mention_createdDate		= date("D M j H:i:s Y", $mention_createdTimestamp);
-$mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
-$mention_createdAge = \Carbon\Carbon::now()->diffInDays($mention_createdDate) . " days";
+if ($mention_member) $mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
+if($mention_createdDate) $mention_createdAge = \Carbon\Carbon::now()->diffInDays($mention_createdDate) . " days";
 
 //Load history
 $mention_folder = "\\users\\$mention_id";
@@ -24,10 +24,12 @@ if (is_array($mention_nicknames_array)) {
 	$mention_nicknames_array = array_reverse($mention_nicknames_array);
 	$x=0;
 	foreach ($mention_nicknames_array as $nickname) {
-		if ($x<5) {
-			$mention_nicknames = $mention_nicknames . $nickname . "\n";
+		if ($nickname != ""){
+			if ($x<5) {
+				$mention_nicknames = $mention_nicknames . $nickname . "\n";
+			}
+			$x++;
 		}
-		$x++;
 	}
 }
 if ($mention_nicknames == "") {
@@ -41,10 +43,12 @@ if (is_array($mention_tags_array)) {
 	$mention_tags_array = array_reverse($mention_tags_array);
 	$x=0;
 	foreach ($mention_tags_array as $tag) {
-		if ($x<5) {
-			$mention_tags = $mention_tags . $tag . "\n";
+		if($tag != ""){
+			if ($x<5) {
+				$mention_tags = $mention_tags . $tag . "\n";
+			}
+			$x++;
 		}
-		$x++;
 	}
 }
 if ($mention_tags == "") {
