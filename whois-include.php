@@ -8,7 +8,7 @@ $mention_avatar 			= $mention_user->avatar;
 
 $mention_joinedTimestamp	= $mention_member->joined_at->timestamp;
 $mention_joinedDate			= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
-if (mention_joinedTimestamp) $mention_joinedDateTime = new \Carbon\Carbon('@' . $mention_joinedTimestamp);
+if ($mention_joinedTimestamp) $mention_joinedDateTime = new \Carbon\Carbon('@' . $mention_joinedTimestamp);
 //$mention_created			= $mention_user->createdAt;
 $mention_createdTimestamp	= $mention_user->createdTimestamp(); //echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
 $mention_createdDate		= date("D M j H:i:s Y", $mention_createdTimestamp);
