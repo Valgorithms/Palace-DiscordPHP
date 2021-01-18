@@ -1,19 +1,21 @@
 <?php
-$mention_username			= $mention_user->username;
-$mention_id					= $mention_user->id;
-$mention_discriminator		= $mention_user->discriminator;
-$mention_check				= $mention_username."#".$mention_discriminator;
-$mention_nickname			= $mention_user->nick;
-$mention_avatar 			= $mention_user->avatar;
+$mention_username			= $mention_user->username; echo "mention_username: $mention_username" . PHP_EOL;
+$mention_id					= $mention_user->id; echo "mention_id: $mention_id" . PHP_EOL;
+$mention_discriminator		= $mention_user->discriminator; echo "mention_discriminator: $mention_discriminator" . PHP_EOL;
+$mention_check				= $mention_username."#".$mention_discriminator; echo "mention_check: $mention_check" . PHP_EOL;
+$mention_nickname			= $mention_user->nick; echo "mention_nickname: $mention_nickname" . PHP_EOL;
+$mention_avatar 			= $mention_user->avatar; echo "mention_avatar: $mention_avatar" . PHP_EOL;
 
-$mention_joinedTimestamp	= $mention_member->joined_at->timestamp;
-$mention_joinedDate			= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
-if ($mention_joinedTimestamp) $mention_joinedDateTime = new \Carbon\Carbon('@' . $mention_joinedTimestamp);
+if ($mention_member){
+	$mention_joinedTimestamp = $mention_member->joined_at->timestamp;
+	$mention_joinedDate	= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
+	$mention_joinedDateTime = new \Carbon\Carbon('@' . $mention_joinedTimestamp);
+	$mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
+}
 //$mention_created			= $mention_user->createdAt;
-$mention_createdTimestamp	= $mention_user->createdTimestamp(); //echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
-$mention_createdDate		= date("D M j H:i:s Y", $mention_createdTimestamp);
-if ($mention_member) $mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
-if($mention_createdDate) $mention_createdAge = \Carbon\Carbon::now()->diffInDays($mention_createdDate) . " days";
+$mention_createdTimestamp = $mention_user->createdTimestamp(); //echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
+$mention_createdDate = date("D M j H:i:s Y", $mention_createdTimestamp);
+$mention_createdAge = \Carbon\Carbon::now()->diffInDays($mention_createdDate) . " days";
 
 //Load history
 $mention_folder = "\\users\\$mention_id";
