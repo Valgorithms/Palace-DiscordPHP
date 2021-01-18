@@ -3643,33 +3643,10 @@ if(!$called) return;
 				$author_channel->sendMessage("Invite URL: $url");
 			});
 		}
-		if ($message_content_lower == 'debug all invites'){ //;debug all invites
-			foreach($discord->guilds as $guild){
-				foreach($guild->channels as $channel){
-					$channel->createInvite([
-						'max_age' => 0, // Forever
-						'max_uses' => 1, // 1 use
-					])->then(
-						function ($invite) use ($author_user, $guild) {
-							$url = 'https://discord.gg/' . $invite->code;
-							$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
-						},
-						function ($error) use ($discord, $channel, $guild){
-							$channel->sendMessage("This bot does not have administrator privileges and cannot function! Leaving guild...")->done(
-								function ($message) use ($discord, $guild){
-									$discord->guilds->leave($guild->id);
-								}
-							);
-						}
-					);
-					break 1;
-				}
-			}
-		}
 		if ($message_content_lower == 'debug guild names'){ //;debug all invites
 			$guildstring = "";
 			foreach($discord->guilds as $guild){
-				$guildstring .= "{$guild->name} ({$guild->id})";
+				$guildstring .= "{$guild->name} ({$guild->id}) \n";
 			}
 			$message->channel->sendMessage($guildstring);
 		}
