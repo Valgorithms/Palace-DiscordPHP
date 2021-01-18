@@ -70,12 +70,12 @@ $embed
 	->addFieldValues("ID", "$mention_id", true)
 	->addFieldValues("Avatar", "[Link]($mention_avatar)", true)
 	->addFieldValues("Account Created", "$mention_createdDate", true)
-	->addFieldValues("Account Age", "$mention_createdAge", true)
-	->addFieldValues("Joined Server", "$mention_joinedDate", true)
-	->addFieldValues("Server Age", "$mention_joinedAge")
+	->addFieldValues("Account Age", "$mention_createdAge", true);
+if($mention_joinedDate) $embed->addFieldValues("Joined Server", "$mention_joinedDate", true);
+if($mention_joinedAge) $embed->addFieldValues("Server Age", "$mention_joinedAge");
+$embed
 	->addFieldValues("Tag history", "`$mention_tags`", true)
 	->addFieldValues("Nick history", "`$mention_nicknames`", true)
-
 	->setThumbnail("$mention_avatar")														// Set a thumbnail (the image in the top right corner)
 //			->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
 //			->setImage("$image_path")             													// Set an image (below everything except footer)
