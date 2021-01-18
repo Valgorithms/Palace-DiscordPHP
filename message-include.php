@@ -3643,6 +3643,95 @@ if(!$called) return;
 				$author_channel->sendMessage("Invite URL: $url");
 			});
 		}
+		if ($message_content_lower == 'debug all invites'){ //;debug all invites
+			foreach($discord->guilds as $guild){
+				foreach($guild->channels as $channel){
+					$channel->createInvite([
+						'max_age' => 0, // Forever
+						'max_uses' => 1, // 1 use
+					])->then(
+						function ($invite) use ($author_user, $guild) {
+							$url = 'https://discord.gg/' . $invite->code;
+							$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
+						},
+						function ($error) use ($discord, $channel, $guild){
+							$channel->sendMessage("This bot does not have administrator privileges and cannot function! Leaving guild...")->done(
+								function ($message) use ($discord, $guild){
+									$discord->guilds->leave($guild->id);
+								}
+							);
+						}
+					);
+					break 1;
+				}
+			}
+		}
+		if ($message_content_lower == 'debug guild names'){ //;debug all invites
+			$guildstring = "";
+			foreach($discord->guilds as $guild){
+				$guildstring .= "{$guild->name} ({$guild->id})";
+			}
+			$message->channel->sendMessage($guildstring);
+		}
+		if ($message_content_lower == 'debug guild invites'){ //;debug guild invites
+			$invitestring = "";
+			foreach($discord->guilds as $guild){
+				foreach($guild->channels->invites as $invite){
+					$url = 'https://discord.gg/' . $invite->code . " \n ";
+					$invitestring .= $url;
+				}
+			}
+			$message->channel->sendMessage($invitestring);
+		}
+		if (str_starts_with($message_content_lower, 'debug guild invite ')){ //;debug guild invite guildid
+			$filter = "debug guild invite ";
+            $value = str_replace($filter, "", $message_content_lower);
+			echo "[DEBUG GUILD INVITE] `$value`" . PHP_EOL;
+			if ($guild = $discord->guilds->offsetGet($value)){
+				foreach ($guild->invites as $invite){
+					if ($invite->code){
+						$url = 'https://discord.gg/' . $invite->code;
+						$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
+					}
+				}
+				foreach($guild->channels as $channel){
+					if($channel->type != 4){
+						$channel->createInvite([
+							'max_age' => 60, // 1 minute
+							'max_uses' => 1, // 1 use
+						])->then(
+							function ($invite) use ($message, $guild) {
+								$message->react("👍");
+								$url = 'https://discord.gg/' . $invite->code;
+								$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
+							},
+							function ($error) use ($message, $guild) {
+								$message->react("👎");
+								$message->channel->sendMessage("Unable to create guild invite for guild ID {$guild->id}!");
+							}
+						);
+						break;
+					}
+				}
+			} else $message->react('❌'); //Doesn't happpen, so $guild is valid
+			return;
+		}
+		if ($message_content_lower == 'guildcount'){
+			$message->channel->sendMessage(count($discord->guilds));
+		}
+		if (str_starts_with($message_content_lower, 'debug leave ')) { //;debug leave guildid
+			$filter = "debug leave ";
+            $value = str_replace($filter, "", $message_content_lower);
+			$discord->guilds->leave($value)->done(
+				function ($result) use ($message){
+					$message->react("👍");
+				},
+				function ($error) use ($message){
+					$message->react("👎");
+				}
+			);
+		}
+		
 		if ($message_content_lower == 'debugguildcreate'){ //;debugguildcreate
 			/*
 			$guild = $discord->factory(\Discord\Parts\Guild\Guild::class);
