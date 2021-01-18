@@ -54,7 +54,7 @@ $guildstring = "";
 //Check if user is in a shared guild
 foreach($discord->guilds as $guild){
 	if($member = $guild->members->offsetGet($mention_id)){
-			$guildstring .= $guild->name . "\n";
+			$guildstring .= $guild->name . ' (' . $guild->id . ")\n";
 	}
 }
 //var_dump(\Discord\Parts\Embed\Embed::class);
