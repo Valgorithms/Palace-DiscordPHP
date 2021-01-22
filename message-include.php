@@ -4592,7 +4592,7 @@ if(!$called) return;
                     $message->react("☠️");
                     throw new \CharlotteDunois\Events\UnhandledErrorException('Unhandled error event', 0, (($arguments[0] ?? null) instanceof \Throwable ? $arguments[0] : null));
                     return true;
-				case 'debugrole': //;debugrole
+				case 'debug role': //;debug role
 					echo '[DEBUG ROLE]' . PHP_EOL;
 					$new_role = $discord->factory(
 						Discord\Parts\Guild\Role::class,
@@ -4610,6 +4610,7 @@ if(!$called) return;
 					}, static function ($error) {
 						echo $error->getMessage() . PHP_EOL;
 					});
+					$message->delete();
 					return true;
 				case 'freshen';
 					$message->channel->guild->members->freshen()->done(

@@ -484,7 +484,7 @@ if ($rp0) {
                                 [
                                 'name' => ucfirst($select_name),
                                 'permissions' => 0,
-                                'color' => 0x713678a,
+                                'color' => 0x713678,
                                 'hoist' => false,
                                 'mentionable' => false
                                 ]
