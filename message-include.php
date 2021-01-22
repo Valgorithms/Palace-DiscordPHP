@@ -172,6 +172,12 @@ if ($is_dm === false) { //Guild message
     } else {
         $rolepicker_channel = null;
     }
+	if ($nsfw_rolepicker_channel_id) {
+        $nsfw_rolepicker_channel = $author_guild->channels->get('id', $nsfw_rolepicker_channel_id);
+    } else {
+        $nsfw_rolepicker_channel = null;
+    }
+	
 	if ($games_rolepicker_channel_id) {
         $games_rolepicker_channel = $author_guild->channels->get('id', $games_rolepicker_channel_id);
     } else {
@@ -749,7 +755,8 @@ if(!$called) return;
                 } else {
                     $documentation = $documentation . "`watch #channel` (defaulted to direct message only)\n";
                 }
-                $documentation = $documentation . "`rolepicker channel #channel`  <#{$rolepicker_channel->id}>\n";
+                $documentation = $documentation . "`nsfw rolepicker channel #channel`  <#{$nsfw_rolepicker_channel->id}>\n";
+				//$documentation = $documentation . "`rolepicker channel #channel`  <#{$rolepicker_channel->id}>\n";
 				$documentation = $documentation . "`games rolepicker channel #channel`  <#{$games_rolepicker_channel->id}>\n";
                 $documentation = $documentation . "`games #channel` <#{$games_channel->id}>\n";
                 $documentation = $documentation . "`suggestion pending #channel` <#{$suggestion_pending_channel->id}>\n";
