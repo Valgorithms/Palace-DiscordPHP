@@ -24,6 +24,7 @@ use React\Http\Server;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
 
+
 function execInBackground($cmd){
     if (substr(php_uname(), 0, 7) == "Windows") {
         pclose(popen("start ". $cmd, "r")); //pclose(popen("start /B ". $cmd, "r"));
@@ -61,6 +62,27 @@ $discord = new Discord([
 $loop = $discord->getLoop();
 $restcord = null;//new DiscordClient(['token' => "{$token}"]); // Token is required
 //var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
+
+$filesystem = \React\Filesystem\Filesystem::create($discord->getLoop()); //Awaiting full PHP 8 support
+$rtmp = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($filesystem) {
+	$file = $filesystem->file('media/SpaceEngineers.mp4'); //$file = $filesystem->file('C:\WinNMP\WWW\vzg.project\media_server\.m3u8');
+	return $file->exists()
+		->then(
+			function () use ($file) {
+				return $file->open('r', true)
+					->then(function ($stream) {
+						echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+						//file_put_contents('stream.txt', $stream);
+						//file_put_contents('stream.mp4', $stream);
+						return new Response(200, ['Content-Type' => 'video/mp4'], $stream);
+					});
+			},
+			function () {
+				return new Response(404, ['Content-Type' => 'text/plain'], "This video doesn't exist on server.");
+			});
+});
+$rsocket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55554'), $discord->getLoop());
+$rtmp->listen($rsocket);
 
 function webapiFail($part, $id){
 	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
@@ -356,6 +378,7 @@ try {
 		'type' => Activity::TYPE_WATCHING
 		]);
 		$discord->updatePresence($act, false, 'over the Palace');
+		
         $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord) { //Handling of a message
             include "author_perms.php";
             include "message-include.php";

@@ -4,6 +4,7 @@ token.php
 /_globals
 /users
 /guilds
+/media
 /tools
 run.bat
 cmd.exe

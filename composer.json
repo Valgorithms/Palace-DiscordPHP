@@ -1,6 +1,7 @@
 {
     "require": {
         "php": "^8.0",
-        "team-reflex/discord-php": "dev-master"
+        "team-reflex/discord-php": "dev-master",
+        "react/filesystem": "0.1.1"
     }
 }

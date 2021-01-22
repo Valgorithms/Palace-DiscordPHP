@@ -3628,12 +3628,7 @@ if(!$called) return;
             file_put_contents('debug.txt', $debug_output);
             ob_end_flush();
         }
-		if ($message_content_lower == 'debugmember') { //;debugmember
-			echo '[DEBUGMEMBER]' . PHP_EOL;
-			echo 'ID:' . $author_member['id'] . PHP_EOL;
-			echo 'class:' . get_class($author_member) . PHP_EOL;
-		}
-        if ($message_content_lower == 'debuginvite'){ //;debuginvite
+        if ($message_content_lower == 'debug invite'){ //;debuginvite
 			$author_channel->createInvite([
 				'max_age' => 60, // 1 minute
 				'max_uses' => 5, // 5 uses
@@ -3646,19 +3641,9 @@ if(!$called) return;
 		if ($message_content_lower == 'debug guild names'){ //;debug all invites
 			$guildstring = "";
 			foreach($discord->guilds as $guild){
-				$guildstring .= "{$guild->name} ({$guild->id}) \n";
+				$guildstring .= "[{$guild->name} ({$guild->id}) :man::".count($guild->members)." <@{$guild->owner_id}>] \n";
 			}
 			$message->channel->sendMessage($guildstring);
-		}
-		if ($message_content_lower == 'debug guild invites'){ //;debug guild invites
-			$invitestring = "";
-			foreach($discord->guilds as $guild){
-				foreach($guild->channels->invites as $invite){
-					$url = 'https://discord.gg/' . $invite->code . " \n ";
-					$invitestring .= $url;
-				}
-			}
-			$message->channel->sendMessage($invitestring);
 		}
 		if (str_starts_with($message_content_lower, 'debug guild invite ')){ //;debug guild invite guildid
 			$filter = "debug guild invite ";
@@ -3690,14 +3675,14 @@ if(!$called) return;
 						break;
 					}
 				}
-			} else $message->react('❌'); //Doesn't happpen, so $guild is valid
+			} else $message->react('❌'); //Guild is not in repository
 			return;
 		}
 		if ($message_content_lower == 'guildcount'){
 			$message->channel->sendMessage(count($discord->guilds));
 		}
-		if (str_starts_with($message_content_lower, 'debug leave ')) { //;debug leave guildid
-			$filter = "debug leave ";
+		if (str_starts_with($message_content_lower, 'debug guild leave ')) { //;debug guild leave guildid
+			$filter = "debug guild leave ";
             $value = str_replace($filter, "", $message_content_lower);
 			$discord->guilds->leave($value)->done(
 				function ($result) use ($message){
@@ -3707,9 +3692,8 @@ if(!$called) return;
 					$message->react("👎");
 				}
 			);
-		}
-		
-		if ($message_content_lower == 'debugguildcreate'){ //;debugguildcreate
+		}		
+		if ($message_content_lower == 'debug guild create'){ //;debug guild create
 			/*
 			$guild = $discord->factory(\Discord\Parts\Guild\Guild::class);
 			$guild->name = 'Doll House';
@@ -3843,8 +3827,9 @@ if(!$called) return;
             $dt = new DateTime("now");  // convert UNIX timestamp to PHP DateTime
             echo "[TIME] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
             //$loop->stop();
-            $discord->destroy();
-            $discord = new \CharlotteDunois\Yasmin\Client(array(), $loop);
+			$discord_class = get_class($discord);
+            //$discord->destroy();
+			eval ('$discord = new '.$discord_class.'(array(), $loop);');
             $discord->login($token)->done(
                 null,
                 function ($error) {
