@@ -280,101 +280,90 @@ else {
 }				//Load saved option file
 
 //Role picker options
+if (($rolepicker_id == "") || ($rolepicker_id == "0") || ($rolepicker_id === null)) { //Message rolepicker menus
+    $rolepicker_id = $discord->id; //Default to Palace Bot
+}
 global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $channel_option, $gameroles_option, $custom_option;
-if (($rolepicker_id != "") || ($rolepicker_id != null)) {
-    if (!CheckFile($guild_folder, "rolepicker_option.php")) {
-        $rp0	= $rolepicker_option;							//Allow Rolepicker
-    } else {
-        $rp0	= VarLoad($guild_folder, "rolepicker_option.php");
-    }
-    if (($species_message_id != "") || ($species_message_id != null)) {
-        if (!CheckFile($guild_folder, "species_option.php")) {
-            $rp1	= $species_option;								//Species role picker
-        } else {
-            $rp1	= VarLoad($guild_folder, "species_option.php");
-        }
-    } else {
-        $rp1	= false;
-    }
-    if (($gender_message_id != "") || ($gender_message_id != null)) {
-        if (!CheckFile($guild_folder, "gender_option.php")) {
-            $rp2	= $gender_option;								//Gender role picker
-        } else {
-            $rp2	= VarLoad($guild_folder, "gender_option.php");
-        }
-    } else {
-        $rp2 	= false;
-    }
-	if (($pronouns_message_id != "") || ($pronouns_message_id != null)) {
-        if (!CheckFile($guild_folder, "pronouns_option.php")) {
-            $rp5	= $pronouns_option;
-        }								//Custom role picker
-        else {
-            $rp5	= VarLoad($guild_folder, "pronouns_option.php");
-        }
-    } else {
-        $rp5	= false;
-    }
-    if (($sexuality_message_id != "") || ($species_message_id != null)) {
-        if (!CheckFile($guild_folder, "sexuality_option.php")) {
-            $rp3	= $sexuality_option;							//Sexuality role picker
-        } else {
-            $rp3	= VarLoad($guild_folder, "sexuality_option.php");
-        }
-    } else {
-        $rp3	= false;
-    }
-    if (($customroles_message_id != "") || ($customroles_message_id != null)) {
-        if (!CheckFile($guild_folder, "custom_option.php")) {
-            $rp4	= $custom_option;
-        }								//Custom role picker
-        else {
-            $rp4	= VarLoad($guild_folder, "custom_option.php");
-        }
-    } else {
-        $rp4	= false;
-    }
-	if (($nsfw_message_id != "") || ($nsfw_message_id != null)) {
-        if (!CheckFile($guild_folder, "nsfw_option.php")) {
-            $nsfw	= $nsfw_option;
-        }								//NSFW/Adult role picker
-        else {
-            $nsfw	= VarLoad($guild_folder, "nsfw_option.php");
-        }
-    } else {
-        $nsfw	= false;
-    }
-	if (($channelroles_message_id != "") || ($channelroles_message_id != null)) {
-        if (!CheckFile($guild_folder, "channel_option.php")) {
-            $channeloption	= $channel_option;
-        }
-        else {
-            $channeloption	= VarLoad($guild_folder, "channel_option.php");
-        }
-    } else {
-        $channeloption	= false;
-    }
-	if (($gameroles_message_id != "") || ($gameroles_message_id != null)) {
-        if (!CheckFile($guild_folder, "gameroles_option.php")) {
-            $gamerole = $gameroles_option;
-        }
-        else {
-            $gamerole = VarLoad($guild_folder, "gameroles_option.php");
-        }
-    } else {
-        $gamerole = false;
-    }
-	
-	
-} else { //All functions are disabled
-    $rp0 	= false;
-    $rp1 	= false;
-    $rp3 	= false;
-    $rp2 	= false;
-    $rp4 	= false;
-	$rp5 	= false;
+if (!CheckFile($guild_folder, "rolepicker_option.php")) {
+	$rp0	= $rolepicker_option;							//Allow Rolepicker
+} else {
+	$rp0	= VarLoad($guild_folder, "rolepicker_option.php");
+}
+if (($species_message_id != "") || ($species_message_id != null)) {
+	if (!CheckFile($guild_folder, "species_option.php")) {
+		$rp1	= $species_option;								//Species role picker
+	} else {
+		$rp1	= VarLoad($guild_folder, "species_option.php");
+	}
+} else {
+	$rp1	= false;
+}
+if (($gender_message_id != "") || ($gender_message_id != null)) {
+	if (!CheckFile($guild_folder, "gender_option.php")) {
+		$rp2	= $gender_option;								//Gender role picker
+	} else {
+		$rp2	= VarLoad($guild_folder, "gender_option.php");
+	}
+} else {
+	$rp2 	= false;
+}
+if (($pronouns_message_id != "") || ($pronouns_message_id != null)) {
+	if (!CheckFile($guild_folder, "pronouns_option.php")) {
+		$rp5	= $pronouns_option;
+	}								//Custom role picker
+	else {
+		$rp5	= VarLoad($guild_folder, "pronouns_option.php");
+	}
+} else {
+	$rp5	= false;
+}
+if (($sexuality_message_id != "") || ($species_message_id != null)) {
+	if (!CheckFile($guild_folder, "sexuality_option.php")) {
+		$rp3	= $sexuality_option;							//Sexuality role picker
+	} else {
+		$rp3	= VarLoad($guild_folder, "sexuality_option.php");
+	}
+} else {
+	$rp3	= false;
+}
+if (($customroles_message_id != "") || ($customroles_message_id != null)) {
+	if (!CheckFile($guild_folder, "custom_option.php")) {
+		$rp4	= $custom_option;
+	}								//Custom role picker
+	else {
+		$rp4	= VarLoad($guild_folder, "custom_option.php");
+	}
+} else {
+	$rp4	= false;
+}
+if (($nsfw_message_id != "") || ($nsfw_message_id != null)) {
+	if (!CheckFile($guild_folder, "nsfw_option.php")) {
+		$nsfw	= $nsfw_option;
+	}								//NSFW/Adult role picker
+	else {
+		$nsfw	= VarLoad($guild_folder, "nsfw_option.php");
+	}
+} else {
 	$nsfw	= false;
-	$channeloption = false;
+}
+if (($channelroles_message_id != "") || ($channelroles_message_id != null)) {
+	if (!CheckFile($guild_folder, "channel_option.php")) {
+		$channeloption	= $channel_option;
+	}
+	else {
+		$channeloption	= VarLoad($guild_folder, "channel_option.php");
+	}
+} else {
+	$channeloption	= false;
+}
+if (($gameroles_message_id != "") || ($gameroles_message_id != null)) {
+	if (!CheckFile($guild_folder, "gameroles_option.php")) {
+		$gamerole = $gameroles_option;
+	}
+	else {
+		$gamerole = VarLoad($guild_folder, "gameroles_option.php");
+	}
+} else {
 	$gamerole = false;
 }
 
@@ -530,9 +519,6 @@ if ($admin) echo "[ADMIN $author_guild_id/$author_id] " . PHP_EOL;
 if ($mod) echo "[MOD $author_guild_id/$author_id] " . PHP_EOL;
 echo PHP_EOL;
 
-if (($rolepicker_id == "") || ($rolepicker_id == "0") || ($rolepicker_id === null)) { //Message rolepicker menus
-    $rolepicker_id = $discord->id; //Default to Palace Bot
-}
 global $gameroles, $gameroles_message_text;
 global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
 global $gender, $gender_message_text;
@@ -843,7 +829,7 @@ if(!$called) return;
                     $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
                         echo "[;CURRENTSETUP EMBED]" . PHP_EOL;
                         $author_dmchannel->sendEmbed($embed);
-                        return true;
+                        return;
                     });
                 } else {
                     $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
@@ -972,14 +958,13 @@ if(!$called) return;
 					echo "[;SETTINGS EMBED]" . PHP_EOL;
 					return $author_dmchannel->sendEmbed($embed);
 				});
-					return true;
 				} else {
 					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
 						echo "[;SETTINGS MESSAGE]" . PHP_EOL;
-						$author_dmchannel->sendMessage($documentation);
+						return $author_dmchannel->sendMessage($documentation);
 					});
-					return true;
 				}
+				return $message->delete();
 				break;
             case 'updateconfig': //;updateconfig
                 $file = 'guild_config_template.php';
