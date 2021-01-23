@@ -755,8 +755,8 @@ if(!$called) return;
                 } else {
                     $documentation = $documentation . "`watch #channel` (defaulted to direct message only)\n";
                 }
-                $documentation = $documentation . "`nsfw rolepicker channel #channel`  <#{$nsfw_rolepicker_channel->id}>\n";
-				//$documentation = $documentation . "`rolepicker channel #channel`  <#{$rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`rolepicker channel #channel`  <#{$rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`nsfw rolepicker channel #channel`  <#{$nsfw_rolepicker_channel->id}>\n";
 				$documentation = $documentation . "`games rolepicker channel #channel`  <#{$games_rolepicker_channel->id}>\n";
                 $documentation = $documentation . "`games #channel` <#{$games_channel->id}>\n";
                 $documentation = $documentation . "`suggestion pending #channel` <#{$suggestion_pending_channel->id}>\n";
@@ -1739,6 +1739,20 @@ if(!$called) return;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "rolepicker_channel_id.php", $value);
                 $message->reply("Rolepicker channel ID saved!");
+            } else {
+                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
+            }
+            return true;
+        }
+		if (str_starts_with($message_content_lower, 'setup nsfw rolepicker channel ')) {
+            $filter = "setup nsfw rolepicker channel ";
+            $value = str_replace($filter, "", $message_content_lower);
+            $value = str_replace("<#", "", $value);
+            $value = str_replace(">", "", $value);
+            $value = trim($value); //echo "value: " . $value . PHP_EOL;
+            if (is_numeric($value)) {
+                VarSave($guild_folder, "nsfw_rolepicker_channel_id.php", $value);
+                $message->reply("NSFW Rolepicker channel ID saved!");
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
