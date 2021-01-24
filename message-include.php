@@ -3917,9 +3917,9 @@ if(!$called) return;
                 echo "[RESCUE DONE]" . PHP_EOL;
             }
         }
-        if ($message_content_lower == 'get unregistered') { //;get unregistered
-            echo "[GET UNREGISTERED START]" . PHP_EOL;
-            $GLOBALS["UNREGISTERED"] = null;
+		if ($message_content_lower == 'get unregistered') { //;get unregistered
+			echo "[GET UNREGISTERED START]" . PHP_EOL;
+			$GLOBALS["UNREGISTERED"] = null;
 			$author_guild->members->freshen()->done(
 				function ($members) use ($message, $author_guild) {
 					foreach ($members as $target_member) { //GuildMember
@@ -3965,7 +3965,7 @@ if(!$called) return;
 					return true;
 				}
 			);
-        }
+		}
         if ($message_content_lower == 'unverify unregistered') { //;unverify unregistered
             echo "[UNVERIFY UNREGISTERED START]" . PHP_EOL;
             if ($GLOBALS["UNREGISTERED"]) {
