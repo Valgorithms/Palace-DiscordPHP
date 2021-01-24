@@ -33,7 +33,7 @@ $author_channel_id												= $author_channel->id; 											//echo "author_c
 $is_dm															= false; //echo "author_channel_class: " . $author_channel_class . PHP_EOL;
 
 //echo "[CLASS] " . get_class($message->author) . PHP_EOL;
-if ( is_null($message->channel->guild_id) || (is_object($message->author) && (get_class($message->author) == "Discord\Parts\User\User")) ) { //True if direct message
+if (is_null($message->channel->guild_id)) { //True if direct message
     $is_dm = true;
 	ob_flush();
 	ob_start();
