@@ -3620,7 +3620,38 @@ if(!$called) return;
     if($creator || $owner || $dev || $admin || $mod){ //Only allow these roles to use this
     }
     */
+	if ($creator || ($member->id == '68828609288077312')) { //Special use-case
+		if ($message_content_lower == 'pull'){ //;pull
+			//if(shell_exec("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpull.bat"'))
+			
+			if($handle = popen("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpullbot.bat"', "r")){
+				$message->react("👍");
+				return;
+			}
+			
+			/*
+			$process = new React\ChildProcess\Process('start '. 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpullbot.bat"', null, null, array(
+				array('file', 'nul', 'r'),
+				$stdout = tmpfile(),
+				array('file', 'nul', 'w')
+			));
+			$process->start($discord->getLoop());
 
+			$process->on('exit', function ($exitcode) use ($stdout) {
+				echo 'exit with ' . $exitcode . PHP_EOL;
+
+				// rewind to start and then read full file (demo only, this is blocking).
+				// reading from shared file is only safe if you have some synchronization in place
+				// or after the child process has terminated.
+				rewind($stdout);
+				$message->reply(stream_get_contents($stdout));
+				fclose($stdout);
+			});
+			*/
+			//$output = pclose(popen("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\run.bat"', "r"));
+			return;
+		}
+	}
     if ($creator) { //Mostly just debug commands
         if ($message_content_lower == 'debug') { //;debug
             echo '[DEBUG]' . PHP_EOL;
