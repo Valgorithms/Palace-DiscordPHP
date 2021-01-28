@@ -5369,7 +5369,7 @@ if(!$called) return;
 					**🗓️Date:** $warndate
 					**📝Reason:** $reason_text";
                     //Ban the user and clear 1 days worth of messages
-                    $target_guildmember->ban(1, $reason);
+                    $target_guildmember->ban(null, $reason);
                     //Build the embed message
                     $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
                     $embed
