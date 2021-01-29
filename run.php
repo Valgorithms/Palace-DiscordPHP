@@ -377,7 +377,7 @@ try {
 		'name' => 'over the Palace',
 		'type' => Activity::TYPE_WATCHING
 		]);
-		$discord->updatePresence($act, false, 'over the Palace');
+		$discord->updatePresence($act, false, 'online');
 		
         $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord) { //Handling of a message
             include "author_perms.php";
