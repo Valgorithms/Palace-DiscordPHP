@@ -32,3 +32,5 @@ xml.php
 .php_cs.cache
 run_old.php
 debug.txt
+*.mp4
+stream.txt

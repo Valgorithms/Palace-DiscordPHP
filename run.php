@@ -65,22 +65,25 @@ $restcord = null;//new DiscordClient(['token' => "{$token}"]); // Token is requi
 
 $filesystem = \React\Filesystem\Filesystem::create($discord->getLoop()); //Awaiting full PHP 8 support
 $rtmp = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($filesystem) {
-	$file = $filesystem->file('media/SpaceEngineers.mp4'); //$file = $filesystem->file('C:\WinNMP\WWW\vzg.project\media_server\.m3u8');
+	$file = $filesystem->file('media/fixeditcouldhaveeasy.mp4'); //$file = $filesystem->file('C:\WinNMP\WWW\vzg.project\media_server\.m3u8');
 	return $file->exists()
 		->then(
 			function () use ($file) {
 				return $file->open('r', true)
 					->then(function ($stream) {
-						echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
-						//file_put_contents('stream.txt', $stream);
-						//file_put_contents('stream.mp4', $stream);
-						return new Response(200, ['Content-Type' => 'video/mp4'], $stream);
+						//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+						//return new React\Http\Message\Response(200, ['Content-Type' => 'video/mp4'], $stream); //video/mp4
 					});
 			},
 			function () {
-				return new Response(404, ['Content-Type' => 'text/plain'], "This video doesn't exist on server.");
+				return new React\Http\Message\Response(404, ['Content-Type' => 'text/plain'], "This video doesn't exist on server.");
 			});
 });
+$rtmp->on('error',
+	function (Throwable $t){
+		file_put_contents('stream.txt', $t);
+	}
+);
 $rsocket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55554'), $discord->getLoop());
 $rtmp->listen($rsocket);
 
