@@ -714,7 +714,7 @@ if ($rp0) {
                 $role_index = array_search(strtolower($select_name), $guild_roles_names);
                 $target_role_id = $guild_roles_ids[$role_index];
                 echo "target_role_id: " . $target_role_id . PHP_EOL;
-                $respondent_member->removeRole($guild_roles_role[$target_role_id]); //$target_role_id);
+                if ($respondent_member->id != $discord->id) $respondent_member->removeRole($guild_roles_role[$target_role_id]); //$target_role_id);
                 echo "Role removed: $select_name" . PHP_EOL;
             } else {
                 //echo "Respondent does not already have the role" . PHP_EOL;
@@ -722,7 +722,7 @@ if ($rp0) {
                 //Add the role
                 $role_index = array_search(strtolower($select_name), $guild_roles_names);
                 $target_role_id = $guild_roles_ids[$role_index];
-                $respondent_member->addRole($guild_roles_role[$target_role_id]); // $target_role_id);
+                if ($respondent_member->id != $discord->id) $respondent_member->addRole($guild_roles_role[$target_role_id]); // $target_role_id);
                 echo "Role added: $select_name" . PHP_EOL;
             } else {
                 echo "Guild does not have this role" . PHP_EOL;
