@@ -2240,22 +2240,19 @@ if(!$called) return;
         $message->reply("Pong!");
         return true;
     }
-    /*
+    
     if (str_starts_with($message_content_lower, 'remindme ')){ //;remindme
         echo "[REMINDER]" . PHP_EOL;
         $filter = "remindme ";
         $value = str_replace($filter, "", $message_content_lower);
         if(is_numeric($value)){
             $discord->getLoop()->addTimer($value, function() use ($author_user) {
-                $author_user->getPrivateChannel()->done(function($author_dmchannel) use ($message){	//Promise
-                    if($author_dmchannel) $author_dmchannel->sendMessage( "This is your requested reminder!");
-                    return true;
-                });
+                $author_user->sendMessage("This is your requested reminder!");
             });
             if($react) $message->react("👍");
         }else return $message->reply("Invalid input! Please use the format `;remindme #` where # is seconds.");
     }
-    */
+    
     if ($message_content_lower == 'roles') { //;roles
         echo "[GET AUTHOR ROLES]" . PHP_EOL;
         //	Build the string for the reply
