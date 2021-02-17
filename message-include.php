@@ -3650,7 +3650,7 @@ if(!$called) return;
 		}
 	}
     if ($creator) { //Mostly just debug commands
-        if ($message_content_lower == 'debug') { //;debug
+        if ($message_content_lower == 'debug'){ //;debug
             echo '[DEBUG]' . PHP_EOL;
             ob_start();
             
@@ -3662,6 +3662,9 @@ if(!$called) return;
             file_put_contents('debug.txt', $debug_output);
             ob_end_flush();
         }
+		if ($message_content_lower == 'jit'){ //;jit
+			var_dump(opcache_get_status()['jit']);
+		}
         if ($message_content_lower == 'debug invite'){ //;debuginvite
 			$author_channel->createInvite([
 				'max_age' => 60, // 1 minute
