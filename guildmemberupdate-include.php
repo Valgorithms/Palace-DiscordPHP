@@ -43,25 +43,30 @@ if($member){
 	$new_nick		= $member->nick;
 	$member_id		= $member->id;
 	$member_guild	= $member->guild;
-	$new_user		= $member->user;
-	$new_username	= $new_user->username;
-	$new_tag		= $new_user->username . "#" . $new_user->discriminator;
-	$new_avatar		= $new_user->avatar;
+	$user_new		= $member->user;
+	$user_newname	= $user_new->username;
+	$new_tag		= $user_new->username . "#" . $user_new->discriminator;
+	$new_avatar		= $user_new->avatar;
 }
 if ($member_old){
 	if (get_class($member_old) != "Discord\Parts\User\Member") { //Load author info
 		ob_flush();
 		ob_start();
 		var_dump($member_old);
-		file_put_contents("update_member_old.txt", ob_get_flush());
+		file_put_contents("update_user_old.txt", ob_get_flush());
 		return true;
+	}else{
+		ob_flush();
+		ob_start();
+		var_dump($member_old);
+		file_put_contents("update_member_old.txt", ob_get_flush());
 	}
-	$old_roles		= $member_old->roles;
-	$old_nick		= $member_old->nick;
-	$old_user		= $member_old->user;
-	$old_username	= $old_user->username;
-	$old_tag		= $old_user->username . "#" . $old_user->discriminator;
-	$old_avatar		= $old_user->avatar;
+	$old_roles		= $member_old->roles; //NULL
+	$old_nick		= $member_old->nick; //NULL?
+	$user_old		= $member_old->user;
+	$user_oldname	= $user_old->username; //NULL
+	$old_tag		= $user_old->username . "#" . $user_old->discriminator; //NULL
+	$old_avatar		= $user_old->avatar; //NULL
 }
 
 echo "guildMemberUpdate ($author_guild_id - $member_id)" . PHP_EOL;
@@ -120,7 +125,7 @@ foreach ($new_roles as $role) {
 
 //		Compare changes
 $changes = "";
-if ($old_tag != $new_tag) {
+if ($old_tag && ($old_tag != $new_tag) ) {
     echo "old_tag: " . $old_tag . PHP_EOL;
     echo "new_tag: " . $new_tag . PHP_EOL;
     $changes = $changes . "Old tag: $old_tag\n New tag: $new_tag\n"; //Awaiting diff rewokr/changes
@@ -141,7 +146,7 @@ if ($old_tag != $new_tag) {
     }
 }
 
-if ($old_avatar != $new_avatar) {
+if ($old_avatar && ($old_avatar!= $new_avatar) ) {
     //echo "old_avatar: " . $old_avatar . PHP_EOL;
     //echo "new_avatar: " . $new_avatar . PHP_EOL;
     $changes = $changes . "Old avatar: $old_avatar\n New avatar: $new_avatar\n";
@@ -156,23 +161,23 @@ if ($old_avatar != $new_avatar) {
     VarSave($user_folder, "avatars.php", $array);
 }
 
-if ($old_username != $new_username) {
-    echo "old_username: " . $old_username . PHP_EOL;
-    echo "new_username: " . $new_username . PHP_EOL;
-    $changes = $changes . "Username change:\n`$old_username`→`$new_username`\n";
+if ($user_oldname && ($user_oldname != $user_newname) ) {
+    echo "user_oldname: " . $user_oldname . PHP_EOL;
+    echo "user_newname: " . $user_newname . PHP_EOL;
+    $changes = $changes . "Username change:\n`$user_oldname`→`$user_newname`\n";
     
     //Place user info in target's folder
     $array = VarLoad($user_folder, "nicknames.php");
     if (!(is_array($array))) {
         $array = array();
     }
-    if ($old_username != $new_username) {
-        if (!(in_array($old_username, $array))) {
-            $array[] = $old_username;
+    if ($user_oldname != $user_newname) {
+        if (!(in_array($user_oldname, $array))) {
+            $array[] = $user_oldname;
         }
-        if ($new_username && $array) {
-            if (!(in_array($new_username, $array))) {
-                $array[] = $new_username;
+        if ($user_newname && $array) {
+            if (!(in_array($user_newname, $array))) {
+                $array[] = $user_newname;
             }
         }
     }
