@@ -34,3 +34,6 @@ run_old.php
 debug.txt
 *.mp4
 stream.txt
+special.txt
+update_member_new.txt
+update_member_old.txt

@@ -1,5 +1,6 @@
 <?php
 if ($member === null) return true; //either the loadAllMembers option or the privileged GUILD_MEMBERS intent may be missing
+if ($member->id === $discord->id) return true; //Don't process changes for the bot (not compatible with $diff)
 include_once "custom_functions.php";
 $author_guild = $member->guild;
 $author_guild_id = $member->guild->id;
@@ -32,36 +33,43 @@ if ($whitelisted_guilds) {
 }
 
 if($member){
-	if ( is_object($member) && get_class($member) != "Discord\Parts\User\Member") { //Load author info
+	if (is_object($member) && (get_class($member) != "Discord\Parts\User\Member") ) { //Load author info
 		ob_flush();
 		ob_start();
 		var_dump($member);
-		file_put_contents("update_member.txt", ob_get_flush());
-		return true;
+		file_put_contents("update_user_new.txt", ob_get_flush());
 	}
-	$new_roles		= $member->roles;
-	$new_nick		= $member->nick;
-	$member_id		= $member->id;
-	$member_guild	= $member->guild;
-	$new_user		= $member->user;
-	$new_username	= $new_user->username;
-	$new_tag		= $new_user->username . "#" . $new_user->discriminator;
-	$new_avatar		= $new_user->avatar;
+	ob_flush();
+	ob_start();
+	var_dump($member);
+	file_put_contents("update_member_new.txt", ob_get_flush());
+	$new_roles		= $member['roles'];
+	$new_nick		= $member['nick'];
+	$member_id		= $member['id'];
+	$member_guild	= $member['guild'];
+	$new_user		= $member['user'];
+	$new_username	= $new_user['username'];
+	$new_tag		= $new_user['username'] . '#' . $new_user['discriminator'];
+	$new_avatar		= $new_user['avatar'];
 }
 if ($member_old){
 	if (get_class($member_old) != "Discord\Parts\User\Member") { //Load author info
 		ob_flush();
 		ob_start();
 		var_dump($member_old);
-		file_put_contents("update_member_old.txt", ob_get_flush());
-		return true;
+		file_put_contents("update_user_old.txt", ob_get_flush());
 	}
-	$old_roles		= $member_old->roles;
-	$old_nick		= $member_old->nick;
-	$old_user		= $member_old->user;
-	$old_username	= $old_user->username;
-	$old_tag		= $old_user->username . "#" . $old_user->discriminator;
-	$old_avatar		= $old_user->avatar;
+	ob_flush();
+	ob_start();
+	var_dump($member_old);
+	file_put_contents("update_member_old.txt", ob_get_flush());
+	
+	$old_roles		= $member_old['roles'];
+	$old_nick		= $member_old['nick'];
+	$old_user		= $member_old['user'];
+	$old_username	= $old_user['username'];
+	$old_tag		= $old_user['username'] . '#' . $old_user['discriminator'];
+	$old_avatar		= $old_user['avatar'];
 }
 
 echo "guildMemberUpdate ($author_guild_id - $member_id)" . PHP_EOL;
@@ -103,18 +111,16 @@ $old_member_roles_names 											= array();
 $old_member_roles_ids 												= array();
 
 foreach ($old_roles as $role) {
-        $old_member_roles_names[] 									= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-        $old_member_roles_ids[]										= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+        $old_member_roles_names[] 									= $role['name']; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+        $old_member_roles_ids[]										= $role['id']; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 }
 
 $new_member_roles_names 											= array();
 $new_member_roles_ids 												= array();
 
 foreach ($new_roles as $role) {
-    
-        $new_member_roles_names[] 									= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-        $new_member_roles_ids[]										= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-    
+        $new_member_roles_names[] 									= $role['name']; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+        $new_member_roles_ids[]										= $role['id']; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 }
 
 
@@ -123,8 +129,12 @@ $changes = "";
 if ($old_tag != $new_tag) {
     echo "old_tag: " . $old_tag . PHP_EOL;
     echo "new_tag: " . $new_tag . PHP_EOL;
-    $changes = $changes . "Old tag: $old_tag\n New tag: $new_tag\n"; //Awaiting diff rewokr/changes
-    
+    if ($old_tag && $new_tag)
+		$changes = $changes . "Tag Changed:\n`$old_tag`→`$new_tag`\n";
+	elseif ($old_tag && !$new_tag)
+		$changes = $changes . "Removed Tag:\n`$old_tag`\n";
+	elseif (!$old_tag && $new_tag)
+		$changes = $changes . "Added Tag:\n`$new_tag`";
     //Place user info in target's folder
     $array = VarLoad($user_folder, "tags.php");
     if (!(is_array($array))) {
@@ -144,7 +154,12 @@ if ($old_tag != $new_tag) {
 if ($old_avatar != $new_avatar) {
     //echo "old_avatar: " . $old_avatar . PHP_EOL;
     //echo "new_avatar: " . $new_avatar . PHP_EOL;
-    $changes = $changes . "Old avatar: $old_avatar\n New avatar: $new_avatar\n";
+	if ($old_avatar && $new_avatar)
+		$changes = $changes . "Avatar Changed:\n`$old_avatar`→`$new_tag`\n";
+	elseif ($old_avatar && !$new_avatar)
+		$changes = $changes . "Removed Avatar:\n`$old_avatar`\n";
+	elseif (!$old_avatar && $new_avatar)
+		$changes = $changes . "Added Avatar:\n`$new_avatar`";
 
     //Place user info in target's folder
     $array = VarLoad($user_folder, "avatars.php");
@@ -157,10 +172,15 @@ if ($old_avatar != $new_avatar) {
 }
 
 if ($old_username != $new_username) {
-    echo "old_username: " . $old_username . PHP_EOL;
-    echo "new_username: " . $new_username . PHP_EOL;
-    $changes = $changes . "Username change:\n`$old_username`→`$new_username`\n";
-    
+    //echo "old_username: " . $old_username . PHP_EOL;
+    //echo "new_username: " . $new_username . PHP_EOL;
+    if ($old_username && $new_username)
+		$changes = $changes . "Username Changed:\n`$old_username`→`$new_username`\n";
+	elseif ($old_username && !$new_username)
+		$changes = $changes . "Removed Username:\n`$old_username`\n";
+	elseif (!$old_username && $new_username)
+		$changes = $changes . "Added Username:\n`$new_username`";
+	
     //Place user info in target's folder
     $array = VarLoad($user_folder, "nicknames.php");
     if (!(is_array($array))) {
@@ -180,9 +200,14 @@ if ($old_username != $new_username) {
 }
 
 if ($old_nick != $new_nick) {
-    echo "old_nick: " . $old_nick . PHP_EOL;
-    echo "new_nick: " . $new_nick . PHP_EOL;
-    $changes = $changes . "Nickname change:\n`$old_nick`→`$new_nick`\n";
+    //echo "old_nick: " . $old_nick . PHP_EOL;
+    //echo "new_nick: " . $new_nick . PHP_EOL;
+	if ($old_nick && $new_nick)
+		$changes = $changes . "Nickname Changed:\n`$old_nick`→`$new_nick`\n";
+	elseif ($old_nick && !$new_nick)
+		$changes = $changes . "Removed Nickname:\n`$old_nick`\n";
+	elseif (!$old_nick && $new_nick)
+		$changes = $changes . "Added Nickname:\n`$new_nick`";
     
     //Place user info in target's folder
     $array = VarLoad($user_folder, "nicknames.php");
@@ -251,7 +276,7 @@ if ($old_member_roles_ids != $new_member_roles_ids) {
                 $changes = $changes . "<@&$role_diff>";
             }
         } else {
-            $switch = "Roles: ";
+            $switch = "Added Roles: ";
             if (!$added) {
                 $changes = $changes . $switch . "<@&$role_diff>";
                 $added = true;
