@@ -8,8 +8,19 @@ $author_guild_id = $member->guild->id;
 //Leave the guild if blacklisted
 //GLOBAL $blacklisted_guilds;
 include 'blacklisted_owners.php'; //Array of guild owner user IDs that are not allowed to use this bot
+if (isset($blacklisted_owners)) {
+    if (in_array($member->guild->owner_id, $blacklisted_owners)) {
+        /*
+        $author_guild->leave($author_guild_id)->done(null, function ($error){
+            var_dump($error->getMessage()); //Echo any errors
+        });
+        */
+        echo "[LEAVE BLACKLISTED OWNER GUILD - $author_guild_id]" . PHP_EOL;
+        $discord->guilds->leave($author_guild);
+    }
+}
 include 'blacklisted_guilds.php'; //Array of Guilds that are not allowed to use this bot
-if ($blacklisted_guilds) {
+if (isset($blacklisted_guilds)) {
     if (in_array($author_guild_id, $blacklisted_guilds)) {
         /*
         $author_guild->leave($author_guild_id)->done(null, function ($error){
@@ -22,7 +33,7 @@ if ($blacklisted_guilds) {
 }
 //Leave the guild if not whitelisted
 global $whitelisted_guilds;
-if ($whitelisted_guilds) {
+if (isset($whitelisted_guilds)) {
     if (!in_array($author_guild_id, $whitelisted_guilds)) {
         $author_guild->leave($author_guild_id)->done(null,
 			function ($error) {
