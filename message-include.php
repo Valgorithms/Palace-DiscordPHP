@@ -3997,6 +3997,24 @@ if(!$called) return;
 				}
 			);
 		}
+		if ($message_content_lower == 'fix unverified'){ //;fix unverified
+			echo "[FIX UNVERIFIED]" . PHP_EOL;
+			$string = "";
+			foreach ($author_guild->members as $target_member){
+				$has_role = false;
+				foreach($target_member->roles as $role){
+					if(!is_null($role->id)){
+						$has_role = true;
+					}
+				}
+				if (!$has_role){
+					$string = $string . '<@'.$target_member->id.'> ';
+					$target_member->addRole("469312086766518272");
+				}
+			}
+			if($string) $message->channel->sendMessage($string);
+			else $message->react("👎");
+		}
         if ($message_content_lower == 'unverify unregistered') { //;unverify unregistered
             echo "[UNVERIFY UNREGISTERED START]" . PHP_EOL;
             if ($GLOBALS["UNREGISTERED"]) {
