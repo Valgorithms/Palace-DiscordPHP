@@ -39,10 +39,13 @@ if($member){
 		var_dump($member);
 		file_put_contents("update_user_new.txt", ob_get_flush());
 	}
+	/*
 	ob_flush();
 	ob_start();
 	var_dump($member);
 	file_put_contents("update_member_new.txt", ob_get_flush());
+	*/
+	
 	$new_roles		= $member['roles'];
 	$new_nick		= $member['nick'];
 	$member_id		= $member['id'];
@@ -59,10 +62,12 @@ if ($member_old){
 		var_dump($member_old);
 		file_put_contents("update_user_old.txt", ob_get_flush());
 	}
+	/*
 	ob_flush();
 	ob_start();
 	var_dump($member_old);
 	file_put_contents("update_member_old.txt", ob_get_flush());
+	*/
 	
 	$old_roles		= $member_old['roles'];
 	$old_nick		= $member_old['nick'];

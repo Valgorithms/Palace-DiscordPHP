@@ -50,7 +50,9 @@ include 'whitelisted_guilds.php'; //Only guilds in the $whitelisted_guilds array
 require '../token.php';
 $logger = new Monolog\Logger('HTTPLogger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
+$loop = React\EventLoop\Factory::create();
 $discord = new Discord([
+	'loop' => $loop,
 	'socket_options' => [
         'dns' => '8.8.8.8', // can change dns
 	],
@@ -59,12 +61,11 @@ $discord = new Discord([
     'storeMessages' => true,
 	'httpLogger' => $logger
 ]);
-$loop = $discord->getLoop();
 $restcord = null;//new DiscordClient(['token' => "{$token}"]); // Token is required
 //var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
 
-$filesystem = \React\Filesystem\Filesystem::create($discord->getLoop()); //Awaiting full PHP 8 support
-$rtmp = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($filesystem) {
+$filesystem = \React\Filesystem\Filesystem::create($loop); //Awaiting full PHP 8 support
+$rtmp = new Server($loop, function (ServerRequestInterface $request) use ($filesystem) {
 	$file = $filesystem->file('media/fixeditcouldhaveeasy.mp4'); //$file = $filesystem->file('C:\WinNMP\WWW\vzg.project\media_server\.m3u8');
 	return $file->exists()
 		->then(
@@ -84,7 +85,7 @@ $rtmp->on('error',
 		file_put_contents('stream.txt', $t);
 	}
 );
-$rsocket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55554'), $discord->getLoop());
+$rsocket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55554'), $loop);
 $rtmp->listen($rsocket);
 
 function webapiFail($part, $id){
@@ -95,7 +96,7 @@ function webapiSnow($string){
 	return preg_match('/^[0-9]{16,18}$/', $string);
 }
 $GLOBALS['querycount'] = 0;
-$webapi = new Server($discord->getLoop(), function (ServerRequestInterface $request) use ($discord) {
+$webapi = new Server($loop, function (ServerRequestInterface $request) use ($discord) {
 	$path = explode('/', $request->getUri()->getPath());
 	$sub = (isset($path[1]) ? (string) $path[1] : false);
 	$id = (isset($path[2]) ? (string) $path[2] : false);
@@ -290,7 +291,7 @@ $webapi = new Server($discord->getLoop(), function (ServerRequestInterface $requ
 	}
 	return new Response(200, ['Content-Type' => 'text/json'], json_encode($return));
 });
-$socket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55555'), $discord->getLoop());
+$socket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55555'), $loop);
 $webapi->listen($socket);
 $webapi->on('error', function ($e) {
 	echo('[webapi] ' . $e->getMessage());
@@ -309,7 +310,7 @@ set_exception_handler(function (Throwable $e) { //stops execution completely
 });
 */
 
-//$filesystem = \React\Filesystem\Filesystem::create($discord->getLoop()); //May be used in an future version of DPHP
+//$filesystem = \React\Filesystem\Filesystem::create($loop); //May be used in an future version of DPHP
 include_once "custom_functions.php";
 $rescue = VarLoad("_globals", "RESCUE.php"); //Check if recovering from a fatal crash
 $GLOBALS['presenceupdate'] = false;
