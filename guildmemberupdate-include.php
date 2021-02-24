@@ -149,7 +149,6 @@ if ($old_tag != $new_tag) {
 		$array[] = $new_tag;
 	VarSave($user_folder, "tags.php", $array);
 }
-
 if ($old_avatar != $new_avatar) {
     //echo "old_avatar: " . $old_avatar . PHP_EOL;
     //echo "new_avatar: " . $new_avatar . PHP_EOL;
@@ -170,7 +169,6 @@ if ($old_avatar != $new_avatar) {
         $array[] = $new_avatar;
     VarSave($user_folder, "avatars.php", $array);
 }
-
 if ($old_username != $new_username) {
     //echo "old_username: " . $old_username . PHP_EOL;
     //echo "new_username: " . $new_username . PHP_EOL;
@@ -191,7 +189,6 @@ if ($old_username != $new_username) {
 		$array[] = $new_username
     VarSave($user_folder, "usernames.php", $array);
 }
-
 if ($old_nick != $new_nick) {
     //echo "old_nick: " . $old_nick . PHP_EOL;
     //echo "new_nick: " . $new_nick . PHP_EOL;
@@ -212,33 +209,8 @@ if ($old_nick != $new_nick) {
 		$array[] = $new_nick;
     VarSave($user_folder, "nicknames.php", $array);
 }
-if ($old_member_roles_ids != $new_member_roles_ids) {
-    //			Build the string for the reply
-
-    /*
-//			Log the full list of old and new roles
-
-    $old_role_name_queue 									= "";
-    foreach ($old_member_roles_ids as $old_role){
-        $old_role_name_queue 								= "$old_role_name_queue<@&$old_role> ";
-    }
-    $old_role_name_queue 									= substr($old_role_name_queue, 0, -1);
-    $old_role_name_queue_full 								= $old_role_name_queue_full . PHP_EOL . $old_role_name_queue;
-    //$changes = $changes . "Old roles: $old_role_name_queue_full\n";
-
-    $new_role_name_queue 									= "";
-    foreach ($new_member_roles_ids as $new_role){
-        $new_role_name_queue 								= "$new_role_name_queue<@&$new_role> ";
-    }
-    $new_role_name_queue 									= substr($new_role_name_queue, 0, -1);
-    $new_role_name_queue_full 								= $new_role_name_queue_full . PHP_EOL . $new_role_name_queue;
-    $new_role_name_queue_check								= trim($new_role_name_queue_full);
-    //$changes = $changes . "New roles: $new_role_name_queue_full\n";
-    */
-    
-    
-    //			Only log the added/removed difference
-    //			New Roles
+if ($old_member_roles_ids != $new_member_roles_ids) { //Only log the added/removed difference
+    //New Roles
     $role_difference_ids = array_diff($old_member_roles_ids, $new_member_roles_ids);
     foreach ($role_difference_ids as $role_diff) {
         if (in_array($role_diff, $old_member_roles_ids)) {
@@ -281,29 +253,28 @@ if (($modlog_channel_id != null) && ($modlog_channel_id != "")) {
         if (strlen($changes) < 1025) {
             $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
             $embed
-//					->setTitle("Commands")																	// Set a title
-            ->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
-            ->setDescription("<@$member_id>\n**User Update**\n$changes")									// Set a description (below title, above fields)
-//					->addFieldValues("**User Update**", "$changes")												// New line after this
-            
-//					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
-//					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
-            ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-            ->setAuthor("$new_tag", "$new_avatar")  												// Set an author with icon
-            ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-            ->setURL("");                             												// Set the URL
+//				->setTitle("")																			// Set a title
+				->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
+				->setDescription("<@$member_id>\n**User Update**\n$changes")							// Set a description (below title, above fields)
+//				->addFieldValues("<@$member_id>\n**User Update**", "$changes")							// New line after this
+//				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
+//				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
+				->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
+				->setAuthor("$new_tag", "$new_avatar")  												// Set an author with icon
+				->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
+				->setURL("");                             												// Set the URL
 //				Send a message
-        if ($modlog_channel) {
-            $modlog_channel->sendEmbed($embed);
-        }
-            return true;
+			if ($modlog_channel) {
+				$modlog_channel->sendEmbed($embed);
+			}
+            return;
         } else {
             if ($modlog_channel) {
                 $modlog_channel->sendMessage("**User Update**\n$changes");
             }
-            return true;
+            return;
         }
     } else { //No info we want to capture was changed
-        return true;
+        return;
     }
 }
