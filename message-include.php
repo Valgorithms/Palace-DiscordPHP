@@ -6096,9 +6096,13 @@ if(!$called) return;
                             if ($rolepicker_channel) {
                                 $msg = $msg . " Feel free to pick out some roles in <#$rolepicker_channel_id>.";
                             }
-                            if ($general_channel) {
-                                $general_channel->sendMessage($msg);
-                            }
+							$general_channel->sendMessage($msg)->done(
+								function ($message) use ($discord){
+									$discord->getLoop()->addTimer(60, function() use ($message) {
+										return $message->delete();
+									});
+								}
+							);
                         }
                         return true;
                     } else {

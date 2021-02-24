@@ -18,7 +18,6 @@ use Discord\Discord;
 use Discord\Parts\Embed\Embed;
 use Discord\Parts\User\User;
 use Discord\Parts\Guild\Role;
-use Discord\Parts\User\Activity;
 use Carbon\Carbon;
 use React\Http\Server;
 use GuzzleHttp\Psr7\Response;
@@ -377,9 +376,9 @@ try {
         $dt = new DateTime("now"); // convert UNIX timestamp to PHP DateTime
         echo "[READY TIMESTAMP] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
        
-		$act  = $discord->factory(Activity::class, [
+		$act  = $discord->factory(\Discord\Parts\User\Activity::class, [
 		'name' => 'over the Palace',
-		'type' => Activity::TYPE_WATCHING
+		'type' => \Discord\Parts\User\Activity::TYPE_WATCHING
 		]);
 		$discord->updatePresence($act, false, 'online');
 		
