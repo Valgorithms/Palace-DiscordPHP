@@ -141,18 +141,13 @@ if ($old_tag != $new_tag) {
 		$changes = $changes . "Added Tag:\n`$new_tag`";
     //Place user info in target's folder
     $array = VarLoad($user_folder, "tags.php");
-    if (!(is_array($array))) {
+    if (!is_array($array))
         $array = array();
-    }
-    if ($old_tag != $new_tag) {
-        if (!(in_array($old_tag, $array))) {
-            $array[] = $old_tag;
-        }
-        if (!(in_array($new_tag, $array))) {
-            $array[] = $new_tag;
-        }
-        VarSave($user_folder, "tags.php", $array);
-    }
+	if (!in_array($old_tag, $array))
+		$array[] = $old_tag;
+	if (!in_array($new_tag, $array))
+		$array[] = $new_tag;
+	VarSave($user_folder, "tags.php", $array);
 }
 
 if ($old_avatar != $new_avatar) {
@@ -167,10 +162,11 @@ if ($old_avatar != $new_avatar) {
 
     //Place user info in target's folder
     $array = VarLoad($user_folder, "avatars.php");
-    if (!(is_array($array))) $array = array();
-    if (!(in_array($old_avatar, $array)))
+    if (!is_array($array))
+		$array = array();
+    if (!in_array($old_avatar, $array))
         $array[] = $old_avatar;
-    if (!(in_array($new_avatar, $array)))
+    if (!in_array($new_avatar, $array))
         $array[] = $new_avatar;
     VarSave($user_folder, "avatars.php", $array);
 }
@@ -187,19 +183,12 @@ if ($old_username != $new_username) {
 	
     //Place user info in target's folder
     $array = VarLoad($user_folder, "nicknames.php");
-    if (!(is_array($array))) {
+    if (!is_array($array))
         $array = array();
-    }
-    if ($old_username != $new_username) {
-        if (!(in_array($old_username, $array))) {
-            $array[] = $old_username;
-        }
-        if ($new_username && $array) {
-            if (!(in_array($new_username, $array))) {
-                $array[] = $new_username;
-            }
-        }
-    }
+	if (!in_array($old_username, $array))
+		$array[] = $old_username;
+	if (!in_array($new_username, $array))
+		$array[] = $new_username
     VarSave($user_folder, "usernames.php", $array);
 }
 
@@ -215,19 +204,12 @@ if ($old_nick != $new_nick) {
     
     //Place user info in target's folder
     $array = VarLoad($user_folder, "nicknames.php");
-    if (!(is_array($array))) {
+    if (!is_array($array))
         $array = array();
-    }
-    if ($old_nick != $new_nick) {
-        if (!(in_array($old_nick, $array))) {
-            $array[] = $old_nick;
-        }
-        if ($new_nick && $array) {
-            if (!(in_array($new_nick, $array))) {
-                $array[] = $new_nick;
-            }
-        }
-    }
+	if (!in_array($old_nick, $array))
+		$array[] = $old_nick;
+	if (!in_array($new_nick, $array))
+		$array[] = $new_nick;
     VarSave($user_folder, "nicknames.php", $array);
 }
 if ($old_member_roles_ids != $new_member_roles_ids) {
