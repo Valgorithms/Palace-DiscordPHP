@@ -14,15 +14,6 @@ include __DIR__ . '/vendor/autoload.php';
 define('MAIN_INCLUDED', 1); //Token and SQL credential files are protected, this must be defined to access
 ini_set('memory_limit', '-1'); //Unlimited memory usage
 //use RestCord\DiscordClient;
-use Discord\Discord;
-use Discord\Parts\Embed\Embed;
-use Discord\Parts\User\User;
-use Discord\Parts\Guild\Role;
-use Carbon\Carbon;
-use React\Http\Server;
-use GuzzleHttp\Psr7\Response;
-use Psr\Http\Message\ServerRequestInterface;
-
 
 function execInBackground($cmd){
     if (substr(php_uname(), 0, 7) == "Windows") {
@@ -50,7 +41,7 @@ require '../token.php';
 $logger = new Monolog\Logger('HTTPLogger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
 $loop = React\EventLoop\Factory::create();
-$discord = new Discord([
+$discord = new \Discord\Discord([
 	'loop' => $loop,
 	'socket_options' => [
         'dns' => '8.8.8.8', // can change dns
@@ -64,7 +55,7 @@ $restcord = null;//new DiscordClient(['token' => "{$token}"]); // Token is requi
 //var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
 
 $filesystem = \React\Filesystem\Filesystem::create($loop); //Awaiting full PHP 8 support
-$rtmp = new Server($loop, function (ServerRequestInterface $request) use ($filesystem) {
+$rtmp = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerRequestInterface $request) use ($filesystem) {
 	$file = $filesystem->file('media/fixeditcouldhaveeasy.mp4'); //$file = $filesystem->file('C:\WinNMP\WWW\vzg.project\media_server\.m3u8');
 	return $file->exists()
 		->then(
@@ -89,13 +80,13 @@ $rtmp->listen($rsocket);
 
 function webapiFail($part, $id){
 	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
-	return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
+	return new \GuzzleHttp\Psr7\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
 }
 function webapiSnow($string){
 	return preg_match('/^[0-9]{16,18}$/', $string);
 }
 $GLOBALS['querycount'] = 0;
-$webapi = new Server($loop, function (ServerRequestInterface $request) use ($discord) {
+$webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerRequestInterface $request) use ($discord) {
 	$path = explode('/', $request->getUri()->getPath());
 	$sub = (isset($path[1]) ? (string) $path[1] : false);
 	$id = (isset($path[2]) ? (string) $path[2] : false);
@@ -177,7 +168,7 @@ $webapi = new Server($loop, function (ServerRequestInterface $request) use ($dis
 		case 'restart':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //Restricted for obvious reasons
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			$return = 'restarting';
 			//execInBackground('cmd /c "'. __DIR__  . '\run.bat"');
@@ -187,7 +178,7 @@ $webapi = new Server($loop, function (ServerRequestInterface $request) use ($dis
 		case 'lookup':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id))
 				return webapiFail('user_id', $id);
@@ -196,7 +187,7 @@ $webapi = new Server($loop, function (ServerRequestInterface $request) use ($dis
 		case 'owner':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id))
 				return webapiFail('user_id', $id);
@@ -214,7 +205,7 @@ $webapi = new Server($loop, function (ServerRequestInterface $request) use ($dis
 		case 'whitelist':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id))
 				return webapiFail('user_id', $id);
@@ -251,7 +242,7 @@ $webapi = new Server($loop, function (ServerRequestInterface $request) use ($dis
 				$discord->users->fetch($id)->done(
 					function ($user){
 						$return = $user->avatar;
-						return new Response(200, ['Content-Type' => 'text/json'], json_encode($return));
+						return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'text/json'], json_encode($return));
 					}, function ($error){
 						return webapiFail('user_id', $id);
 					}
@@ -260,7 +251,7 @@ $webapi = new Server($loop, function (ServerRequestInterface $request) use ($dis
 			}else{
 				$return = $user->avatar;
 			}
-			//if (!$return) return new Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
+			//if (!$return) return new \GuzzleHttp\Psr7\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
 			break;
 
 		case 'avatars':
@@ -279,16 +270,16 @@ $webapi = new Server($loop, function (ServerRequestInterface $request) use ($dis
 			}
 
 			$promise->done(function () use ($results) {
-			  return new Response(200, ['Content-Type' => 'application/json'], json_encode($results));
+			  return new \GuzzleHttp\Psr7\Response (200, ['Content-Type' => 'application/json'], json_encode($results));
 			}, function () use ($results) {
 			  // return with error ?
-			  return new Response(200, ['Content-Type' => 'application/json'], json_encode($results));
+			  return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'application/json'], json_encode($results));
 			});
 			break;
 		default:
-			return new Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
+			return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
 	}
-	return new Response(200, ['Content-Type' => 'text/json'], json_encode($return));
+	return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'text/json'], json_encode($return));
 });
 $socket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55555'), $loop);
 $webapi->listen($socket);

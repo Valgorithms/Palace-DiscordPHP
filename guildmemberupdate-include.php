@@ -7,7 +7,7 @@ $author_guild_id = $member->guild->id;
 //echo "guildMemberUpdate ($author_guild_id)" . PHP_EOL;
 //Leave the guild if blacklisted
 //GLOBAL $blacklisted_guilds;
-include 'blacklisted_owners.php'; //Array of guild owner user IDs that are not allowed to use this bot
+include 'blacklisted_owners.php'; //Array of user IDs that are not allowed to use this bot in their guilds
 if (isset($blacklisted_owners)) {
     if (in_array($member->guild->owner_id, $blacklisted_owners)) {
         /*
@@ -44,12 +44,6 @@ if (isset($whitelisted_guilds)) {
 }
 
 if($member){
-	if (is_object($member) && (get_class($member) != "Discord\Parts\User\Member") ) { //Load author info
-		ob_flush();
-		ob_start();
-		var_dump($member);
-		file_put_contents("update_user_new.txt", ob_get_flush());
-	}
 	/*
 	ob_flush();
 	ob_start();
@@ -67,12 +61,6 @@ if($member){
 	$new_avatar		= $new_user['avatar'];
 }
 if ($member_old){
-	if (get_class($member_old) != "Discord\Parts\User\Member") { //Load author info
-		ob_flush();
-		ob_start();
-		var_dump($member_old);
-		file_put_contents("update_user_old.txt", ob_get_flush());
-	}
 	/*
 	ob_flush();
 	ob_start();
@@ -123,28 +111,28 @@ if (!include "$guild_config_path") {
 $modlog_channel	= $member_guild->channels->get('id', $modlog_channel_id);
 
 //		Populate roles
-$old_member_roles_names 											= array();
-$old_member_roles_ids 												= array();
+$old_member_roles_names = array();
+$old_member_roles_ids = array();
 
 foreach ($old_roles as $role) {
-        $old_member_roles_names[] 									= $role['name']; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-        $old_member_roles_ids[]										= $role['id']; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+	$old_member_roles_names[] = $role['name']; 											//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+	$old_member_roles_ids[]	= $role['id']; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 }
 
-$new_member_roles_names 											= array();
-$new_member_roles_ids 												= array();
+$new_member_roles_names = array();
+$new_member_roles_ids = array();
 
 foreach ($new_roles as $role) {
-        $new_member_roles_names[] 									= $role['name']; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-        $new_member_roles_ids[]										= $role['id']; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+	$new_member_roles_names[] = $role['name']; 											//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+	$new_member_roles_ids[]	= $role['id']; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 }
 
 
 //		Compare changes
 $changes = "";
 if ($old_tag != $new_tag) {
-    echo "old_tag: " . $old_tag . PHP_EOL;
-    echo "new_tag: " . $new_tag . PHP_EOL;
+    //echo "old_tag: " . $old_tag . PHP_EOL;
+    //echo "new_tag: " . $new_tag . PHP_EOL;
     if ($old_tag && $new_tag)
 		$changes = $changes . "Tag Changed:\n`$old_tag`→`$new_tag`\n";
 	elseif ($old_tag && !$new_tag)
