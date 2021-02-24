@@ -26,7 +26,7 @@ if (!CheckDir($guild_folder)) {
     /*
     if(!CheckFile($guild_folder, "guild_owner_id.php")){
         VarSave($guild_folder, "guild_owner_id.php", $guild_owner_id);
-    }else $guild_owner_id	= VarLoad($guild_folder, "guild_owner_id.php");
+    }
     */
 }
 

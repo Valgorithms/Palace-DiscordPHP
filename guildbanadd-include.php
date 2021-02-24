@@ -23,11 +23,7 @@ $user_folder = "\\users\\$author_id";
 CheckDir($user_folder);
 $guild_folder = "\\guilds\\$author_guild_id";
 if (!CheckDir($guild_folder)) {
-    /*
-    if(!CheckFile($guild_folder, "guild_owner_id.php")){
-        VarSave($guild_folder, "guild_owner_id.php", "{$guild->owner_id}");
-    }else $guild_owner_id = VarLoad($guild_folder, "guild_owner_id.php");
-    */
+	//
 }
 
 //Load config variables for the guild

@@ -83,11 +83,7 @@ CheckDir($user_folder);
 
 $guild_folder = "\\guilds\\$author_guild_id";
 if (!CheckDir($guild_folder)) {
-    if (!CheckFile($guild_folder, "guild_owner_id.php")) {
-        VarSave($guild_folder, "guild_owner_id.php", $guild_owner_id);
-    } else {
-        $guild_owner_id	= VarLoad($guild_folder, "guild_owner_id.php");
-    }
+	//
 }
 
 //Load config variables for the guild
@@ -186,7 +182,7 @@ if ($old_username != $new_username) {
 	if (!in_array($old_username, $array))
 		$array[] = $old_username;
 	if (!in_array($new_username, $array))
-		$array[] = $new_username
+		$array[] = $new_username;
     VarSave($user_folder, "usernames.php", $array);
 }
 if ($old_nick != $new_nick) {
