@@ -4013,6 +4013,7 @@ if(!$called) return;
 			}
 			if($string) $message->channel->sendMessage($string);
 			else $message->react("👎");
+			return;
 		}
         if ($message_content_lower == 'unverify unregistered') { //;unverify unregistered
             echo "[UNVERIFY UNREGISTERED START]" . PHP_EOL;
