@@ -3466,7 +3466,6 @@ if(!$called) return;
                 return true;
             }
         }
-        
         if (str_starts_with($message_content_lower, 'vstats ')) { //;vstats @
             echo "[GET MENTIONED VANITY STATS]" . PHP_EOL;
             //		Check Cooldown Timer
@@ -3592,7 +3591,48 @@ if(!$called) return;
                 return true;
             }
         }
-    } //End of vanity commands
+		
+		//ymdhis cooldown time
+        $spam_limit['year'] = 0;
+        $spam_limit['month'] = 0;
+        $spam_limit['day'] = 0;
+        $spam_limit['hour'] = 0;
+        $spam_limit['min'] = 0;
+        $spam_limit['sec'] = 30;
+        $spam_limit_seconds = TimeArrayToSeconds($spam_limit);
+		if (str_starts_with($message_content_lower, 'roll ')) { //;roll #d#
+			echo '[ROLL]' . PHP_EOL;
+			$cooldown = CheckCooldownMem($author_id, "spam", $spam_limit);
+			if (($cooldown[0] == true) || ($bypass)) {
+				$filter = "roll ";
+				$message_content_lower = str_replace($filter, "", $message_content_lower);
+				$arr = explode('d', $message_content_lower);
+				echo 'arr[0]: ' . $arr[0] . PHP_EOL;;
+				echo 'arr[1]: ' . $arr[1] . PHP_EOL;;
+				if( is_numeric($arr[0]) && is_numeric($arr[1]) ){
+					if ( ((int)$arr[0] < 1) || ((int)$arr[1] < 1) )
+						return $message->reply('All numbers must be positive!');
+					$count = $arr[0];
+					$side = $arr[1];
+					$result = array();
+					for ($x = 0; $x <= $count; $x++)
+						$result[] = rand(1,(int)$side);
+					echo 'result: '; var_dump($result); echo PHP_EOL;
+					$sum = array_sum($result);
+					$message->reply("You rolled $sum!");
+					SetCooldownMem($author_id, "spam");
+					return;
+				}else return $message->reply('Command must in #d# format!');
+				
+			}else{ //Reply with remaining time
+                $waittime = ($spam_limit_seconds - $cooldown[1]);
+                $formattime = FormatTime($waittime);
+                if ($react) $message->react("👎");
+                $message->reply("You must wait $formattime before using the roll command again.");
+                return true;
+			}
+		}
+	} //End of vanity commands
 
     /*
     *********************
