@@ -3,7 +3,7 @@ if ($message->author->bot) return; //Don't process messages sent by bots
 
 $message_content = $message->content;
 if (($message_content == null) || ($message_content == "")) {
-    return true;
+    return;
 }
 $message_id = $message->id;
 $message_content_lower = mb_strtolower($message_content);
@@ -58,7 +58,7 @@ if ($message_content_lower == ';invite') {
         });
     });
     */
-    return true;
+    return;
 }
 /*
 *********************
@@ -83,7 +83,7 @@ if ($is_dm === false) { //Guild message
         }
     }
     if (in_array($author_id, $blacklisted_owners)) { //Ignore all commands from blacklisted guild owners
-        return true;
+        return;
     }
     //Leave the guild if blacklisted
     global $blacklisted_guilds;
@@ -229,7 +229,7 @@ if ($is_dm === false) { //Guild message
         //$message->reply("$dm_text \n$server_invite");
         //$message->reply("$dm_text");
     }
-    return true;
+    return;
 }
 
 /*
@@ -375,11 +375,11 @@ if (($gameroles_message_id != "") || ($gameroles_message_id != null)) {
 //echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
 $author_webhook = $author_user->webhook;
 if ($author_webhook === true) {
-    return true;
+    return;
 } //Don't process webhooks
 $author_bot = $author_user->bot;
 if ($author_bot === true) {
-    return true;
+    return;
 } //Don't process bots
 
 /*
@@ -411,7 +411,7 @@ if (CheckFile($author_folder, "watchers.php")) {
                     } elseif ($watcher_dmchannel) {
                         $watcher_dmchannel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
                     }
-                    return true;
+                    return;
                 });
             } catch (Exception $e) {
                 //				RuntimeException: Unknown property
@@ -705,13 +705,13 @@ if(!$called) return;
                         ->setURL("");                             												// Set the URL
                     //Open a DM channel then send the rich embed message
                     $author_user->sendEmbed($embed);
-                    return true;
+                    return;
                 } else {
                     $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
                         echo "[;SETUP MESSAGE]" . PHP_EOL;
                         $author_dmchannel->sendMessage($documentation);
                     });
-                    return true;
+                    return;
                 }
                 break;
             case 'currentsetup': //;currentsetup
@@ -993,7 +993,7 @@ if(!$called) return;
                     } //Delete the file
                 }
                 $author_channel->sendMessage("The server's configuration files were recently delete by <@$author_id>. Please run the ;setup commands again.");
-                return true;
+                return;
                 break;
             //Role Messages Setup
 			case 'message games': //;message games
@@ -1019,9 +1019,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
 					$message->delete();
-                    return true;
+                    return;
                 });
-                return true;
+                return;
                 break;
             case 'message species': //;message species
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
@@ -1044,9 +1044,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
 					$message->delete();
-                    return true;
+                    return;
                 });
-                return true;
+                return;
                 break;
             case 'message species2': //;message species2
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
@@ -1069,9 +1069,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
                     $message->delete();
-                    return true;
+                    return;
                 });
-                return true;
+                return;
                 break;
             case 'message species3': //;message species3
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
@@ -1094,9 +1094,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
                     $message->delete();
-                    return true;
+                    return;
                 });
-                return true;
+                return;
                 break;
             case 'message gender': //;message gender
                 echo '[GENDER MESSAGE GEN]' . PHP_EOL;
@@ -1120,9 +1120,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
                     $message->delete();
-                    return true;
+                    return;
                 });
-                return true;
+                return;
                 break;
 			case 'message pronoun': //;message pronoun
 			case 'message pronouns': //;message pronouns
@@ -1147,9 +1147,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
                     $message->delete();
-                    return true;
+                    return;
                 });
-                return true;
+                return;
                 break;
             case 'message sexuality':
             case 'message sexualities':
@@ -1173,9 +1173,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
                     $message->delete();
-                    return true;
+                    return;
                 });
-                return true;
+                return;
                 break;
 			case 'message nsfw': //;message nsfw
 			case 'message adult': //;message adult
@@ -1199,9 +1199,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
                     $message->delete();
-                    return true;
+                    return;
                 });
-				return true;
+				return;
 				break;
 			case 'message channel':
 			case 'message channels':
@@ -1226,9 +1226,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
                     $message->delete();
-                    return true;
+                    return;
                 });
-				return true;
+				return;
 				break;
 				
             case 'message customroles': //;message customroles
@@ -1291,9 +1291,9 @@ if(!$called) return;
 					}
 					eval($string); //I really hate this language sometimes
                     $message->delete();
-                    return true;
+                    return;
                 });
-                return true;
+                return;
                 break;
         //Toggles
             case 'react':
@@ -1312,7 +1312,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Reaction functions disabled!");
                 }
-                return true;
+                return;
                 break;
             case 'vanity': //toggle vanity functions ;vanity
                 if (!CheckFile($guild_folder, "vanity_option.php")) {
@@ -1330,7 +1330,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Vanity functions disabled!");
                 }
-                return true;
+                return;
                 break;
             case 'nsfw':
                 if (!CheckFile($guild_folder, "nsfw_option.php")) {
@@ -1348,7 +1348,7 @@ if(!$called) return;
                 } else {
                     $message->reply("NSFW functions disabled!");
                 }
-                return true;
+                return;
                 break;
 			case 'games':
                 if (!CheckFile($guild_folder, "games_option.php")) {
@@ -1366,7 +1366,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Games functions disabled!");
                 }
-                return true;
+                return;
                 break;
 			            case 'gamerole':
             case 'rolepicker':
@@ -1385,7 +1385,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Rolepicker disabled!");
                 }
-                return true;
+                return;
                 break;
 			case 'gameroles':
                 if (!CheckFile($guild_folder, "gameroles_option.php")) {
@@ -1403,7 +1403,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Game role functions disabled!");
                 }
-                return true;
+                return;
                 break;
             case 'species':
                 if (!CheckFile($guild_folder, "species_option.php")) {
@@ -1421,7 +1421,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Species roles	disabled!");
                 }
-                return true;
+                return;
                 break;
             case 'gender':
                 if (!CheckFile($guild_folder, "gender_option.php")) {
@@ -1439,7 +1439,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Gender roles disabled!");
                 }
-                return true;
+                return;
                 break;
 			case 'pronoun':
 			case 'pronouns':
@@ -1458,7 +1458,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Pronoun roles disabled!");
                 }
-                return true;
+                return;
                 break;
 			case 'sexuality':
                 if (!CheckFile($guild_folder, "sexuality_option.php")) {
@@ -1476,7 +1476,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Sexuality roles disabled!");
                 }
-                return true;
+                return;
                 break;
 			case 'channelrole':
 			case 'channelroles':
@@ -1495,7 +1495,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Channel roles disabled!");
                 }
-                return true;
+                return;
                 break;
             case 'customroles':
                 if (!CheckFile($guild_folder, "custom_option.php")) {
@@ -1513,7 +1513,7 @@ if(!$called) return;
                 } else {
                     $message->reply("Custom roles disabled!");
                 }
-                return true;
+                return;
                 break;
         }
         //End switch
@@ -1530,7 +1530,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the role");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup admin ')) {
             $filter = "setup admin ";
@@ -1544,7 +1544,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the role");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup mod ')) {
             $filter = "setup mod ";
@@ -1558,7 +1558,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the role");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup bot ')) {
             $filter = "setup bot ";
@@ -1572,7 +1572,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the role");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup vzgbot ')) {
             $filter = "setup vzgbot ";
@@ -1586,7 +1586,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the role");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup muted ')) {
             $filter = "setup muted ";
@@ -1600,7 +1600,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the role");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup verified ')) {
             $filter = "setup verified ";
@@ -1614,7 +1614,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the role");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup adult ')) {
             $filter = "setup adult ";
@@ -1628,7 +1628,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the role");
             }
-            return true;
+            return;
         }
         //Channels
         if (str_starts_with($message_content_lower,  'setup general ')) {
@@ -1643,7 +1643,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup welcome ')) {
             $filter = "setup welcome ";
@@ -1657,7 +1657,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup welcomelog ')) {
             $filter = "setup welcomelog ";
@@ -1671,7 +1671,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup log ')) {
             $filter = "setup log ";
@@ -1685,7 +1685,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup verify channel ')) {
             $filter = "setup verify channel ";
@@ -1699,7 +1699,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup verifylog ')) {
             $filter = "setup verifylog ";
@@ -1713,7 +1713,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup watch ')) {
             $filter = "setup watch ";
@@ -1727,7 +1727,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup rolepicker channel ')) {
             $filter = "setup rolepicker channel ";
@@ -1741,7 +1741,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
 		if (str_starts_with($message_content_lower, 'setup nsfw rolepicker channel ')) {
             $filter = "setup nsfw rolepicker channel ";
@@ -1755,7 +1755,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup games rolepicker channel ')) {
             $filter = "setup games rolepicker channel ";
@@ -1769,7 +1769,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         
 		if (str_starts_with($message_content_lower, 'setup games ')) {
@@ -1784,7 +1784,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
 		if (str_starts_with($message_content_lower, 'setup gameroles ')) {
             $filter = "setup gameroles ";
@@ -1798,7 +1798,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup suggestion pending ')) {
             $filter = "setup suggestion pending ";
@@ -1812,7 +1812,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup suggestion approved ')) {
             $filter = "setup suggestion approved ";
@@ -1826,7 +1826,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup tip pending ')) {
             $filter = "setup tip pending ";
@@ -1840,7 +1840,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup tip approved ')) {
             $filter = "setup tip approved ";
@@ -1854,7 +1854,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
             }
-            return true;
+            return;
         }
         
 		//Users
@@ -1872,7 +1872,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter an ID or @mention the user");
             }
-            return true;
+            return;
         }
         //Messages
         if (str_starts_with($message_content_lower, 'setup species ')) {
@@ -1885,7 +1885,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a message ID");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup species2 ')) {
             $filter = "setup species2 ";
@@ -1897,7 +1897,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a message ID");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup species3 ')) {
             $filter = "setup species3 ";
@@ -1909,7 +1909,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a message ID");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup gender ')) {
             $filter = "setup gender ";
@@ -1921,7 +1921,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a message ID");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'setup sexuality ')) {
             $filter = "setup sexuality ";
@@ -1933,7 +1933,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a message ID");
             }
-            return true;
+            return;
         }
 		if (str_starts_with($message_content_lower, 'setup channelroles ')) {
             $filter = "setup channelroles ";
@@ -1945,7 +1945,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a message ID");
             }
-            return true;
+            return;
         }
 		if (str_starts_with($message_content_lower, 'setup customroles ')) {
             $filter = "setup customroles ";
@@ -1957,7 +1957,7 @@ if(!$called) return;
             } else {
                 $message->reply("Invalid input! Please enter a message ID");
             }
-            return true;
+            return;
         }
 		
 		
@@ -2178,13 +2178,13 @@ if(!$called) return;
                 echo "[;HELP EMBED]" . PHP_EOL;
                 return $author_dmchannel->sendEmbed($embed);
             });
-            return true;
+            return;
         } else {
             $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
                 echo "[;HELP MESSAGE]" . PHP_EOL;
                 $author_dmchannel->sendMessage($documentation);
             });
-            return true;
+            return;
         }
     }
 
@@ -2220,7 +2220,7 @@ if(!$called) return;
                 }
                 $message->reply("You do NOT have the 18+ role!");
             }
-            return true;
+            return;
         }
     }
     if ($games) {
@@ -2237,7 +2237,7 @@ if(!$called) return;
 		//$pingdiff = $message->timestamp->floatDiffInRealSeconds();
         //$message->reply("your message took $pingdiff to arrive.");
         $message->reply("Pong!");
-        return true;
+        return;
     }
     
     if (str_starts_with($message_content_lower, 'remindme ')){ //;remindme
@@ -2284,7 +2284,7 @@ if(!$called) return;
     //	Send the message
     //	We do not need another promise here, so we call done, because we want to consume the promise
         $author_channel->sendEmbed($embed);
-        return true;
+        return;
     }
     if (str_starts_with($message_content_lower, 'roles ')) {//;roles @
         echo "[GET MENTIONED ROLES]" . PHP_EOL;
@@ -2383,18 +2383,18 @@ if(!$called) return;
     //					Send the message
     //					We do not need another promise here, so we call done, because we want to consume the promise
                 $author_channel->sendEmbed($embed);
-                return true; //No more processing
+                return; //No more processing
             } else {
                 if ($react) {
                     $message->react("👎");
                 }
                 $message->reply("Nobody in the guild was mentioned!");
-                return true;  //No more processing
+                return;  //No more processing
             }
         }
         //Foreach method didn't return, so nobody was mentioned
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-        return true;
+        return;
     }
 
     //ymdhis cooldown time
@@ -2430,13 +2430,13 @@ if(!$called) return;
             $author_channel->sendEmbed($embed);
             //SetCooldown($author_folder, "avatar_time.php");
             SetCooldownMem($author_id, "avatar");
-            return true;
+            return;
         } else {
             //		Reply with remaining time
             $waittime = $avatar_limit_seconds - $cooldown[1];
             $formattime = FormatTime($waittime);
             $message->reply("You must wait $formattime before using this command again.");
-            return true;
+            return;
         }
     }
     if (str_starts_with($message_content_lower, 'avatar ')) {//;avatar @
@@ -2502,17 +2502,17 @@ if(!$called) return;
                 //			Set Cooldown
                 //SetCooldown($author_folder, "avatar_time.php");
                 SetCooldownMem($author_id, "avatar");
-                return true;
+                return;
             }
             //Foreach method didn't return, so nobody was mentioned
             $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-            return true;
+            return;
         } else {
             //		Reply with remaining time
             $waittime = $avatar_limit_seconds - $cooldown[1];
             $formattime = FormatTime($waittime);
             $message->reply("You must wait $formattime before using this command again.");
-            return true;
+            return;
         }
     }
 
@@ -2560,10 +2560,10 @@ if(!$called) return;
                         return $message->reply("Suggestion not found or already processed!");
                     }
                 }
-                return true; //catch
+                return; //catch
             }
             if ( (str_starts_with($message_content_lower, 'suggestion deny ')) || (str_starts_with($message_content_lower, 'suggest deny ')) ) { //;suggestion
-                //return true;
+                //return;
                 $filter = "suggestion deny ";
                 $value = str_replace($filter, "", $message_content_lower);
                 $filter = "suggest deny ";
@@ -2598,13 +2598,13 @@ if(!$called) return;
                         return $message->reply("Suggestion not found or already processed!");
                     }
                 }
-                return true;
+                return;
             }
         }
     }
 	if ($suggestion_pending_channel != null) {
          if ( (str_starts_with($message_content_lower, 'suggestion ')) || (str_starts_with($message_content_lower, 'suggest ')) ) { //;suggestion
-            //return true;
+            //return;
 			$filter = "suggestion ";
             $value = str_replace($filter, "", $message_content_lower);
             $filter = "suggest ";
@@ -2660,11 +2660,11 @@ if(!$called) return;
                 $message->delete(); //Delete the original ;suggestion message
                 $discord->getLoop()->addTimer(10, function () use ($new_message) {
                     $new_message->delete(); //Delete message confirming the suggestion was logged
-                    return true;
+                    return;
                 });
-                return true;
+                return;
             });
-            return true;
+            return;
         }
     }
 	if ($tip_approved_channel != null) {
@@ -2709,10 +2709,10 @@ if(!$called) return;
                         return $message->reply("Tip not found or already processed!");
                     }
                 }
-                return true; //catch
+                return; //catch
             }
             if (str_starts_with($message_content_lower, 'tip deny ')) { //;tip deny
-                //return true;
+                //return;
                 $filter = "tip deny ";
                 $value = str_replace($filter, "", $message_content_lower);
                 $pieces = explode(" ", $value);
@@ -2745,13 +2745,13 @@ if(!$called) return;
                         return $message->reply("Tip not found or already processed!");
                     }
                 }
-                return true;
+                return;
             }
         }
     }
     if ($tip_pending_channel != null) {
         if (str_starts_with($message_content_lower, 'tip ')) { //;tip
-            //return true;
+            //return;
             $filter = "tip ";
             $value = str_replace($filter, "", $message_content_lower);
             if (($value == "") || ($value == null)) {
@@ -2800,11 +2800,11 @@ if(!$called) return;
                 $message->delete(); //Delete the original ;tip message
                 $discord->getLoop()->addTimer(10, function () use ($new_message) {
                     $new_message->delete(); //Delete message confirming the tip was logged
-                    return true;
+                    return;
                 });
-                return true;
+                return;
             });
-            return true;
+            return;
         }
     }
 
@@ -2967,7 +2967,7 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     } else {
                         $self_hug_messages							= array();
                         $self_hug_messages[]						= "<@$author_id> hugs themself. What a wierdo!";
@@ -2987,18 +2987,18 @@ if(!$called) return;
                         //Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     }
                 }
                 //foreach method didn't return, so nobody was mentioned
                 $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-                return true;
+                return;
             } else {
                 //		Reply with remaining time
                 $waittime = $vanity_limit_seconds - $cooldown[1];
                 $formattime = FormatTime($waittime);
                 $message->reply("You must wait $formattime before using vanity commands again.");
-                return true;
+                return;
             }
         }
         if ( (str_starts_with($message_content_lower, 'kiss ')) || (str_starts_with($message_content_lower, 'smooch ')) ) { //;kiss ;smooch
@@ -3048,7 +3048,7 @@ if(!$called) return;
     //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     } else {
                         $self_kiss_messages							= array();
                         $self_kiss_messages[]						= "<@$author_id> tried to kiss themselves in the mirror. How silly!";
@@ -3068,18 +3068,18 @@ if(!$called) return;
                         //							Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     }
                 }
                 //foreach method didn't return, so nobody was mentioned
                 $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-                return true;
+                return;
             } else {
                 //					Reply with remaining time
                 $waittime = $vanity_limit_seconds - $cooldown[1];
                 $formattime = FormatTime($waittime);
                 $message->reply("You must wait $formattime before using vanity commands again.");
-                return true;
+                return;
             }
         }
         if (str_starts_with($message_content_lower, 'nuzzle ')) { //;nuzzle @
@@ -3130,7 +3130,7 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     } else {
                         $self_nuzzle_messages						= array();
                         $self_nuzzle_messages[]						= "<@$author_id> curled into a ball in an attempt to nuzzle themselves.";
@@ -3150,18 +3150,18 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     }
                 }
                 //Foreach method didn't return, so nobody was mentioned
                 $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-                return true;
+                return;
             } else {
                 //					Reply with remaining time
                 $waittime = $vanity_limit_seconds - $cooldown[1];
                 $formattime = FormatTime($waittime);
                 $message->reply("You must wait $formattime before using vanity commands again.");
-                return true;
+                return;
             }
         }
         if (str_starts_with($message_content_lower, 'boop ')) { //;boop @
@@ -3209,7 +3209,7 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     } else {
                         $self_boop_messages							= array();
                         $self_boop_messages[]						= "<@$author_id> placed a paw on their own nose. How silly!";
@@ -3229,18 +3229,18 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing
+                        return; //No more processing
                     }
                 }
                 //Foreach method didn't return, so nobody was mentioned
                 $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-                return true;
+                return;
             } else {
                 //			Reply with remaining time
                 $waittime = $vanity_limit_seconds - $cooldown[1];
                 $formattime = FormatTime($waittime);
                 $message->reply("You must wait $formattime before using vanity commands again.");
-                return true;
+                return;
             }
         }
         if (str_starts_with($message_content_lower, 'bap ')) { //;bap @
@@ -3289,7 +3289,7 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     } else {
                         $self_bap_messages							= array();
                         $self_bap_messages[]						= "<@$author_id> placed a paw on their own nose. How silly!";
@@ -3309,18 +3309,18 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing
+                        return; //No more processing
                     }
                 }
                 //Foreach method didn't return, so nobody was mentioned
                 $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-                return true;
+                return;
             } else {
                 //					Reply with remaining time
                 $waittime = $vanity_limit_seconds - $cooldown[1];
                 $formattime = FormatTime($waittime);
                 $message->reply("You must wait $formattime before using vanity commands again.");
-                return true;
+                return;
             }
         }
         if (str_starts_with($message_content_lower, 'pet ')) { //;pet @
@@ -3367,7 +3367,7 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing, we only want to process the first person mentioned
+                        return; //No more processing, we only want to process the first person mentioned
                     } else {
                         $self_pet_messages							= array();
                         $self_pet_messages[]						= "<@$author_id> placed a paw on their own nose. How silly!";
@@ -3387,18 +3387,18 @@ if(!$called) return;
                         //					Set Cooldown
                         //SetCooldown($author_folder, "vanity_time.php");
                         SetCooldownMem($author_id, "vanity");
-                        return true; //No more processing
+                        return; //No more processing
                     }
                 }
                 //Foreach method didn't return, so nobody was mentioned
                 $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-                return true;
+                return;
             } else {
                 //					Reply with remaining time
                 $waittime = $vanity_limit_seconds - $cooldown[1];
                 $formattime = FormatTime($waittime);
                 $message->reply("You must wait $formattime before using vanity commands again.");
-                return true;
+                return;
             }
         }
         
@@ -3454,7 +3454,7 @@ if(!$called) return;
                 //			Set Cooldown
                 //SetCooldown($author_folder, "vstats_limit.php");
                 SetCooldownMem($author_id, "vstats");
-                return true;
+                return;
             } else {
                 //			Reply with remaining time
                 $waittime = ($vstats_limit_seconds - $cooldown[1]);
@@ -3463,7 +3463,7 @@ if(!$called) return;
                     $message->react("👎");
                 }
                 $message->reply("You must wait $formattime before using vstats on yourself again.");
-                return true;
+                return;
             }
         }
         if (str_starts_with($message_content_lower, 'vstats ')) { //;vstats @
@@ -3575,11 +3575,11 @@ if(!$called) return;
                     //				Set Cooldown
                     //SetCooldown($author_folder, "vstats_limit.php");
                     SetCooldownMem($author_id, "vstats");
-                    return true; //No more processing, we only want to process the first person mentioned
+                    return; //No more processing, we only want to process the first person mentioned
                 }
                 //Foreach method didn't return, so nobody was mentioned
                 $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-                return true;
+                return;
             } else {
                 //			Reply with remaining time
                 $waittime = ($vstats_limit_seconds - $cooldown[1]);
@@ -3588,7 +3588,7 @@ if(!$called) return;
                     $message->react("👎");
                 }
                 $message->reply("You must wait $formattime before using vstats on yourself again.");
-                return true;
+                return;
             }
         }
 		
@@ -3629,7 +3629,7 @@ if(!$called) return;
                 $formattime = FormatTime($waittime);
                 if ($react) $message->react("👎");
                 $message->reply("You must wait $formattime before using the roll command again.");
-                return true;
+                return;
 			}
 		}
 	} //End of vanity commands
@@ -3864,7 +3864,7 @@ if(!$called) return;
             });
             */
             $author_channel->sendEmbed($embed);
-            return true;
+            return;
         }
         if ($message_content_lower == 'promote') { //;promote
             $author_member->addRole($role_dev_id)->done(
@@ -3893,10 +3893,10 @@ if(!$called) return;
                     //DO STUFF HERE TO MESSAGES
                 //}
             });
-            return true;
+            return;
         }
         if ($message_content_lower == 'connections') {
-            return true;
+            return;
         }
         if ($message_content_lower == 'restart') {
             echo "[RESTART LOOP]" . PHP_EOL;
@@ -3926,7 +3926,7 @@ if(!$called) return;
             } else {
                 return $message->reply("Invalid input! Please enter a valid number");
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'resolveid ')) { //;timer
             echo "[RESOLVEID]" . PHP_EOL;
@@ -4032,7 +4032,7 @@ if(!$called) return;
 					$message->react("👍");
 					echo count($GLOBALS["UNREGISTERED"]) . " UNREGISTERED ACCOUNTS" . PHP_EOL;
 					echo "[GET UNREGISTERED DONE]" . PHP_EOL;
-					return true;
+					return;
 				}
 			);
 		}
@@ -4075,14 +4075,14 @@ if(!$called) return;
                             $target_member->removeRole("468983261708681216");
                             $target_member->addRole("469312086766518272");
                             $GLOBALS["UNREGISTERED_X"] = $GLOBALS["UNREGISTERED_X"] + 1;
-                            return true;
+                            return;
                         } else {
                             $loop->cancelTimer($GLOBALS['UNREGISTERED_TIMER']);
                             $GLOBALS["UNREGISTERED_COUNT"] = null;
                             $GLOBALS['UNREGISTERED_X'] = null;
                             $GLOBALS['UNREGISTERED_TIMER'] = null;
                             echo "[UNREGISTERED TIMER DONE]";
-                            return true;
+                            return;
                         }
                     }
                 });
@@ -4091,7 +4091,7 @@ if(!$called) return;
 				$message->react("👎");
             }
             echo "[CHECK UNREGISTERED DONE]" . PHP_EOL;
-            return true;
+            return;
         }
         if ($message_content_lower == 'get unverified') { //;get unverified
             echo "[GET UNVERIFIED START]" . PHP_EOL;
@@ -4131,7 +4131,7 @@ if(!$called) return;
 					echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 				}
             );
-			return true;
+			return;
         }
         if ($message_content_lower == 'purge unverified') { //;purge unverified
             echo "[PURGE UNVERIFIED START]" . PHP_EOL;
@@ -4152,14 +4152,14 @@ if(!$called) return;
 							$target_member = $target_guild->members->get('id', $target_id); //echo "target_member: " . get_class($target_member) . PHP_EOL;
 							$target_guild->members->kick($target_member); //$target_member->kick("unverified purge");
 							$GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
-                            return true;
+                            return;
                         } else {
                             $loop->cancelTimer($GLOBALS['UNVERIFIED_TIMER']);
                             $GLOBALS["UNVERIFIED_COUNT"] = null;
                             $GLOBALS['UNVERIFIED_X'] = null;
                             $GLOBALS['UNVERIFIED_TIMER'] = null;
                             echo "[PURGE UNVERIFIED TIMER DONE]" . PHP_EOL;
-                            return true;
+                            return;
                         }
                     }
                 });
@@ -4172,7 +4172,7 @@ if(!$called) return;
                 }
             }
             echo "[PURGE UNVERIFIED DONE]" . PHP_EOL;
-            return true;
+            return;
         }
     }
 
@@ -4195,7 +4195,7 @@ if(!$called) return;
                 curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/serverstate.txt"); // set url
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
                 $message->reply(curl_exec($ch));
-                return true;
+                return;
                 break;
         }
 		/*VMWare
@@ -4209,7 +4209,7 @@ if(!$called) return;
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
                     curl_setopt($ch, CURLOPT_POST, true);
                     $message->reply(curl_exec($ch));
-                    return true;
+                    return;
                     break;
                 case 'save 1': //;save 1
                     echo "[SAVE SLOT 1] $author_check" .  PHP_EOL;
@@ -4249,10 +4249,10 @@ if(!$called) return;
                             $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                             $message->reply("$time EST");
                             VarSave(null, "manual_saving.php", false);
-                            return true;
+                            return;
                         });
                     }
-                    return true;
+                    return;
                     break;
                 case 'save 2': //;save 2
                     echo "[SAVE SLOT 2] $author_check" .  PHP_EOL;
@@ -4291,10 +4291,10 @@ if(!$called) return;
                             $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                             $message->reply("$time EST");
                         VarSave(null, "manual_saving.php", false);
-                        return true;
+                        return;
                         //});
                     }
-                    return true;
+                    return;
                     break;
                 case 'save 3': //;save 3
                     echo "[SAVE SLOT 3] $author_check" .  PHP_EOL;
@@ -4333,14 +4333,14 @@ if(!$called) return;
                             $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                             $message->reply("$time EST");
                         VarSave(null, "manual_saving.php", false);
-                        return true;
+                        return;
                         //});
                     }
-                    return true;
+                    return;
                     break;
                 case 'delete 1': //;delete 1
                     if (!($creator || $owner || $dev)) {
-                        return true;
+                        return;
                         break;
                     }
                     echo "[DELETE SLOT 1] $author_check" . PHP_EOL;
@@ -4370,9 +4370,9 @@ if(!$called) return;
                         $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
                         $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                         $message->reply("$time EST");
-                        return true;
+                        return;
                     //});
-                    return true;
+                    return;
                     break;
             }
         }
@@ -4406,9 +4406,9 @@ if(!$called) return;
                         $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
                         $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                         $message->reply("$time EST");
-                        return true;
+                        return;
                     //});
-                    return true;
+                    return;
                     break;
                 case 'load 2': //;load 2
                     echo "[LOAD SLOT 2] $author_check" . PHP_EOL;
@@ -4438,9 +4438,9 @@ if(!$called) return;
                         $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
                         $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                         $message->reply("$time EST");
-                        return true;
+                        return;
                     //});
-                    return true;
+                    return;
                     break;
                 case 'load 3': //;load 3
                     echo "[LOAD SLOT 3] $author_check" . PHP_EOL;
@@ -4470,9 +4470,9 @@ if(!$called) return;
                         $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
                         $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                         $message->reply("$time EST");
-                        return true;
+                        return;
                     //});
-                    return true;
+                    return;
                     break;
                 case 'load1h': //;load1h
                     echo "[LOAD 1H] $author_check" . PHP_EOL;
@@ -4502,9 +4502,9 @@ if(!$called) return;
                         $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
                         $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                         $message->reply("$time EST");
-                        return true;
+                        return;
                     //});
-                    return true;
+                    return;
                     break;
                 case 'load2h': //;load2h
                     echo "[LOAD 2H] $author_check" . PHP_EOL;
@@ -4534,9 +4534,9 @@ if(!$called) return;
                         $dt = new DateTime("now", new DateTimeZone('America/New_York'));  // convert UNIX timestamp to PHP DateTime
                         $time = $dt->format('d-m-Y H:i:s'); // output = 2017-01-01 00:00:00
                         $message->reply("$time EST");
-                        return true;
+                        return;
                     //});
-                    return true;
+                    return;
                     break;
                 case 'host persistence':
                 case 'host pers':
@@ -4569,9 +4569,9 @@ if(!$called) return;
                         if ($react) {
                             $message->react("👍");
                         }
-                        return true;
+                        return;
                     //});
-                    return true;
+                    return;
                     break;
                 case 'kill persistence':
                 case 'kill pers':
@@ -4603,9 +4603,9 @@ if(!$called) return;
                         if ($react) {
                             $message->react("👍");
                         }
-                        return true;
+                        return;
                     //});
-                    return true;
+                    return;
                     break;
                 case 'update persistence':
                 case 'update pers':
@@ -4636,13 +4636,13 @@ if(!$called) return;
                         //$message->reply("$time EST");
 
                         //if($react) $message->react("👍");
-                        //return true;
+                        //return;
                     //});
                     
                     if ($react) {
                         $message->react("👎");
                     }
-                    return true;
+                    return;
                     break;
             }
         }
@@ -4656,7 +4656,7 @@ if(!$called) return;
                     } else {
                         $author_channel->sendMessage("No debug info found!");
                     }
-                    return true;
+                    return;
                     break;
                 case 'pause': //;pause
                     //Trigger the php script remotely
@@ -4665,7 +4665,7 @@ if(!$called) return;
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
                     curl_setopt($ch, CURLOPT_POST, true);
                     $message->reply(curl_exec($ch));
-                    return true;
+                    return;
                     break;
                 case 'loadnew': //;loadnew
                     //Trigger the php script remotely
@@ -4674,11 +4674,11 @@ if(!$called) return;
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
                     curl_setopt($ch, CURLOPT_POST, true);
                     $message->reply(curl_exec($ch));
-                    return true;
+                    return;
                     break;
                 case 'VM_restart': //;VM_restart
                     if (!($creator || $dev)) {
-                        return true;
+                        return;
                         break;
                     }
                     //Trigger the php script remotely
@@ -4687,7 +4687,7 @@ if(!$called) return;
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
                     curl_setopt($ch, CURLOPT_POST, true);
                     $message->reply(curl_exec($ch));
-                    return true;
+                    return;
                     break;
             }
         }
@@ -4697,11 +4697,11 @@ if(!$called) return;
 				case "php": //;php
 					echo '[PHP]' . PHP_EOL;
 					$message->reply('Current PHP version: ' . phpversion());
-					return true;
+					return;
                 case 'crash': //;crash
                     $message->react("☠️");
                     throw new \CharlotteDunois\Events\UnhandledErrorException('Unhandled error event', 0, (($arguments[0] ?? null) instanceof \Throwable ? $arguments[0] : null));
-                    return true;
+                    return;
 				case 'debug role': //;debug role
 					echo '[DEBUG ROLE]' . PHP_EOL;
 					$new_role = $discord->factory(
@@ -4721,14 +4721,14 @@ if(!$called) return;
 						echo $error->getMessage() . PHP_EOL;
 					});
 					$message->delete();
-					return true;
+					return;
 				case 'freshen';
 					$message->channel->guild->members->freshen()->done(
 						function ($members){
 							//Do stuff 
 						}
 					);
-					return true;
+					return;
             }
         }
     }
@@ -4742,7 +4742,7 @@ if(!$called) return;
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
             curl_setopt($ch, CURLOPT_POST, true);
             $message->reply(curl_exec($ch));
-            return true;
+            return;
         }
         if ($message_content_lower == 'pull'){ //;pull
             echo "[START] $author_check" .  PHP_EOL;
@@ -4752,7 +4752,7 @@ if(!$called) return;
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
             curl_setopt($ch, CURLOPT_POST, true);
             $message->reply(curl_exec($ch));
-            return true;
+            return;
         }
     }
     */
@@ -4795,15 +4795,15 @@ if(!$called) return;
 						//Count reacts
 						if (($yes_count - $no_count) == 0) {
 							$message->channel->sendMessage("**Vote tied! ($yes_count:$no_count)**");
-							return true;
+							return;
 						}
 						if (($yes_count - $no_count) > 0) {
 							$message->channel->sendMessage("**Vote passed! ($yes_count:$no_count)**");
-							return true;
+							return;
 						}
 						if (($yes_count - $no_count) < 0) {
 							$message->channel->sendMessage("**Vote failed! ($yes_count:$no_count)**");
-							return true;
+							return;
 						}
 						$author_channel->sendMessage("**Vote errored! ($yes_count:$no_count)**");
 
@@ -4856,7 +4856,7 @@ if(!$called) return;
                 $message->reply("Invalid input! Please enter an ID or @mention the user");
 				$message->react('❌');
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'lookup ')) { //;lookup
             echo "[LOOKUP] $author_check" . PHP_EOL;
@@ -4957,13 +4957,13 @@ if(!$called) return;
                 if ($react) {
                     $message->react("👁");
                 }
-                return true;
+                return;
             } else {
                 if ($react) {
                     $message->react("👎");
                 }
                 $message->reply("Nobody in the guild was mentioned!");
-                return true;
+                return;
             }
             //
         }
@@ -5020,7 +5020,7 @@ if(!$called) return;
             } else {
                 $author_channel->sendMessage($mention_watch_name_queue_default . $mention_watch_name_queue_full . PHP_EOL);
             }
-            return true;
+            return;
         }
         if (str_starts_with($message_content_lower, 'warn ')) { //;warn @
             echo "[WARN] $author_check" . PHP_EOL;
@@ -5065,13 +5065,13 @@ if(!$called) return;
                 if ($react) {
                     $message->react("👁");
                 }
-                return true;
+                return;
             } else {
                 if ($react) {
                     $message->react("👎");
                 }
                 $message->reply("Nobody in the guild was mentioned!");
-                return true;
+                return;
             }
         }
         if (str_starts_with($message_content_lower, 'infractions ')) { //;infractions @
@@ -5156,7 +5156,7 @@ if(!$called) return;
                     ->setURL("");                             												// Set the URL
     //					Send the embed to the author's channel
                     $author_channel->sendEmbed($embed);
-                    return true;
+                    return;
                 } else { //Too long, send reply instead of embed
                     $message->reply($mention_infraction_queue_full . PHP_EOL);
                     //				React to the original message
@@ -5164,12 +5164,12 @@ if(!$called) return;
                     if ($react) {
                         $message->react("🗒️");
                     }
-                    return true;
+                    return;
                 }
             } else {
                 //if($react) $message->react("👎");
                 $message->reply("No infractions found!");
-                return true;
+                return;
             }
         }
     }
@@ -5184,7 +5184,7 @@ if(!$called) return;
                 //limitDelete handles this
             //}
         });
-        return true;
+        return;
     };
     if ($user_perms['manage_messages'] && str_starts_with($message_content_lower, 'clear ')) { //;clear #
         echo "[CLEAR #] $author_check" . PHP_EOL;
@@ -5221,11 +5221,11 @@ if(!$called) return;
         $author_channel->sendMessage("$author_check ($author_id) deleted $value messages!")->done(function ($new_message) use ($discord, $message, $duration) { //Send message to channel confirming the message deletions then delete the new message after 3 seconds
             $discord->getLoop()->addTimer($duration, function () use ($new_message) {
                 $new_message->delete();
-                return true;
+                return;
             });
-            return true;
+            return;
         });
-        return true;
+        return;
     };
     if ($user_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'vwatch ')) || (str_starts_with($message_content_lower, 'vw ')))) { //;vwatch @
         echo "[VWATCH] $author_check" . PHP_EOL;
@@ -5332,13 +5332,13 @@ if(!$called) return;
                     $general_channel->sendMessage($msg);
                 }
             }
-            return true;
+            return;
         } else {
             if ($react) {
                 $message->react("👎");
             }
             $message->reply("Nobody in the guild was mentioned!");
-            return true;
+            return;
         }
     }
     
@@ -5418,7 +5418,7 @@ if(!$called) return;
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_vzg) || ($creator || $owner)) { //Guild owner and bot creator can ban anyone
                     if ($mention_id == $creator_id) {
-                        return true;
+                        return;
                     } //Don't ban the creator
                     //Build the string to log
                     $filter = "ban <@!$mention_id>";
@@ -5449,17 +5449,17 @@ if(!$called) return;
                     if ($react) {
                         $message->react("🔨");
                     } //Hammer
-                    return true; //No more processing, we only want to process the first person mentioned
+                    return; //No more processing, we only want to process the first person mentioned
                 } else {//Target is not allowed to be banned
                     $author_channel->sendMessage("<@$mention_id> cannot be banned because of their roles!");
-                    return true;
+                    return;
                 }
             } else {
                 if ($react) {
                     $message->react("👎");
                 }
                 $author_channel->sendMessage("<@$author_id>, you can't ban yourself!");
-                return true;
+                return;
             }
         } //foreach method didn't return, so nobody in the guild was mentioned
         //Try restcord
@@ -5484,7 +5484,7 @@ if(!$called) return;
             }
             //$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         }
-        return true;
+        return;
     }
     if ($user_perms['ban_members'] && str_starts_with($message_content_lower, 'unban ')) { //;ban
         echo "[UNBAN]" . PHP_EOL;
@@ -5553,7 +5553,7 @@ if(!$called) return;
 //						Send the message
             if($modlog_channel)$modlog_channel->sendEmbed($embed);
             if($react) $message->react("🔨"); //Hammer
-            return true; //No more processing, we only want to process the first person mentioned
+            return; //No more processing, we only want to process the first person mentioned
         } //foreach method didn't return, so nobody in the guild was mentioned
         */
         $output_string = "Mentions IDs: ";
@@ -5580,7 +5580,7 @@ if(!$called) return;
                 var_dump($error->getMessage());
             });
         }
-        return true;
+        return;
     }
     if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions @mention #
         echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
@@ -5631,7 +5631,7 @@ if(!$called) return;
                 //			Check that message is formatted properly
                 if ($proper != substr($message_content_lower, 0, $strlen)) {
                     $message->reply("Please format your command properly: " . $command_symbol . "warn @mention number");
-                    return true;
+                    return;
                 }
                 
                 //			Check if $substr is a number
@@ -5648,20 +5648,20 @@ if(!$called) return;
                             $message->react("👍");
                         }
                         $message->reply("Infraction $substr removed from $mention_check!");
-                        return true;
+                        return;
                     } else {
                         if ($react) {
                             $message->react("👎");
                         }
                         $message->reply("Infraction '$substr' not found!");
-                        return true;
+                        return;
                     }
                 } else {
                     if ($react) {
                         $message->react("👎");
                     }
                     $message->reply("'$substr' is not a number");
-                    return true;
+                    return;
                 }
             }
             $x++;
@@ -5729,7 +5729,7 @@ if(!$called) return;
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Bot creator, guild owner, and devs can kick anyone
                     if ($mention_id == $creator_id) {
-                        return true;
+                        return;
                     } //Don't kick the creator
                     //Build the string to log
                     $filter = "kick <@!$mention_id>";
@@ -5765,20 +5765,20 @@ if(!$called) return;
     //						Send the message
                     if($modlog_channel)$modlog_channel->sendEmbed($embed);
                     */
-                    return true;
+                    return;
                 } else {//Target is not allowed to be kicked
                     $author_channel->sendMessage("<@$mention_id> cannot be kicked because of their roles!");
-                    return true;
+                    return;
                 }
             } else {
                 $message->react("👎");
                 $author_channel->sendMessage("<@$author_id>, you can't kick yourself!");
-                return true;
+                return;
             }
         } //foreach method didn't return, so nobody was mentioned
         $message->react("👎");
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-        return true;
+        return;
     }
     if ($user_perms['manage_roles'] && str_starts_with($message_content_lower, 'mute ')) { //;mute
         echo "[MUTE]" . PHP_EOL;
@@ -5852,7 +5852,7 @@ if(!$called) return;
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Guild owner and bot creator can mute anyone
                     if ($mention_id == $creator_id) {
-                        return true;
+                        return;
                     } //Don't mute the creator
                     //Save current roles in a file for the user
                     VarSave($guild_folder."/".$mention_id, "removed_roles.php", $removed_roles);
@@ -5890,24 +5890,24 @@ if(!$called) return;
 //						Send the message
                     if($modlog_channel)$modlog_channel->sendEmbed($embed);
                     */
-                    return true;
+                    return;
                 } else {//Target is not allowed to be muted
                     $author_channel->sendMessage("<@$mention_id> cannot be muted because of their roles!");
-                    return true;
+                    return;
                 }
             } else {
                 if ($react) {
                     $message->react("👎");
                 }
                 $author_channel->sendMessage("<@$author_id>, you can't mute yourself!");
-                return true;
+                return;
             }
         } //foreach method didn't return, so nobody was mentioned
         if ($react) {
             $message->react("👎");
         }
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-        return true;
+        return;
     }
     if ($user_perms['manage_roles'] && str_starts_with($message_content_lower, 'unmute ')) { //;unmute
         echo "[UNMUTE]" . PHP_EOL;
@@ -5982,7 +5982,7 @@ if(!$called) return;
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) {
                     if ($mention_id == $creator_id) {
-                        return true;
+                        return;
                     } //Don't mute the creator
                     //Build the string to log
                     $filter = "unmute <@!$mention_id>";
@@ -6020,24 +6020,24 @@ if(!$called) return;
 //						Send the message
                     if($modlog_channel)$modlog_channel->sendEmbed($embed);
                     */
-                    return true;
+                    return;
                 } else {//Target is not allowed to be unmuted
                     $author_channel->sendMessage("<@$mention_id> cannot be unmuted because of their roles!");
-                    return true;
+                    return;
                 }
             } else {
                 if ($react) {
                     $message->react("👎");
                 }
                 $author_channel->sendMessage("<@$author_id>, you can't mute yourself!");
-                return true;
+                return;
             }
         } //foreach method didn't return, so nobody was mentioned
         if ($react) {
             $message->react("👎");
         }
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-        return true;
+        return;
     }
     if ($user_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'v ')) || (str_starts_with($message_content_lower, 'verify ')))) { //Verify ;v ;verify
         if (($role_verified_id != "") || ($role_verified_id != null)) { //This command only works if the Verified Role is setup
@@ -6144,13 +6144,13 @@ if(!$called) return;
 								}
 							);
                         }
-                        return true;
+                        return;
                     } else {
                         if ($react) {
                             $message->react("👎");
                         }
                         $message->reply("$mention_check does not need to be verified!" . PHP_EOL);
-                        return true;
+                        return;
                     }
                 }
             }
@@ -6173,6 +6173,6 @@ if(!$called) return;
 				3. Do you understand the rules?
 				4. Do you have any other questions?");
             }
-            return true;
+            return;
         }
     }
