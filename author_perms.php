@@ -1,15 +1,13 @@
 <?php
 $author	= $message->author; //Member OR User object
-
-if ( is_object($author) && get_class($author) == "Discord\Parts\User\Member") {
+if (isset($author) && is_object($author) && get_class($author) == "Discord\Parts\User\Member") {
     $author_user = $author->user;
     $author_member = $author;
 } else {
     $author_user = $author;
 }
-if ($author_member) {
-    //Permissions granted by roles
-    $user_perms = array(
+if (isset($author_member)) { //Populate permissions granted by roles
+    $user_perms = array( //Everything is assumed false
         'priority_speaker' => false,
         'stream' => false,
         'connect' => false,
@@ -47,18 +45,17 @@ if ($author_member) {
         'manage_webhooks' => false
     );
     
-    $author_member_roles = $author_member->roles; 								//Role objects for the author);
-    
+    $author_member_roles = $author_member->roles;
     foreach ($author_member_roles as $role) { //Check all roles for guild and channel permissions
         $permissions = json_decode(json_encode($role->permissions), 1);
         foreach ($permissions as $id => $perm) {
-            if ( ($perm === true) || ($member->guild->owner_id == $member->id) || ($member->id == '116927250145869826') ) {
+            if ( ($perm === true) || ($member->guild->owner_id == $member->id) || ($member->id == '116927250145869826') ) { //If the role gives permission, the user is the owner of the guild, or the member is Valithor#5947, allow access to commands that need the permission
                 $user_perms[$id] = true;
             }
             //echo "id: " . $id . PHP_EOL;
             //echo "perm: $perm" . PHP_EOL;
         }
-        /*
+        /*This does the same thing as above
         if ($permissions->priority_speaker === true) $priority_speaker = true;
         if ($permissions->stream === true) $stream = true;
         if ($permissions->connect === true) $connect = true;
