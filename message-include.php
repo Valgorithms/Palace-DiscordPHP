@@ -2005,7 +2005,6 @@ if(!$called) return;
             //customrole
             $documentation = $documentation . "`customrole`\n";
             
-            
             //TODO:
             //tempmute/tm
         }
@@ -2128,6 +2127,8 @@ if(!$called) return;
             $documentation = $documentation . "`yahtzee end` Ends the game and deletes all progress\n";
             $documentation = $documentation . "`yahtzee pause` Pauses the game and can be resumed later \n";
             $documentation = $documentation . "`yahtzee resume` Resumes the paused game \n";
+			//roll
+			$documentation = $documentation . "`roll #d#`\n";
         }
         //All other functions
         $documentation = $documentation . "\n__**General:**__\n";
@@ -2224,13 +2225,56 @@ if(!$called) return;
         }
     }
     if ($games) {
-        if ($author_channel_id == $games_channel_id) {
+        if ( is_null($games_channel_id) || ($author_channel_id == $games_channel_id) ) { //Commands that can only be used in the dedicated games channel
             //yahtzee
             include "yahtzee.php";
             //machi koro
             //include_once (__DIR__ . "/machikoro/classes.php");
             //include (__DIR__ . "/machikoro/game.php");
         }
+		
+		/*Commands that can be used anywhere*/
+		
+		//ymdhis cooldown time
+        $spam_limit['year'] = 0;
+        $spam_limit['month'] = 0;
+        $spam_limit['day'] = 0;
+        $spam_limit['hour'] = 0;
+        $spam_limit['min'] = 0;
+        $spam_limit['sec'] = 30;
+        $spam_limit_seconds = TimeArrayToSeconds($spam_limit);
+		if (str_starts_with($message_content_lower, 'roll ')) { //;roll #d#
+			echo '[ROLL]' . PHP_EOL;
+			$cooldown = CheckCooldownMem($author_id, "spam", $spam_limit);
+			if (($cooldown[0] == true) || ($bypass)) {
+				$filter = "roll ";
+				$message_content_lower = str_replace($filter, "", $message_content_lower);
+				$arr = explode('d', $message_content_lower);
+				echo 'arr[0]: ' . $arr[0] . PHP_EOL;;
+				echo 'arr[1]: ' . $arr[1] . PHP_EOL;;
+				if( is_numeric($arr[0]) && is_numeric($arr[1]) ){
+					if ( ((int)$arr[0] < 1) || ((int)$arr[1] < 1) )
+						return $message->reply('All numbers must be positive!');
+					$count = $arr[0];
+					$side = $arr[1];
+					$result = array();
+					for ($x = 0; $x <= $count; $x++)
+						$result[] = rand(1,(int)$side);
+					echo 'result: '; var_dump($result); echo PHP_EOL;
+					$sum = array_sum($result);
+					$message->reply("You rolled $sum!");
+					SetCooldownMem($author_id, "spam");
+					return;
+				}else return $message->reply('Command must in #d# format!');
+				
+			}else{ //Reply with remaining time
+                $waittime = ($spam_limit_seconds - $cooldown[1]);
+                $formattime = FormatTime($waittime);
+                if ($react) $message->react("👎");
+                $message->reply("You must wait $formattime before using the roll command again.");
+                return;
+			}
+		}
     }
     if ($message_content_lower == 'ping') { //;ping
         echo '[PING]' . PHP_EOL;
@@ -2239,7 +2283,6 @@ if(!$called) return;
         $message->reply("Pong!");
         return;
     }
-    
     if (str_starts_with($message_content_lower, 'remindme ')){ //;remindme
         echo "[REMINDER]" . PHP_EOL;
         $filter = "remindme ";
@@ -2250,8 +2293,7 @@ if(!$called) return;
             });
             if($react) $message->react("👍");
         }else return $message->reply("Invalid input! Please use the format `;remindme #` where # is seconds.");
-    }
-    
+    }    
     if ($message_content_lower == 'roles') { //;roles
         echo "[GET AUTHOR ROLES]" . PHP_EOL;
         //	Build the string for the reply
@@ -3591,47 +3633,6 @@ if(!$called) return;
                 return;
             }
         }
-		
-		//ymdhis cooldown time
-        $spam_limit['year'] = 0;
-        $spam_limit['month'] = 0;
-        $spam_limit['day'] = 0;
-        $spam_limit['hour'] = 0;
-        $spam_limit['min'] = 0;
-        $spam_limit['sec'] = 30;
-        $spam_limit_seconds = TimeArrayToSeconds($spam_limit);
-		if (str_starts_with($message_content_lower, 'roll ')) { //;roll #d#
-			echo '[ROLL]' . PHP_EOL;
-			$cooldown = CheckCooldownMem($author_id, "spam", $spam_limit);
-			if (($cooldown[0] == true) || ($bypass)) {
-				$filter = "roll ";
-				$message_content_lower = str_replace($filter, "", $message_content_lower);
-				$arr = explode('d', $message_content_lower);
-				echo 'arr[0]: ' . $arr[0] . PHP_EOL;;
-				echo 'arr[1]: ' . $arr[1] . PHP_EOL;;
-				if( is_numeric($arr[0]) && is_numeric($arr[1]) ){
-					if ( ((int)$arr[0] < 1) || ((int)$arr[1] < 1) )
-						return $message->reply('All numbers must be positive!');
-					$count = $arr[0];
-					$side = $arr[1];
-					$result = array();
-					for ($x = 0; $x <= $count; $x++)
-						$result[] = rand(1,(int)$side);
-					echo 'result: '; var_dump($result); echo PHP_EOL;
-					$sum = array_sum($result);
-					$message->reply("You rolled $sum!");
-					SetCooldownMem($author_id, "spam");
-					return;
-				}else return $message->reply('Command must in #d# format!');
-				
-			}else{ //Reply with remaining time
-                $waittime = ($spam_limit_seconds - $cooldown[1]);
-                $formattime = FormatTime($waittime);
-                if ($react) $message->react("👎");
-                $message->reply("You must wait $formattime before using the roll command again.");
-                return;
-			}
-		}
 	} //End of vanity commands
 
     /*
@@ -3802,8 +3803,7 @@ if(!$called) return;
             $message->react("👍");
             $message->react("👍");
             $message->react("👍");
-        }
-        
+        }        
         if ($message_content_lower == 'debug ping') { //;debug ping
             $message->channel->sendMessage("Pong!");
             $message->channel->sendMessage("Pong!");
@@ -3893,9 +3893,6 @@ if(!$called) return;
                     //DO STUFF HERE TO MESSAGES
                 //}
             });
-            return;
-        }
-        if ($message_content_lower == 'connections') {
             return;
         }
         if ($message_content_lower == 'restart') {
@@ -4758,7 +4755,7 @@ if(!$called) return;
     */
 
     if ($creator || $owner || $dev || $admin || $mod) { //Only allow these roles to use this
-        if (str_starts_with($message_content_lower, 'poll ')) { //;poll\
+        if (str_starts_with($message_content_lower, 'poll ')) { //;poll
             //return; //Reactions are bugged?!
             echo "[POLL] $author_check" . PHP_EOL;
             $filter = "poll ";
@@ -4898,7 +4895,7 @@ if(!$called) return;
 				return;
             }
         }
-        if (str_starts_with($message_content_lower, 'watch ')) { //;watch @
+        /*if (str_starts_with($message_content_lower, 'watch ')) { //;watch @
             echo "[WATCH] $author_check" . PHP_EOL;
             //			Get an array of people mentioned
             $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4967,7 +4964,8 @@ if(!$called) return;
             }
             //
         }
-        if (str_starts_with($message_content_lower, 'unwatch ')) { //;unwatch @
+        */
+		if (str_starts_with($message_content_lower, 'unwatch ')) { //;unwatch @
             echo "[UNWATCH] $author_check" . PHP_EOL;
             //	Get an array of people mentioned
             $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5022,59 +5020,7 @@ if(!$called) return;
             }
             return;
         }
-        if (str_starts_with($message_content_lower, 'warn ')) { //;warn @
-            echo "[WARN] $author_check" . PHP_EOL;
-            //$message->reply("Not yet implemented!");
-    //		Get an array of people mentioned
-            $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
-            if ($modlog_channel) {
-                $mention_warn_name_mention_default		= "<@$author_id>";
-            }
-            $mention_warn_queue_default									= $mention_warn_name_mention_default." warned the following users:" . PHP_EOL;
-            $mention_warn_queue_full 									= "";
-            
-            foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
-    //			id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-                $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-                $mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-                $mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-                $mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
-                $mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-                $mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
-                
-    //			Build the string to log
-                $filter = "warn <@!$mention_id>";
-                $warndate = date("m/d/Y");
-                $mention_warn_queue = "**$mention_check was warned by $author_check on $warndate for reason: **" . str_replace($filter, "", $message_content);
-                
-                //			Place warn info in target's folder
-                $infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php");
-                $infractions[] = $mention_warn_queue;
-                VarSave($guild_folder."/".$mention_id, "infractions.php", $infractions);
-                $mention_warn_queue_full = $mention_warn_queue_full . PHP_EOL . $mention_warn_queue;
-            }
-            //		Send a message
-            if ($mention_warn_queue != "") {
-                if ($watch_channel) {
-                    $watch_channel->sendMessage($mention_warn_queue_default . $mention_warn_queue_full . PHP_EOL);
-                } else {
-                    $message->channel->sendMessage($mention_warn_queue_default . $mention_warn_queue_full . PHP_EOL);
-                }
-                //			React to the original message
-                //			if($react) $message->react("👀");
-                if ($react) {
-                    $message->react("👁");
-                }
-                return;
-            } else {
-                if ($react) {
-                    $message->react("👎");
-                }
-                $message->reply("Nobody in the guild was mentioned!");
-                return;
-            }
-        }
-        if (str_starts_with($message_content_lower, 'infractions ')) { //;infractions @
+		if (str_starts_with($message_content_lower, 'infractions ')) { //;infractions @
             echo "[INFRACTIONS] $author_check" . PHP_EOL;
             //		Get an array of people mentioned
             $mentions_arr 													= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5227,7 +5173,7 @@ if(!$called) return;
         });
         return;
     };
-    if ($user_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'vwatch ')) || (str_starts_with($message_content_lower, 'vw ')))) { //;vwatch @
+    /*if ($user_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'vwatch ')) || (str_starts_with($message_content_lower, 'vw ')))) { //;vwatch @
         echo "[VWATCH] $author_check" . PHP_EOL;
         //		Get an array of people mentioned
         $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5341,8 +5287,8 @@ if(!$called) return;
             return;
         }
     }
-    
-    if ($user_perms['ban_members'] && str_starts_with($message_content_lower, 'ban ')) { //;ban
+    */
+	if ($user_perms['ban_members'] && str_starts_with($message_content_lower, 'ban ')) { //;ban
         echo "[BAN]" . PHP_EOL;
         //Get an array of people mentioned
         $mentions_arr 	= $message->mentions; //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5582,91 +5528,6 @@ if(!$called) return;
         }
         return;
     }
-    if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions @mention #
-        echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
-        //	Get an array of people mentioned
-        $mentions_arr 													= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
-        
-        
-        $filter = "removeinfraction ";
-        $value = str_replace($filter, "", $message_content_lower);
-        $value = str_replace("<@!", "", $value);
-        $value = str_replace("<@", "", $value);
-        $value = str_replace("<@", "", $value);
-        $value = str_replace(">", "", $value);
-        
-            
-        if (is_numeric($value)) {
-			if (!preg_match('/^[0-9]{16,18}$/', $value)){
-				$message->react('❌');
-				return;
-			}
-            $mention_member				= $author_guild->members->get('id', $value);
-            $mention_user				= $mention_member->user;
-            $mentions_arr				= array($mention_user);
-        } else {
-            return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-        }
-        if ($mention_member == null) {
-            return $message->reply("Invalid input! Please enter an ID or @mention the user");
-        }
-        
-        $x = 0;
-        foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
-            if ($x == 0) { //We only want the first person mentioned
-    //			id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-                $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-                $mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-                $mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-                $mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
-                $mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-                $mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
-                
-    //			Get infraction info in target's folder
-                $infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php");
-                $proper = "removeinfraction <@!$mention_id> ";
-                $strlen = strlen("removeinfraction <@!$mention_id> ");
-                $substr = substr($message_content_lower, $strlen);
-                
-                //			Check that message is formatted properly
-                if ($proper != substr($message_content_lower, 0, $strlen)) {
-                    $message->reply("Please format your command properly: " . $command_symbol . "warn @mention number");
-                    return;
-                }
-                
-                //			Check if $substr is a number
-                if (($substr != "") && (is_numeric(intval($substr)))) {
-                    //				Remove array element and reindex
-                    //array_splice($infractions, $substr, 1);
-                    if ($infractions[$substr] != null) {
-                        $infractions[$substr] = "Infraction removed by $author_check on " . date("m/d/Y"); // for arrays where key equals offset
-                        //					Save the new infraction log
-                        VarSave($guild_folder."/".$mention_id, "infractions.php", $infractions);
-                        
-                        //					Send a message
-                        if ($react) {
-                            $message->react("👍");
-                        }
-                        $message->reply("Infraction $substr removed from $mention_check!");
-                        return;
-                    } else {
-                        if ($react) {
-                            $message->react("👎");
-                        }
-                        $message->reply("Infraction '$substr' not found!");
-                        return;
-                    }
-                } else {
-                    if ($react) {
-                        $message->react("👎");
-                    }
-                    $message->reply("'$substr' is not a number");
-                    return;
-                }
-            }
-            $x++;
-        }
-    }
     if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'kick ')) { //;kick
         echo "[KICK]" . PHP_EOL;
         //Get an array of people mentioned
@@ -5779,6 +5640,143 @@ if(!$called) return;
         $message->react("👎");
         $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         return;
+    }
+	if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'warn ')) { //;warn @
+		echo "[WARN] $author_check" . PHP_EOL;
+		//$message->reply("Not yet implemented!");
+//		Get an array of people mentioned
+		$mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		if ($modlog_channel) {
+			$mention_warn_name_mention_default		= "<@$author_id>";
+		}
+		$mention_warn_queue_default									= $mention_warn_name_mention_default." warned the following users:" . PHP_EOL;
+		$mention_warn_queue_full 									= "";
+		
+		foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+//			id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
+			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+			$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+			$mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+			
+//			Build the string to log
+			$filter = "warn <@!$mention_id>";
+			$warndate = date("m/d/Y");
+			$mention_warn_queue = "**$mention_check was warned by $author_check on $warndate for reason: **" . str_replace($filter, "", $message_content);
+			
+			//			Place warn info in target's folder
+			$infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php");
+			$infractions[] = $mention_warn_queue;
+			VarSave($guild_folder."/".$mention_id, "infractions.php", $infractions);
+			$mention_warn_queue_full = $mention_warn_queue_full . PHP_EOL . $mention_warn_queue;
+		}
+		//		Send a message
+		if ($mention_warn_queue != "") {
+			if ($watch_channel) {
+				$watch_channel->sendMessage($mention_warn_queue_default . $mention_warn_queue_full . PHP_EOL);
+			} else {
+				$message->channel->sendMessage($mention_warn_queue_default . $mention_warn_queue_full . PHP_EOL);
+			}
+			//			React to the original message
+			//			if($react) $message->react("👀");
+			if ($react) {
+				$message->react("👁");
+			}
+			return;
+		} else {
+			if ($react) {
+				$message->react("👎");
+			}
+			$message->reply("Nobody in the guild was mentioned!");
+			return;
+		}
+	}
+	if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions @mention #
+        echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
+        //	Get an array of people mentioned
+        $mentions_arr 													= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+        
+        
+        $filter = "removeinfraction ";
+        $value = str_replace($filter, "", $message_content_lower);
+        $value = str_replace("<@!", "", $value);
+        $value = str_replace("<@", "", $value);
+        $value = str_replace("<@", "", $value);
+        $value = str_replace(">", "", $value);
+        
+            
+        if (is_numeric($value)) {
+			if (!preg_match('/^[0-9]{16,18}$/', $value)){
+				$message->react('❌');
+				return;
+			}
+            $mention_member				= $author_guild->members->get('id', $value);
+            $mention_user				= $mention_member->user;
+            $mentions_arr				= array($mention_user);
+        } else {
+            return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+        }
+        if ($mention_member == null) {
+            return $message->reply("Invalid input! Please enter an ID or @mention the user");
+        }
+        
+        $x = 0;
+        foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+            if ($x == 0) { //We only want the first person mentioned
+    //			id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
+                $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+                $mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+                $mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+                $mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+                $mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+                $mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+                
+    //			Get infraction info in target's folder
+                $infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php");
+                $proper = "removeinfraction <@!$mention_id> ";
+                $strlen = strlen("removeinfraction <@!$mention_id> ");
+                $substr = substr($message_content_lower, $strlen);
+                
+                //			Check that message is formatted properly
+                if ($proper != substr($message_content_lower, 0, $strlen)) {
+                    $message->reply("Please format your command properly: " . $command_symbol . "warn @mention number");
+                    return;
+                }
+                
+                //			Check if $substr is a number
+                if (($substr != "") && (is_numeric(intval($substr)))) {
+                    //				Remove array element and reindex
+                    //array_splice($infractions, $substr, 1);
+                    if ($infractions[$substr] != null) {
+                        $infractions[$substr] = "Infraction removed by $author_check on " . date("m/d/Y"); // for arrays where key equals offset
+                        //					Save the new infraction log
+                        VarSave($guild_folder."/".$mention_id, "infractions.php", $infractions);
+                        
+                        //					Send a message
+                        if ($react) {
+                            $message->react("👍");
+                        }
+                        $message->reply("Infraction $substr removed from $mention_check!");
+                        return;
+                    } else {
+                        if ($react) {
+                            $message->react("👎");
+                        }
+                        $message->reply("Infraction '$substr' not found!");
+                        return;
+                    }
+                } else {
+                    if ($react) {
+                        $message->react("👎");
+                    }
+                    $message->reply("'$substr' is not a number");
+                    return;
+                }
+            }
+            $x++;
+        }
     }
     if ($user_perms['manage_roles'] && str_starts_with($message_content_lower, 'mute ')) { //;mute
         echo "[MUTE]" . PHP_EOL;
