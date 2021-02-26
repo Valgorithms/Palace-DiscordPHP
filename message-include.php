@@ -2272,7 +2272,7 @@ if(!$called) return;
 					$side = (int)$arr[1];
 					$mod = (int)$arr[2] ?? 0;
 					$result = array();
-					for ($x = 0; $x <= $count; $x++)
+					for ($x = 1; $x <= $count; $x++)
 						$result[] = rand(1,(int)$side);
 					echo 'result: '; var_dump($result); echo PHP_EOL;
 					$sum = array_sum($result) + $mod;
