@@ -2,6 +2,7 @@
 include_once 'custom_functions.php';
 
 $channelroles = array(
+	"Anime" => "📺",
     "Art" => "🖌️",
     "Memes" => "🤣",
 	"Games" => "🎮",
@@ -17,6 +18,7 @@ $channelroles = array(
 
 //Message copy-pasta:
 $channelroles_message_text = "**Role Menu: Channels**
+:tv: : `Anime`
 :paintbrush: : `Art`
 :rofl: : `Memes`
 :video_game: : `Games`
