@@ -2128,7 +2128,7 @@ if(!$called) return;
             $documentation = $documentation . "`yahtzee pause` Pauses the game and can be resumed later \n";
             $documentation = $documentation . "`yahtzee resume` Resumes the paused game \n";
 			//roll
-			$documentation = $documentation . "`roll #d#`\n";
+			$documentation = $documentation . "`roll #d#(+/-#)`\n";
         }
         //All other functions
         $documentation = $documentation . "\n__**General:**__\n";
@@ -2250,22 +2250,46 @@ if(!$called) return;
 				$filter = "roll ";
 				$message_content_lower = str_replace($filter, "", $message_content_lower);
 				$arr = explode('d', $message_content_lower);
-				echo 'arr[0]: ' . $arr[0] . PHP_EOL;;
-				echo 'arr[1]: ' . $arr[1] . PHP_EOL;;
+				echo 'arr[0]: ' . $arr[0] . PHP_EOL;
+				echo 'arr[1]: ' . $arr[1] . PHP_EOL;
+				if(str_contains($arr[1], '+')){
+					$arr2 = explode('+', $arr[1]);
+					$arr[1] = $arr2[0];
+					$arr[2] = $arr2[1];
+				}
+				elseif(str_contains($arr[1], '-')){
+					$arr2 = explode('-', $arr[1]);
+					$arr[1] = $arr2[0];
+					$arr[2] = '-'.$arr2[1];
+				}
+				echo 'arr[2]: ' . $arr[2] . PHP_EOL;
 				if( is_numeric($arr[0]) && is_numeric($arr[1]) ){
 					if ( ((int)$arr[0] < 1) || ((int)$arr[1] < 1) )
-						return $message->reply('All numbers must be positive!');
-					$count = $arr[0];
-					$side = $arr[1];
+						return $message->reply('Die count and side count must be positive!');
+					if (isset($arr[2]) && is_nan($arr[2]))
+						return $message->reply('Modifier is not a valid number!');
+					$count = (int)$arr[0];
+					$side = (int)$arr[1];
+					$mod = (int)$arr[2] ?? 0;
 					$result = array();
 					for ($x = 0; $x <= $count; $x++)
 						$result[] = rand(1,(int)$side);
 					echo 'result: '; var_dump($result); echo PHP_EOL;
-					$sum = array_sum($result);
-					$message->reply("You rolled $sum!");
+					$sum = array_sum($result) + $mod;
+					$output = "You rolled $sum!";
+					$output .= "\n[";
+					foreach ($result as $roll){
+						$rolls .= "$roll, ";
+					}
+					if (isset($rolls)){
+						$rolls = substr(trim($rolls), 0, -1);
+						$output .= $rolls;
+					}
+					$output .= "]";
+					$message->reply($output);
 					SetCooldownMem($author_id, "spam");
 					return;
-				}else return $message->reply('Command must in #d# format!');
+				}else return $message->reply('Command must in #d#(+/-#) format!');
 				
 			}else{ //Reply with remaining time
                 $waittime = ($spam_limit_seconds - $cooldown[1]);
