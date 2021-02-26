@@ -2277,15 +2277,13 @@ if(!$called) return;
 					echo 'result: '; var_dump($result); echo PHP_EOL;
 					$sum = array_sum($result) + $mod;
 					$output = "You rolled $sum!";
-					$output .= "\n[";
 					foreach ($result as $roll){
 						$rolls .= "$roll, ";
 					}
 					if (isset($rolls)){
 						$rolls = substr(trim($rolls), 0, -1);
-						$output .= $rolls;
+						$output .= "\n`$rolls`";
 					}
-					$output .= "]";
 					$message->reply($output);
 					SetCooldownMem($author_id, "spam");
 					return;
