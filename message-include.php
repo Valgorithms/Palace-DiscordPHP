@@ -3724,6 +3724,9 @@ if(!$called) return;
             file_put_contents('debug.txt', $debug_output);
             ob_end_flush();
         }
+		if ($message_content_lower == 'stats'){ //;stats
+			$stats->handle($message);
+		}
 		if ($message_content_lower == 'jit'){ //;jit
 			var_dump(opcache_get_status()['jit']);
 		}

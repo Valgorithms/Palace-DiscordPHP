@@ -51,6 +51,9 @@ $discord = new \Discord\Discord([
     'storeMessages' => true,
 	'httpLogger' => $logger
 ]);
+include 'stats.php';
+$stats = new Stats();
+$stats->init($discord);
 $restcord = null;//new DiscordClient(['token' => "{$token}"]); // Token is required
 //var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
 
@@ -339,7 +342,7 @@ try {
         }
     });
 
-    $discord->once('ready', function ($discord) use ($loop, $token, $restcord) {	// Listen for events here
+    $discord->once('ready', function ($discord) use ($loop, $token, $restcord, $stats) {	// Listen for events here
         //$line_count = COUNT(FILE(basename($_SERVER['PHP_SELF']))); //No longer relevant due to includes
         //$version = "RC V1.4.1";
         /*
@@ -373,7 +376,7 @@ try {
 		]);
 		$discord->updatePresence($act, false, 'online');
 		
-        $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord) { //Handling of a message
+        $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord, $stats) { //Handling of a message
             include "author_perms.php";
             include "message-include.php";
         });
