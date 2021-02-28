@@ -75,7 +75,7 @@ class Stats
         $embed = new Discord\Parts\Embed\Embed($this->discord);
         $embed
             ->setTitle('DiscordPHP')
-            ->setDescription('This bot runs with DiscordPHP. Used for stability testing and library help to users.')
+            ->setDescription('This bot runs with DiscordPHP.')
             ->addFieldValues('PHP Version', phpversion())
             //->addFieldValues('DiscordPHP Version', $this->getDiscordPHPVersion())
             ->addFieldValues('Start time', $this->startTime->longRelativeToNowDiffForHumans(3))
