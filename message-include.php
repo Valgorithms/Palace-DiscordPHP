@@ -2,9 +2,7 @@
 if ($message->author->bot) return; //Don't process messages sent by bots
 
 $message_content = $message->content;
-if (($message_content == null) || ($message_content == "")) {
-    return;
-}
+if (($message_content == null) || ($message_content == "")) return;
 $message_id = $message->id;
 $message_content_lower = mb_strtolower($message_content);
 
@@ -82,9 +80,7 @@ if ($is_dm === false) { //Guild message
             $discord->guilds->leave($author_guild);
         }
     }
-    if (in_array($author_id, $blacklisted_owners)) { //Ignore all commands from blacklisted guild owners
-        return;
-    }
+    if (in_array($author_id, $blacklisted_owners)) return; //Ignore all commands from blacklisted guild owners
     //Leave the guild if blacklisted
     global $blacklisted_guilds;
     if ($blacklisted_guilds) {
@@ -374,13 +370,8 @@ if (($gameroles_message_id != "") || ($gameroles_message_id != null)) {
 
 //echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
 $author_webhook = $author_user->webhook;
-if ($author_webhook === true) {
-    return;
-} //Don't process webhooks
-$author_bot = $author_user->bot;
-if ($author_bot === true) {
-    return;
-} //Don't process bots
+if ($author_webhook === true) return; //Don't process webhooks
+if ($author_user->bot === true) return; //Don't process bots
 
 /*
 
@@ -401,21 +392,24 @@ if (CheckFile($author_folder, "watchers.php")) {
     foreach ($watchers as $watcher) {
         if ($watcher != null) {																									//echo "watcher: " . $watcher . PHP_EOL;
             $null_array = false; //Mark the array as valid
-            try { //Get objects for the watcher
-                $watcher_member = $author_guild->members->get('id', $watcher);													//echo "watcher_member class: " . get_class($watcher_member) . PHP_EOL;
-                $watcher_user = $watcher_member->user;																		//echo "watcher_user class: " . get_class($watcher_user) . PHP_EOL;
-                $watcher_user->getPrivateChannel()->done(function ($watcher_dmchannel) use ($message) {	//Promise
-//					echo "watcher_dmchannel class: " . get_class($watcher_dmchannel) . PHP_EOL; //DMChannel
-                    if ($watch_channel) {
-                        $watch_channel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
-                    } elseif ($watcher_dmchannel) {
-                        $watcher_dmchannel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
-                    }
-                    return;
-                });
-            } catch (Exception $e) {
-                //				RuntimeException: Unknown property
-            }
+			if ($watcher_member = $author_guild->members->get('id', $watcher)){
+				if (get_class($watcher_member) == "Discord\Parts\User\Member") {
+					$watcher_user = $watcher_member->user;
+				} else {
+					$watcher_user = $watcher_member;
+				}
+				$watcher_user->getPrivateChannel()->done(
+					function ($watcher_dmchannel) use ($message) {	//Promise
+						//echo "watcher_dmchannel class: " . get_class($watcher_dmchannel) . PHP_EOL; //DMChannel
+						if (isset($watch_channel)) {
+							return $watch_channel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
+						} elseif (isset($watcher_dmchannel)) {
+							return $watcher_dmchannel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
+						}
+						return;
+					}
+				);
+			}
         }
     }
     if ($null_array === true) { //Delete the null file
@@ -434,10 +428,10 @@ Guild-specific variables
 
 
 include 'CHANGEME.php';
-if ($author_id != $creator_id) {
-    $creator	= false;
+if ($author_id == $creator_id) {
+    $creator = true;
 } else {
-    $creator 	= true;
+    $creator = false;
 }
 
 //echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
@@ -459,9 +453,8 @@ $author_guild_roles_ids 				= array(); 												//IDs of all guild roles
 foreach ($author_guild_roles as $role) {
     $author_guild_roles_names[] 		= $role->name; 																		//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
     $author_guild_roles_ids[] 			= $role->id; 																		//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-    if ($role->name == "Palace Bot") {
+    if ($role->name == "Palace Bot") //Author is this bot
         $role_vzgbot_id = $role->id;
-    }						//Author is this bot
 }																															//echo "discord_guild_roles_names" . PHP_EOL; var_dump($author_guild_roles_names);
                                                                                                                             //echo "discord_guild_roles_ids" . PHP_EOL; var_dump($author_guild_roles_ids);
 /*
@@ -477,46 +470,33 @@ $author_member_roles_ids 										= array();
 foreach ($author_member_roles as $role) {
 	$author_member_roles_names[] 							= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
 	$author_member_roles_ids[]								= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-	if ($role->id == $role_18_id) {
-		$adult = true;
-	}							//Author has the 18+ role
-	if ($role->id == $role_dev_id) {
-		$dev = true;
-	}							//Author has the dev role
-	if ($role->id == $role_owner_id) {
-		$owner = true;
-	}							//Author has the owner role
-	if ($role->id == $role_admin_id) {
-		$admin = true;
-	}							//Author has the admin role
-	if ($role->id == $role_mod_id) {
-		$mod = true;
-	}							//Author has the mod role
-	if ($role->id == $role_assistant_id) {
-		$assistant = true;
-	}							//Author has the assistant role
-	if ($role->id == $role_tech_id) {
-		$tech = true;
-	}							//Author has the tech role
-	if ($role->id == $role_verified_id) {
-		$verified = true;
-	}							//Author has the verified role
-	if ($role->id == $role_bot_id) {
-		$bot = true;
-	}							//Author has the bot role
-	if ($role->id == $role_vzgbot_id) {
-		$vzgbot = true;
-	}							//Author is this bot
-	if ($role->id == $role_muted_id) {
-		$muted = true;
-	}							//Author is this bot
+	if ($role->id == $role_18_id)
+		$adult = true; //Author has the 18+ role
+	if ($role->id == $role_dev_id)
+		$dev = true; //Author has the dev role
+	if ($role->id == $role_owner_id)
+		$owner = true; //Author has the owner role
+	if ($role->id == $role_admin_id)
+		$admin = true; //Author has the admin role
+	if ($role->id == $role_mod_id)
+		$mod = true; //Author has the mod role
+	if ($role->id == $role_assistant_id)
+		$assistant = true; //Author has the assistant role
+	if ($role->id == $role_tech_id)
+		$tech = true; //Author has the tech role
+	if ($role->id == $role_verified_id)
+		$verified = true; //Author has the verified role
+	if ($role->id == $role_bot_id)
+		$bot = true; //Author has the bot role
+	if ($role->id == $role_vzgbot_id)
+		$vzgbot = true; //Author is this bot
+	if ($role->id == $role_muted_id)
+		$muted = true; //Author is muted
 }
-if ($creator || $owner || $dev) {
-    $bypass = true;
-} //Ignore spam restrictions
-else {
-    $bypass = false;
-}
+if ($creator || $owner || $dev)
+    $bypass = true; //Ignore spam restrictions
+else $bypass = false;
+
 if ($creator) echo "[CREATOR $author_guild_id/$author_id] " . PHP_EOL;
 if ($owner) echo "[OWNER $author_guild_id/$author_id] " . PHP_EOL;
 if ($dev) echo "[DEV $author_guild_id/$author_id] " . PHP_EOL;
@@ -589,45 +569,33 @@ if(!$called) return;
 				$value = str_replace($filter, "", $value);
 				$filter = ">";
 				$value = str_replace($filter, "", $value);
-				if(is_numeric($value)){
-					if (!preg_match('/^[0-9]{16,18}$/', $value)){
-						$message->react('❌');
-						return;
-					}
-				}
-				if ($switch == 'add'){
-					if ($target_user = $discord->users->offsetGet($value)){ //Add to whitelist
+				if(is_numeric($value))
+					if (!preg_match('/^[0-9]{16,18}$/', $value))
+						return $message->react('❌');
+				if ($switch == 'add')
+					if ($target_user = $discord->users->offsetGet($value)) //Add to whitelist
 						if(!in_array($value, $whitelist_array)){
 							$whitelist_array[] = $value;
 							VarSave($guild_folder, "ownerwhitelist.php", $whitelist_array);
-							$message->react("👍");
-							return;
+							return $message->react("👍");
 						}
-					}
-				}
-				if ( ($switch == 'rem') || ($switch == 'remove')){ //TODO
+				if ( ($switch == 'rem') || ($switch == 'remove')) //TODO
 					if(in_array($value, $whitelist_array)){ //Remove from whitelist
 						$pruned_whitelist_array = array();
-						foreach ($whitelist_array as $id){
-							if ($id != $value)
-								$pruned_whitelist_array[] = $id;
-						}
+						foreach ($whitelist_array as $id)
+							if ($id != $value) $pruned_whitelist_array[] = $id;
 						VarSave($guild_folder, "ownerwhitelist.php", $pruned_whitelist_array);
-						$message->react("👍");
-						return;
+						return $message->react("👍");
 					}
-				}
 				if ($switch == 'list'){ //TODO
 					$string = "Whitelisted users: ";
-					foreach ($whitelist_array as $id){
+					foreach ($whitelist_array as $id)
 						$string .= "<@$id> ";
-					}
-					$message->channel->sendMessage($string);
-					return;
+					return $message->channel->sendMessage($string);
 				}
-				$message->react("👎");
-				return;
+				return $message->react("👎");
 			}
+			return;
 			//check for empty subcommand and subcommands
 		}
 	}
@@ -848,101 +816,56 @@ if(!$called) return;
 					$documentation = $documentation . "\nBot options:\n";
 					//react
 					$documentation = $documentation . "`react:` ";
-					if ($react) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($react) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//vanity
 					$documentation = $documentation . "`vanity:` ";
-					if ($vanity) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($vanity) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//nsfw
 					$documentation = $documentation . "`nsfw:` ";
-					if ($nsfw) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($nsfw) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//games
 					$documentation = $documentation . "`games:` ";
-					if ($games) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($games) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					
 					//rolepicker
 					$documentation = $documentation . "`\nrolepicker:` ";
-					if ($rp0) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($rp0) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					
-					//Strikeout invalid options
-					if (!$rp0) {
-						$documentation = $documentation . "~~";
-					} //Strikeout invalid options
+					if (!$rp0) $documentation = $documentation . "~~"; //Strikeout invalid options 
 					//gameroles
 					$documentation = $documentation . "`game roles:` ";
-					if ($gamerole) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($gamerole) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//species
 					$documentation = $documentation . "`species:` ";
-					if ($rp1) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($rp1) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//gender
 					$documentation = $documentation . "`gender:` ";
-					if ($rp2) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($rp2) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//prnouns
 					$documentation = $documentation . "`pronouns:` ";
-					if ($rp5) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
-					
+					if ($rp5) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//sexuality
 					$documentation = $documentation . "`sexuality:` ";
-					if ($rp3) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
-					
+					if ($rp3) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//channel roles
 					$documentation = $documentation . "`channel roles:` ";
-					if ($channeloption) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
+					if ($channeloption) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
 					//customrole
 					$documentation = $documentation . "`customrole:` ";
-					if ($rp4) {
-						$documentation = $documentation . "**Enabled**\n";
-					} else {
-						$documentation = $documentation . "**Disabled**\n";
-					}
-				
-					//Strikeout invalid options
-				if (!$rp0) {
-					$documentation = $documentation . "~~";
-				} //Strikeout invalid options
+					if ($rp4) $documentation = $documentation . "**Enabled**\n";
+					else $documentation = $documentation . "**Disabled**\n";
+					if (!$rp0) $documentation = $documentation . "~~"; //Strikeout invalid options
 				
 				$doc_length = strlen($documentation);
 				if ($doc_length < 1024) {
@@ -974,14 +897,10 @@ if(!$called) return;
 				break;
             case 'updateconfig': //;updateconfig
                 $file = 'guild_config_template.php';
-                if (sha1_file($guild_config_path) == sha1_file('guild_config_template.php')) {
-                    $message->reply("Guild configuration is already up to date!");
-                } else {
-                    if (!copy($file, $guild_config_path)) {
-                        $message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
-                    } else {
-                        $author_channel->sendMessage("The server's configuration file was recently updated by <@$author_id>. Please check the ;currentsetup");
-                    }
+                if (sha1_file($guild_config_path) == sha1_file('guild_config_template.php')) return $message->reply("Guild configuration is already up to date!");
+                else {
+                    if (!copy($file, $guild_config_path)) return $message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
+                    else return $author_channel->sendMessage("The server's configuration file was recently updated by <@$author_id>. Please check the ;currentsetup");
                 }
                 break;
             case 'clearconfig': //;clearconfig
@@ -992,8 +911,7 @@ if(!$called) return;
                         unlink($file);
                     } //Delete the file
                 }
-                $author_channel->sendMessage("The server's configuration files were recently delete by <@$author_id>. Please run the ;setup commands again.");
-                return;
+                return $author_channel->sendMessage("The server's configuration files were recently delete by <@$author_id>. Please run the ;setup commands again.");
                 break;
             //Role Messages Setup
 			case 'message games': //;message games
@@ -1018,8 +936,7 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-					$message->delete();
-                    return;
+					return $message->delete();
                 });
                 return;
                 break;
@@ -1043,8 +960,7 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-					$message->delete();
-                    return;
+					return $message->delete();
                 });
                 return;
                 break;
@@ -1068,8 +984,7 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-                    $message->delete();
-                    return;
+                    return $message->delete();
                 });
                 return;
                 break;
@@ -1093,8 +1008,7 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-                    $message->delete();
-                    return;
+                    return $message->delete();
                 });
                 return;
                 break;
@@ -1119,8 +1033,7 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-                    $message->delete();
-                    return;
+                    return $message->delete();
                 });
                 return;
                 break;
@@ -1146,8 +1059,7 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-                    $message->delete();
-                    return;
+                    return $message->delete();
                 });
                 return;
                 break;
@@ -1172,8 +1084,7 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-                    $message->delete();
-                    return;
+                    return $message->delete();
                 });
                 return;
                 break;
@@ -1225,12 +1136,10 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-                    $message->delete();
-                    return;
+                    return $message->delete();
                 });
 				return;
 				break;
-				
             case 'message customroles': //;message customroles
 				echo '[MESSAGE CUSTOMROLES]' . PHP_EOL;
                 VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
@@ -1290,8 +1199,7 @@ if(!$called) return;
 					  $string .= $string2;
 					}
 					eval($string); //I really hate this language sometimes
-                    $message->delete();
-                    return;
+                    return $message->delete();
                 });
                 return;
                 break;
@@ -1304,15 +1212,9 @@ if(!$called) return;
                 $react_var = VarLoad($guild_folder, "react_option.php");
                 $react_flip = !$react_var;
                 VarSave($guild_folder, "react_option.php", $react_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($react_flip === true) {
-                    $message->reply("Reaction functions enabled!");
-                } else {
-                    $message->reply("Reaction functions disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($react_flip === true) return $message->reply("Reaction functions enabled!");
+                else return $message->reply("Reaction functions disabled!");
                 break;
             case 'vanity': //toggle vanity functions ;vanity
                 if (!CheckFile($guild_folder, "vanity_option.php")) {
@@ -1322,15 +1224,10 @@ if(!$called) return;
                 $vanity_var = VarLoad($guild_folder, "vanity_option.php");
                 $vanity_flip = !$vanity_var;
                 VarSave($guild_folder, "vanity_option.php", $vanity_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($vanity_flip === true) {
-                    $message->reply("Vanity functions enabled!");
-                } else {
-                    $message->reply("Vanity functions disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($vanity_flip === true) return $message->reply("Vanity functions enabled!");
+                else return $message->reply("Vanity functions disabled!");
+                ;
                 break;
             case 'nsfw':
                 if (!CheckFile($guild_folder, "nsfw_option.php")) {
@@ -1340,15 +1237,9 @@ if(!$called) return;
                 $nsfw_var = VarLoad($guild_folder, "nsfw_option.php");
                 $nsfw_flip = !$nsfw_var;
                 VarSave($guild_folder, "nsfw_option.php", $nsfw_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($nsfw_flip === true) {
-                    $message->reply("NSFW functions enabled!");
-                } else {
-                    $message->reply("NSFW functions disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($nsfw_flip === true) return $message->reply("NSFW functions enabled!");
+                else return $message->reply("NSFW functions disabled!");
                 break;
 			case 'games':
                 if (!CheckFile($guild_folder, "games_option.php")) {
@@ -1358,17 +1249,10 @@ if(!$called) return;
                 $games_var = VarLoad($guild_folder, "games_option.php");
                 $games_flip = !$games_var;
                 VarSave($guild_folder, "games_option.php", $games_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($games_flip === true) {
-                    $message->reply("Games functions enabled!");
-                } else {
-                    $message->reply("Games functions disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($games_flip === true) return $message->reply("Games functions enabled!");
+                else return $message->reply("Games functions disabled!");
                 break;
-			            case 'gamerole':
             case 'rolepicker':
                 if (!CheckFile($guild_folder, "rolepicker_option.php")) {
                     VarSave($guild_folder, "rolepicker_option.php", $rolepicker_option);
@@ -1377,16 +1261,11 @@ if(!$called) return;
                 $rolepicker_var = VarLoad($guild_folder, "rolepicker_option.php");
                 $rolepicker_flip = !$rolepicker_var;
                 VarSave($guild_folder, "rolepicker_option.php", $rolepicker_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($rolepicker_flip === true) {
-                    $message->reply("Rolepicker enabled!");
-                } else {
-                    $message->reply("Rolepicker disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($rolepicker_flip === true) return $message->reply("Rolepicker enabled!");
+                else return $message->reply("Rolepicker disabled!");
                 break;
+			case 'gamerole':
 			case 'gameroles':
                 if (!CheckFile($guild_folder, "gameroles_option.php")) {
                     VarSave($guild_folder, "gameroles_option.php", $gameroles_option);
@@ -1395,15 +1274,9 @@ if(!$called) return;
                 $gameroles_var = VarLoad($guild_folder, "gameroles_option.php");
                 $gameroles_flip = !$gameroles_var;
                 VarSave($guild_folder, "gameroles_option.php", $gameroles_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($gameroles_flip === true) {
-                    $message->reply("Game role functions enabled!");
-                } else {
-                    $message->reply("Game role functions disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($gameroles_flip === true) return $message->reply("Game role functions enabled!");
+                else return $message->reply("Game role functions disabled!");
                 break;
             case 'species':
                 if (!CheckFile($guild_folder, "species_option.php")) {
@@ -1413,15 +1286,9 @@ if(!$called) return;
                 $species_var = VarLoad($guild_folder, "species_option.php");
                 $species_flip = !$species_var;
                 VarSave($guild_folder, "species_option.php", $species_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($species_flip === true) {
-                    $message->reply("Species roles enabled!");
-                } else {
-                    $message->reply("Species roles	disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($species_flip === true) return $message->reply("Species roles enabled!");
+                else return $message->reply("Species roles	disabled!");
                 break;
             case 'gender':
                 if (!CheckFile($guild_folder, "gender_option.php")) {
@@ -1431,15 +1298,9 @@ if(!$called) return;
                 $gender_var = VarLoad($guild_folder, "gender_option.php");
                 $gender_flip = !$gender_var;
                 VarSave($guild_folder, "gender_option.php", $gender_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($gender_flip === true) {
-                    $message->reply("Gender roles enabled!");
-                } else {
-                    $message->reply("Gender roles disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($gender_flip === true) return $message->reply("Gender roles enabled!");
+                else return $message->reply("Gender roles disabled!");
                 break;
 			case 'pronoun':
 			case 'pronouns':
@@ -1450,9 +1311,7 @@ if(!$called) return;
                 $pronouns_var = VarLoad($guild_folder, "pronouns_option.php");
                 $pronouns_flip = !$pronouns_var;
                 VarSave($guild_folder, "pronouns_option.php", $pronouns_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
+                if ($react) $message->react("👍");
                 if ($pronouns_flip === true) {
                     $message->reply("Pronoun roles enabled!");
                 } else {
@@ -1468,15 +1327,9 @@ if(!$called) return;
                 $sexuality_var = VarLoad($guild_folder, "sexuality_option.php");
                 $sexuality_flip = !$sexuality_var;
                 VarSave($guild_folder, "sexuality_option.php", $sexuality_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($sexuality_flip === true) {
-                    $message->reply("Sexuality roles enabled!");
-                } else {
-                    $message->reply("Sexuality roles disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($sexuality_flip === true) return $message->reply("Sexuality roles enabled!");
+                else return $message->reply("Sexuality roles disabled!");
                 break;
 			case 'channelrole':
 			case 'channelroles':
@@ -1487,15 +1340,9 @@ if(!$called) return;
                 $channel_var = VarLoad($guild_folder, "channel_option.php");
                 $channel_flip = !$channel_var;
                 VarSave($guild_folder, "channel_option.php", $channel_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($channel_flip === true) {
-                    $message->reply("Channel roles enabled!");
-                } else {
-                    $message->reply("Channel roles disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($channel_flip === true) return $message->reply("Channel roles enabled!");
+                else return $message->reply("Channel roles disabled!");
                 break;
             case 'customroles':
                 if (!CheckFile($guild_folder, "custom_option.php")) {
@@ -1505,15 +1352,9 @@ if(!$called) return;
                 $custom_var = VarLoad($guild_folder, "custom_option.php");
                 $custom_flip = !$custom_var;
                 VarSave($guild_folder, "custom_option.php", $custom_flip);
-                if ($react) {
-                    $message->react("👍");
-                }
-                if ($custom_flip === true) {
-                    $message->reply("Custom roles enabled!");
-                } else {
-                    $message->reply("Custom roles disabled!");
-                }
-                return;
+                if ($react) $message->react("👍");
+                if ($custom_flip === true) return $message->reply("Custom roles enabled!");
+                else return $message->reply("Custom roles disabled!");
                 break;
         }
         //End switch
@@ -1526,11 +1367,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "role_dev_id.php", $value);
-                $message->reply("Developer role ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the role");
-            }
-            return;
+                return $message->reply("Developer role ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         if (str_starts_with($message_content_lower, 'setup admin ')) {
             $filter = "setup admin ";
@@ -1540,11 +1378,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "role_admin_id.php", $value);
-                $message->reply("Admin role ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the role");
-            }
-            return;
+                return $message->reply("Admin role ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         if (str_starts_with($message_content_lower, 'setup mod ')) {
             $filter = "setup mod ";
@@ -1554,11 +1389,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "role_mod_id.php", $value);
-                $message->reply("Moderator role ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the role");
-            }
-            return;
+                return $message->reply("Moderator role ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         if (str_starts_with($message_content_lower, 'setup bot ')) {
             $filter = "setup bot ";
@@ -1568,11 +1400,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "role_bot_id.php", $value);
-                $message->reply("Bot role ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the role");
-            }
-            return;
+                return $message->reply("Bot role ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         if (str_starts_with($message_content_lower, 'setup vzgbot ')) {
             $filter = "setup vzgbot ";
@@ -1582,11 +1411,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "role_vzgbot_id.php", $value);
-                $message->reply("Palace Bot role ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the role");
-            }
-            return;
+                return $message->reply("Palace Bot role ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         if (str_starts_with($message_content_lower, 'setup muted ')) {
             $filter = "setup muted ";
@@ -1596,11 +1422,8 @@ if(!$called) return;
             $value = trim($value);//echo "value: '$value';" . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "role_muted_id.php", $value);
-                $message->reply("Muted role ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the role");
-            }
-            return;
+                return $message->reply("Muted role ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         if (str_starts_with($message_content_lower, 'setup verified ')) {
             $filter = "setup verified ";
@@ -1610,11 +1433,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "role_verified_id.php", $value);
-                $message->reply("Verified role ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the role");
-            }
-            return;
+                return$message->reply("Verified role ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         if (str_starts_with($message_content_lower, 'setup adult ')) {
             $filter = "setup adult ";
@@ -1624,11 +1444,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "role_18_id.php", $value);
-                $message->reply("Adult role ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the role");
-            }
-            return;
+                return $message->reply("Adult role ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         //Channels
         if (str_starts_with($message_content_lower,  'setup general ')) {
@@ -1639,11 +1456,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "general_channel_id.php", $value);
-                $message->reply("General channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("General channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup welcome ')) {
             $filter = "setup welcome ";
@@ -1653,11 +1467,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "welcome_public_channel_id.php", $value);
-                $message->reply("Welcome channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Welcome channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup welcomelog ')) {
             $filter = "setup welcomelog ";
@@ -1667,11 +1478,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "welcome_log_channel_id.php", $value);
-                $message->reply("Welcome log channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Welcome log channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup log ')) {
             $filter = "setup log ";
@@ -1681,11 +1489,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "modlog_channel_id.php", $value);
-                $message->reply("Log channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Log channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup verify channel ')) {
             $filter = "setup verify channel ";
@@ -1695,11 +1500,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "getverified_channel_id.php", $value);
-                $message->reply("Verify channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return message->reply("Verify channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup verifylog ')) {
             $filter = "setup verifylog ";
@@ -1709,11 +1511,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "verifylog_channel_id.php", $value);
-                $message->reply("Verifylog channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Verifylog channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup watch ')) {
             $filter = "setup watch ";
@@ -1723,11 +1522,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "watch_channel_id.php", $value);
-                $message->reply("Watch channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Watch channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup rolepicker channel ')) {
             $filter = "setup rolepicker channel ";
@@ -1737,11 +1533,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "rolepicker_channel_id.php", $value);
-                $message->reply("Rolepicker channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Rolepicker channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
 		if (str_starts_with($message_content_lower, 'setup nsfw rolepicker channel ')) {
             $filter = "setup nsfw rolepicker channel ";
@@ -1751,11 +1544,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "nsfw_rolepicker_channel_id.php", $value);
-                $message->reply("NSFW Rolepicker channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("NSFW Rolepicker channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup games rolepicker channel ')) {
             $filter = "setup games rolepicker channel ";
@@ -1765,11 +1555,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "games_rolepicker_channel_id.php", $value);
-                $message->reply("Games Rolepicker channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Games Rolepicker channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         
 		if (str_starts_with($message_content_lower, 'setup games ')) {
@@ -1780,11 +1567,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "games_channel_id.php", $value);
-                $message->reply("Games channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Games channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
 		if (str_starts_with($message_content_lower, 'setup gameroles ')) {
             $filter = "setup gameroles ";
@@ -1794,11 +1578,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "gameroles_message_id.php", $value);
-                $message->reply("Game roles channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return$message->reply("Game roles channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup suggestion pending ')) {
             $filter = "setup suggestion pending ";
@@ -1808,11 +1589,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "suggestion_pending_channel_id.php", $value);
-                $message->reply("Suggestion pending channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Suggestion pending channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup suggestion approved ')) {
             $filter = "setup suggestion approved ";
@@ -1822,11 +1600,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "suggestion_approved_channel_id.php", $value);
-                $message->reply("Suggestion approved channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Suggestion approved channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup tip pending ')) {
             $filter = "setup tip pending ";
@@ -1836,11 +1611,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "tip_pending_channel_id.php", $value);
-                $message->reply("Tip pending channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Tip pending channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup tip approved ')) {
             $filter = "setup tip approved ";
@@ -1850,11 +1622,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "tip_approved_channel_id.php", $value);
-                $message->reply("Tip approved channel ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
-            }
-            return;
+                return $message->reply("Tip approved channel ID saved!");
+            } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         
 		//Users
@@ -1868,11 +1637,8 @@ if(!$called) return;
             $value = trim($value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
                 VarSave($guild_folder, "rolepicker_id.php", $value);
-                $message->reply("Rolepicker user ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the user");
-            }
-            return;
+                return $message->reply("Rolepicker user ID saved!");
+            } else return $message->reply("Invalid input! Please enter an ID or @mention the user");
         }
         //Messages
         if (str_starts_with($message_content_lower, 'setup species ')) {
@@ -1881,11 +1647,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "species_message_id.php", $value);
-                $message->reply("Species message ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a message ID");
-            }
-            return;
+                return $message->reply("Species message ID saved!");
+            } else return $message->reply("Invalid input! Please enter a message ID");
         }
         if (str_starts_with($message_content_lower, 'setup species2 ')) {
             $filter = "setup species2 ";
@@ -1893,11 +1656,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "species2_message_id.php", $value);
-                $message->reply("Species2 message ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a message ID");
-            }
-            return;
+                return $message->reply("Species2 message ID saved!");
+            } else return $message->reply("Invalid input! Please enter a message ID");
         }
         if (str_starts_with($message_content_lower, 'setup species3 ')) {
             $filter = "setup species3 ";
@@ -1905,11 +1665,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "species3_message_id.php", $value);
-                $message->reply("Species3 message ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a message ID");
-            }
-            return;
+                return $message->reply("Species3 message ID saved!");
+            } else return $message->reply("Invalid input! Please enter a message ID");
         }
         if (str_starts_with($message_content_lower, 'setup gender ')) {
             $filter = "setup gender ";
@@ -1917,11 +1674,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "gender_message_id.php", $value);
-                $message->reply("Gender message ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a message ID");
-            }
-            return;
+                return $message->reply("Gender message ID saved!");
+            } else return $message->reply("Invalid input! Please enter a message ID");
         }
         if (str_starts_with($message_content_lower, 'setup sexuality ')) {
             $filter = "setup sexuality ";
@@ -1929,11 +1683,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "sexuality_message_id.php", $value);
-                $message->reply("Sexuality message ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a message ID");
-            }
-            return;
+                return $message->reply("Sexuality message ID saved!");
+            } else return $message->reply("Invalid input! Please enter a message ID");
         }
 		if (str_starts_with($message_content_lower, 'setup channelroles ')) {
             $filter = "setup channelroles ";
@@ -1941,11 +1692,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "channelroles_message_id.php", $value);
-                $message->reply("Channel roles message ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a message ID");
-            }
-            return;
+                return $message->reply("Channel roles message ID saved!");
+            } else return $message->reply("Invalid input! Please enter a message ID");
         }
 		if (str_starts_with($message_content_lower, 'setup customroles ')) {
             $filter = "setup customroles ";
@@ -1953,11 +1701,8 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "customroles_message_id.php", $value);
-                $message->reply("Custom roles message ID saved!");
-            } else {
-                $message->reply("Invalid input! Please enter a message ID");
-            }
-            return;
+                return $message->reply("Custom roles message ID saved!");
+            } else return $message->reply("Invalid input! Please enter a message ID");
         }
 		
 		
@@ -1974,8 +1719,13 @@ if(!$called) return;
     if ($message_content_lower == 'help') { //;help
         $documentation ="\n`;invite` sends a DM with an OAuth2 link to invite Palace Bot to your server\n";
         $documentation = $documentation . "**\nCommand symbol: $command_symbol**\n";
+		if ($creator || $owner) {
+			$documentation = $documentation . "\n__**Owner:**__\n";
+			//Website BCP
+			$documentation = $documentation . "`bcp (add/rem/list)` allows another users access to the bot control panel on the valzargaming.com\n";
+		}
         if ($creator || $owner || $dev) { //toggle options
-            $documentation = $documentation . "\n__**Owner:**__\n";
+            $documentation = $documentation . "\n__**Owner / Dev:**__\n";
             //toggle options
             $documentation = $documentation . "*Bot settings:*\n";
             //react
@@ -2211,17 +1961,12 @@ if(!$called) return;
     if ($nsfw) { //This currently doesn't serve a purpose
         if ($message_content_lower == '18+') {
             if ($adult) {
-                if ($react) {
-                    $message->react("👍");
-                }
-                $message->reply("You have the 18+ role!");
+                if ($react) $message->react("👍");
+                return $message->reply("You have the 18+ role!");
             } else {
-                if ($react) {
-                    $message->react("👎");
-                }
-                $message->reply("You do NOT have the 18+ role!");
+                if ($react) $message->react("👎");
+                return $message->reply("You do NOT have the 18+ role!");
             }
-            return;
         }
     }
     if ($games) {
@@ -2284,17 +2029,15 @@ if(!$called) return;
 						$rolls = substr(trim($rolls), 0, -1);
 						$output .= "\n`$rolls`";
 					}
-					$message->reply($output);
 					SetCooldownMem($author_id, "spam");
-					return;
+					return $message->reply($output);
 				}else return $message->reply('Command must in #d#(+/-#) format!');
 				
 			}else{ //Reply with remaining time
                 $waittime = ($spam_limit_seconds - $cooldown[1]);
                 $formattime = FormatTime($waittime);
                 if ($react) $message->react("👎");
-                $message->reply("You must wait $formattime before using the roll command again.");
-                return;
+                return $message->reply("You must wait $formattime before using the roll command again.");
 			}
 		}
     }
@@ -2302,18 +2045,18 @@ if(!$called) return;
         echo '[PING]' . PHP_EOL;
 		//$pingdiff = $message->timestamp->floatDiffInRealSeconds();
         //$message->reply("your message took $pingdiff to arrive.");
-        $message->reply("Pong!");
-        return;
+        return $message->reply("Pong!");
     }
     if (str_starts_with($message_content_lower, 'remindme ')){ //;remindme
         echo "[REMINDER]" . PHP_EOL;
         $filter = "remindme ";
         $value = str_replace($filter, "", $message_content_lower);
         if(is_numeric($value)){
+			if($react) $message->react("👍");
             $discord->getLoop()->addTimer($value, function() use ($author_user) {
-                $author_user->sendMessage("This is your requested reminder!");
+                return $author_user->sendMessage("This is your requested reminder!");
             });
-            if($react) $message->react("👍");
+			return;
         }else return $message->reply("Invalid input! Please use the format `;remindme #` where # is seconds.");
     }    
     if ($message_content_lower == 'roles') { //;roles
@@ -2327,9 +2070,7 @@ if(!$called) return;
         $author_role_name_queue 									= substr($author_role_name_queue, 0, -1);
         $author_role_name_queue_full 								= PHP_EOL . $author_role_name_queue;
         //	Send the message
-        if ($react) {
-            $message->react("👍");
-        }
+        if ($react) $message->react("👍");
         //	$message->reply($author_role_name_queue_full . PHP_EOL);
         //	Build the embed
         $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
@@ -2347,8 +2088,7 @@ if(!$called) return;
             ->setURL("");                             												// Set the URL
     //	Send the message
     //	We do not need another promise here, so we call done, because we want to consume the promise
-        $author_channel->sendEmbed($embed);
-        return;
+        return $author_channel->sendEmbed($embed);
     }
     if (str_starts_with($message_content_lower, 'roles ')) {//;roles @
         echo "[GET MENTIONED ROLES]" . PHP_EOL;
@@ -2362,8 +2102,7 @@ if(!$called) return;
             $value = str_replace(">", "", $value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
 				if (!preg_match('/^[0-9]{16,18}$/', $value)){
-					$message->react('❌');
-					return;
+					return $message->react('❌');
 				}
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
@@ -2425,9 +2164,7 @@ if(!$called) return;
             //				if ($mention_role_name_queue_default != $mention_role_name_queue){
             if ($mention_role_name_queue_default != $mention_role_id_queue) {
                 //					Send the message
-                if ($react) {
-                    $message->react("👍");
-                }
+                if ($react) $message->react("👍");
                 //$message->reply($mention_role_name_queue_full . PHP_EOL);
                 //					Build the embed
                 $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
@@ -2446,19 +2183,14 @@ if(!$called) return;
                     ->setURL("");                             												// Set the URL
     //					Send the message
     //					We do not need another promise here, so we call done, because we want to consume the promise
-                $author_channel->sendEmbed($embed);
-                return; //No more processing
+                return $author_channel->sendEmbed($embed);
             } else {
-                if ($react) {
-                    $message->react("👎");
-                }
-                $message->reply("Nobody in the guild was mentioned!");
-                return;  //No more processing
+                if ($react) $message->react("👎");
+                return $message->reply("Nobody in the guild was mentioned!");
             }
         }
         //Foreach method didn't return, so nobody was mentioned
-        $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-        return;
+        return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
     }
 
     //ymdhis cooldown time
@@ -2490,17 +2222,14 @@ if(!$called) return;
                 ->setURL("");                             												// Set the URL
             
     //		Send the message
-            //		We do not need another promise here, so we call done, because we want to consume the promise
-            $author_channel->sendEmbed($embed);
             //SetCooldown($author_folder, "avatar_time.php");
             SetCooldownMem($author_id, "avatar");
-            return;
+            return $author_channel->sendEmbed($embed);
         } else {
             //		Reply with remaining time
             $waittime = $avatar_limit_seconds - $cooldown[1];
             $formattime = FormatTime($waittime);
-            $message->reply("You must wait $formattime before using this command again.");
-            return;
+            return $message->reply("You must wait $formattime before using this command again.");
         }
     }
     if (str_starts_with($message_content_lower, 'avatar ')) {//;avatar @
@@ -2517,8 +2246,7 @@ if(!$called) return;
                 $value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
                 if (is_numeric($value)) {
 					if (!preg_match('/^[0-9]{16,18}$/', $value)){
-						$message->react('❌');
-						return;
+						return $message->react('❌');
 					}
                     $mention_member				= $author_guild->members->get('id', $value);
                     $mention_user				= $mention_member->user;
@@ -2561,22 +2289,18 @@ if(!$called) return;
                 ->setURL("");                             												// Set the URL
                 
     //			Send the message
-                //			We do not need another promise here, so we call done, because we want to consume the promise
-                $author_channel->sendEmbed($embed);
                 //			Set Cooldown
                 //SetCooldown($author_folder, "avatar_time.php");
                 SetCooldownMem($author_id, "avatar");
-                return;
+                return $author_channel->sendEmbed($embed);
             }
             //Foreach method didn't return, so nobody was mentioned
-            $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-            return;
+            return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         } else {
             //		Reply with remaining time
             $waittime = $avatar_limit_seconds - $cooldown[1];
             $formattime = FormatTime($waittime);
-            $message->reply("You must wait $formattime before using this command again.");
-            return;
+            return $message->reply("You must wait $formattime before using this command again.");
         }
     }
 
@@ -2602,11 +2326,8 @@ if(!$called) return;
                 }
                 foreach ($nums as $num) {
                     //Get the message stored at the index
-                    $array = VarLoad($guild_folder, "guild_suggestions.php");
-                    if (!$array) {
-                        return false;
-                    }
-                    if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
+                    if (!$array = VarLoad($guild_folder, "guild_suggestions.php")) return;
+                    if (isset($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
                         $suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
                             //Repost the suggestion
@@ -2616,9 +2337,7 @@ if(!$called) return;
                         });
                         //Clear the value stored in the array
                         $array[$num] = "Approved";
-                        if ($react) {
-                            $message->react("👍");
-                        }
+                        if ($react) $message->react("👍");
                         //Send a DM to the person who made the suggestion to let them know that it has been approved.
                     } else {
                         return $message->reply("Suggestion not found or already processed!");
@@ -2627,7 +2346,6 @@ if(!$called) return;
                 return; //catch
             }
             if ( (str_starts_with($message_content_lower, 'suggestion deny ')) || (str_starts_with($message_content_lower, 'suggest deny ')) ) { //;suggestion
-                //return;
                 $filter = "suggestion deny ";
                 $value = str_replace($filter, "", $message_content_lower);
                 $filter = "suggest deny ";
@@ -2642,25 +2360,16 @@ if(!$called) return;
                         $valid = true;
                     }
                 }
-                if (!$valid) {
-                    return $message->reply("Invalid input! Please enter an integer number");
-                }
+                if (!$valid) return $message->reply("Invalid input! Please enter an integer number");
                 foreach ($nums as $num) {
                     //Get the message stored at the index
-                    $array = VarLoad($guild_folder, "guild_suggestions.php");
-                    if (!$array) {
-                        return false;
-                    }
+                    if (!$array = VarLoad($guild_folder, "guild_suggestions.php")) return;
                     if (($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
                         //Clear the value stored in the array
                         $array[$num] = "Denied";
-                        if ($react) {
-                            $message->react("👍");
-                        }
-                    } else {
-                        return $message->reply("Suggestion not found or already processed!");
-                    }
+                        if ($react) $message->react("👍");
+                    } else return $message->reply("Suggestion not found or already processed!");
                 }
                 return;
             }
@@ -4718,12 +4427,13 @@ if(!$called) return;
             switch ($message_content_lower) {
 				case "php": //;php
 					echo '[PHP]' . PHP_EOL;
-					$message->reply('Current PHP version: ' . phpversion());
-					return;
+					return $message->reply('Current PHP version: ' . phpversion());
                 case 'crash': //;crash
-                    $message->react("☠️");
-                    throw new \CharlotteDunois\Events\UnhandledErrorException('Unhandled error event', 0, (($arguments[0] ?? null) instanceof \Throwable ? $arguments[0] : null));
-                    return;
+                    return $message->react("☠️")->then(
+						function ($result){
+							throw new \CharlotteDunois\Events\UnhandledErrorException('Unhandled error event', 0, (($arguments[0] ?? null) instanceof \Throwable ? $arguments[0] : null));
+						}
+					);
 				case 'debug role': //;debug role
 					echo '[DEBUG ROLE]' . PHP_EOL;
 					$new_role = $discord->factory(
@@ -4742,15 +4452,13 @@ if(!$called) return;
 					}, static function ($error) {
 						echo $error->getMessage() . PHP_EOL;
 					});
-					$message->delete();
-					return;
+					return $message->delete();
 				case 'freshen';
-					$message->channel->guild->members->freshen()->done(
+					return $message->channel->guild->members->freshen()->done(
 						function ($members){
 							//Do stuff 
 						}
 					);
-					return;
             }
         }
     }
@@ -4806,38 +4514,22 @@ if(!$called) return;
 						foreach ($storage as $emoji => $count) {
 							var_dump($emoji);
 							echo PHP_EOL;
-							if ($emoji == "👍") {
-								$yes_count = (int)$count-1;
-							}
-							if ($emoji == "👎") {
-								$no_count = (int)$count-1;
-							}
+							if ($emoji == "👍") $yes_count = (int)$count-1;
+							if ($emoji == "👎") $no_count = (int)$count-1;
 							//$msg .= $emoji.': '.$count.', ';
 						}
 						//Count reacts
-						if (($yes_count - $no_count) == 0) {
-							$message->channel->sendMessage("**Vote tied! ($yes_count:$no_count)**");
-							return;
-						}
-						if (($yes_count - $no_count) > 0) {
-							$message->channel->sendMessage("**Vote passed! ($yes_count:$no_count)**");
-							return;
-						}
-						if (($yes_count - $no_count) < 0) {
-							$message->channel->sendMessage("**Vote failed! ($yes_count:$no_count)**");
-							return;
-						}
-						$author_channel->sendMessage("**Vote errored! ($yes_count:$no_count)**");
-
-						$message->reply($msg);
+						if (($yes_count - $no_count) == 0) return $message->channel->sendMessage("**Vote tied! ($yes_count:$no_count)**");							
+						if (($yes_count - $no_count) > 0) return $message->channel->sendMessage("**Vote passed! ($yes_count:$no_count)**");
+						if (($yes_count - $no_count) < 0) return $message->channel->sendMessage("**Vote failed! ($yes_count:$no_count)**");
+						return $author_channel->sendMessage("**Vote errored! ($yes_count:$no_count)**");
+						//$message->reply($msg);
 					});
-					$message->react("👍")->done(function($result){
-						$message->react("👎");
+					return $message->react("👍")->done(function($result){
+						return $message->react("👎");
 					});
 				});
-            } else {
-                return $message->reply("Invalid input!");
-            }
+            } else return $message->reply("Invalid input!");
         }
         if (str_starts_with($message_content_lower, 'whois ')) { //;whois
             echo "[WHOIS] $author_check" . PHP_EOL;
@@ -4849,18 +4541,12 @@ if(!$called) return;
             $value = str_replace(">", "", $value);
             $value = trim($value);
             if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)){
-					$message->react('❌');
-					return;
-				}
-                $mention_member	= $author_guild->members->get('id', $value);
-                if ($mention_member != null) { //$message->reply("Invalid input! Please enter an ID or @mention the user");
+				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');                
+                if ($mention_member	= $author_guild->members->get('id', $value)) { //$message->reply("Invalid input! Please enter an ID or @mention the user");
                     if (get_class($mention_member) == "Discord\Parts\User\Member") {
                         $mention_user = $mention_member->user;
                         $mention_member = $mention_member;
-                    } else {
-                        $mention_user = $mention_member;
-                    }
+                    } else $mention_user = $mention_member;
                     include 'whois-include.php';
                 }
 				else {
@@ -4869,14 +4555,13 @@ if(!$called) return;
 						function ($mention_user) use ($discord, $author_channel){
 							include 'whois-include.php';
 						}, function ($error) use ($author_channel, $message){
-							$message->react("👎");
-							return;
+							return $message->react("👎");
 						}					
 					);
                 }
             } else {
-                $message->reply("Invalid input! Please enter an ID or @mention the user");
-				$message->react('❌');
+				if ($react) $message->react('❌');
+                return $message->reply("Invalid input! Please enter an ID or @mention the user");
             }
             return;
         }
@@ -4901,20 +4586,17 @@ if(!$called) return;
                 }
                 $message->reply($restcord_result);
 				*/
-				if (!preg_match('/^[0-9]{16,18}$/', $value)){
-					$message->react('❌');
-					return;
-				}
+				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 				$discord->users->fetch($value)->done(
 					function ($target_user) use ($message, $value){
 						$target_username = $target_user->username;
 						$target_discriminator = $target_user->discriminator;
 						$target_id = $target_user->id;
 						$target_avatar = $target_user->avatar;
-						$message->reply("Discord ID is registered to $target_check (<@$value>");
+						return $message->reply("Discord ID is registered to $target_check (<@$value>");
 					},
 					function ($error) use ($messaage, $value){
-						$message->reply("Unable to locate user for ID $value");
+						return $message->reply("Unable to locate user for ID $value");
 					}
 				);
 				return;
@@ -5005,19 +4687,12 @@ if(!$called) return;
                 $value = str_replace("<@", "", $value);
                 $value = str_replace(">", "", $value);
                 if (is_numeric($value)) {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)){
-						$message->react('❌');
-						return;
-					}
+					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                     $mention_member				= $author_guild->members->get('id', $value);
                     $mention_user				= $mention_member->user;
                     $mentions_arr				= array($mention_user);
-                } else {
-                    return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-                }
-                if ($mention_member == null) {
-                    return $message->reply("Invalid input! Please enter an ID or @mention the user");
-                }
+                } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+                if ($mention_member == null) return $message->reply("Invalid input! Please enter an ID or @mention the user");
             }
             
             foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
@@ -5038,43 +4713,29 @@ if(!$called) return;
                 $message->react("👍");
             }
             //	Send the message
-            if ($watch_channel) {
-                $watch_channel->sendMessage($mention_watch_name_queue_default . $mention_watch_name_queue_full . PHP_EOL);
-            } else {
-                $author_channel->sendMessage($mention_watch_name_queue_default . $mention_watch_name_queue_full . PHP_EOL);
-            }
-            return;
+            if ($watch_channel) return $watch_channel->sendMessage($mention_watch_name_queue_default . $mention_watch_name_queue_full . PHP_EOL);
+            else return $author_channel->sendMessage($mention_watch_name_queue_default . $mention_watch_name_queue_full . PHP_EOL);
         }
 		if (str_starts_with($message_content_lower, 'infractions ')) { //;infractions @
             echo "[INFRACTIONS] $author_check" . PHP_EOL;
             //		Get an array of people mentioned
-            $mentions_arr 													= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+            $mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
             $GetMentionResult = GetMention([&$author_guild,  substr($message_content_lower, 12, strlen($message_content_lower)), null, 1, &$restcord]);
-            if ($GetMentionResult === false) {
-                return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-            }
+            if ($GetMentionResult === false) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
 
             if (!strpos($message_content_lower, "<")) { //String doesn't contain a mention
                 $filter = "infractions ";
                 $value = str_replace($filter, "", $message_content_lower);
                 $value = str_replace("<@!", "", $value);
                 $value = str_replace("<@", "", $value);
-                $value = str_replace("<@", "", $value);
                 $value = str_replace(">", "", $value);
                 if (is_numeric($value)) {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)){
-						$message->react('❌');
-						return;
-					}
+					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                     $mention_member = $author_guild->members->get('id', $value);
                     $mention_user = $mention_member->user;
                     $mentions_arr = array($mention_user);
-                } else {
-                    return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-                }
-                if ($mention_member == null) {
-                    return $message->reply("Invalid input! Please enter an ID or @mention the user");
-                }
+                } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+                if ($mention_member == null) return $message->reply("Invalid input! Please enter an ID or @mention the user");
             }
             
             //update
@@ -5126,21 +4787,14 @@ if(!$called) return;
                     ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                     ->setURL("");                             												// Set the URL
     //					Send the embed to the author's channel
-                    $author_channel->sendEmbed($embed);
-                    return;
+                    return $author_channel->sendEmbed($embed);
                 } else { //Too long, send reply instead of embed
-                    $message->reply($mention_infraction_queue_full . PHP_EOL);
-                    //				React to the original message
-                    //				if($react) $message->react("👀");
-                    if ($react) {
-                        $message->react("🗒️");
-                    }
-                    return;
+                    if ($react) $message->react("🗒️");
+					return $message->reply($mention_infraction_queue_full . PHP_EOL);
                 }
             } else {
                 //if($react) $message->react("👎");
-                $message->reply("No infractions found!");
-                return;
+                return $message->reply("No infractions found!");
             }
         }
     }
@@ -5191,8 +4845,7 @@ if(!$called) return;
         $duration = 3;
         $author_channel->sendMessage("$author_check ($author_id) deleted $value messages!")->done(function ($new_message) use ($discord, $message, $duration) { //Send message to channel confirming the message deletions then delete the new message after 3 seconds
             $discord->getLoop()->addTimer($duration, function () use ($new_message) {
-                $new_message->delete();
-                return;
+                return $new_message->delete();
             });
             return;
         });
@@ -5319,9 +4972,7 @@ if(!$called) return;
         $mentions_arr 	= $message->mentions; //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
         
         $GetMentionResult = GetMention([&$author_guild,  substr($message_content_lower, 4, strlen($message_content_lower)), null, 1, &$restcord]);
-        if ($GetMentionResult === false) {
-            return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-        }
+        if ($GetMentionResult === false) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
         $mention_id_array = array();
         $reason_text = null;
         $keys = array_keys($GetMentionResult);
@@ -5388,9 +5039,7 @@ if(!$called) return;
                     
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_vzg) || ($creator || $owner)) { //Guild owner and bot creator can ban anyone
-                    if ($mention_id == $creator_id) {
-                        return;
-                    } //Don't ban the creator
+                    if ($mention_id == $creator_id) return; //Don't ban the creator
                     //Build the string to log
                     $filter = "ban <@!$mention_id>";
                     $warndate = date("m/d/Y");
@@ -5414,23 +5063,13 @@ if(!$called) return;
                         ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
                         ->setURL("");                             												// Set the URL
     //						Send the message
-                    if ($modlog_channel) {
-                        $modlog_channel->sendEmbed($embed);
-                    }
-                    if ($react) {
-                        $message->react("🔨");
-                    } //Hammer
+                    if ($react) $message->react("🔨");
+					if ($modlog_channel) $modlog_channel->sendEmbed($embed);
                     return; //No more processing, we only want to process the first person mentioned
-                } else {//Target is not allowed to be banned
-                    $author_channel->sendMessage("<@$mention_id> cannot be banned because of their roles!");
-                    return;
-                }
+                } else return $author_channel->sendMessage("<@$mention_id> cannot be banned because of their roles!");
             } else {
-                if ($react) {
-                    $message->react("👎");
-                }
-                $author_channel->sendMessage("<@$author_id>, you can't ban yourself!");
-                return;
+                if ($react) $message->react("👎");
+                return $author_channel->sendMessage("<@$author_id>, you can't ban yourself!");
             }
         } //foreach method didn't return, so nobody in the guild was mentioned
         //Try restcord
@@ -5450,9 +5089,7 @@ if(!$called) return;
             }
             //$message->reply($restcord_result);
         } else {
-            if ($react) {
-                $message->react("👎");
-            }
+            if ($react) $message->react("👎");
             //$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
         }
         return;
@@ -5558,9 +5195,7 @@ if(!$called) return;
         //Get an array of people mentioned
         $mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
         $GetMentionResult = GetMention([&$author_guild, $message_content_lower, "kick ", 1, &$restcord]);
-        if (!(is_array($GetMentionResult))) {
-            return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-        }
+        if (!(is_array($GetMentionResult))) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
         $mention_user = $GetMentionResult[0];
         $mention_member = $GetMentionResult[1];
         $mentions_arr = $mentions_arr ?? $GetMentionResult[2];
@@ -5614,9 +5249,7 @@ if(!$called) return;
 					}
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Bot creator, guild owner, and devs can kick anyone
-                    if ($mention_id == $creator_id) {
-                        return;
-                    } //Don't kick the creator
+                    if ($mention_id == $creator_id) return; //Don't kick the creator
                     //Build the string to log
                     $filter = "kick <@!$mention_id>";
                     $warndate = date("m/d/Y");
@@ -5652,19 +5285,14 @@ if(!$called) return;
                     if($modlog_channel)$modlog_channel->sendEmbed($embed);
                     */
                     return;
-                } else {//Target is not allowed to be kicked
-                    $author_channel->sendMessage("<@$mention_id> cannot be kicked because of their roles!");
-                    return;
-                }
+                } else return  $author_channel->sendMessage("<@$mention_id> cannot be kicked because of their roles!");
             } else {
-                $message->react("👎");
-                $author_channel->sendMessage("<@$author_id>, you can't kick yourself!");
-                return;
+                if ($react) $message->react("👎");
+                return $author_channel->sendMessage("<@$author_id>, you can't kick yourself!");
             }
         } //foreach method didn't return, so nobody was mentioned
-        $message->react("👎");
-        $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-        return;
+        if ($react) $message->react("👎");
+        return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
     }
 	if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'warn ')) { //;warn @
 		echo "[WARN] $author_check" . PHP_EOL;
@@ -5699,23 +5327,15 @@ if(!$called) return;
 		}
 		//		Send a message
 		if ($mention_warn_queue != "") {
-			if ($watch_channel) {
-				$watch_channel->sendMessage($mention_warn_queue_default . $mention_warn_queue_full . PHP_EOL);
-			} else {
-				$message->channel->sendMessage($mention_warn_queue_default . $mention_warn_queue_full . PHP_EOL);
-			}
+			if ($watch_channel) $watch_channel->sendMessage($mention_warn_queue_default . $mention_warn_queue_full . PHP_EOL);
+			else $message->channel->sendMessage($mention_warn_queue_default . $mention_warn_queue_full . PHP_EOL);
 			//			React to the original message
 			//			if($react) $message->react("👀");
-			if ($react) {
-				$message->react("👁");
-			}
+			if ($react) $message->react("👁");
 			return;
 		} else {
-			if ($react) {
-				$message->react("👎");
-			}
-			$message->reply("Nobody in the guild was mentioned!");
-			return;
+			if ($react) $message->react("👎");
+			return $message->reply("Nobody in the guild was mentioned!");
 		}
 	}
 	if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions @mention #
@@ -5733,19 +5353,12 @@ if(!$called) return;
         
             
         if (is_numeric($value)) {
-			if (!preg_match('/^[0-9]{16,18}$/', $value)){
-				$message->react('❌');
-				return;
-			}
+			if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
             $mention_member				= $author_guild->members->get('id', $value);
             $mention_user				= $mention_member->user;
             $mentions_arr				= array($mention_user);
-        } else {
-            return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-        }
-        if ($mention_member == null) {
-            return $message->reply("Invalid input! Please enter an ID or @mention the user");
-        }
+        } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+        if ($mention_member == null) return $message->reply("Invalid input! Please enter an ID or @mention the user");
         
         $x = 0;
         foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
@@ -5765,10 +5378,7 @@ if(!$called) return;
                 $substr = substr($message_content_lower, $strlen);
                 
                 //			Check that message is formatted properly
-                if ($proper != substr($message_content_lower, 0, $strlen)) {
-                    $message->reply("Please format your command properly: " . $command_symbol . "warn @mention number");
-                    return;
-                }
+                if ($proper != substr($message_content_lower, 0, $strlen)) return $message->reply("Please format your command properly: " . $command_symbol . "warn @mention number");
                 
                 //			Check if $substr is a number
                 if (($substr != "") && (is_numeric(intval($substr)))) {
@@ -5780,24 +5390,15 @@ if(!$called) return;
                         VarSave($guild_folder."/".$mention_id, "infractions.php", $infractions);
                         
                         //					Send a message
-                        if ($react) {
-                            $message->react("👍");
-                        }
-                        $message->reply("Infraction $substr removed from $mention_check!");
-                        return;
+                        if ($react) $message->react("👍");
+                        return $message->reply("Infraction $substr removed from $mention_check!");
                     } else {
-                        if ($react) {
-                            $message->react("👎");
-                        }
-                        $message->reply("Infraction '$substr' not found!");
-                        return;
+                        if ($react) $message->react("👎");
+                        return $message->reply("Infraction '$substr' not found!");
                     }
                 } else {
-                    if ($react) {
-                        $message->react("👎");
-                    }
-                    $message->reply("'$substr' is not a number");
-                    return;
+                    if ($react) $message->react("👎");
+                    return $message->reply("'$substr' is not a number");
                 }
             }
             $x++;
@@ -5814,19 +5415,12 @@ if(!$called) return;
             $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)){
-					$message->react('❌');
-					return;
-				}
+				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
-            } else {
-                return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-            }
-            if ($mention_member == null) {
-                return $message->reply("Invalid input! Please enter an ID or @mention the user");
-            }
+            } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+            if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
         }
         foreach ($mentions_arr as $mention_param) {
             $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
@@ -5874,9 +5468,7 @@ if(!$called) return;
                     
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Guild owner and bot creator can mute anyone
-                    if ($mention_id == $creator_id) {
-                        return;
-                    } //Don't mute the creator
+                    if ($mention_id == $creator_id) return; //Don't mute the creator
                     //Save current roles in a file for the user
                     VarSave($guild_folder."/".$mention_id, "removed_roles.php", $removed_roles);
                     //Build the string to log
@@ -5914,23 +5506,14 @@ if(!$called) return;
                     if($modlog_channel)$modlog_channel->sendEmbed($embed);
                     */
                     return;
-                } else {//Target is not allowed to be muted
-                    $author_channel->sendMessage("<@$mention_id> cannot be muted because of their roles!");
-                    return;
-                }
+                } else return $author_channel->sendMessage("<@$mention_id> cannot be muted because of their roles!");
             } else {
-                if ($react) {
-                    $message->react("👎");
-                }
-                $author_channel->sendMessage("<@$author_id>, you can't mute yourself!");
-                return;
+                if ($react) $message->react("👎");
+                return $author_channel->sendMessage("<@$author_id>, you can't mute yourself!");
             }
         } //foreach method didn't return, so nobody was mentioned
-        if ($react) {
-            $message->react("👎");
-        }
-        $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-        return;
+        if ($react) $message->react("👎");
+        return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
     }
     if ($user_perms['manage_roles'] && str_starts_with($message_content_lower, 'unmute ')) { //;unmute
         echo "[UNMUTE]" . PHP_EOL;
@@ -5943,19 +5526,12 @@ if(!$called) return;
             $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)){
-					$message->react('❌');
-					return;
-				}
+				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
-            } else {
-                return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-            }
-            if ($mention_member == null) {
-                return $message->reply("Invalid input! Please enter an ID or @mention the user");
-            }
+            } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+            if ($mention_member == null) return $message->reply("Invalid input! Please enter an ID or @mention the user");
         }
         foreach ($mentions_arr as $mention_param) {
             $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
@@ -5981,32 +5557,16 @@ if(!$called) return;
                 $target_guildmember_roles_ids = array();
                 
                 foreach ($target_guildmember_role_collection as $role) {
-                    
-                        $target_guildmember_roles_ids[] 						= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-                        if ($role->id == $role_dev_id) {
-                            $target_dev 		= true;
-                        }							//Author has the dev role
-                        if ($role->id == $role_owner_id) {
-                            $target_owner	 	= true;
-                        }							//Author has the owner role
-                        if ($role->id == $role_admin_id) {
-                            $target_admin 		= true;
-                        }							//Author has the admin role
-                        if ($role->id == $role_mod_id) {
-                            $target_mod 		= true;
-                        }							//Author has the mod role
-                        if ($role->id == $role_vzgbot_id) {
-                            $target_vzgbot 		= true;
-                        }							//Author is this bot
-                        if ($role->name == "Palace Bot") {
-                            $target_vzgbot 		= true;
-                        }							//Author is this bot
-
+                        $target_guildmember_roles_ids[]= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+                        if ($role->id == $role_dev_id) $target_dev = true; //Author has the dev role
+                        if ($role->id == $role_owner_id) $target_owner = true; //Author has the owner role
+                        if ($role->id == $role_admin_id) $target_admin = true; //Author has the admin role
+                        if ($role->id == $role_mod_id) $target_mod = true; //Author has the mod role
+                        if ($role->id == $role_vzgbot_id) $target_vzgbot = true; //Author is this bot
+                        if ($role->name == "Palace Bot") $target_vzgbot = true; //Author is this bot
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) {
-                    if ($mention_id == $creator_id) {
-                        return;
-                    } //Don't mute the creator
+                    if ($mention_id == $creator_id) return;
                     //Build the string to log
                     $filter = "unmute <@!$mention_id>";
                     $warndate = date("m/d/Y");
@@ -6019,12 +5579,8 @@ if(!$called) return;
                     foreach ($removed_roles as $role) {
                         $target_guildmember->addRole($role);
                     }
-                    if ($role_muted_id) {
-                        $target_guildmember->removeRole($role_muted_id);
-                    }
-                    if ($react) {
-                        $message->react("😩");
-                    }
+                    if ($role_muted_id) $target_guildmember->removeRole($role_muted_id);
+                    if ($react) $message->react("😩");
                     //Build the embed message
                     /*
                     $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
@@ -6044,23 +5600,14 @@ if(!$called) return;
                     if($modlog_channel)$modlog_channel->sendEmbed($embed);
                     */
                     return;
-                } else {//Target is not allowed to be unmuted
-                    $author_channel->sendMessage("<@$mention_id> cannot be unmuted because of their roles!");
-                    return;
-                }
+                } else return $author_channel->sendMessage("<@$mention_id> cannot be unmuted because of their roles!");
             } else {
-                if ($react) {
-                    $message->react("👎");
-                }
-                $author_channel->sendMessage("<@$author_id>, you can't mute yourself!");
-                return;
+                if ($react) $message->react("👎");
+                return $author_channel->sendMessage("<@$author_id>, you can't mute yourself!");
             }
         } //foreach method didn't return, so nobody was mentioned
-        if ($react) {
-            $message->react("👎");
-        }
-        $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-        return;
+        if ($react) $message->react("👎");
+        return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
     }
     if ($user_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'v ')) || (str_starts_with($message_content_lower, 'verify ')))) { //Verify ;v ;verify
         if (($role_verified_id != "") || ($role_verified_id != null)) { //This command only works if the Verified Role is setup
@@ -6080,19 +5627,12 @@ if(!$called) return;
             $value = str_replace(">", "", $value);
             
             if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)){
-					$message->react('❌');
-					return;
-				}
+				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
-            } else {
-                return $message->reply("Invalid input! Please enter a valid ID or @mention the user.");
-            }
-            if ($mention_member == null) {
-                return $message->reply("Invalid ID or user not found! Are they in the server?");
-            } //User not found
+            } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user.");
+            if ($mention_member == null) return $message->reply("Invalid ID or user not found! Are they in the server?");
             
             foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
         //		id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
@@ -6169,11 +5709,8 @@ if(!$called) return;
                         }
                         return;
                     } else {
-                        if ($react) {
-                            $message->react("👎");
-                        }
-                        $message->reply("$mention_check does not need to be verified!" . PHP_EOL);
-                        return;
+                        if ($react) $message->react("👎");
+                        return $message->reply("$mention_check does not need to be verified!" . PHP_EOL);
                     }
                 }
             }
