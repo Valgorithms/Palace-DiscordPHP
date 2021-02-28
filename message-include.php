@@ -178,136 +178,61 @@ Options
 */
 if (!CheckFile($guild_folder, "command_symbol.php")) {
     //Author must prefix text with this to use commands
-} else {
-    $command_symbol = VarLoad($guild_folder, "command_symbol.php");
-}			//Load saved option file (Not used yet, but might be later)
+} else $command_symbol = VarLoad($guild_folder, "command_symbol.php"); //Load saved option file (Not used yet, but might be later)
 
 //Chat options
 global $react_option, $vanity_option, $nsfw_option, $channel_option, $games_option, $gameroles_option;
-if (!CheckFile($guild_folder, "react_option.php")) {
-    $react	= $react_option;
-}								//Bot will not react to messages if false
-else {
-    $react 	= VarLoad($guild_folder, "react_option.php");
-}			//Load saved option file
-if (!CheckFile($guild_folder, "vanity_option.php")) {
-    $vanity	= $vanity_option;
-}								//Allow SFW vanity like hug, nuzzle, kiss
-else {
-    $vanity = VarLoad($guild_folder, "vanity_option.php");
-}			//Load saved option file
-if (!CheckFile($guild_folder, "nsfw_option.php")) {
-    $nsfw	= $nsfw_option;
-}									//Allow NSFW commands
-else {
-    $nsfw 	= VarLoad($guild_folder, "nsfw_option.php");
-}				//Load saved option file
-if (!CheckFile($guild_folder, "channel_option.php")) {
-    $channeloption	= $channel_option;
-}									//Allow channelrole reactions
-else {
-    $channeloption 	= VarLoad($guild_folder, "channel_option.php");
-}				//Load saved option file
-if (!CheckFile($guild_folder, "games_option.php")) {
-    $games	= $games_option;
-}									//Allow games like Yahtzee
-else {
-    $games 	= VarLoad($guild_folder, "games_option.php");
-}				//Load saved option file
-if (!CheckFile($guild_folder, "gameroles_option.php")) {
-    $gamerole	= $gameroles_option;
-}									//Allow gameroles
-else {
-    $gamerole 	= VarLoad($guild_folder, "gameroles_option.php");
-}				//Load saved option file
+if (!CheckFile($guild_folder, "react_option.php")) $react	= $react_option; //Bot will not react to messages if false
+else $react  = VarLoad($guild_folder, "react_option.php"); //Load saved option file
+if (!CheckFile($guild_folder, "vanity_option.php")) $vanity	= $vanity_option; //Allow SFW vanity like hug, nuzzle, kiss
+else $vanity = VarLoad($guild_folder, "vanity_option.php"); //Load saved option file
+if (!CheckFile($guild_folder, "nsfw_option.php")) $nsfw	= $nsfw_option; //Allow NSFW commands
+else $nsfw  = VarLoad($guild_folder, "nsfw_option.php"); //Load saved option file
+if (!CheckFile($guild_folder, "channel_option.php")) $channeloption	= $channel_option; //Allow channelrole reactions
+else $channeloption  = VarLoad($guild_folder, "channel_option.php"); //Load saved option file
+if (!CheckFile($guild_folder, "games_option.php")) $games	= $games_option; //Allow games like Yahtzee
+else $games  = VarLoad($guild_folder, "games_option.php"); //Load saved option file
+if (!CheckFile($guild_folder, "gameroles_option.php")) $gamerole	= $gameroles_option; //Allow gameroles
+else $gamerole  = VarLoad($guild_folder, "gameroles_option.php"); //Load saved option file
 
 //Role picker options
-if (($rolepicker_id == "") || ($rolepicker_id == "0") || ($rolepicker_id === null)) { //Message rolepicker menus
+if (($rolepicker_id == "") || ($rolepicker_id == "0") || is_null($rolepicker_id)) //Message rolepicker menus
     $rolepicker_id = $discord->id; //Default to Palace Bot
-}
 global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $channel_option, $gameroles_option, $custom_option;
-if (!CheckFile($guild_folder, "rolepicker_option.php")) {
-	$rp0	= $rolepicker_option;							//Allow Rolepicker
-} else {
-	$rp0	= VarLoad($guild_folder, "rolepicker_option.php");
-}
-if (($species_message_id != "") || ($species_message_id != null)) {
-	if (!CheckFile($guild_folder, "species_option.php")) {
-		$rp1	= $species_option;								//Species role picker
-	} else {
-		$rp1	= VarLoad($guild_folder, "species_option.php");
-	}
-} else {
-	$rp1	= false;
-}
-if (($gender_message_id != "") || ($gender_message_id != null)) {
-	if (!CheckFile($guild_folder, "gender_option.php")) {
-		$rp2	= $gender_option;								//Gender role picker
-	} else {
-		$rp2	= VarLoad($guild_folder, "gender_option.php");
-	}
-} else {
-	$rp2 	= false;
-}
-if (($pronouns_message_id != "") || ($pronouns_message_id != null)) {
-	if (!CheckFile($guild_folder, "pronouns_option.php")) {
-		$rp5	= $pronouns_option;
-	}								//Custom role picker
-	else {
-		$rp5	= VarLoad($guild_folder, "pronouns_option.php");
-	}
-} else {
-	$rp5	= false;
-}
-if (($sexuality_message_id != "") || ($species_message_id != null)) {
-	if (!CheckFile($guild_folder, "sexuality_option.php")) {
-		$rp3	= $sexuality_option;							//Sexuality role picker
-	} else {
-		$rp3	= VarLoad($guild_folder, "sexuality_option.php");
-	}
-} else {
-	$rp3	= false;
-}
-if (($customroles_message_id != "") || ($customroles_message_id != null)) {
-	if (!CheckFile($guild_folder, "custom_option.php")) {
-		$rp4	= $custom_option;
-	}								//Custom role picker
-	else {
-		$rp4	= VarLoad($guild_folder, "custom_option.php");
-	}
-} else {
-	$rp4	= false;
-}
-if (($nsfw_message_id != "") || ($nsfw_message_id != null)) {
-	if (!CheckFile($guild_folder, "nsfw_option.php")) {
-		$nsfw	= $nsfw_option;
-	}								//NSFW/Adult role picker
-	else {
-		$nsfw	= VarLoad($guild_folder, "nsfw_option.php");
-	}
-} else {
-	$nsfw	= false;
-}
-if (($channelroles_message_id != "") || ($channelroles_message_id != null)) {
-	if (!CheckFile($guild_folder, "channel_option.php")) {
-		$channeloption	= $channel_option;
-	}
-	else {
-		$channeloption	= VarLoad($guild_folder, "channel_option.php");
-	}
-} else {
-	$channeloption	= false;
-}
-if (($gameroles_message_id != "") || ($gameroles_message_id != null)) {
-	if (!CheckFile($guild_folder, "gameroles_option.php")) {
-		$gamerole = $gameroles_option;
-	}
-	else {
-		$gamerole = VarLoad($guild_folder, "gameroles_option.php");
-	}
-} else {
-	$gamerole = false;
-}
+if (!CheckFile($guild_folder, "rolepicker_option.php")) $rp0 = $rolepicker_option; //Allow Rolepicker
+else $rp0 = VarLoad($guild_folder, "rolepicker_option.php");
+if (isset($species_message_id) && ($species_message_id != "") && ($species_message_id != "0")) {
+	if (!CheckFile($guild_folder, "species_option.php")) $rp1 = $species_option; //Species role picker
+	else $rp1 = VarLoad($guild_folder, "species_option.php");
+} else $rp1 = false;
+if ( isset($gender_message_id) && ($gender_message_id != "") && ($gender_message_id != "0")) {
+	if (!CheckFile($guild_folder, "gender_option.php")) $rp2 = $gender_option; //Gender role picker
+	else $rp2 = VarLoad($guild_folder, "gender_option.php");
+} else $rp2 = false;
+if (isset($pronouns_message_id) && ($pronouns_message_id != "") && ($pronouns_message_id != "0")) {
+	if (!CheckFile($guild_folder, "pronouns_option.php")) $rp5 = $pronouns_option; //Custom role picker
+	else $rp5 = VarLoad($guild_folder, "pronouns_option.php");
+} else $rp5 = false;
+if (isset($species_message_id) && ($sexuality_message_id != "") && ($sexuality_message_id != "0")) {
+	if (!CheckFile($guild_folder, "sexuality_option.php")) $rp3	= $sexuality_option; //Sexuality role picker
+	else $rp3 = VarLoad($guild_folder, "sexuality_option.php");
+} else $rp3 = false;
+if (isset($customroles_message_id) && ($customroles_message_id != "") && ($customroles_message_id != "0")) {
+	if (!CheckFile($guild_folder, "custom_option.php")) $rp4 = $custom_option;//Custom role picker
+	else $rp4 = VarLoad($guild_folder, "custom_option.php");
+} else $rp4 = false;
+if (isset($nsfw_message_id) && ($nsfw_message_id != "") && ($nsfw_message_id != "0")) {
+	if (!CheckFile($guild_folder, "nsfw_option.php")) $nsfw	= $nsfw_option; //NSFW/Adult role picker
+	else $nsfw = VarLoad($guild_folder, "nsfw_option.php");
+} else $nsfw = false;
+if (isset($channelroles_message_id) && ($channelroles_message_id != "") && ($channelroles_message_id != "0")) {
+	if (!CheckFile($guild_folder, "channel_option.php")) $channeloption	= $channel_option;
+	else $channeloption = VarLoad($guild_folder, "channel_option.php");
+} else $channeloption = false;
+if (isset($gameroles_message_id) && ($gameroles_message_id != "") && ($gameroles_message_id != "0")) {
+	if (!CheckFile($guild_folder, "gameroles_option.php")) $gamerole = $gameroles_option;
+	else $gamerole = VarLoad($guild_folder, "gameroles_option.php");
+} else $gamerole = false;
 
 //echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
 $author_webhook = $author_user->webhook;
@@ -2316,7 +2241,7 @@ if(!$called) return;
             }
         }
     }
-	if ($suggestion_pending_channel != null) {
+	if (isset($suggestion_pending_channel)) {
          if ( (str_starts_with($message_content_lower, 'suggestion ')) || (str_starts_with($message_content_lower, 'suggest ')) ) { //;suggestion
             //return;
 			$filter = "suggestion ";
@@ -2381,7 +2306,7 @@ if(!$called) return;
             return;
         }
     }
-	if ($tip_approved_channel != null) {
+	if (isset($tip_approved_channel)) {
         if ($creator || $owner || $dev || $admin || $mod) {
             if (str_starts_with($message_content_lower, 'tip approve ')) { //;tip approve
                 $filter = "tip approve ";
@@ -2463,7 +2388,7 @@ if(!$called) return;
             }
         }
     }
-    if ($tip_pending_channel != null) {
+    if (isset($tip_pending_channel)) {
         if (str_starts_with($message_content_lower, 'tip ')) { //;tip
             //return;
             $filter = "tip ";
@@ -2551,74 +2476,74 @@ if(!$called) return;
         if (!CheckFile($author_folder, "vanity_give_count.php")) {
             $vanity_give_count	= 0;
         } else {
-            $vanity_give_count	= VarLoad($author_folder, "vanity_give_count.php");
+            $vanity_give_count = VarLoad($author_folder, "vanity_give_count.php");
         }
         if (!CheckFile($author_folder, "hugger_count.php")) {
             $hugger_count		= 0;
         } else {
-            $hugger_count 		= VarLoad($author_folder, "hugger_count.php");
+            $hugger_count 	 = VarLoad($author_folder, "hugger_count.php");
         }
         if (!CheckFile($author_folder, "kisser_count.php")) {
             $kisser_count		= 0;
         } else {
-            $kisser_count 		= VarLoad($author_folder, "kisser_count.php");
+            $kisser_count 	 = VarLoad($author_folder, "kisser_count.php");
         }
         if (!CheckFile($author_folder, "nuzzler_count.php")) {
             $nuzzler_count		= 0;
         } else {
-            $nuzzler_count		= VarLoad($author_folder, "nuzzler_count.php");
+            $nuzzler_count	 = VarLoad($author_folder, "nuzzler_count.php");
         }
         if (!CheckFile($author_folder, "booper_count.php")) {
             $booper_count		= 0;
         } else {
-            $booper_count		= VarLoad($author_folder, "booper_count.php");
+            $booper_count	 = VarLoad($author_folder, "booper_count.php");
         }
         if (!CheckFile($author_folder, "baper_count.php")) {
             $baper_count		= 0;
         } else {
-            $baper_count		= VarLoad($author_folder, "baper_count.php");
+            $baper_count	 = VarLoad($author_folder, "baper_count.php");
         }
         if (!CheckFile($author_folder, "peter_count.php")) {
             $peter_count		= 0;
         } else {
-            $peter_count		= VarLoad($author_folder, "peter_count.php");
+            $peter_count	 = VarLoad($author_folder, "peter_count.php");
         }
 
         //	Load author get statistics
         if (!CheckFile($author_folder, "vanity_get_count.php")) {
             $vanity_get_count	= 0;
         } else {
-            $vanity_get_count 	= VarLoad($author_folder, "vanity_get_count.php");
+            $vanity_get_count  = VarLoad($author_folder, "vanity_get_count.php");
         }
         if (!CheckFile($author_folder, "hugged_count.php")) {
             $hugged_count		= 0;
         } else {
-            $hugged_count 		= VarLoad($author_folder, "hugged_count.php");
+            $hugged_count 	 = VarLoad($author_folder, "hugged_count.php");
         }
         if (!CheckFile($author_folder, "kissed_count.php")) {
             $kissed_count		= 0;
         } else {
-            $kissed_count 		= VarLoad($author_folder, "kissed_count.php");
+            $kissed_count 	 = VarLoad($author_folder, "kissed_count.php");
         }
         if (!CheckFile($author_folder, "nuzzled_count.php")) {
             $nuzzled_count		= 0;
         } else {
-            $nuzzled_count		= VarLoad($author_folder, "nuzzled_count.php");
+            $nuzzled_count	 = VarLoad($author_folder, "nuzzled_count.php");
         }
         if (!CheckFile($author_folder, "booped_count.php")) {
             $booped_count		= 0;
         } else {
-            $booped_count		= VarLoad($author_folder, "booped_count.php");
+            $booped_count	 = VarLoad($author_folder, "booped_count.php");
         }
         if (!CheckFile($author_folder, "baped_count.php")) {
             $baped_count		= 0;
         } else {
-            $baped_count		= VarLoad($author_folder, "baped_count.php");
+            $baped_count	 = VarLoad($author_folder, "baped_count.php");
         }
         if (!CheckFile($author_folder, "peted_count.php")) {
             $peted_count		= 0;
         } else {
-            $peted_count		= VarLoad($author_folder, "peted_count.php");
+            $peted_count	 = VarLoad($author_folder, "peted_count.php");
         }
         
         if (($message_content_lower == 'cooldown') || ($message_content_lower == 'cd')) {//;cooldown ;cd
@@ -2666,12 +2591,12 @@ if(!$called) return;
                         if (!CheckFile($guild_folder."/".$mention_id, "vanity_get_count.php")) {
                             $vanity_get_count	= 0;
                         } else {
-                            $vanity_get_count 	= VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
+                            $vanity_get_count  = VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
                         }
                         if (!CheckFile($guild_folder."/".$mention_id, "hugged_count.php")) {
                             $hugged_count		= 0;
                         } else {
-                            $hugged_count 		= VarLoad($guild_folder."/".$mention_id, "hugged_count.php");
+                            $hugged_count 	 = VarLoad($guild_folder."/".$mention_id, "hugged_count.php");
                         }
                         //Increment get stat counter of target
                         $vanity_get_count++;
@@ -2747,12 +2672,12 @@ if(!$called) return;
                         if (!CheckFile($guild_folder."/".$mention_id, "vanity_get_count.php")) {
                             $vanity_get_count	= 0;
                         } else {
-                            $vanity_get_count 	= VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
+                            $vanity_get_count  = VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
                         }
                         if (!CheckFile($guild_folder."/".$mention_id, "kissed_count.php")) {
                             $kissed_count		= 0;
                         } else {
-                            $kissed_count 		= VarLoad($guild_folder."/".$mention_id, "kissed_count.php");
+                            $kissed_count 	 = VarLoad($guild_folder."/".$mention_id, "kissed_count.php");
                         }
                         //Increment get stat counter of target
                         $vanity_get_count++;
@@ -2829,12 +2754,12 @@ if(!$called) return;
                         if (!CheckFile($guild_folder."/".$mention_id, "vanity_get_count.php")) {
                             $vanity_get_count	= 0;
                         } else {
-                            $vanity_get_count 	= VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
+                            $vanity_get_count  = VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
                         }
                         if (!CheckFile($guild_folder."/".$mention_id, "nuzzled_count.php")) {
                             $nuzzled_count		= 0;
                         } else {
-                            $nuzzled_count 		= VarLoad($guild_folder."/".$mention_id, "nuzzled_count.php");
+                            $nuzzled_count 	 = VarLoad($guild_folder."/".$mention_id, "nuzzled_count.php");
                         }
                         //Increment get stat counter of target
                         $vanity_get_count++;
@@ -2908,12 +2833,12 @@ if(!$called) return;
                         if (!CheckFile($guild_folder."/".$mention_id, "vanity_get_count.php")) {
                             $vanity_get_count	= 0;
                         } else {
-                            $vanity_get_count 	= VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
+                            $vanity_get_count  = VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
                         }
                         if (!CheckFile($guild_folder."/".$mention_id, "booped_count.php")) {
                             $booped_count		= 0;
                         } else {
-                            $booped_count 		= VarLoad($guild_folder."/".$mention_id, "booped_count.php");
+                            $booped_count 	 = VarLoad($guild_folder."/".$mention_id, "booped_count.php");
                         }
                         //Increment get stat counter of target
                         $vanity_get_count++;
@@ -2988,12 +2913,12 @@ if(!$called) return;
                         if (!CheckFile($guild_folder."/".$mention_id, "vanity_get_count.php")) {
                             $vanity_get_count	= 0;
                         } else {
-                            $vanity_get_count 	= VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
+                            $vanity_get_count  = VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
                         }
                         if (!CheckFile($guild_folder."/".$mention_id, "baped_count.php")) {
                             $baped_count		= 0;
                         } else {
-                            $baped_count 		= VarLoad($guild_folder."/".$mention_id, "baped_count.php");
+                            $baped_count 	 = VarLoad($guild_folder."/".$mention_id, "baped_count.php");
                         }
                         //Increment get stat counter of target
                         $vanity_get_count++;
@@ -3066,12 +2991,12 @@ if(!$called) return;
                         if (!CheckFile($guild_folder."/".$mention_id, "vanity_get_count.php")) {
                             $vanity_get_count	= 0;
                         } else {
-                            $vanity_get_count 	= VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
+                            $vanity_get_count  = VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
                         }
                         if (!CheckFile($guild_folder."/".$mention_id, "peted_count.php")) {
                             $peted_count		= 0;
                         } else {
-                            $peted_count 		= VarLoad($guild_folder."/".$mention_id, "peted_count.php");
+                            $peted_count 	 = VarLoad($guild_folder."/".$mention_id, "peted_count.php");
                         }
                         //Increment get stat counter of target
                         $vanity_get_count++;
@@ -3207,52 +3132,52 @@ if(!$called) return;
                     if (!CheckFile($guild_folder."/".$mention_id, "vanity_get_count.php")) {
                         $target_vanity_get_count	= 0;
                     } else {
-                        $target_vanity_get_count 	= VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
+                        $target_vanity_get_count  = VarLoad($guild_folder."/".$mention_id, "vanity_get_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "vanity_give_count.php")) {
                         $target_vanity_give_count	= 0;
                     } else {
-                        $target_vanity_give_count 	= VarLoad($guild_folder."/".$mention_id, "vanity_give_count.php");
+                        $target_vanity_give_count  = VarLoad($guild_folder."/".$mention_id, "vanity_give_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "hugged_count.php")) {
                         $target_hugged_count		= 0;
                     } else {
-                        $target_hugged_count 		= VarLoad($guild_folder."/".$mention_id, "hugged_count.php");
+                        $target_hugged_count 	 = VarLoad($guild_folder."/".$mention_id, "hugged_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "hugger_count.php")) {
                         $target_hugger_count		= 0;
                     } else {
-                        $target_hugger_count 		= VarLoad($guild_folder."/".$mention_id, "hugger_count.php");
+                        $target_hugger_count 	 = VarLoad($guild_folder."/".$mention_id, "hugger_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "kissed_count.php")) {
                         $target_kissed_count		= 0;
                     } else {
-                        $target_kissed_count 		= VarLoad($guild_folder."/".$mention_id, "kissed_count.php");
+                        $target_kissed_count 	 = VarLoad($guild_folder."/".$mention_id, "kissed_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "kisser_count.php")) {
                         $target_kisser_count		= 0;
                     } else {
-                        $target_kisser_count 		= VarLoad($guild_folder."/".$mention_id, "kisser_count.php");
+                        $target_kisser_count 	 = VarLoad($guild_folder."/".$mention_id, "kisser_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "nuzzled_count.php")) {
                         $target_nuzzled_count		= 0;
                     } else {
-                        $target_nuzzled_count 		= VarLoad($guild_folder."/".$mention_id, "nuzzled_count.php");
+                        $target_nuzzled_count 	 = VarLoad($guild_folder."/".$mention_id, "nuzzled_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "nuzzler_count.php")) {
                         $target_nuzzler_count		= 0;
                     } else {
-                        $target_nuzzler_count 		= VarLoad($guild_folder."/".$mention_id, "nuzzler_count.php");
+                        $target_nuzzler_count 	 = VarLoad($guild_folder."/".$mention_id, "nuzzler_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "booped_count.php")) {
                         $target_booped_count		= 0;
                     } else {
-                        $target_booped_count 		= VarLoad($guild_folder."/".$mention_id, "booped_count.php");
+                        $target_booped_count 	 = VarLoad($guild_folder."/".$mention_id, "booped_count.php");
                     }
                     if (!CheckFile($guild_folder."/".$mention_id, "booper_count.php")) {
                         $target_booper_count		= 0;
                     } else {
-                        $target_booper_count 		= VarLoad($guild_folder."/".$mention_id, "booper_count.php");
+                        $target_booper_count 	 = VarLoad($guild_folder."/".$mention_id, "booper_count.php");
                     }
                     
                     //Build the embed
@@ -4439,7 +4364,7 @@ if(!$called) return;
             $arr = explode(" ", $message_content);
             $duration = $arr[1];
             $poll = str_replace($duration, "", $poll);
-            if (($poll != "" && $poll != null) && is_numeric($duration)) {
+            if (isset($poll) && $poll != "" && is_numeric($duration)) {
                 $author_channel->sendMessage("**VOTE TIME! ($duration seconds)**\n`".trim($poll)."`")->done(function ($message) use ($discord, $author_channel, $duration) {
 					$storage = [];
 					$message->createReactionCollector(function ($reaction) use (&$storage) {
@@ -5325,7 +5250,7 @@ if(!$called) return;
                 if (($substr != "") && (is_numeric(intval($substr)))) {
                     //				Remove array element and reindex
                     //array_splice($infractions, $substr, 1);
-                    if ($infractions[$substr] != null) {
+                    if (isset($infractions[$substr])) {
                         $infractions[$substr] = "Infraction removed by $author_check on " . date("m/d/Y"); // for arrays where key equals offset
                         //					Save the new infraction log
                         VarSave($guild_folder."/".$mention_id, "infractions.php", $infractions);
@@ -5551,7 +5476,7 @@ if(!$called) return;
         return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
     }
     if ($user_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'v ')) || (str_starts_with($message_content_lower, 'verify ')))) { //Verify ;v ;verify
-        if (($role_verified_id != "") || ($role_verified_id != null)) { //This command only works if the Verified Role is setup
+        if (isset($role_verified_id) && ($role_verified_id != "")) { //This command only works if the Verified Role is setup
             echo "[VERIFY] $author_check" . PHP_EOL;
             //	Get an array of people mentioned
             $mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5658,7 +5583,7 @@ if(!$called) return;
         }
     }
     if (($user_perms['manage_messages'] && $user_perms['manage_roles']) && (($message_content_lower == 'cv') || ($message_content_lower == 'clearv'))) { //;clearv ;cv Clear all messages in the get-verified channel
-        if (($getverified_channel_id != "") || ($getverified_channel_id != null)) { //This command only works if the Get Verified Channel is setup
+        if ( isset($getverified_channel_id) && ($getverified_channel_id != "") ) { //This command only works if the Get Verified Channel is setup
             echo "[CV] $author_check" . PHP_EOL;
             if ($getverified_channel) {
                 $getverified_channel->limitDelete(100);
