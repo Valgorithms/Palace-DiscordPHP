@@ -301,8 +301,7 @@ if ($author_id == $creator_id) {
 }
 
 //echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
-$adult 		= false;
-
+$adult 		= false; //This role current serves no purpose
 //$owner		= false; //This is populated directly from the guild
 $dev		= false; //This is a higher rank than admin because they're assumed to have administrator privileges
 $admin 		= false;
