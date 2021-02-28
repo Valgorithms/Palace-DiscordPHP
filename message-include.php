@@ -114,11 +114,11 @@ if ($is_dm === false) { //Guild message
         elseif ( ($old_guild_owner_id = VarLoad($guild_folder, "guild_owner_id.php")) && ($old_guild_owner_id != $guild_owner_id) )
 			VarSave($guild_folder, "guild_owner_id.php", $guild_owner_id);
     }
-    if ($guild_owner_id == $author_id) {
-        $owner = true; //Enable usage of restricted commands
-    } else {
-        $owner = false;
-    }
+    if ($guild_owner_id == $author_id) $owner = true; //Enable usage of restricted commands
+    else $owner = false;
+	
+	if ($role->name == "Server Booster") $booster = true; //Author boosted the server
+	else $booster = false;
     
     //Load config variables for the guild
     $guild_config_path = __DIR__  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
@@ -136,79 +136,20 @@ if ($is_dm === false) { //Guild message
     
     $author_guild_avatar = $author_guild->icon;
     $author_guild_roles = $author_guild->roles;
-    if ($getverified_channel_id) {
-        $getverified_channel  = $author_guild->channels->get('id', $getverified_channel_id);
-    } else {
-        $getverified_channel = null;
-    }
-    if ($verifylog_channel_id) {
-        $verifylog_channel  = $author_guild->channels->get('id', $verifylog_channel_id);
-    } //Modlog is used if this is not declared
-    else {
-        $verifylog_channel = null;
-    }
-    if ($watch_channel_id) {
-        $watch_channel  = $author_guild->channels->get('id', $watch_channel_id);
-    } else {
-        $watch_channel = null;
-    }
-    if ($modlog_channel_id) {
-        $modlog_channel  = $author_guild->channels->get('id', $modlog_channel_id);
-    } else {
-        $modlog_channel = null;
-    }
-    if ($general_channel_id) {
-        $general_channel = $author_guild->channels->get('id', $general_channel_id);
-    } else {
-        $general_channel = null;
-    }
-    if ($rolepicker_channel_id) {
-        $rolepicker_channel = $author_guild->channels->get('id', $rolepicker_channel_id);
-    } else {
-        $rolepicker_channel = null;
-    }
-	if ($nsfw_rolepicker_channel_id) {
-        $nsfw_rolepicker_channel = $author_guild->channels->get('id', $nsfw_rolepicker_channel_id);
-    } else {
-        $nsfw_rolepicker_channel = null;
-    }
-	
-	if ($games_rolepicker_channel_id) {
-        $games_rolepicker_channel = $author_guild->channels->get('id', $games_rolepicker_channel_id);
-    } else {
-        $games_rolepicker_channel = null;
-    }
-	
-    if ($games_channel_id) {
-        $games_channel = $author_guild->channels->get('id', $games_channel_id);
-    } else {
-        $games_channel = null;
-    }
-	if ($gameroles_message_id) {
-        $gameroles_channel = $author_guild->channels->get('id', $gameroles_message_id);
-    } else {
-        $gameroles_channel = null;
-    }
-    if ($suggestion_pending_channel_id) {
-        $suggestion_pending_channel	= $author_guild->channels->get('id', strval($suggestion_pending_channel_id));
-    } else {
-        $suggestion_pending_channel = null;
-    }
-    if ($suggestion_approved_channel_id) {
-        $suggestion_approved_channel = $author_guild->channels->get('id', strval($suggestion_approved_channel_id));
-    } else {
-        $suggestion_approved_channel = null;
-    }
-	if ($tip_pending_channel_id) {
-        $tip_pending_channel = $author_guild->channels->get('id', strval($tip_pending_channel_id));
-    } else {
-        $tip_pending_channel = null;
-    }
-    if ($tip_approved_channel_id) {
-        $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
-    } else {
-        $tip_approved_channel = null;
-    }
+    if (isset($getverified_channel_id)) $getverified_channel  = $author_guild->channels->get('id', $getverified_channel_id);
+    if (isset($verifylog_channel_id)) $verifylog_channel = $author_guild->channels->get('id', $verifylog_channel_id); //Modlog is used if this is not declared
+    if (isset($watch_channel_id)) $watch_channel  = $author_guild->channels->get('id', $watch_channel_id);
+    if (isset($modlog_channel_id)) $modlog_channel  = $author_guild->channels->get('id', $modlog_channel_id);
+    if (isset($general_channel_id)) $general_channel = $author_guild->channels->get('id', $general_channel_id);
+    if (isset($rolepicker_channel_id)) $rolepicker_channel = $author_guild->channels->get('id', $rolepicker_channel_id);
+	if (isset($nsfw_rolepicker_channel_id)) $nsfw_rolepicker_channel = $author_guild->channels->get('id', $nsfw_rolepicker_channel_id);
+	if (isset($games_rolepicker_channel_id)) $games_rolepicker_channel = $author_guild->channels->get('id', $games_rolepicker_channel_id);
+    if (isset($games_channel_id)) $games_channel = $author_guild->channels->get('id', $games_channel_id);
+	if (isset($gameroles_message_id)) $gameroles_channel = $author_guild->channels->get('id', $gameroles_message_id);
+    if (isset($suggestion_pending_channel_id)) $suggestion_pending_channel	= $author_guild->channels->get('id', strval($suggestion_pending_channel_id));
+    if (isset($suggestion_approved_channel_id)) $suggestion_approved_channel = $author_guild->channels->get('id', strval($suggestion_approved_channel_id));
+	if (isset($tip_pending_channel_id)) $tip_pending_channel = $author_guild->channels->get('id', strval($tip_pending_channel_id));
+    if (isset($tip_approved_channel_id)) $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
 	
 	$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
 	if (CheckFile($guild_folder."/", 'custom_roles.php')){
