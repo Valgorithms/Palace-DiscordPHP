@@ -56,7 +56,7 @@ $stats = new Stats();
 $stats->init($discord);
 $restcord = null;//new DiscordClient(['token' => "{$token}"]); // Token is required
 //var_dump($restcord->guild->getGuild(['guild.id' => 116927365652807686]));
-
+/*
 $filesystem = \React\Filesystem\Filesystem::create($loop); //Awaiting full PHP 8 support
 $rtmp = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerRequestInterface $request) use ($filesystem) {
 	$file = $filesystem->file('media/fixeditcouldhaveeasy.mp4'); //$file = $filesystem->file('C:\WinNMP\WWW\vzg.project\media_server\.m3u8');
@@ -80,7 +80,7 @@ $rtmp->on('error',
 );
 $rsocket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55554'), $loop);
 $rtmp->listen($rsocket);
-
+*/
 function webapiFail($part, $id){
 	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
 	return new \GuzzleHttp\Psr7\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
