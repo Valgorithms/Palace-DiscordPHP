@@ -1627,21 +1627,13 @@ if(!$called) return;
             $documentation = $documentation . "`settings` sends a DM with current settings\n";
             
             //v
-            if (!$role_verified_id) {
-                $documentation = $documentation . "~~";
-            }
+            if (!$role_verified_id) $documentation = $documentation . "~~";
             $documentation = $documentation . "`v` or `verify` gives the verified role\n";
-            if (!$role_verified_id) {
-                $documentation = $documentation . "~~";
-            }
+            if (!$role_verified_id) $documentation = $documentation . "~~";
             //cv
-            if (!$getverified_channel) {
-                $documentation = $documentation . "~~";
-            }
+            if (!$getverified_channel) $documentation = $documentation . "~~";
             $documentation = $documentation . "`cv` or `clearv` clears the verification channel and posts a short notice\n";
-            if (!$getverified_channel) {
-                $documentation = $documentation . "~~";
-            }
+            if (!$getverified_channel) $documentation = $documentation . "~~";
             //clearall
             $documentation = $documentation . "`clearall` clears the current channel of up to 100 messages\n";
             //clear #
@@ -1651,13 +1643,9 @@ if(!$called) return;
             //unwatch
             $documentation = $documentation . "`unwatch` removes the effects of the watch command\n";
             //vwatch
-            if (!$role_verified_id) {
-                $documentation = $documentation . "~~";
-            }
+            if (!$role_verified_id) $documentation = $documentation . "~~";
             $documentation = $documentation . "`vw` or `vwatch` gives the verified role to the mentioned and watches them\n";
-            if (!$role_verified_id) {
-                $documentation = $documentation . "~~";
-            }
+            if (!$role_verified_id) $documentation = $documentation . "~~";
             //warn
             $documentation = $documentation . "`warn` logs an infraction\n";
             //infractions
@@ -1671,43 +1659,31 @@ if(!$called) return;
             //unban
             $documentation = $documentation . "`unban @mention`\n";
             //Strikeout invalid options
-            if (!$suggestion_pending_channel) {
-                $documentation = $documentation . "~~";
-            }
+            if (!$suggestion_pending_channel) $documentation = $documentation . "~~";
             //suggest approve
             $documentation = $documentation . "`suggest approve #`\n";
             //suggest deny
             $documentation = $documentation . "`suggest deny #`\n";
             //Strikeout invalid options
-            if (!$suggestion_pending_channel) {
-                $documentation = $documentation . "~~";
-            }
-			if (!$tip_pending_channel) {
-                $documentation = $documentation . "~~";
-            }
+            if (!$suggestion_pending_channel) $documentation = $documentation . "~~";
+			if (!$tip_pending_channel) $documentation = $documentation . "~~";
 			//tip approve
             $documentation = $documentation . "`tip approve #`\n";
             //tip deny
             $documentation = $documentation . "`tip deny #`\n";
-			if (!$tip_pending_channel) {
-                $documentation = $documentation . "~~";
-            }
+			if (!$tip_pending_channel) $documentation = $documentation . "~~";
 			
         }
         if ($creator || $owner || $dev || $admin || $mod) {
             $documentation = $documentation . "\n__**Moderators:**__\n";
             //Strikeout invalid options
-            if (!$role_muted_id) {
-                $documentation = $documentation . "~~";
-            } //Strikeout invalid options
+            if (!$role_muted_id) $documentation = $documentation . "~~"; //Strikeout invalid options
             //mute/m
             $documentation = $documentation . "`mute @mention reason`\n";
             //unmute
             $documentation = $documentation . "`unmute @mention reason`\n";
             //Strikeout invalid options
-            if (!$role_muted_id) {
-                $documentation = $documentation . "~~";
-            } //Strikeout invalid options
+            if (!$role_muted_id) $documentation = $documentation . "~~"; //Strikeout invalid options
             //whois
             $documentation = $documentation . "`whois` displays known information about a user\n";
             //lookup
@@ -1756,21 +1732,13 @@ if(!$called) return;
         //remindme
         $documentation = $documentation . "`remindme #` send a DM after # of seconds have passed\n";
         //suggest
-        if (!$suggestion_pending_channel) {
-            $documentation = $documentation . "~~";
-        }
+        if (!$suggestion_pending_channel) $documentation = $documentation . "~~";
         $documentation = $documentation . "`suggest` posts a suggestion for staff to vote on\n";
-        if (!$suggestion_pending_channel) {
-            $documentation = $documentation . "~~";
-        }
+        if (!$suggestion_pending_channel) $documentation = $documentation . "~~";
 		//tip
-        if (!$tip_pending_channel) {
-            $documentation = $documentation . "~~";
-        }
+        if (!$tip_pending_channel) $documentation = $documentation . "~~";
         $documentation = $documentation . "`tip` posts a tip for staff to vote on\n";
-        if (!$tip_pending_channel) {
-            $documentation = $documentation . "~~";
-        }
+        if (!$tip_pending_channel) $documentation = $documentation . "~~";
 
         $documentation_sanitized = str_replace("\n", "", $documentation);
         $doc_length = strlen($documentation_sanitized);
@@ -3619,11 +3587,8 @@ if(!$called) return;
 			$string = "";
 			foreach ($author_guild->members as $target_member){
 				$has_role = false;
-				foreach($target_member->roles as $role){
-					if(!is_null($role->id)){
-						$has_role = true;
-					}
-				}
+				foreach($target_member->roles as $role)
+					if(!is_null($role->id)) $has_role = true;
 				if (!$has_role){
 					$string = $string . '<@'.$target_member->id.'> ';
 					$target_member->addRole("469312086766518272");
