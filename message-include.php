@@ -2291,9 +2291,7 @@ if(!$called) return;
                         });
                         //Clear the value stored in the array
                         $array[$num] = "Approved";
-                        if ($react) {
-                            $message->react("👍");
-                        }
+                        if ($react) $message->react("👍");
                         //Send a DM to the person who made the tip to let them know that it has been approved.
                     } else {
                         return $message->reply("Tip not found or already processed!");
@@ -2328,12 +2326,8 @@ if(!$called) return;
                         $embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
                         //Clear the value stored in the array
                         $array[$num] = "Denied";
-                        if ($react) {
-                            $message->react("👍");
-                        }
-                    } else {
-                        return $message->reply("Tip not found or already processed!");
-                    }
+                        if ($react) $message->react("👍");
+                    } else return $message->reply("Tip not found or already processed!");
                 }
                 return;
             }
@@ -3035,9 +3029,7 @@ if(!$called) return;
                 
     //			Send the message
                 //			We do not need another promise here, so we call done, because we want to consume the promise
-                if ($react) {
-                    $message->react("👍");
-                }
+                if ($react) $message->react("👍");
                 $author_channel->sendEmbed($embed);
                 //			Set Cooldown
                 //SetCooldown($author_folder, "vstats_limit.php");
@@ -3047,9 +3039,7 @@ if(!$called) return;
                 //			Reply with remaining time
                 $waittime = ($vstats_limit_seconds - $cooldown[1]);
                 $formattime = FormatTime($waittime);
-                if ($react) {
-                    $message->react("👎");
-                }
+                if ($react) $message->react("👎");
                 $message->reply("You must wait $formattime before using vstats on yourself again.");
                 return;
             }
@@ -3156,9 +3146,7 @@ if(!$called) return;
                     
     //				Send the message
                     //				We do not need another promise here, so we call done, because we want to consume the promise
-                    if ($react) {
-                        $message->react("👍");
-                    }
+                    if ($react) $message->react("👍");
                     $author_channel->sendEmbed($embed);
                     //				Set Cooldown
                     //SetCooldown($author_folder, "vstats_limit.php");
@@ -3172,9 +3160,7 @@ if(!$called) return;
                 //			Reply with remaining time
                 $waittime = ($vstats_limit_seconds - $cooldown[1]);
                 $formattime = FormatTime($waittime);
-                if ($react) {
-                    $message->react("👎");
-                }
+                if ($react) $message->react("👎");
                 $message->reply("You must wait $formattime before using vstats on yourself again.");
                 return;
             }
@@ -3207,10 +3193,8 @@ if(!$called) return;
 		if ($message_content_lower == 'pull'){ //;pull
 			//if(shell_exec("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpull.bat"'))
 			
-			if($handle = popen("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpullbot.bat"', "r")){
-				$message->react("👍");
-				return;
-			}
+			if($handle = popen("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpullbot.bat"', "r"))
+				return $message->react("👍");
 			
 			/*
 			$process = new React\ChildProcess\Process('start '. 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpullbot.bat"', null, null, array(
@@ -3630,9 +3614,7 @@ if(!$called) return;
                     }
                 });
 				$message->react("👍");
-            } else {
-				$message->react("👎");
-            }
+            } else $message->react("👎");
             echo "[CHECK UNREGISTERED DONE]" . PHP_EOL;
             return;
         }
@@ -3706,14 +3688,8 @@ if(!$called) return;
                         }
                     }
                 });
-                if ($react) {
-                    $message->react("👍");
-                }
-            } else {
-                if ($react) {
-                    $message->react("👎");
-                }
-            }
+                if ($react) $message->react("👍");
+            } elseif ($react) $message->react("👎");
             echo "[PURGE UNVERIFIED DONE]" . PHP_EOL;
             return;
         }
@@ -4514,9 +4490,7 @@ if(!$called) return;
                 $mention_watch_name_queue_full 							= $mention_watch_name_queue_full . PHP_EOL . $mention_watch_name_queue;
             }
             //	React to the original message
-            if ($react) {
-                $message->react("👍");
-            }
+            if ($react) $message->react("👍");
             //	Send the message
             if ($watch_channel) return $watch_channel->sendMessage($mention_watch_name_queue_default . $mention_watch_name_queue_full . PHP_EOL);
             else return $author_channel->sendMessage($mention_watch_name_queue_default . $mention_watch_name_queue_full . PHP_EOL);
@@ -5270,15 +5244,10 @@ if(!$called) return;
 					**🗓️Date:** $warndate
 					**📝Reason:** " . str_replace($filter, "", $message_content);
                     //Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
-                    foreach ($removed_roles as $role) {
+                    foreach ($removed_roles as $role)
                         $target_guildmember->removeRole($role);
-                    }
-                    if ($role_muted_id) {
-                        $target_guildmember->addRole($role_muted_id);
-                    }
-                    if ($react) {
-                        $message->react("🤐");
-                    }
+                    if ($role_muted_id) $target_guildmember->addRole($role_muted_id);
+                    if ($react) $message->react("🤐");
                     /*
                     //Build the embed message
                     $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
