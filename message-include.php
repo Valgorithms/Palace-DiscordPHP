@@ -1822,7 +1822,7 @@ if(!$called) return;
 		if (str_starts_with($message_content_lower, 'roll ')) { //;roll #d#
 			echo '[ROLL]' . PHP_EOL;
 			$cooldown = CheckCooldownMem($author_id, "spam", $spam_limit);
-			if (($cooldown[0] == true) || ($bypass)) {
+			if (($cooldown[0]) || ($bypass)) {
 				$filter = "roll ";
 				$message_content_lower = str_replace($filter, "", $message_content_lower);
 				$arr = explode('d', $message_content_lower);
@@ -2030,7 +2030,7 @@ if(!$called) return;
         echo "[GET AUTHOR AVATAR]" . PHP_EOL;
         //$cooldown = CheckCooldown($author_folder, "avatar_time.php", $avatar_limit); //	Check Cooldown Timer
         $cooldown = CheckCooldownMem($author_id, "avatar", $avatar_limit);
-        if (($cooldown[0] == true) || ($bypass)) {
+        if (($cooldown[0]) || ($bypass)) {
             //		Build the embed
             $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
             $embed
@@ -2061,7 +2061,7 @@ if(!$called) return;
         echo "GETTING AVATAR FOR MENTIONED" . PHP_EOL;
         //$cooldown = CheckCooldown($author_folder, "avatar_time.php", $avatar_limit); //Check Cooldown Timer
         $cooldown = CheckCooldownMem($author_id, "avatar", $avatar_limit);
-        if (($cooldown[0] == true) || ($bypass)) {
+        if (($cooldown[0]) || ($bypass)) {
             $mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
             if (!strpos($message_content_lower, "<")) { //String doesn't contain a mention
             $filter = "avatar ";
@@ -2500,7 +2500,7 @@ if(!$called) return;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
             $cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 return $message->reply("No cooldown.");
             } else {
                 //			Reply with remaining time
@@ -2514,7 +2514,7 @@ if(!$called) return;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
             $cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 //			Get an array of people mentioned
                 $mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
                 foreach ($mentions_arr as $mention_param) {
@@ -2594,7 +2594,7 @@ if(!$called) return;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
             $cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 //			Get an array of people mentioned
                 $mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
                 foreach ($mentions_arr as $mention_param) {
@@ -2675,7 +2675,7 @@ if(!$called) return;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
             $cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 //			Get an array of people mentioned
                 $mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
                 foreach ($mentions_arr as $mention_param) {
@@ -2757,7 +2757,7 @@ if(!$called) return;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
             $cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 //			Get an array of people mentioned
                 $mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
                 foreach ($mentions_arr as $mention_param) {
@@ -2836,7 +2836,7 @@ if(!$called) return;
             //				Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
             $cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 //					Get an array of people mentioned
                 $mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
                 foreach ($mentions_arr as $mention_param) {
@@ -2916,7 +2916,7 @@ if(!$called) return;
             //				Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
             $cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 //					Get an array of people mentioned
                 $mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
                 foreach ($mentions_arr as $mention_param) {
@@ -3003,7 +3003,7 @@ if(!$called) return;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vstats_limit.php", $vstats_limit);
             $cooldown = CheckCooldownMem($author_id, "vstats", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 //			Build the embed
                 $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
                 $embed
@@ -3059,7 +3059,7 @@ if(!$called) return;
             //		Check Cooldown Timer
             //$cooldown = CheckCooldown($author_folder, "vstats_limit.php", $vstats_limit);
             $cooldown = CheckCooldownMem($author_id, "vstats", $vanity_limit);
-            if (($cooldown[0] == true) || ($bypass)) {
+            if (($cooldown[0]) || ($bypass)) {
                 //			Get an array of people mentioned
                 $mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
                 foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
@@ -3514,7 +3514,7 @@ if(!$called) return;
             echo "[RESCUE]" . PHP_EOL;
             include_once "custom_functions.php";
             $rescue = VarLoad("_globals", "RESCUE.php"); //Check if recovering from a fatal crash
-            if ($rescue == true) { //Attempt to restore crashed session
+            if ($rescue) { //Attempt to restore crashed session
                 echo "[RESCUE START]" . PHP_EOL;
                 $rescue_dir = __DIR__ . '/_globals';
                 $rescue_vars = scandir($rescue_dir);
@@ -3757,7 +3757,7 @@ if(!$called) return;
                 case 'save 1': //;save 1
                     echo "[SAVE SLOT 1] $author_check" .  PHP_EOL;
                     $manual_saving = VarLoad(null, "manual_saving.php");
-                    if ($manual_saving == true) {
+                    if ($manual_saving) {
                         if ($react) {
                             $message->react("👎");
                         }
@@ -3800,7 +3800,7 @@ if(!$called) return;
                 case 'save 2': //;save 2
                     echo "[SAVE SLOT 2] $author_check" .  PHP_EOL;
                     $manual_saving = VarLoad(null, "manual_saving.php");
-                    if ($manual_saving == true) {
+                    if ($manual_saving) {
                         if ($react) {
                             $message->react("👎");
                         }
@@ -3842,7 +3842,7 @@ if(!$called) return;
                 case 'save 3': //;save 3
                     echo "[SAVE SLOT 3] $author_check" .  PHP_EOL;
                     $manual_saving = VarLoad(null, "manual_saving.php");
-                    if ($manual_saving == true) {
+                    if ($manual_saving) {
                         if ($react) {
                             $message->react("👎");
                         }
@@ -4707,17 +4707,11 @@ if(!$called) return;
             $target_guildmember_role_collection 					= $target_guildmember->roles;									//echo "target_guildmember_role_collection: " . (count($author_guildmember_role_collection)-1);
             
             //				Populate arrays of the info we need
-            $target_verified										= false; //Default
+            $target_verified = false;
+            foreach ($target_guildmember_role_collection as $role)
+				if ($role->id == $role_verified_id) $target_verified = true;
             
-            foreach ($target_guildmember_role_collection as $role) {
-                
-                    if ($role->id == $role_verified_id) {
-                        $target_verified 							= true;
-                    }
-                
-            }
-            
-            if ($target_verified == false) {
+            if (!$target_verified) {
                 //					Build the string for the reply
                 $mention_role_name_queue 							= "**<@$mention_id>** ";
                 $mention_role_name_queue_full 						= $mention_role_name_queue_full . PHP_EOL . $mention_role_name_queue;
@@ -5450,16 +5444,10 @@ if(!$called) return;
                     $target_guildmember_user								= $target_guildmember->user;									//echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
                     $mention_avatar 										= "{$target_guildmember_user->avatar}";					//echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
                     
-                    $target_verified										= false; //Default
-                    
-                    foreach ($target_guildmember_role_collection as $role) {
-                        
-                            if ($role->id == $role_verified_id) {
-                                $target_verified 							= true;
-                            }
-                        
-                    }
-                    if ($target_verified == false) { //Add the verified role to the member
+                    $target_verified = false; //Default
+                    foreach ($target_guildmember_role_collection as $role)
+						if ($role->id == $role_verified_id) $target_verified = true;
+                    if (!$target_verified) { //Add the verified role to the member
                         $target_guildmember->addRole($role_verified_id)->done(
                             null,
                             function ($error) {
