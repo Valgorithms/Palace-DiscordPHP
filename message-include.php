@@ -2,7 +2,7 @@
 if ($message->author->bot) return; //Don't process messages sent by bots
 
 $message_content = $message->content;
-if (($message_content == null) || ($message_content == "")) return;
+if (!$message_content) return;
 $message_id = $message->id;
 $message_content_lower = mb_strtolower($message_content);
 
@@ -196,7 +196,7 @@ if (!CheckFile($guild_folder, "gameroles_option.php")) $gamerole	= $gameroles_op
 else $gamerole  = VarLoad($guild_folder, "gameroles_option.php"); //Load saved option file
 
 //Role picker options
-if (($rolepicker_id == "") || ($rolepicker_id == "0") || is_null($rolepicker_id)) //Message rolepicker menus
+if (!$rolepicker_id) //Message rolepicker menus
     $rolepicker_id = $discord->id; //Default to Palace Bot
 global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $channel_option, $gameroles_option, $custom_option;
 if (!CheckFile($guild_folder, "rolepicker_option.php")) $rp0 = $rolepicker_option; //Allow Rolepicker
@@ -1627,19 +1627,19 @@ if(!$called) return;
             $documentation = $documentation . "`settings` sends a DM with current settings\n";
             
             //v
-            if (($role_verified_id === null) || ($role_verified_id == "") || ($role_verified_id == "0")) {
+            if (!$role_verified_id) {
                 $documentation = $documentation . "~~";
             }
             $documentation = $documentation . "`v` or `verify` gives the verified role\n";
-            if (($role_verified_id === null) || ($role_verified_id == "") || ($role_verified_id == "0")) {
+            if (!$role_verified_id) {
                 $documentation = $documentation . "~~";
             }
             //cv
-            if (($getverified_channel === null) || ($getverified_channel == "") || ($getverified_channel == "0")) {
+            if (!$getverified_channel) {
                 $documentation = $documentation . "~~";
             }
             $documentation = $documentation . "`cv` or `clearv` clears the verification channel and posts a short notice\n";
-            if (($getverified_channel === null) || ($getverified_channel == "") || ($getverified_channel == "0")) {
+            if (!$getverified_channel) {
                 $documentation = $documentation . "~~";
             }
             //clearall
@@ -1651,11 +1651,11 @@ if(!$called) return;
             //unwatch
             $documentation = $documentation . "`unwatch` removes the effects of the watch command\n";
             //vwatch
-            if (($role_verified_id === null) || ($role_verified_id == "") || ($role_verified_id == "0")) {
+            if (!$role_verified_id) {
                 $documentation = $documentation . "~~";
             }
             $documentation = $documentation . "`vw` or `vwatch` gives the verified role to the mentioned and watches them\n";
-            if (($role_verified_id === null) || ($role_verified_id == "") || ($role_verified_id == "0")) {
+            if (!$role_verified_id) {
                 $documentation = $documentation . "~~";
             }
             //warn
@@ -1671,7 +1671,7 @@ if(!$called) return;
             //unban
             $documentation = $documentation . "`unban @mention`\n";
             //Strikeout invalid options
-            if (($suggestion_pending_channel === null) || ($suggestion_pending_channel == "") || ($suggestion_pending_channel == "0")) {
+            if (!$suggestion_pending_channel) {
                 $documentation = $documentation . "~~";
             }
             //suggest approve
@@ -1679,17 +1679,17 @@ if(!$called) return;
             //suggest deny
             $documentation = $documentation . "`suggest deny #`\n";
             //Strikeout invalid options
-            if (($suggestion_pending_channel === null) || ($suggestion_pending_channel == "") || ($suggestion_pending_channel == "0")) {
+            if (!$suggestion_pending_channel) {
                 $documentation = $documentation . "~~";
             }
-			if (($tip_pending_channel === null) || ($tip_pending_channel == "") || ($tip_pending_channel == "0")) {
+			if (!$tip_pending_channel) {
                 $documentation = $documentation . "~~";
             }
 			//tip approve
             $documentation = $documentation . "`tip approve #`\n";
             //tip deny
             $documentation = $documentation . "`tip deny #`\n";
-			if (($tip_pending_channel === null) || ($tip_pending_channel == "") || ($tip_pending_channel == "0")) {
+			if (!$tip_pending_channel) {
                 $documentation = $documentation . "~~";
             }
 			
@@ -1697,7 +1697,7 @@ if(!$called) return;
         if ($creator || $owner || $dev || $admin || $mod) {
             $documentation = $documentation . "\n__**Moderators:**__\n";
             //Strikeout invalid options
-            if (($role_muted_id === null) || ($role_muted_id == "") || ($role_muted_id == "0")) {
+            if (!$role_muted_id) {
                 $documentation = $documentation . "~~";
             } //Strikeout invalid options
             //mute/m
@@ -1705,7 +1705,7 @@ if(!$called) return;
             //unmute
             $documentation = $documentation . "`unmute @mention reason`\n";
             //Strikeout invalid options
-            if (($role_muted_id === null) || ($role_muted_id == "") || ($role_muted_id == "0")) {
+            if (!$role_muted_id) {
                 $documentation = $documentation . "~~";
             } //Strikeout invalid options
             //whois
@@ -1756,19 +1756,19 @@ if(!$called) return;
         //remindme
         $documentation = $documentation . "`remindme #` send a DM after # of seconds have passed\n";
         //suggest
-        if (($suggestion_pending_channel === null) || ($suggestion_pending_channel == "") || ($suggestion_pending_channel == "0")) {
+        if (!$suggestion_pending_channel) {
             $documentation = $documentation . "~~";
         }
         $documentation = $documentation . "`suggest` posts a suggestion for staff to vote on\n";
-        if (($suggestion_pending_channel === null) || ($suggestion_pending_channel == "") || ($suggestion_pending_channel == "0")) {
+        if (!$suggestion_pending_channel) {
             $documentation = $documentation . "~~";
         }
 		//tip
-        if (($tip_pending_channel === null) || ($tip_pending_channel == "") || ($tip_pending_channel == "0")) {
+        if (!$tip_pending_channel) {
             $documentation = $documentation . "~~";
         }
         $documentation = $documentation . "`tip` posts a tip for staff to vote on\n";
-        if (($tip_pending_channel === null) || ($tip_pending_channel == "") || ($tip_pending_channel == "0")) {
+        if (!$tip_pending_channel) {
             $documentation = $documentation . "~~";
         }
 
@@ -1964,18 +1964,12 @@ if(!$called) return;
             $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value); //echo "value: " . $value . PHP_EOL;
             if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)){
-					return $message->react('❌');
-				}
+				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
-            } else {
-                return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-            }
-            if ($mention_member == null) {
-                return $message->reply("Invalid input! Please enter an ID or @mention the user");
-            }
+            } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+            if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
         }
         //$mention_role_name_queue_full								= "Here's a list of roles for the requested users:" . PHP_EOL;
         $mention_role_name_queue_default							= "";
@@ -2108,18 +2102,12 @@ if(!$called) return;
                 $value = str_replace("<@", "", $value);
                 $value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
                 if (is_numeric($value)) {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)){
-						return $message->react('❌');
-					}
+					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                     $mention_member				= $author_guild->members->get('id', $value);
                     $mention_user				= $mention_member->user;
                     $mentions_arr				= array($mention_user);
-                } else {
-                    return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-                }
-                if ($mention_member == null) {
-                    return $message->reply("Invalid input! Please enter an ID or @mention the user");
-                }
+                } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+                if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
             }
             foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
     //			id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
@@ -2245,9 +2233,7 @@ if(!$called) return;
             $value = str_replace($filter, "", $message_content_lower);
             $filter = "suggest ";
             $value = str_replace($filter, "", $value);
-            if (($value == "") || ($value == null)) {
-                return $message->reply("Invalid input! Please enter text for your suggestion");
-            }
+            if (!$value) return $message->reply("Invalid input! Please enter text for your suggestion");
             //Build the embed message
             $message_sanitized = str_replace("*", "", $value);
             $message_sanitized = str_replace("@", "", $message_sanitized);
@@ -2390,9 +2376,7 @@ if(!$called) return;
             //return;
             $filter = "tip ";
             $value = str_replace($filter, "", $message_content_lower);
-            if (($value == "") || ($value == null)) {
-                return $message->reply("Invalid input! Please enter text for your tip");
-            }
+            if (!$value) return $message->reply("Invalid input! Please enter text for your tip");
             //Build the embed message
             $message_sanitized = str_replace("*", "", $value);
             $message_sanitized = str_replace("@", "", $message_sanitized);
@@ -4483,19 +4467,12 @@ if(!$called) return;
                 $value = str_replace("<@", "", $value);
                 $value = str_replace(">", "", $value);
                 if (is_numeric($value)) {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)){
-						$message->react('❌');
-						return;
-					}
+					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                     $mention_member				= $author_guild->members->get('id', $value);
                     $mention_user				= $mention_member->user;
                     $mentions_arr				= array($mention_user);
-                } else {
-                    return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-                }
-                if ($mention_member == null) {
-                    return $message->reply("Invalid input! Please enter an ID or @mention the user");
-                }
+                } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+                if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
             }
             
             foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
@@ -4555,7 +4532,7 @@ if(!$called) return;
                     $mention_user				= $mention_member->user;
                     $mentions_arr				= array($mention_user);
                 } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-                if ($mention_member == null) return $message->reply("Invalid input! Please enter an ID or @mention the user");
+                if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
             }
             
             foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
@@ -4598,7 +4575,7 @@ if(!$called) return;
                     $mention_user = $mention_member->user;
                     $mentions_arr = array($mention_user);
                 } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-                if ($mention_member == null) return $message->reply("Invalid input! Please enter an ID or @mention the user");
+                if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
             }
             
             //update
@@ -4738,19 +4715,12 @@ if(!$called) return;
             $value = str_replace("<@", "", $value);
             $value = str_replace(">", "", $value);
             if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)){
-					$message->react('❌');
-					return;
-				}
+				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
                 $mention_member				= $author_guild->members->get('id', $value);
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
-            } else {
-                return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-            }
-            if ($mention_member == null) {
-                return $message->reply("Invalid input! Please enter an ID or @mention the user");
-            }
+            } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
+            if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
         }
         
         foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
@@ -5221,7 +5191,7 @@ if(!$called) return;
             $mention_user				= $mention_member->user;
             $mentions_arr				= array($mention_user);
         } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-        if ($mention_member == null) return $message->reply("Invalid input! Please enter an ID or @mention the user");
+        if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
         
         $x = 0;
         foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
@@ -5394,7 +5364,7 @@ if(!$called) return;
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
             } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-            if ($mention_member == null) return $message->reply("Invalid input! Please enter an ID or @mention the user");
+            if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
         }
         foreach ($mentions_arr as $mention_param) {
             $mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
@@ -5495,7 +5465,7 @@ if(!$called) return;
                 $mention_user				= $mention_member->user;
                 $mentions_arr				= array($mention_user);
             } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user.");
-            if ($mention_member == null) return $message->reply("Invalid ID or user not found! Are they in the server?");
+            if (is_null($mention_member)) return $message->reply("Invalid ID or user not found! Are they in the server?");
             
             foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
         //		id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
