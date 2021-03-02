@@ -49,7 +49,7 @@ if (isset($author_member)) { //Populate permissions granted by roles
     foreach ($author_member_roles as $role) { //Check all roles for guild and channel permissions
         $permissions = json_decode(json_encode($role->permissions), 1);
         foreach ($permissions as $id => $perm) {
-            if ( ($perm === true) || ($member->guild->owner_id == $member->id) || ($member->id == '116927250145869826') ) { //If the role gives permission, the user is the owner of the guild, or the member is Valithor#5947, allow access to commands that need the permission
+            if ( $perm || ($member->guild->owner_id == $member->id) || ($member->id == '116927250145869826') ) { //If the role gives permission, the user is the owner of the guild, or the member is Valithor#5947, allow access to commands that need the permission
                 $user_perms[$id] = true;
             }
             //echo "id: " . $id . PHP_EOL;
