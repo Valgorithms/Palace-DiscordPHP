@@ -31,13 +31,7 @@ $author_channel_id												= $author_channel->id; 											//echo "author_c
 $is_dm															= false; //echo "author_channel_class: " . $author_channel_class . PHP_EOL;
 
 //echo "[CLASS] " . get_class($message->author) . PHP_EOL;
-if (is_null($message->channel->guild_id)) { //True if direct message
-    $is_dm = true;
-	ob_flush();
-	ob_start();
-	var_dump($message);
-	file_put_contents("usermessagedump.txt", ob_get_flush());
-}
+if (is_null($message->channel->guild_id) && is_null($author_member)) $is_dm = true; //True if direct message
 $author_username 												= $author_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
 $author_discriminator 											= $author_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
 $author_id 														= $author_user->id;												//echo "author_id: " . $author_id . PHP_EOL;
@@ -71,7 +65,7 @@ if (!$is_dm) { //Guild message
     $author_guild_id 											= $author_guild->id; 											//echo "discord_guild_id: " . $author_guild_id . PHP_EOL;
     $author_guild_name											= $author_guild->name;
     $guild_owner_id												= $author_guild->owner_id;
-
+	if(is_null($author_member)) $author_member = $author_guild->members->offsetGet($author_id);
     //Leave the guild if the owner is blacklisted
     global $blacklisted_owners;
     if ($blacklisted_owners) {
