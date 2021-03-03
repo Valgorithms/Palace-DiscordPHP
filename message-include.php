@@ -1,7 +1,7 @@
 <?php
 if (is_null($message) || empty($message)) return; //An invalid message object was passed
 if (is_null($message->content)) return; //Don't process messages without content
-if (isset($message->webhook_id)) return; //Don't process webhooks
+if ($message["webhook_id"]) return; //Don't process webhooks
 if ($message->author->bot) return; //Don't process messages sent by bots
 
 $message_content = $message->content;
