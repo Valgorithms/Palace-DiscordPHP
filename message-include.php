@@ -3301,26 +3301,51 @@ if(!$called) return;
 			);
 		}		
 		if ($message_content_lower == 'debug guild create'){ //;debug guild create
+			return; //Only works for bots that are in less than 10 guilds
+			echo '[DEBUG GUILD CREATE]' . PHP_EOL;
 			/*
 			$guild = $discord->factory(\Discord\Parts\Guild\Guild::class);
 			$guild->name = 'Doll House';
 			*/
-			$guild = $discord->guilds->create([
-				'name' => 'Doll House',
+			$guild_temp = $discord->guilds->create([
+				'name' => 'Test Server',
 			]);
-			$discord->guilds->save($guild)->done( //Fails
-				function ($guild) use ($author_user){
-					//
-					foreach($guild->channels as $channel){
-						$channel->createInvite([
-							'max_age' => 60, // 1 minute
-							'max_uses' => 5, // 5 uses
-						])->done(function ($invite) use ($author_user, $channel) {
-							$url = 'https://discord.gg/' . $invite->code;
-							$author_user->sendMessage("Invite URL: $url");
-							$channel->sendMessage("Invite URL: $url");
-						});
-					}
+			$discord->guilds->save($guild_temp)->then( //Fails
+				function ($new_guild) use ($author_user){
+					$new_guild->channels->freshen()->then(
+						function () use ($author_user, $channel, $new_guild){
+							foreach($new_guild->channels as $channel_new){
+								$channel_new->createInvite([
+									'max_age' => 60, // 1 minute
+									'max_uses' => 5, // 5 uses
+								])->then(
+									function ($invite) use ($author_user, $channel) {
+										$url = 'https://discord.gg/' . $invite->code;
+										$author_user->sendMessage("Invite URL: $url");
+										$channel->sendMessage("Invite URL: $url");
+									},
+									function ($error){
+										ob_flush();
+										ob_start();
+										var_dump($error);
+										file_put_contents("error_invite.txt", ob_get_flush());
+									}
+								);
+							}
+						},
+						function ($error){
+							ob_flush();
+							ob_start();
+							var_dump($error);
+							file_put_contents("error_guild_create_2.txt", ob_get_flush());
+						}
+					);
+				},
+				function ($error){
+					ob_flush();
+					ob_start();
+					var_dump($error);
+					file_put_contents("error_guild_create_1.txt", ob_get_flush());
 				}
 			);
 		}
