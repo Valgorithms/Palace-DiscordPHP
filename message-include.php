@@ -3300,7 +3300,7 @@ if(!$called) return;
 				}
 			);
 		}		
-		if ($message_content_lower == 'debug guild create'){ //;debug guild create
+		if (str_starts_with($message_content_lower, 'debug guild create')) { //;debug guild create
 			return; //Only works for bots that are in less than 10 guilds
 			echo '[DEBUG GUILD CREATE]' . PHP_EOL;
 			/*
