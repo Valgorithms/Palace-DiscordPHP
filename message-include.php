@@ -5168,14 +5168,11 @@ if(!$called) return;
         $value = str_replace($filter, "", $message_content_lower);
         $value = str_replace("<@!", "", $value);
         $value = str_replace("<@", "", $value);
-        $value = str_replace("<@", "", $value);
         $value = str_replace(">", "", $value);
-        echo 'value: ' . $value . PHP_EOL;
-		$arr = explode(' ', $value);
-		$value = $arr[0];
-        if (is_numeric($value)) {
-			if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
-            $mention_member				= $author_guild->members->get('id', $value);
+		$arr = explode(' ', $value); //[mention_id, index]
+        if (is_numeric($arr[0])) {
+			if (!preg_match('/^[0-9]{16,18}$/', $arr[0])) return $message->react('❌');
+            $mention_member				= $author_guild->members->get('id', $arr[0]);
             $mention_user				= $mention_member->user;
             $mentions_arr				= array($mention_user);
         } else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
@@ -5194,26 +5191,22 @@ if(!$called) return;
                 
     //			Get infraction info in target's folder
                 $infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php");
-                $substr = $arr[1]; 
-                //			Check if $substr is a number
-                if (($substr != "") && (is_numeric(intval($substr)))) {
-                    //				Remove array element and reindex
-                    //array_splice($infractions, $substr, 1);
-                    if (isset($infractions[$substr])) {
-                        $infractions[$substr] = "Infraction removed by $author_check on " . date("m/d/Y"); // for arrays where key equals offset
-                        //					Save the new infraction log
-                        VarSave($guild_folder."/".$mention_id, "infractions.php", $infractions);
-                        
-                        //					Send a message
+                //Check if $$arr[1] is a number
+                if (isset($arr[1]) && (is_numeric(intval($arr[1])))) {
+                    //Remove array element and reindex
+                    if (isset($infractions[$arr[1]])) {
+                        $infractions[$arr[1]] = "Infraction removed by $author_check on " . date("m/d/Y"); // for arrays where key equals offset
+                        VarSave($guild_folder."/".$mention_id, "infractions.php", $infractions);//Save the new infraction log 
+                        //Send a message
                         if ($react) $message->react("👍");
-                        return $message->reply("Infraction $substr removed from $mention_check!");
+                        return $message->reply("Infraction `".$arr[1]."` removed from $mention_check!");
                     } else {
                         if ($react) $message->react("👎");
-                        return $message->reply("Infraction '$substr' not found!");
+                        return $message->reply("Infraction '".$arr[1]."' not found!");
                     }
                 } else {
                     if ($react) $message->react("👎");
-                    return $message->reply("'$substr' is not a number");
+                    return $message->reply("'".$arr[1]."' is not a number");
                 }
             }
             $x++;
