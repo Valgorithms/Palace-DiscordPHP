@@ -125,7 +125,7 @@ if (!$is_dm) { //Guild message
             $message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
         } else {
             $author_channel->sendMessage("<@$guild_owner_id>, I'm here! Please ;setup the bot." . PHP_EOL . "While interacting with this bot, any conversations made through direct mention of the bot name are stored anonymously in a secure database. Avatars, IDs, Names, or any other unique user identifier is not stored with these messages. Through continuing to use this bot, you agree to allow it to track user information to support its functions and for debugging purposes. Your message data will never be used for anything more. If you wish to have any associated information removed, please contact Valithor#5937.");
-            $author_channel->sendMessage("(Maintenance is currently ongoing and many commands are currently not working. We are aware of the issue and working on a fix.)");
+            //$author_channel->sendMessage("(Maintenance is currently ongoing and many commands are currently not working. We are aware of the issue and working on a fix.)");
         }
     }
     
@@ -486,7 +486,7 @@ if(!$called) return;
                 $documentation = $documentation . "`setup welcome #channel` Simple welcome message tagging new user\n";
                 $documentation = $documentation . "`setup welcomelog #channel` Detailed message about the user\n";
                 $documentation = $documentation . "`setup log #channel` Detailed log channel\n"; //Modlog
-                $documentation = $documentation . "`setup verify channel #channel` Detailed log channel\n";
+                $documentation = $documentation . "`setup verify channel #channel` Where users get verified\n";
                 $documentation = $documentation . "`setup watch #channel` ;watch messages are duplicated here instead of in a DM\n";
                 /* Deprecated
                 $documentation = $documentation . "`setup rolepicker channel #channel` Where users pick a role\n";
@@ -1360,7 +1360,7 @@ if(!$called) return;
             $value = trim($value);
             if (is_numeric($value)) {
                 VarSave($guild_folder, "getverified_channel_id.php", $value);
-                return message->reply("Verify channel ID saved!");
+                return $message->reply("Verify channel ID saved!");
             } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
         if (str_starts_with($message_content_lower, 'setup verifylog ')) {
@@ -3597,7 +3597,11 @@ if(!$called) return;
 					if(!is_null($role->id)) $has_role = true;
 				if (!$has_role){
 					$string = $string . '<@'.$target_member->id.'> ';
-					$target_member->addRole("469312086766518272");
+					if ($author_guild->id == "468979034571931648"){ //Civ13
+						$target_member->addRole("469312086766518272");
+					}else if($author_guild->id == "807759102624792576"){ //World
+						//$target_member->addRole("469312086766518272"); //This server is hopefully not the big dumb and doesn't have a "Peasent" role
+					}
 				}
 			}
 			if($string) $message->channel->sendMessage($string);
@@ -3643,41 +3647,72 @@ if(!$called) return;
         if ($message_content_lower == 'get unverified') { //;get unverified
             echo "[GET UNVERIFIED START]" . PHP_EOL;
             $GLOBALS["UNVERIFIED"] = null;
-
-            $author_guild->members->freshen()->done(
-				function ($members) use ($message, $author_guild){
-					//$members = $fetched_guild->members->all(); //array
-					foreach ($members as $target_member) { //GuildMember
-						$target_skip = false;
-						//get roles of member
-						$target_guildmember_role_collection = $target_member->roles;
-						foreach ($target_guildmember_role_collection as $role) {
-							if ($role->name == "Peasant") {
-								$target_get = true;
+			if($author_guild->id == '468979034571931648'){
+				$author_guild->members->freshen()->done(
+					function ($members) use ($message, $author_guild){
+						//$members = $fetched_guild->members->all(); //array
+						foreach ($members as $target_member) { //GuildMember
+							$target_skip = false;
+							//get roles of member
+							$target_guildmember_role_collection = $target_member->roles;
+							foreach ($target_guildmember_role_collection as $role) {
+								if ($role->name == "Peasant") {
+									$target_get = true;
+								}
+								if ($role->name == "Footman") {
+									$target_skip = true;
+								}
+								if ($role->name == "Brother At Arms") {
+									$target_skip = true;
+								}
+								if ($role->name == "Bots") {
+									$target_skip = true;
+								}
+								if ($role->name == "BANNED") {
+									$target_skip = true;
+								}
 							}
-							if ($role->name == "Footman") {
-								$target_skip = true;
-							}
-							if ($role->name == "Brother At Arms") {
-								$target_skip = true;
-							}
-							if ($role->name == "Bots") {
-								$target_skip = true;
-							}
-							if ($role->name == "BANNED") {
-								$target_skip = true;
+							if (!$target_skip && $target_get) {
+								$mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
+								$GLOBALS["UNVERIFIED"][] = $mention_id;
 							}
 						}
-						if (!$target_skip && $target_get) {
-							$mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
-							$GLOBALS["UNVERIFIED"][] = $mention_id;
-						}
+						$message->react("👍");
+						echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 					}
-					$message->react("👍");
-					echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
-					echo "[GET UNVERIFIED DONE]" . PHP_EOL;
-				}
-            );
+				);
+			}else
+			if($author_guild->id == '807759102624792576'){
+				$author_guild->members->freshen()->done(
+					function ($members) use ($message, $author_guild){
+						//$members = $fetched_guild->members->all(); //array
+						foreach ($members as $target_member) { //GuildMember
+							$target_skip = false;
+							//get roles of member
+							$target_guildmember_role_collection = $target_member->roles;
+							foreach ($target_guildmember_role_collection as $role) {
+								if ($role->name == "Verified") {
+									$target_get = true;
+								}
+								if ($role->name == "Promoted") {
+									$target_skip = true;
+								}
+								if ($role->name == "Banned") {
+									$target_skip = true;
+								}
+							}
+							if (!$target_skip && $target_get) {
+								$mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
+								$GLOBALS["UNVERIFIED"][] = $mention_id;
+							}
+						}
+						$message->react("👍");
+						echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
+					}
+				);
+			}
 			return;
         }
         if ($message_content_lower == 'purge unverified') { //;purge unverified
