@@ -1644,9 +1644,9 @@ if(!$called) return;
             $documentation = $documentation . "`vw` or `vwatch` gives the verified role to the mentioned and watches them\n";
             if (!$role_verified_id) $documentation = $documentation . "~~";
             //warn
-            $documentation = $documentation . "`warn` logs an infraction\n";
+            $documentation = $documentation . "`warn @mention reason` logs an infraction\n";
             //infractions
-            $documentation = $documentation . "`infractions` replies with a list of infractions for someone\n";
+            $documentation = $documentation . "`infractions @mention` replies with a list of infractions for someone\n";
             //removeinfraction
             $documentation = $documentation . "`removeinfraction @mention #`\n";
             //kick
@@ -5162,17 +5162,17 @@ if(!$called) return;
 	if ($user_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions @mention #
         echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
         //	Get an array of people mentioned
-        $mentions_arr 													= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
-        
-        
+        $mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+
         $filter = "removeinfraction ";
         $value = str_replace($filter, "", $message_content_lower);
         $value = str_replace("<@!", "", $value);
         $value = str_replace("<@", "", $value);
         $value = str_replace("<@", "", $value);
         $value = str_replace(">", "", $value);
-        
-            
+        echo 'value: ' . $value . PHP_EOL;
+		$arr = explode(' ', $value);
+		$value = $arr[0];
         if (is_numeric($value)) {
 			if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
             $mention_member				= $author_guild->members->get('id', $value);
@@ -5194,13 +5194,7 @@ if(!$called) return;
                 
     //			Get infraction info in target's folder
                 $infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php");
-                $proper = "removeinfraction <@!$mention_id> ";
-                $strlen = strlen("removeinfraction <@!$mention_id> ");
-                $substr = substr($message_content_lower, $strlen);
-                
-                //			Check that message is formatted properly
-                if ($proper != substr($message_content_lower, 0, $strlen)) return $message->reply("Please format your command properly: " . $command_symbol . "warn @mention number");
-                
+                $substr = $arr[1]; 
                 //			Check if $substr is a number
                 if (($substr != "") && (is_numeric(intval($substr)))) {
                     //				Remove array element and reindex
