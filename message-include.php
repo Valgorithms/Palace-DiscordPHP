@@ -2137,9 +2137,7 @@ if(!$called) return;
                         $valid = true;
                     }
                 }
-                if (!$valid) {
-                    return $message->reply("Invalid input! Please enter an integer number");
-                }
+                if (!$valid) return $message->reply("Invalid input! Please enter an integer number");
                 foreach ($nums as $num) {
                     //Get the message stored at the index
                     if (!$array = VarLoad($guild_folder, "guild_suggestions.php")) return;
