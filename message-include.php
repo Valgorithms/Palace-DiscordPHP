@@ -34,7 +34,7 @@ if (isset($author) && is_object($author) && get_class($author) == "Discord\Parts
 } else {
     $author_user = $author;
 }
-if (isset($author_member)) $user_perms = $member->getPermissions($message->channel); //Populate permissions granted by roles
+if (isset($author_member)) $user_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
 
 $author_channel 												= $message->channel;
 $author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
