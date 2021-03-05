@@ -239,475 +239,474 @@ if ($rp0) {
         //Process the reaction to add a role
         $select_name = "";
         switch ($message_id) {
-		case ($gameroles_message_id):
-            if ($gamerole) { //Will eventually contain many games, so server owner should decide if they want it enabled
-                echo "game role reaction" . PHP_EOL;
-                foreach ($gameroles as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 3066993,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 0x000ead,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($pronouns as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-        case ($species_message_id):
-            if ($rp1) {
-                echo "species reaction" . PHP_EOL;
-                foreach ($species as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        echo "select_name: " . $select_name . PHP_EOL;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                    'name' => ucfirst($select_name),
-                                    'permissions' => 0,
-                                    'color' => 15158332,
-                                    'hoist' => false,
-                                    'mentionable' => false
-                                ]
-                            );
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 15158332,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                        //Messages can have a max of 20 different reacts, but species has more than 20 options
-                        //Clear reactions to avoid discord ratelimit
-                        //$message->clearReactions();
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($species as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-        case ($species2_message_id):
-            if ($rp1) {
-                echo "species2 reaction" . PHP_EOL;
-                foreach ($species2 as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        echo "select_name: " . $select_name . PHP_EOL;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 15158332,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                            'name' => ucfirst($select_name),
-                            'permissions' => 0,
-                            'color' => 15158332,
-                            'hoist' => false,
-                            'mentionable' => false
-                            ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                        //Messages can have a max of 20 different reacts, but species has more than 20 options
-                        //Clear reactions to avoid discord ratelimit
-                        //$message->clearReactions();
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($species2 as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-        case ($species3_message_id):
-            if ($rp1) {
-                echo "species3 reaction" . PHP_EOL;
-                foreach ($species3 as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        echo "select_name: " . $select_name . PHP_EOL;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 15158332,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 15158332,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                        //Messages can have a max of 20 different reacts, but species has more than 20 options
-                        //Clear reactions to avoid discord ratelimit
-                        //$message->clearReactions();
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($species3 as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-        case ($sexuality_message_id):
-            if ($rp2) {
-                echo "sexuality reaction" . PHP_EOL;
-                foreach ($sexualities as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 7419530,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 0x992d22,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                    }
-                }
-                /*foreach ($sexualities as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-        case ($gender_message_id):
-            if ($rp3) {
-                echo "gender reaction" . PHP_EOL;
-                foreach ($gender as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 3066993,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 0x713678,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($gender as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-		case ($pronouns_message_id):
-            if ($rp5) {
-                echo "pronouns reaction" . PHP_EOL;
-                foreach ($pronouns as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 3066993,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 0x9b59b6,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($pronouns as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-		case ($channelroles_message_id):
-            if ($channeloption) {
-                echo "channel role reaction" . PHP_EOL;
-                foreach ($channelroles as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 3066993,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 0x1abc9c,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($pronouns as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-        case ($customroles_message_id):
-            if ($rp4) {
-                echo "Custom roles reaction" . PHP_EOL;
-                //echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
-                foreach ($customroles as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        echo "select_name: $select_name" . PHP_EOL;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            /*
-                            $new_role = array(
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 3066993,
-                                'hoist' => false,
-                                'mentionable' => false
-                            );
-                            */
-                            
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 0x1abc9c,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($customroles as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-            break;
-		case ($nsfw_message_id):
-			if ($nsfw) {
-                echo "NSFW roles reaction" . PHP_EOL;
-                //echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
-                foreach ($nsfwroles as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        echo "select_name: $select_name" . PHP_EOL;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 0xff0000,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($nsfwroles as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-			break;
-		case ($nsfwsubrole_message_id):
-			if ($nsfw) {
-                echo "NSFW subroles reaction" . PHP_EOL;
-                //echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
-                foreach ($nsfwsubroles as $var_name => $value) {
-                    if (($value == $emoji_name) || ($value == $emoji_name)) {
-                        $select_name = $var_name;
-                        echo "select_name: $select_name" . PHP_EOL;
-                        if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                            //Create the role
-                            $new_role = $discord->factory(
-                                Discord\Parts\Guild\Role::class,
-                                [
-                                'name' => ucfirst($select_name),
-                                'permissions' => 0,
-                                'color' => 0xff0000,
-                                'hoist' => false,
-                                'mentionable' => false
-                                ]
-                            );
-                            $author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-                                //echo '[ROLECREATE SUCCEED]' . PHP_EOL;
-                            }, static function ($error) {
-                                echo $e->getMessage() . PHP_EOL;
-                            });
-                            echo "[ROLE $select_name CREATED]" . PHP_EOL;
-                        }
-                    }
-                }
-                //$message->clearReactions();
-                /*foreach ($nsfwsubroles as $var_name => $value){
-                    //$message->react($value);
-                }*/
-            }
-			break;
-			
-    }
-        if ($select_name != "") { //A reaction role was found
+			case ($gameroles_message_id):
+				if ($gamerole) { //Will eventually contain many games, so server owner should decide if they want it enabled
+					echo "game role reaction" . PHP_EOL;
+					foreach ($gameroles as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 3066993,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 0x000ead,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($pronouns as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($species_message_id):
+				if ($rp1) {
+					echo "species reaction" . PHP_EOL;
+					foreach ($species as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							echo "select_name: " . $select_name . PHP_EOL;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+										'name' => ucfirst($select_name),
+										'permissions' => 0,
+										'color' => 15158332,
+										'hoist' => false,
+										'mentionable' => false
+									]
+								);
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 15158332,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+							//Messages can have a max of 20 different reacts, but species has more than 20 options
+							//Clear reactions to avoid discord ratelimit
+							//$message->clearReactions();
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($species as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($species2_message_id):
+				if ($rp1) {
+					echo "species2 reaction" . PHP_EOL;
+					foreach ($species2 as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							echo "select_name: " . $select_name . PHP_EOL;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 15158332,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+								'name' => ucfirst($select_name),
+								'permissions' => 0,
+								'color' => 15158332,
+								'hoist' => false,
+								'mentionable' => false
+								]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+							//Messages can have a max of 20 different reacts, but species has more than 20 options
+							//Clear reactions to avoid discord ratelimit
+							//$message->clearReactions();
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($species2 as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($species3_message_id):
+				if ($rp1) {
+					echo "species3 reaction" . PHP_EOL;
+					foreach ($species3 as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							echo "select_name: " . $select_name . PHP_EOL;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 15158332,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 15158332,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+							//Messages can have a max of 20 different reacts, but species has more than 20 options
+							//Clear reactions to avoid discord ratelimit
+							//$message->clearReactions();
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($species3 as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($sexuality_message_id):
+				if ($rp2) {
+					echo "sexuality reaction" . PHP_EOL;
+					foreach ($sexualities as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 7419530,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 0x992d22,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+						}
+					}
+					/*foreach ($sexualities as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($gender_message_id):
+				if ($rp3) {
+					echo "gender reaction" . PHP_EOL;
+					foreach ($gender as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 3066993,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 0x713678,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($gender as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($pronouns_message_id):
+				if ($rp5) {
+					echo "pronouns reaction" . PHP_EOL;
+					foreach ($pronouns as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 3066993,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 0x9b59b6,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($pronouns as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($channelroles_message_id):
+				if ($channeloption) {
+					echo "channel role reaction" . PHP_EOL;
+					foreach ($channelroles as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 3066993,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 0x1abc9c,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($pronouns as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($customroles_message_id):
+				if ($rp4) {
+					echo "Custom roles reaction" . PHP_EOL;
+					//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
+					foreach ($customroles as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							echo "select_name: $select_name" . PHP_EOL;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								/*
+								$new_role = array(
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 3066993,
+									'hoist' => false,
+									'mentionable' => false
+								);
+								*/
+								
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 0x1abc9c,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($customroles as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($nsfw_message_id):
+				if ($nsfw) {
+					echo "NSFW roles reaction" . PHP_EOL;
+					//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
+					foreach ($nsfwroles as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							echo "select_name: $select_name" . PHP_EOL;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 0xff0000,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($nsfwroles as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+			case ($nsfwsubrole_message_id):
+				if ($nsfw) {
+					echo "NSFW subroles reaction" . PHP_EOL;
+					//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
+					foreach ($nsfwsubroles as $var_name => $value) {
+						if (($value == $emoji_name) || ($value == $emoji_name)) {
+							$select_name = $var_name;
+							echo "select_name: $select_name" . PHP_EOL;
+							if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+								//Create the role
+								$new_role = $discord->factory(
+									Discord\Parts\Guild\Role::class,
+									[
+									'name' => ucfirst($select_name),
+									'permissions' => 0,
+									'color' => 0xff0000,
+									'hoist' => false,
+									'mentionable' => false
+									]
+								);
+								$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
+									//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+								}, static function ($error) {
+									echo $e->getMessage() . PHP_EOL;
+								});
+								echo "[ROLE $select_name CREATED]" . PHP_EOL;
+							}
+						}
+					}
+					//$message->clearReactions();
+					/*foreach ($nsfwsubroles as $var_name => $value){
+						//$message->react($value);
+					}*/
+				}
+				break;
+		}
+        if ($select_name) { //A reaction role was found
             //Check if the member has a role of the same name
             if (in_array(strtolower($select_name), $respondent_member_roles_names)) {
                 //Remove the role
@@ -718,15 +717,13 @@ if ($rp0) {
                 echo "Role removed: $select_name" . PHP_EOL;
             } else {
                 //echo "Respondent does not already have the role" . PHP_EOL;
-            if (in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-                //Add the role
-                $role_index = array_search(strtolower($select_name), $guild_roles_names);
-                $target_role_id = $guild_roles_ids[$role_index];
-                if ($respondent_member->id != $discord->id) $respondent_member->addRole($guild_roles_role[$target_role_id]); // $target_role_id);
-                echo "Role added: $select_name" . PHP_EOL;
-            } else {
-                echo "Guild does not have this role" . PHP_EOL;
-            }
+				if (in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
+					//Add the role
+					$role_index = array_search(strtolower($select_name), $guild_roles_names);
+					$target_role_id = $guild_roles_ids[$role_index];
+					if ($respondent_member->id != $discord->id) $respondent_member->addRole($guild_roles_role[$target_role_id]); // $target_role_id);
+					echo "Role added: $select_name" . PHP_EOL;
+				} else echo "Guild does not have this role" . PHP_EOL;
             }
         }
     }
