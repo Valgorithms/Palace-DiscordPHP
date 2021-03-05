@@ -23,11 +23,18 @@ include "constants.php"; //Redeclare $now every time
 /*
 *********************
 *********************
-/* Load author data from message
-/* $author, $author_user, $author_member, and $user_perms are defined in author_perm.php
+// Load author data from message
 *********************
 *********************
 */
+$author	= $message->author; //Member OR User object
+if (isset($author) && is_object($author) && get_class($author) == "Discord\Parts\User\Member") {
+    $author_user = $author->user;
+    $author_member = $author;
+} else {
+    $author_user = $author;
+}
+if (isset($author_member)) $user_perms = $member->getPermissions($message->channel); //Populate permissions granted by roles
 
 $author_channel 												= $message->channel;
 $author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
