@@ -244,7 +244,39 @@ if ($author_webhook) return; //Don't process webhooks
 if ($author_user->bot) return; //Don't process bots
 
 /*
+*********************
+*********************
+Twitch Chat Integration
+*********************
+*********************
+*/
 
+if ($twitch){ //Passed down into the event from run.php
+	if($twitch_discord_output = $twitch->getDiscordOutput()){
+	
+		if ( //These values can be null, but we only want to do this if they are valid strings
+			($twitch_guild_id = $twitch->getGuildId())
+			&&
+			($twitch_channel_id = $twitch->getChannelId())
+		)
+		{
+			if ($message->id != $discord->id) //Don't output messages sent by this bot (or any other bot, really)
+			{
+				if ( //Only process if the message was sent in the designated channel
+					($twitch_guild_id == $author_guild_id)
+					&&
+					($twitch_channel_id = $author_channel_id)
+				)
+				{
+					$msg = '[DISCORD] ' . $author_user->username . ': ' . $message->content;
+					$twitch->sendMessage($msg);
+				}
+			}
+		}
+	}
+}
+
+/*
 *********************
 *********************
 Load persistent variables for author
@@ -298,9 +330,7 @@ Guild-specific variables
 
 
 include 'CHANGEME.php';
-if ($author_id == $creator_id) {
-    $creator = true;
-}
+if ($author_id == $creator_id) $creator = true;
 
 //echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 //$adult 		= false; //This role current serves no purpose
@@ -1774,8 +1804,6 @@ if(!$called) return;
         }
     }
 
-
-
     /*
     *********************
     *********************
@@ -1783,6 +1811,7 @@ if(!$called) return;
     *********************
     *********************
     */
+
 
 
     /*

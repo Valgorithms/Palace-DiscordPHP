@@ -390,7 +390,7 @@ try {
         }
     });
 
-    $discord->once('ready', function ($discord) use ($loop, $token, $restcord, $stats) {	// Listen for events here
+    $discord->once('ready', function ($discord) use ($loop, $token, $restcord, $stats, $twitch) {	// Listen for events here
         //$line_count = COUNT(FILE(basename($_SERVER['PHP_SELF']))); //No longer relevant due to includes
         //$version = "RC V1.4.1";
         /*
@@ -424,7 +424,7 @@ try {
 		]);
 		$discord->updatePresence($act, false, 'online');
 		
-        $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord, $stats) { //Handling of a message
+        $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord, $stats, $twitch) { //Handling of a message
             include "message-include.php";
         });
             
