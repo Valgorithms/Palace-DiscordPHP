@@ -268,7 +268,30 @@ if ($twitch){ //Passed down into the event from run.php
 					($twitch_channel_id = $author_channel_id)
 				)
 				{
-					$msg = '[DISCORD] ' . $author_user->username . ': ' . $message->content;
+					$content = $message->content;
+					//search the message for anything containing a discord snowflake in the format of either <@id> or <@!id> and replace it with @username
+					preg_match_all('/<@([0-9]*)>/', $message->content, $matches1);
+					preg_match_all('/<@!([0-9]*)>/', $message->content, $matches2);
+					$matches = array_merge($matches1, $matches2);
+					if($matches){
+						foreach($matches as $array){
+							foreach ($array as $match){
+								if(is_numeric($match)){
+									if ($user = $discord->users->offsetGet($match)){
+										$username = $user->username;
+										$content = str_replace($match, '@'.$username, $content);
+									}
+								}
+							}
+						}
+						$filter = "<@!";
+						$content = str_replace($filter, "", $content);
+						$filter = "<@";
+						$content = str_replace($filter, "", $content);
+						$filter = ">";
+						$content = str_replace($filter, "", $content);
+					}
+					$msg = '[DISCORD] ' . $author_user->username . ': ' . $content;
 					$twitch->sendMessage($msg);
 				}
 			}
