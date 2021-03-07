@@ -94,7 +94,7 @@ $options = array(
 	'guild_id' => '116927365652807686', //ID of the Discord server
 	'channel_id' => '431415282129698866', //ID of the Discord channel to output messages to
 	
-	//'loop' => $loop, // Pass your own instance of $loop to share with other ReactPHP applications
+	'loop' => $loop, // Pass your own instance of $loop to share with other ReactPHP applications
 	'socket_options' => [
         'dns' => '8.8.8.8', // Can change DNS provider
 	],
@@ -568,7 +568,7 @@ try {
         }
         //die();
     });
-    
+    $twitch->run();
     $discord->run();
 } catch (Throwable $e) { //Restart the bo
     echo "Captured Throwable: " . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine(). PHP_EOL;
