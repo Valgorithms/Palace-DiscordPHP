@@ -277,10 +277,12 @@ if ($twitch){ //Passed down into the event from run.php
 						foreach($matches as $array){
 							foreach ($array as $match){
 								if(is_numeric($match)){
-									if ($user = $discord->users->offsetGet($match)){
+									if ($user = $discord->users->offsetGet($match))
 										$username = $user->username;
-										$content = str_replace($match, '@'.$username, $content);
-									}
+									if (($member = $author_guild->members->offsetGet($match)) && $member->nick)
+										$nickname = $member->nick;
+									if ($nickname || $username)
+										$content = str_replace($match, '@'.($nickname ?? $username), $content);
 								}
 							}
 						}
