@@ -86,7 +86,7 @@ $options = array(
 	//Required
 	'secret' => $secret, // Client secret
 	'nick' => 'ValZarGaming', // Twitch username
-	'channel' => [
+	'channels' => [
 		'daathren', // Channel to join
 		'valzargaming', // (Optional) Additional channels
 	],
@@ -127,6 +127,7 @@ $options = array(
 	'private_functions' => [ // Enabled functions usable only by the bot owner sharing the same username as the bot
 		'php', //Outputs the current version of PHP as a message
 		'join', //Joins another user's channel
+		'leave', //Leave the current user's channel
 	],
 );
 //include 'commands.php';
