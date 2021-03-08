@@ -289,7 +289,7 @@ if ($twitch){ //Passed down into the event from run.php
 						$filter = "<@";
 						$content = str_replace($filter, "", $content);
 						$filter = ">";
-						$content = str_replace($filter, "", $content);
+						//$content = str_replace($filter, "", $content); //I kinda like this as a reply symbol, also prevents smiley faces like :> from being filtered
 					}
 					$msg = '[DISCORD] ' . $author_user->username . ': ' . $content;
 					if(str_starts_with($message_content_lower, '#')){ //Send message only to designated channel
