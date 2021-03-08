@@ -86,7 +86,10 @@ $options = array(
 	//Required
 	'secret' => $secret, // Client secret
 	'nick' => 'ValZarGaming', // Twitch username
-	'channel' => 'daathren', // Channel to join
+	'channel' => [
+		'daathren', // Channel to join
+		'valzargaming', // (Optional) Additional channels
+	],
 	
 	//Optional
 	'discord' => $discord, // Pass your own instance of DiscordPHP (https://github.com/discord-php/DiscordPHP)	
@@ -98,7 +101,8 @@ $options = array(
 	'socket_options' => [
         'dns' => '8.8.8.8', // Can change DNS provider
 	],
-	'verbose' => false, // Additional output to console (useful for debugging)
+	'verbose' => true, // Additional output to console (useful for debugging)
+	'debug' => true, // Additional output to console (useful for debugging communications with Twitch)
 	
 	//Custom commands
 	'commandsymbol' => [ // Process commands if a message starts with a prefix in this array
@@ -122,6 +126,7 @@ $options = array(
 	],
 	'private_functions' => [ // Enabled functions usable only by the bot owner sharing the same username as the bot
 		'php', //Outputs the current version of PHP as a message
+		'join', //Joins another user's channel
 	],
 );
 //include 'commands.php';
