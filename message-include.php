@@ -3433,9 +3433,7 @@ if(!$called) return;
         if (str_starts_with($message_content_lower, 'mention')) { //;mention
             //Get an array of people mentioned
             $GetMentionResult = GetMention([&$author_guild, substr($message_content_lower, 8, strlen($message_content_lower)), null, 1, &$restcord]);
-            if (!$GetMentionResult) {
-                return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-            }
+            if (!$GetMentionResult) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
             
             $output_string = "Mentions IDs: ";
             $keys = array_keys($GetMentionResult);
@@ -3477,8 +3475,7 @@ if(!$called) return;
                 $author_dmchannel->sendEmbed($embed);
             });
             */
-            $author_channel->sendEmbed($embed);
-            return;
+            return $author_channel->sendEmbed($embed);
         }
         if ($message_content_lower == 'promote') { //;promote
             $author_member->addRole($role_dev_id)->done(
@@ -3534,9 +3531,7 @@ if(!$called) return;
                 $discord->getLoop()->addTimer($value, function () use ($author_channel) {
                     return $author_channel->sendMessage("Timer");
                 });
-            } else {
-                return $message->reply("Invalid input! Please enter a valid number");
-            }
+            } else return $message->reply("Invalid input! Please enter a valid number");
             return;
         }
         if (str_starts_with($message_content_lower, 'resolveid ')) { //;timer
@@ -3640,10 +3635,9 @@ if(!$called) return;
 							}
 						}
 					}
-					$message->react("👍");
 					echo count($GLOBALS["UNREGISTERED"]) . " UNREGISTERED ACCOUNTS" . PHP_EOL;
 					echo "[GET UNREGISTERED DONE]" . PHP_EOL;
-					return;
+					return $message->react("👍");
 				}
 			);
 		}
@@ -3829,8 +3823,7 @@ if(!$called) return;
                 $ch = curl_init(); //create curl resource
                 curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/serverstate.txt"); // set url
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
-                $message->reply(curl_exec($ch));
-                return;
+                return $message->reply(curl_exec($ch));
                 break;
         }
 		/*VMWare
@@ -4982,9 +4975,7 @@ if(!$called) return;
         $mentions_arr 	= $message->mentions; //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
         
         $GetMentionResult = GetMention([&$author_guild,  substr($message_content_lower, 6, strlen($message_content_lower)), null, 1, &$restcord]);
-        if (!$GetMentionResult) {
-            return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-        }
+        if (!$GetMentionResult) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
         $mention_id_array = array();
         $reason_text = null;
         $keys = array_keys($GetMentionResult);
