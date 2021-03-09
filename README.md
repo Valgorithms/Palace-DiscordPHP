@@ -2,7 +2,7 @@
 
 Invite link: https://discord.com/oauth2/authorize?client_id=662093882795753482&scope=bot&permissions=8
 
-DisccordPHP Github: https://github.com/teamreflex/DiiscordPHP
+DiscordPHP Github: https://github.com/discord-php/DiscordPHP
 
 Bot help: https://discord.gg/nQ5HxbkyyD / https://discord.gg/vNntRSe
 
