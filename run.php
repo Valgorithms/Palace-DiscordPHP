@@ -471,7 +471,9 @@ try {
         });
         
         $discord->on('MESSAGE_DELETE_BULK', function ($messages) use ($discord) { //Handling of multiple messages being deleted
-            echo "[messageDeleteBulk]" . PHP_EOL;
+            foreach ($messages as $message) {
+				include "messagedelete-include.php";
+			}
         });
         
         $discord->on('messageDeleteBulkRaw', function ($messages) use ($discord) { //Handling of multiple old/uncached messages being deleted

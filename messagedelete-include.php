@@ -24,10 +24,7 @@ if ((($message_content == null) || ($message_content == "")) && ($message_embeds
     $guild_config_path = __DIR__ . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
     include "$guild_config_path";
     
-    $modlog_channel = $guild->channels->get('id', $modlog_channel_id);
-    if ($modlog_channel) {
-        $modlog_channel->sendMessage($content);
-    }
+    if ($modlog_channel = $guild->channels->get('id', $modlog_channel_id)) $modlog_channel->sendMessage($content);
     return true;
 } //Don't process blank messages, bots, or webhooks
 $message_content_lower = strtolower($message_content);
