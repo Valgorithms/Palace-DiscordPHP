@@ -89,6 +89,7 @@ $options = array(
 	'channels' => [
 		'valzargaming', // Channel to join
 		'daathren', // (Optional) Additional channels
+		'z3tadragon',
 	],
 	
 	//Optional

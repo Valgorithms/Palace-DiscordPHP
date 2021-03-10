@@ -2,12 +2,19 @@
 $author_guild_id = $guildmember->guild->id;
 echo "guildMemberAdd ($author_guild_id)" . PHP_EOL;
 $user = $guildmember->user;
+if (isset($guildmember) && is_object($guildmember) && get_class($guildmember) == "Discord\Parts\User\Member") {
+    $guildmember = $guildmember;
+	$user = $guildmember->user;
+} else {
+    $author_user = $author;
+	$user = $guildmember;
+}
 
-$user_username 											= $user->username; 													//echo "author_username: " . $author_username . PHP_EOL;
-$user_id 												= $user->id;														//echo "new_user_id: " . $new_user_id . PHP_EOL;
-$user_discriminator 									= $user->discriminator;												//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-$user_avatar 											= $user->avatar;													//echo "author_id: " . $author_id . PHP_EOL;
-$user_check 											= "$user_username#$user_discriminator"; 							//echo "author_check: " . $author_check . PHP_EOL;\
+$user_username 											= $user->username;
+$user_id 												= $user->id;
+$user_discriminator 									= $user->discriminator;
+$user_avatar 											= $user->avatar;
+$user_check 											= "$user_username#$user_discriminator";
 $user_tag												= $user_check;
 $user_createdTimestamp									= $user->createdTimestamp();
 $user_createdTimestamp									= date("D M j H:i:s Y", $user_createdTimestamp);
@@ -17,19 +24,18 @@ $author_guild											= $guildmember->guild;
 $author_guild_id										= $guildmember->guild->id;
 $author_guild_name										= $guildmember->guild->name;
 
-if ($author_guild_id == "116927365652807686") {
+
+if ($author_guild_id == "116927365652807686") { //Only in ValZarGaming
     $minimum_time = strtotime("-30 days");
-    if ($user_createdTimestamp > $minimum_time) {
-        //Alert staff
-        $log_channel = $author_guild->channels->get('id', "333484030492409856");
-        if ($log_channel) {
+    if ($user_createdTimestamp && $user_createdTimestamp && ($user_createdTimestamp > $minimum_time)) {
+        if ($log_channel = $author_guild->channels->offsetGet('333484030492409856')) { //Alert staff
             $log_channel->sendMessage("<@$user_id> was banned because their discord account was newer than 30 days.");
         }
-        //Ban the new account
         $reason = "Your discord account is too new. Please contact <@116927250145869826> if you believe this ban is an error.";
         $guildmember->ban(1, $reason);
     }
 }
+
 
 //Load config variables for the guild
 $guild_folder = "\\guilds\\$author_guild_id";

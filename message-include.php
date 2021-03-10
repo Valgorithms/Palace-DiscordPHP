@@ -264,7 +264,7 @@ if ($twitch){ //Passed down into the event from run.php
 				if ( //Only process if the message was sent in the designated channel
 					($twitch_guild_id == $author_guild_id)
 					&&
-					($twitch_channel_id = $author_channel_id)
+					($twitch_channel_id == $author_channel_id)
 				){
 					$content = $message->content;
 					//search the message for anything containing a discord snowflake in the format of either <@id> or <@!id> and replace it with @username
@@ -1492,7 +1492,6 @@ if(!$called) return;
                 return $message->reply("Games Rolepicker channel ID saved!");
             } else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
         }
-        
 		if (str_starts_with($message_content_lower, 'setup games ')) {
             $filter = "setup games ";
             $value = str_replace($filter, "", $message_content_lower);
@@ -1849,7 +1848,11 @@ if(!$called) return;
     *********************
     */
 
-
+	if (str_starts_with($message_content_lower, 'join #')){ //;join #channel
+		$filter = 'join #';
+		$value = explode(' ', str_replace($filter, "", $message_content_lower));
+		$twitch->joinChannel($value[0]);
+	}
 
     /*
     *********************
