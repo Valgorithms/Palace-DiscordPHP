@@ -436,7 +436,7 @@ if ($owner) echo "[OWNER $author_guild_id/$author_id] " . PHP_EOL;
 if ($dev) echo "[DEV $author_guild_id/$author_id] " . PHP_EOL;
 if ($admin) echo "[ADMIN $author_guild_id/$author_id] " . PHP_EOL;
 if ($mod) echo "[MOD $author_guild_id/$author_id] " . PHP_EOL;
-echo PHP_EOL;
+//echo PHP_EOL;
 
 global $gameroles, $gameroles_message_text;
 global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
@@ -2332,8 +2332,7 @@ if(!$called) return;
             $message->reply("Your suggestion has been logged and is pending approval!")->done(function ($new_message) use ($discord, $message) {
                 $message->delete(); //Delete the original ;suggestion message
                 $discord->getLoop()->addTimer(10, function () use ($new_message) {
-                    $new_message->delete(); //Delete message confirming the suggestion was logged
-                    return;
+                    return $new_message->delete(); //Delete message confirming the suggestion was logged
                 });
                 return;
             });
@@ -3811,7 +3810,7 @@ if(!$called) return;
                         if ($target_id) {
                             echo "PURGING $target_id" . PHP_EOL;
                             $target_guild = $discord->guilds->get('id', $author_guild_id);
-							$target_member = $target_guild->members->get('id', $target_id); //echo "target_member: " . get_class($target_member) . PHP_EOL;
+							if($target_member = $target_guild->members->offsetGet($target_id)) //echo "target_member: " . get_class($target_member) . PHP_EOL;
 							$target_guild->members->kick($target_member); //$target_member->kick("unverified purge");
 							$GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
                             return;
