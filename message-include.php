@@ -2214,7 +2214,7 @@ if(!$called) return;
     }
 
     if ($suggestion_approved_channel != null) {
-        if ($creator || $owner || $dev || $admin || $mod) {
+        if ($creator || $owner || $dev || $admin || $mod || $author_perms['kick_members']) {
             if ( (str_starts_with($message_content_lower, 'suggestion approve ')) || (str_starts_with($message_content_lower, 'suggest approve ')) ) { //;suggestion
                 $filter = "suggestion approve ";
                 $value = str_replace($filter, "", $message_content_lower);
@@ -4453,7 +4453,7 @@ if(!$called) return;
 						return $author_channel->sendMessage("**Vote errored! ($yes_count:$no_count)**");
 						//$message->reply($msg);
 					});
-					return $message->react("👍")->done(function($result){
+					return $message->react("👍")->done(function($result) use ($message){
 						return $message->react("👎");
 					});
 				});
