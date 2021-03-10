@@ -37,7 +37,7 @@ include 'blacklisted_owners.php'; //Array of guild owner user IDs that are not a
 include 'blacklisted_guilds.php'; //Array of Guilds that are not allowed to use this bot
 include 'whitelisted_guilds.php'; //Only guilds in the $whitelisted_guilds array should be allowed to access the bot.
 
-require '../token.php';
+require __DIR__.'/../token.php';
 $logger = new Monolog\Logger('HTTPLogger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
 $loop = React\EventLoop\Factory::create();
@@ -51,7 +51,7 @@ $discord = new \Discord\Discord([
     'storeMessages' => true,
 	'httpLogger' => $logger
 ]);
-include 'stats.php';
+include 'stats_object.php';
 $stats = new Stats();
 $stats->init($discord);
 $restcord = null;//new DiscordClient(['token' => "{$token}"]); // Token is required
