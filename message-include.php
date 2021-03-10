@@ -1848,8 +1848,20 @@ if(!$called) return;
     *********************
     */
 
+	/*
+	*********************
+	*********************
+	Twitch Commands
+	*********************
+	*********************
+	*/
 	if (str_starts_with($message_content_lower, 'join #')){ //;join #channel
 		$filter = 'join #';
+		$value = explode(' ', str_replace($filter, "", $message_content_lower));
+		$twitch->joinChannel($value[0]);
+	}
+	if (str_starts_with($message_content_lower, 'leave #')){ //;leave #channel
+		$filter = 'leave #';
 		$value = explode(' ', str_replace($filter, "", $message_content_lower));
 		$twitch->joinChannel($value[0]);
 	}
