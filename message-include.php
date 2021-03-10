@@ -534,6 +534,11 @@ if(!$called) return;
 		}
 	}
     if ($creator || $owner || $dev) {
+		if ($author_guild_id == '807759102624792576'){
+			if (str_starts_with($message_content_lower, 'host world')) 
+				if($handle = popen("start ". 'cmd /c "'. 'D:\GitHub' . '\World - Pull-Compile-Kill-Copy-Host.bat"', "r"))
+					return $message->react("👍");
+		}
         switch ($message_content_lower) {
             case 'setup': //;setup
                 $documentation = $documentation . "`currentsetup` send DM with current settings\n";
