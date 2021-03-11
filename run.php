@@ -112,6 +112,7 @@ $options = array(
 	'whitelist' => [ // Users who are allowed to use restricted functions
 		'valzargaming',
 		'daathren',
+		'z3tadragon',
 	],
 	'social' => [ //NYI
 		'twitter' => 'https://twitter.com/daathren',
