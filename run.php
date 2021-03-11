@@ -127,13 +127,13 @@ $options = array(
 		'help', // Send a list of commands as a chat message
 	],
 	'restricted_functions' => [ // Enabled functions usable only by whitelisted users
-		'stop', //Kills the bot
 		'so', //Advertise someone else
 	],
 	'private_functions' => [ // Enabled functions usable only by the bot owner sharing the same username as the bot
 		'php', //Outputs the current version of PHP as a message
 		'join', //Joins another user's channel
 		'leave', //Leave the current user's channel
+		'stop', //Kills the bot
 	],
 );
 //include 'commands.php';
