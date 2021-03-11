@@ -114,13 +114,20 @@ $options = array(
 		'valzargaming',
 		'daathren',
 	],
+	'social' => [ //NYI
+		'twitter' => 'https://twitter.com/daathren',
+		'instagram' => 'https://www.instagram.com/daathren/',
+		'discord' => 'https://discord.gg/FhzXf8VK',
+		'tumblr' => 'https://daathren.tumblr.com/',
+	],
+	'tip' => [ //NYI
+		'paypal' => 'https://www.paypal.com/paypalme/daathren',
+		'cashapp' => '$DAAthren',
+	],
 	'responses' => [ // Whenever a message is sent matching a key and prefixed with a command symbol, reply with the defined value
 		'ping' => 'Pong!',
 		'github' => 'https://github.com/VZGCoders/TwitchPHP',
-		'discord' => 'https://discord.gg/yXJVTQNh9e',
 		'lurk' => 'You have said the magick word to make yourself invisible to all eyes upon you, allowing you to fade into the shadows.',
-		'social' => 'Come follow the magick through several dimensions:  Twitter - https://twitter.com/daathren |  Instagram - https://www.instagram.com/daathren/ |  Discord - https://discord.gg/FhzXf8VK |  Tumblr - https://daathren.tumblr.com/',
-		'tip' => 'Wanna help fund the magick?  PayPal - https://www.paypal.com/paypalme/daathren |  CashApp - $DAAthren',
 		'return' => 'You have rolled a Nat 1, clearing your invisibility buff from earlier. You might want to roll for initiative…',
 	],
 	'functions' => [ // Enabled functions usable by anyone
@@ -136,6 +143,11 @@ $options = array(
 		'stop', //Kills the bot
 	],
 );
+// Responses that reference other values in options should be declared afterwards
+$options['responses']['social'] = 'Come follow the magick through several dimensions:  Twitter - '.$options['social']['twitter'].' |  Instagram - '.$options['social']['instagram'].' |  Discord - '.$options['social']['discord'].' |  Tumblr - '.$options['social']['tumblr'];
+$options['responses']['tip'] = 'Wanna help fund the magick?  PayPal - '.$options['tip']['paypal'].' |  CashApp - '.$options['tip']['cashapp'];
+$options['responses']['discord'] = $options['social']['discord'];
+
 //include 'commands.php';
 //$options['commands'] => $commands; // Import your own Twitch/Commands object to add additional functions
 
@@ -566,15 +578,18 @@ try {
     });
 
     set_error_handler(function (int $number, string $message, string $filename, int $fileline) {
-        /*if ($message != "Undefined variable: suggestion_pending_channel") //Expected to be null
+        $warn = false;
+		
+		if ($message != "Undefined variable: suggestion_pending_channel") //Expected to be null
         if ($message != "Trying to access array offset on value of type null") //Expected to be null, part of ;validate*/
         $warn = false;
+		
         $skip_array = array();
         $skip_array[] = "Undefined variable";
         $skip_array[] = "Trying to access array offset on value of type null"; //Expected to be null, part of ;validate
         foreach ($skip_array as $value) {
-            if (strpos($value, $message) !== false) {
-                $warn = true;
+            if (strpos($value, $message) === false) {
+                $warn = false;
             }
         }
         if ($warn) {
