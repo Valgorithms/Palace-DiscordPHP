@@ -3840,7 +3840,7 @@ if(!$called) return;
                 $GLOBALS["UNVERIFIED_COUNT"] = count($GLOBALS["UNVERIFIED"]);
                 echo "UNVERIFIED_COUNT: " . $GLOBALS["UNVERIFIED_COUNT"] . PHP_EOL;
                 $GLOBALS["UNVERIFIED_X"] = 0;
-                $GLOBALS['UNVERIFIED_TIMER'] = $loop->addPeriodicTimer(5, function () use ($discord, $loop, $author_guild_id) {
+                $GLOBALS['UNVERIFIED_TIMER'] = $loop->addPeriodicTimer(3, function () use ($discord, $loop, $author_guild_id) {
                     //FIX THIS
                     if ($GLOBALS["UNVERIFIED_X"] < $GLOBALS["UNVERIFIED_COUNT"]) {
                         $target_id = $GLOBALS["UNVERIFIED"][$GLOBALS["UNVERIFIED_X"]]; //GuildMember
