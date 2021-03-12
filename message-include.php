@@ -3796,7 +3796,41 @@ if(!$called) return;
 						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 					}
 				);
+			}else
+			if($author_guild->id == '807759102624792576'){
+				$author_guild->members->freshen()->done(
+					function ($members) use ($message, $author_guild){
+						//$members = $fetched_guild->members->all(); //array
+						foreach ($members as $target_member) { //GuildMember
+							$target_skip = false;
+							//get roles of member
+							$target_guildmember_role_collection = $target_member->roles;
+							foreach ($target_guildmember_role_collection as $role) {
+								if ($role->name == "Verified") {
+									$target_get = true;
+								}
+								if ($role->name == "Promoted") {
+									$target_skip = true;
+								}
+								if ($role->name == "Banned") {
+									$target_skip = true;
+								}
+								if ($role->name == "Muted") {
+									$target_skip = true;
+								}
+							}
+							if (!$target_skip && $target_get) {
+								$mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
+								$GLOBALS["UNVERIFIED"][] = $mention_id;
+							}
+						}
+						$message->react("👍");
+						echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
+					}
+				);
 			}
+			
 			return;
         }
         if ($message_content_lower == 'purge unverified') { //;purge unverified
