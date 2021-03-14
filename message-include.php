@@ -447,7 +447,51 @@ global $nsfwroles, $nsfw_message_text;
 global $channelroles, $channelroles_message_text;
 global $customroles, $customroles_message_text;
 
-//Early break
+
+/*
+*********************
+*********************
+Automod Trigger
+*********************
+*********************
+*/
+if (CheckFile($guild_folder, "bad_full_words.php")){
+	$bad_full_words = VarLoad($guild_folder, "bad_full_words.php");
+}else{
+	$bad_full_words = array();
+	VarSave($guild_folder, "bad_full_words.php", $bad_full_words);
+}
+
+if($creator || $vzgbot || $bot || $owner || $dev || $admin || $mod || $muted || $author_perms['manage_guild'] || $author_perms['ban_members'] || $author_perms['kick_members']){
+	//Exempt
+}else{
+	foreach ($bad_full_words as $word){
+		//echo "[WORD] $word" . PHP_EOL;
+		if (str_contains($message_content_lower, ' ' . $word . ' ') || ($message_content_lower == $word)){ //Mute the offender
+			echo '[BAD WORD] $word' . PHP_EOL;
+			$removed_roles = array();
+			foreach ($author_member->roles as $role) {
+				$removed_roles[] = $role->id;
+			}
+			VarSave($guild_folder."/".$author_id, "removed_roles.php", $removed_roles);
+			//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
+			foreach ($removed_roles as $role_id)
+				$author_member->removeRole($role_id);
+			if ($role_muted_id) $author_member->addRole($role_muted_id);
+			return $message->react("🤐");
+		}
+	}
+}
+
+	
+/*
+*********************
+*********************
+Early Break
+*********************
+*********************
+*/
+
 $called = false;
 //Allow calling commands by @mention
 if(str_starts_with($message_content_lower,  "<@".$discord->id.">")) {
@@ -495,7 +539,7 @@ if(!$called) return;
 			if (str_starts_with($subcommand, 'rem')) $switch = 'rem';
 			if (str_starts_with($subcommand, 'remove')) $switch = 'remove';
 			if (str_starts_with($subcommand, 'list')) $switch = 'list';
-			if ($switch != null){
+			if ($switch){
 				$value = trim(str_replace($switch, "", $subcommand));
 				$filter = "<@";
 				$value = str_replace($filter, "", $value);
@@ -1387,7 +1431,7 @@ if(!$called) return;
             } else return $message->reply("Invalid input! Please enter an ID or @mention the role");
         }
         //Channels
-        if (str_starts_with($message_content_lower,  'setup general ')) {
+        if (str_starts_with($message_content_lower, 'setup general ')) {
             $filter = "setup general ";
             $value = str_replace($filter, "", $message_content_lower);
             $value = str_replace("<#", "", $value);
@@ -1845,6 +1889,58 @@ if(!$called) return;
         }
     }
 
+	/*
+    *********************
+    *********************
+    Automod Commands
+    *********************
+    *********************
+    */
+	
+	if($creator || $owner || $dev || $admin || $author_perms['manage_guild']){ //Allow high staff to edit the ban word list
+		if (str_starts_with($message_content_lower, 'automod')){ //;automod
+			$subcommand = trim(substr($message_content_lower, 7));
+			echo "[SUBCOMMAND $subcommand]" . PHP_EOL;
+			
+			$switch = null;
+			if (str_starts_with($subcommand, 'add')) $switch = 'add';
+			if (str_starts_with($subcommand, 'rem')) $switch = 'rem';
+			if (str_starts_with($subcommand, 'remove')) $switch = 'remove';
+			if (str_starts_with($subcommand, 'list')) $switch = 'list';
+			
+			if($switch){
+				$array = explode(' ', trim(str_replace($switch, "", $subcommand)));
+				echo "[ARRAY] "; var_dump($array); echo PHP_EOL; 
+				//return; //TODO
+				
+				if(!empty($array)){
+					foreach($array as $word){
+						if ($switch == 'add') //Add to banned words
+							if(!in_array($word, $bad_full_words)){
+								$bad_full_words[] = $word;
+								VarSave($guild_folder, "bad_full_words.php", $bad_full_words);
+							}else return $message->react("👎");
+						if (($switch == 'rem') || ($switch == 'remove')) //Remove from banned words
+							if(in_array($word, $bad_full_words)){ //Remove from whitelist (Rebuilds the array)
+								$pruned_bad_full_words_array = array();
+								foreach ($bad_full_words as $value)
+									if ($word != $value) $pruned_bad_full_words_array[] = $value;
+								VarSave($guild_folder, "bad_full_words.php", $pruned_bad_full_words_array);
+								
+							}else return $message->react("👎");
+					}
+				}
+				if ($switch == 'list'){ //Display all banned words
+					$string = "Banned words: ";
+					foreach ($bad_full_words as $bannedword)
+						$string .= "`$bannedword` ";
+					return $message->channel->sendMessage($string);
+				}
+				return $message->react("👍");
+			}
+		}
+	}
+	
     /*
     *********************
     *********************
@@ -4557,7 +4653,7 @@ if(!$called) return;
 						$target_avatar = $target_user->avatar;
 						return $message->reply("Discord ID is registered to $target_check (<@$value>");
 					},
-					function ($error) use ($messaage, $value){
+					function ($error) use ($message, $value){
 						return $message->reply("Unable to locate user for ID $value");
 					}
 				);
@@ -5355,7 +5451,6 @@ if(!$called) return;
             $mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
             $mention_check 											= $mention_username ."#".$mention_discriminator;
             
-            
             if ($author_id != $mention_id) { //Don't let anyone mute themselves
                 //Get the roles of the mentioned user
                 $target_guildmember 								= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
@@ -5372,24 +5467,13 @@ if(!$called) return;
                 $target_guildmember_roles_ids = array();
                 $removed_roles = array();
                 foreach ($target_guildmember_role_collection as $role) {
-                    
                         $removed_roles[] = $role->id;
-                        $target_guildmember_roles_ids[] 						= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-                        if ($role->id == $role_dev_id) {
-                            $target_dev 		= true;
-                        }							//Author has the dev role
-                        if ($role->id == $role_owner_id) {
-                            $target_owner	 	= true;
-                        }							//Author has the owner role
-                        if ($role->id == $role_admin_id) {
-                            $target_admin 		= true;
-                        }							//Author has the admin role
-                        if ($role->id == $role_mod_id) {
-                            $target_mod 		= true;
-                        }							//Author has the mod role
-                        if ($role->id == $role_vzgbot_id) {
-                            $target_vzgbot 		= true;
-                        }							//Author is this bot
+                        $target_guildmember_roles_ids[] = $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+                        if ($role->id == $role_dev_id) $target_dev = true; //Author has the dev role
+                        if ($role->id == $role_owner_id) $target_owner = true; //Author has the owner role
+                        if ($role->id == $role_admin_id) $target_admin = true; //Author has the admin role
+                        if ($role->id == $role_mod_id) $target_mod = true; //Author has the mod role
+                        if ($role->id == $role_vzgbot_id) $target_vzgbot = true; //Author is this bot
                     
                 }
                 if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Guild owner and bot creator can mute anyone
