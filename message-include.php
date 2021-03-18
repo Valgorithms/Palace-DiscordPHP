@@ -424,12 +424,15 @@ foreach ($author_member_roles as $role) {
 		$bot = true; //Author has the bot role
 	if ($role->id == $role_vzgbot_id)
 		$vzgbot = true; //Author is this bot
-	if ($role->id == $role_muted_id)
+	if ($role->id == $role_muted_id){
 		$muted = true; //Author is muted
+	}
 }
 if ($creator || $owner || $dev)
     $bypass = true; //Ignore spam restrictions
 //else $bypass = false;
+
+if ($muted) return; //Ignore commands by muted users
 
 if ($creator) echo "[CREATOR $author_guild_id/$author_id] " . PHP_EOL;
 if ($owner) echo "[OWNER $author_guild_id/$author_id] " . PHP_EOL;
@@ -476,7 +479,7 @@ if($creator || $vzgbot || $bot || $owner || $dev || $admin || $mod || $muted || 
 			VarSave($guild_folder."/".$author_id, "removed_roles.php", $removed_roles);
 			//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
 			foreach ($removed_roles as $role_id)
-				$author_member->removeRole($role_id);
+				if ($role_id != $role_muted_id) $author_member->removeRole($role_id);
 			if ($role_muted_id) $author_member->addRole($role_muted_id);
 			return $message->react("🤐");
 		}
@@ -5580,9 +5583,7 @@ if(!$called) return;
                     //Unmute the user and readd the verified role (TODO: READD REMOVED ROLES)
                     //Save current roles in a file for the user
                     $removed_roles = VarLoad($guild_folder."/".$mention_id, "removed_roles.php");
-                    foreach ($removed_roles as $role) {
-                        $target_guildmember->addRole($role);
-                    }
+                    foreach ($removed_roles as $role) $target_guildmember->addRole($role);
                     if ($role_muted_id) $target_guildmember->removeRole($role_muted_id);
                     if ($react) $message->react("😩");
                     //Build the embed message
