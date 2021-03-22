@@ -17,7 +17,6 @@ $user_avatar 											= $user->avatar;
 $user_check 											= "$user_username#$user_discriminator";
 $user_tag												= $user_check;
 $user_createdTimestamp									= $user->createdTimestamp();
-$user_createdTimestamp									= date("D M j H:i:s Y", $user_createdTimestamp);
 
 $guild_memberCount										= $guildmember->guild->member_count;
 $author_guild											= $guildmember->guild;
@@ -27,11 +26,12 @@ $author_guild_name										= $guildmember->guild->name;
 
 if ($author_guild_id == "116927365652807686") { //Only in ValZarGaming
     $minimum_time = strtotime("-30 days");
-    if ($user_createdTimestamp && $user_createdTimestamp && ($user_createdTimestamp > $minimum_time)) {
+    if ($user_createdTimestamp > $minimum_time) {
         if ($log_channel = $author_guild->channels->offsetGet('333484030492409856')) { //Alert staff
             $log_channel->sendMessage("<@$user_id> was banned because their discord account was newer than 30 days.");
         }
         $reason = "Your discord account is too new. Please contact <@116927250145869826> if you believe this ban is an error.";
+		
         $guildmember->ban(1, $reason);
     }
 }
