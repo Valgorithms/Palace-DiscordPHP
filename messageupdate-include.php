@@ -8,54 +8,37 @@ $message_id_new = $message_new->id; //This doesn't match any message id if the m
 //Only process message changes
 if ($message_content_new === $message_content_old) {
     //echo "NO MESSAGE CONTENT CHANGE OR MESSAGE TOO OLD" . PHP_EOL;
-    return true;
+    return;
 }
 
 //Make sure the messages aren't blank
-if (($message_content_new == null) || ($message_content_new == "")) { //This should never trigger, but just in case...
+if (!$message_content_new) { //This should never trigger, but just in case...
     //echo "BLANK OR OLD MESSAGE EDITED" . PHP_EOL;
-    return true;
+    return;
 }
 
 echo "[messageUpdate]" . PHP_EOL;
 
-/*
-Debug output
-
-//Check the timestamp
-$createdTimestamp_new = $message_new->createdTimestamp;
-$createdTimestamp_old = $message_old->createdTimestamp;
-
-$editedTimestamp_new = $message_new->editedTimestamp;
-$editedTimestamp_old = $message_old->editedTimestamp;
-
-echo "message_content_new: " . $message_content_new . PHP_EOL;
-echo "message_content_old: " . $message_content_old . PHP_EOL;
-echo PHP_EOL;
-echo "createdTimestamp_new: " . $createdTimestamp_new . PHP_EOL;
-echo "createdTimestamp_old: " . $createdTimestamp_old . PHP_EOL;
-echo PHP_EOL;
-echo "editedTimestamp_new: " . $editedTimestamp_new . PHP_EOL;
-echo "editedTimestamp_old: " . $editedTimestamp_old . PHP_EOL;
-echo PHP_EOL;
-*/
-
 //Load global variables
-$guild = $message_new->guild;
-$author_guild_id = $guild->id;
 
 //Load author info
-$author_user				= $message_new->author; //User object
+$author	= $message_new->author; //Member OR User object
+if (isset($author) && is_object($author) && get_class($author) == "Discord\Parts\User\Member") {
+    $author_user = $author->user;
+    $author_member = $author;
+} else {
+    $author_user = $author;
+}
 $author_channel 			= $message_new->channel;
 $author_channel_id			= $author_channel->id; 												//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 $is_dm = false;
-if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
-    $is_dm = true;
-    return true; //Don't try to process direct messages
+if (is_null($message->channel->guild_id) && is_null($author_member)){
+    $is_dm = true; //True if direct message
+    //return; //Don't try to process direct messages
 }
-if ($author_guild_id == null || $author_guild_id == "") {
-    return true;
-} //Double check for direct message
+$guild = $message_new->channel->guild;
+$author_guild_id = $guild->id;
+
 //Load config variables for the guild
 $guild_folder = "\\guilds\\$author_guild_id"; //echo "guild_folder: $guild_folder" . PHP_EOL;
 $guild_owner_id = $author_channel->guild->owner_id;
@@ -79,7 +62,8 @@ if (!CheckFile($guild_folder, "guild_config.php")) {
 }
 include "$guild_config_path";
 
-$modlog_channel	= $guild->channels->get('id', $modlog_channel_id);
+
+$modlog_channel	= $guild->channels->offsetGet($modlog_channel_id);
 
 $author_username 			= $author_user->username; 											//echo "author_username: " . $author_username . PHP_EOL;
 $author_discriminator 		= $author_user->discriminator;										//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
@@ -100,32 +84,30 @@ if ($message_content_new != $message_content_old) {
 }
 
 if ($modlog_channel) {
-    if ($changes != "") {
+    if ($changes) {
+		echo '[CHANGES]' . PHP_EOL;
         //Build the embed
         //$changes = "**Message edit**:\n" . $changes;
         if (strlen($changes) <= 1024) {
             //		Build the embed message
             $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
             $embed
-//			->setTitle("Commands")																	// Set a title
-            ->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
-//			->setDescription("Commands for $author_guild_name")										// Set a description (below title, above fields)
-            ->addFieldValues("Message Update", "$changes")												// New line after this
-            
-//			->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
-//			->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
-            ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-            ->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
-            ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-            ->setURL("");                             												// Set the URL
+	//			->setTitle("Commands")																	// Set a title
+				->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
+	//			->setDescription("Commands for $author_guild_name")										// Set a description (below title, above fields)
+				->addFieldValues("Message Update", "$changes")												// New line after this
+				
+	//			->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
+	//			->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
+				->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
+				->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
+				->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
+				->setURL("");                             												// Set the URL
 //			Send the message
 //			We do not need another promise here, so we call done, because we want to consume the promise
-        if ($modlog_channel) {
-            $modlog_channel->sendEmbed($embed);
-        }
-            return true;
+			return $modlog_channel->sendEmbed($embed);
         } elseif (strlen($changes) <= 2000) {
-            $modlog_channel->sendMessage($changes);
+            return $modlog_channel->sendMessage($changes);
         } else { //Send changes as a file
             //Rebuild the string so we can send some stuff as a message
             $changes = "[Link](https://discord.com/channels/$author_guild_id/$author_channel_id/$message_id_new)\n";
@@ -150,11 +132,14 @@ if ($modlog_channel) {
             ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
             ->setURL("");                             												// Set the URL
         
-        $modlog_channel->sendMessage("A message was updated but it was too long to log within an embed. Please see the attached file.", array('embed' => $embed, 'files' => [['name' => "changes.txt", 'data' => $changes_file]]))->done(null, function ($error) {
-            echo $error.PHP_EOL; //Echo any errors
-        });
+			return $modlog_channel->sendMessage("A message was updated but it was too long to log within an embed. Please see the attached file.", array('embed' => $embed, 'files' => [['name' => "changes.txt", 'data' => $changes_file]]))->done(
+				null,
+				function ($error) {
+					echo $error.PHP_EOL; //Echo any errors
+				}
+			);
         }
     } else { //No info we want to check was changed
-        return true;
+        return;
     }
 }

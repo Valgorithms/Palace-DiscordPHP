@@ -476,7 +476,7 @@ try {
             include "guildbanremove-include.php";
         });
         
-        $discord->on('MESSAGE_UPDATE', function ($message_new, $message_old) use ($discord) { //Handling of a message being changed
+        $discord->on('MESSAGE_UPDATE', function ($message_new, $discord, $message_old){ //Handling of a message being changed
             include "messageupdate-include.php";
         });
         
