@@ -17,7 +17,7 @@ $user_avatar 											= $user->avatar;
 $user_check 											= "$user_username#$user_discriminator";
 $user_tag												= $user_check;
 $user_createdTimestamp									= $user->createdTimestamp();
-$user_createdFormatted									= date("D M j H:i:s Y", $user_createdTimestamp)
+$user_createdFormatted									= date("D M j H:i:s Y", $user_createdTimestamp);
 
 $guild_memberCount										= $guildmember->guild->member_count;
 $author_guild											= $guildmember->guild;
