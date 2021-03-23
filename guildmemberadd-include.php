@@ -17,6 +17,7 @@ $user_avatar 											= $user->avatar;
 $user_check 											= "$user_username#$user_discriminator";
 $user_tag												= $user_check;
 $user_createdTimestamp									= $user->createdTimestamp();
+$user_createdFormatted									= date("D M j H:i:s Y", $user_createdTimestamp)
 
 $guild_memberCount										= $guildmember->guild->member_count;
 $author_guild											= $guildmember->guild;
@@ -55,7 +56,7 @@ $embed
     ->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
     ->setDescription("<@$user_id> just joined **$author_guild_name**" . "\n" .				// Set a description (below title, above fields)
 		//"There are now **$guild_memberCount** members." . "\n" .
-		"Account created on $user_createdTimestamp")										
+		"Account created on $user_createdFormatted")										
     //X days ago
     ->addFieldValues("Member Count", "$guild_memberCount")
 //	->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
