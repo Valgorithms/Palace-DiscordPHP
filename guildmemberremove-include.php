@@ -13,7 +13,7 @@ if ($welcome === true) {
     $user_check 								= "$user_username#$user_discriminator"; 							//echo "author_check: " . $author_check . PHP_EOL;\
 	$user_tag									= $user_check;
     $user_createdTimestamp						= $user->createdTimestamp();
-    $user_createdTimestamp						= date("D M j Y H:i:s", $user_createdTimestamp);
+    $user_createdFormatted						= date("D M j Y H:i:s", $user_createdTimestamp);
     
     $target_guildmember_role_collection 		= $guildmember->roles;					//This is the Role object for the GuildMember
 	
@@ -53,7 +53,7 @@ if ($welcome === true) {
         ->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
         ->setDescription("<@$user_id> has left the server!" . "\n" .
 		//"There are now **$guild_memberCount** members." . "\n" .
-		"Account created on $user_createdTimestamp")											// Set a description (below title, above fields)
+		"Account created on $user_createdFormatted")											// Set a description (below title, above fields)
 		->addFieldValues("Member Count", "$guild_memberCount")
         ->addFieldValues("Roles", "$mention_role_id_queue")										// New line after this
         ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
