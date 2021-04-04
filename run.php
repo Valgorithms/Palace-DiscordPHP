@@ -121,7 +121,7 @@ $options = array(
 	'social' => [ //NYI
 		'twitter' => 'https://twitter.com/daathren',
 		'instagram' => 'https://www.instagram.com/daathren/',
-		'discord' => 'https://discord.gg/FhzXf8VK',
+		'discord' => 'https://discord.gg/CpVbC78XWT',
 		'tumblr' => 'https://daathren.tumblr.com/',
 	],
 	'tip' => [ //NYI
