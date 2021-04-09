@@ -428,9 +428,7 @@ foreach ($author_member_roles as $role) {
 		$muted = true; //Author is muted
 	}
 }
-if ($creator || $owner || $dev)
-    $bypass = true; //Ignore spam restrictions
-//else $bypass = false;
+if ($creator || $owner || $dev) $bypass = true; //Ignore spam restrictions
 
 if ($muted) return; //Ignore commands by muted users
 
