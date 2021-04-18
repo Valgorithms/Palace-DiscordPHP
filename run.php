@@ -156,6 +156,7 @@ $options['responses']['discord'] = $options['social']['discord'];
 //$options['commands'] => $commands; // Import your own Twitch/Commands object to add additional functions
 
 $twitch = new Twitch\Twitch($options);
+$browser = new \React\Http\Browser($discord->getLoop()/*, $connector*/);
 
 function webapiFail($part, $id){
 	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
@@ -418,7 +419,7 @@ try {
         }
     });
 
-    $discord->once('ready', function ($discord) use ($loop, $token, $restcord, $stats, $twitch) {	// Listen for events here
+    $discord->once('ready', function ($discord) use ($loop, $token, $restcord, $stats, $twitch, $browser) {	// Listen for events here
         //$line_count = COUNT(FILE(basename($_SERVER['PHP_SELF']))); //No longer relevant due to includes
         //$version = "RC V1.4.1";
         /*
@@ -452,7 +453,7 @@ try {
 		]);
 		$discord->updatePresence($act, false, 'online');
 		
-        $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord, $stats, $twitch) { //Handling of a message
+        $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord, $stats, $twitch, $browser) { //Handling of a message
             include "message-include.php";
         });
             
