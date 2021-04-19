@@ -38,11 +38,10 @@ include 'blacklisted_guilds.php'; //Array of Guilds that are not allowed to use 
 include 'whitelisted_guilds.php'; //Only guilds in the $whitelisted_guilds array should be allowed to access the bot.
 
 require __DIR__.'/../token.php';
-$httpLogger = new Monolog\Logger('HTTPLogger');
-$httpLogger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
 $logger = new Monolog\Logger('New logger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
 $loop = React\EventLoop\Factory::create();
+use Discord\WebSockets\Intents;
 $discord = new \Discord\Discord([
 	'loop' => $loop,
 	'socket_options' => [
@@ -52,8 +51,7 @@ $discord = new \Discord\Discord([
     'loadAllMembers' => true,
     'storeMessages' => true,
 	'logger' => $logger,
-	'httpLogger' => $httpLogger,
-	'loggerLevel' => 100,
+	'intents' => Intents::getDefaultIntents() | Intents::GUILD_MEMBERS, // default intents as well as guild members
 ]);
 include 'stats_object.php';
 $stats = new Stats();
