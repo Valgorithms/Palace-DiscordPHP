@@ -1,21 +1,12 @@
 <?php
 //This event listener gets triggered willy-nilly so we need to do some checks here if we want to get anything useful out of it
 
-$message_content_new = $message_new->content; //Null if message is too old
-$message_content_old = $message_old->content; //Null if message is too old
+$message_content_new = $message_new->content; //Null if message is too old or if only an embed was sent
+$message_content_old = $message_old->content; //Null if message is too old or if only an embed was sent
 $message_id_new = $message_new->id; //This doesn't match any message id if the message is too old
 
-//Only process message changes
-if ($message_content_new === $message_content_old) {
-    //echo "NO MESSAGE CONTENT CHANGE OR MESSAGE TOO OLD" . PHP_EOL;
-    return;
-}
-
-//Make sure the messages aren't blank
-if (!$message_content_new) { //This should never trigger, but just in case...
-    //echo "BLANK OR OLD MESSAGE EDITED" . PHP_EOL;
-    return;
-}
+//Only process valid message changes
+if ($message_content_old && ($message_content_new === $message_content_old) ) return;
 
 echo "[messageUpdate]" . PHP_EOL;
 
@@ -75,58 +66,41 @@ $changes = "";
 //if (($message_content_new != $message_content_old) || (($message_content_old == "") || ($message_content_old == NULL))) 	{
 if ($message_content_new != $message_content_old) {
     //			Build the string for the reply
-    $changes = $changes . "[Link](https://discord.com/channels/$author_guild_id/$author_channel_id/$message_id_new)\n";
-    $changes = $changes . "**Channel:** <#$author_channel_id>\n";
-    $changes = $changes . "**Message ID:**: $message_id_new\n";
+    $changes .= "[Link](https://discord.com/channels/$author_guild_id/$author_channel_id/$message_id_new)\n";
+    $changes .= "**Channel:** <#$author_channel_id>\n";
+    $changes .= "**Message ID:** $message_id_new\n";
     
-    $changes = $changes . "**Before:** ```⠀$message_content_old\n```\n";
-    $changes = $changes . "**After:**```⠀$message_content_new\n```\n";
+    $changes .= "**Before:** ```⠀$message_content_old\n```\n";
+    $changes .= "**After:**```⠀$message_content_new\n```\n";
 }
 
 if ($modlog_channel) {
     if ($changes) {
 		echo '[CHANGES]' . PHP_EOL;
-        //Build the embed
-        //$changes = "**Message edit**:\n" . $changes;
         if (strlen($changes) <= 1024) {
-            //		Build the embed message
             $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
             $embed
-	//			->setTitle("Commands")																	// Set a title
-				->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
-	//			->setDescription("Commands for $author_guild_name")										// Set a description (below title, above fields)
-				->addFieldValues("Message Update", "$changes")												// New line after this
-				
-	//			->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
-	//			->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
-				->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-				->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
-				->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-				->setURL("");                             												// Set the URL
-//			Send the message
-//			We do not need another promise here, so we call done, because we want to consume the promise
+				->setColor(0xa7c5fd)
+				->addFieldValues("Message Update", "$changes")
+				->setAuthor("$author_check ($author_id)", "$author_avatar")
+				->setFooter("Palace Bot by Valithor#5947")
+				->setTimestamp()
+				->setURL("");
 			return $modlog_channel->sendEmbed($embed);
-        } elseif (strlen($changes) <= 2000) {
-            return $modlog_channel->sendMessage($changes);
-        } else { //Send changes as a file
-            //Rebuild the string so we can send some stuff as a message
+        } elseif (strlen($changes) <= 2000) //Send changes as text
+			return $modlog_channel->sendMessage($changes);
+        else { //Send changes as a file if the changes are too many
             $changes = "[Link](https://discord.com/channels/$author_guild_id/$author_channel_id/$message_id_new)\n";
-            $changes = $changes . "**Channel:** <#$author_channel_id>\n";
-            $changes = $changes . "**Message ID:**: $message_id_new\n";
+            $changes .= "**Channel:** <#$author_channel_id>\n";
+            $changes .= "**Message ID:** $message_id_new\n";
         
             $changes_file = "**Before:** ```⠀$message_content_old\n```\n";
             $changes_file = $changes_file . "**After:**```⠀$message_content_new\n```\n";
-        
-            //		Rebuild the embed message
+
             $embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
             $embed
-//			->setTitle("Commands")																	// Set a title
             ->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
-//			->setDescription("Commands for $author_guild_name")										// Set a description (below title, above fields)
             ->addFieldValues("Message Update", "$changes")												// New line after this
-            
-//			->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
-//			->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
             ->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
             ->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
             ->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon

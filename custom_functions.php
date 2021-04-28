@@ -419,7 +419,7 @@ function snowflake_timestamp($snowflake)
     return $timestamp;
 }
 
-function GetMention($array)
+function GetMention(array $array = [])
 {
     //echo "array[1] = " . $array[1] . PHP_EOL;
     //echo "array[2] = " . $array[2] . PHP_EOL;
@@ -429,7 +429,7 @@ function GetMention($array)
         //echo "No guild passed!" . PHP_EOL;
         if (is_numeric($array[0])) {
             //Try to get the guild by ID
-            echo "Guild not found when searching by ID!" . PHP_EOL;
+            //echo "Guild not found when searching by ID!" . PHP_EOL;
             return false; //Not yet implemented
         } else {
             echo "No guild variable passed!" . PHP_EOL;
@@ -495,23 +495,12 @@ function GetMention($array)
     }
     
     $return_array = array();
-    $clean_string = $value;
     foreach ($id_array as $id) {
-        $clean_string = str_replace($id, "", $clean_string);
+        $value = str_replace($id, "", $value);
         //echo "Option $option" . PHP_EOL;
         switch ($option) { //What info do we care about getting back?
-            case 1: //Get user info from restcord
-                if ($restcord) {
-                    try {
-                        $restcord_user = $restcord->user->getUser(['user.id' => intval($id)]);
-                        $restcord_user_found = true;
-                    } catch (Throwable $e) {
-                        echo "[RESTCORD] Unable to locate user for ID $id" . PHP_EOL;
-                        $restcord_user = false;
-                        $restcord_user_found = false;
-                    }
-                }
-                $mention_member	= $guild->members->get('id', $id);
+            case 1:
+                $mention_member	= $guild->members->offsetGet($id);
                 $mention_user = $mention_member->user;
                 $return_array[$id]['mention_member'] = $mention_member;
                 $return_array[$id]['mention_user'] = $mention_user;
@@ -522,17 +511,17 @@ function GetMention($array)
             case 3:
             case null: //Grab all that apply
             default:
-                $mention_member	= $guild->members->get('id', $id);
+                $mention_member	= $guild->members->offsetGet($id);
                 $mention_user = $mention_member->user;
                 $return_array[$id]['mention_member'] = $mention_member;
                 $return_array[$id]['mention_user'] = $mention_user;
-                $return_array[$id]['restcord_user'] = false;
-                $return_array[$id]['restcord_user_found'] = false;
+                $return_array[$id]['restcord_user'] = $restcord_user ?? false;
+                $return_array[$id]['restcord_user_found'] = $restcord_user ?? false;
                 //echo "Built return_array!" . PHP_EOL;
                 break;
         }
     }
-    $return_array['string']['string'] = trim($clean_string) ?? false;
+    $return_array['string']['string'] = trim($value) ?? false;
     return $return_array;
 }
 
