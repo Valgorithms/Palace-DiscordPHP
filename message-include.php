@@ -494,19 +494,15 @@ Early Break
 */
 
 $called = false;
-//Allow calling commands by @mention
-if(str_starts_with($message_content_lower,  "<@".$discord->id.">")) {
-	$message_content_lower = trim(substr($message_content_lower, (3+strlen($discord->id))));
-	$message_content = trim(substr($message_content, (3+strlen($discord->id))));
-	$called = true;
-}
-if(str_starts_with($message_content_lower,  "<@!".$discord->id.">")) {
+if (str_starts_with($message_content_lower,  "<@!".$discord->id.">")) { //Allow calling commands by @mention
 	$message_content_lower = trim(substr($message_content_lower, (4+strlen($discord->id))));
 	$message_content = trim(substr($message_content, (4+strlen($discord->id))));
 	$called = true;
-}
-//Allow calling comamnds by command symbol
-if (str_starts_with($message_content_lower, $command_symbol)) {
+} elseif (str_starts_with($message_content_lower,  "<@".$discord->id.">")) { //Allow calling commands by @mention
+	$message_content_lower = trim(substr($message_content_lower, (3+strlen($discord->id))));
+	$message_content = trim(substr($message_content, (3+strlen($discord->id))));
+	$called = true;
+} elseif (str_starts_with($message_content_lower, $command_symbol)) { //Allow calling comamnds by command symbol
     $message_content_lower = trim(substr($message_content_lower, strlen($command_symbol)));
     $message_content = trim(substr($message_content, strlen($command_symbol)));
 	$called = true;
@@ -515,7 +511,7 @@ if (str_starts_with($message_content_lower, $command_symbol)) {
     $message_content = trim(substr($message_content, 2));
 	$called = true;
 }
-if(!$called) return;
+if (!$called) return;
     /*
     *********************
     *********************
@@ -3595,7 +3591,9 @@ if(!$called) return;
 			foreach($discord->guilds as $guild){
 				$guildstring .= "[{$guild->name} ({$guild->id}) :man::".count($guild->members)." <@{$guild->owner_id}>] \n";
 			}
-			$message->channel->sendMessage($guildstring);
+			foreach (str_split($guildstring, 2000) as $piece) {
+				$message->channel->sendMessage($piece);
+			}
 		}
 		if (str_starts_with($message_content_lower, 'debug guild invite ')){ //;debug guild invite guildid
 			$filter = "debug guild invite ";
@@ -5856,7 +5854,7 @@ if(!$called) return;
                             }
 							$general_channel->sendMessage($msg)->done(
 								function ($message) use ($discord){
-									$discord->getLoop()->addTimer(60, function() use ($message) {
+									$discord->getLoop()->addTimer(300, function() use ($message) {
 										return $message->delete();
 									});
 								}
