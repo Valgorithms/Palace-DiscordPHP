@@ -494,6 +494,8 @@ Early Break
 */
 
 $called = false;
+$message_content_original = $message_content;
+$message_content_lower_original = $message_content_lower;
 if (str_starts_with($message_content_lower,  "<@!".$discord->id.">")) { //Allow calling commands by @mention
 	$message_content_lower = trim(substr($message_content_lower, (4+strlen($discord->id))));
 	$message_content = trim(substr($message_content, (4+strlen($discord->id))));
@@ -2221,14 +2223,18 @@ if (!$called) return;
 	}
 	if (str_starts_with($message_content_lower, 'remindme ')){ //;remindme
         echo "[REMINDER]" . PHP_EOL;
-        $filter = "remindme ";
-        $value = str_replace($filter, "", $message_content_lower);
-        if(is_numeric($value)){
-			if($react) $message->react("👍");
-            $discord->getLoop()->addTimer($value, function() use ($author_user) {
-                return $author_user->sendMessage("This is your requested reminder!");
+		$arr = explode(' ', $message_content_lower);
+        //$filter = "remindme ";
+        //$value = str_replace($filter, "", $message_content_lower);
+        if(is_numeric($arr[1])){
+			//echo 'test: ' . strpos($message_content,'remindme')+strlen($arr[0])+strlen($arr[1]) . PHP_EOL;
+			$string = trim(substr($message_content, strpos($message_content,' ')+1+strlen($arr[1])));
+            $discord->getLoop()->addTimer($arr[1], function() use ($message, $string) {
+                return $message->channel->sendMessage("This is your requested reminder!\n `$string`", false, null, ['parse' => ['users', 'roles'],'replied_user' => true], $message);
             });
-			return;
+			
+			if ($react) $message->react("👍");
+			return $message->reply("I'll remind you in " . FormatTime($arr[1]) . '.');
         }else return $message->reply("Invalid input! Please use the format `;remindme #` where # is seconds.");
     }    
     if ($message_content_lower == 'roles') { //;roles
