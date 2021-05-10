@@ -1,519 +1,520 @@
 <?php
-if (is_null($message) || empty($message)) return; //An invalid message object was passed
-if (is_null($message->content)) return; //Don't process messages without content
-if ($message["webhook_id"]) return; //Don't process webhooks
-if ($message->author->bot) return; //Don't process messages sent by bots
+function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, $browser){
+	if (is_null($message) || empty($message)) return; //An invalid message object was passed
+	if (is_null($message->content)) return; //Don't process messages without content
+	if ($message["webhook_id"]) return; //Don't process webhooks
+	if ($message->author->bot) return; //Don't process messages sent by bots
 
-$message_content = $message->content;
-if (!$message_content) return;
-$message_id = $message->id;
-$message_content_lower = mb_strtolower($message_content);
+	$message_content = $message->content;
+	if (!$message_content) return;
+	$message_id = $message->id;
+	$message_content_lower = mb_strtolower($message_content);
 
-/*
-*********************
-*********************
-Required includes
-*********************
-*********************
-*/
-
-include_once "custom_functions.php";
-include "constants.php"; //Redeclare $now every time
-
-/*
-*********************
-*********************
-// Load author data from message
-*********************
-*********************
-*/
-$author	= $message->author; //Member OR User object
-if (isset($author) && is_object($author) && get_class($author) == "Discord\Parts\User\Member") {
-	$author_user = $author->user;
-	$author_member = $author;
-} else {
-	$author_user = $author;
-}
-if (isset($author_member)) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
-
-$author_channel 												= $message->channel;
-$author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
-$is_dm															= false; //echo "author_channel_class: " . $author_channel_class . PHP_EOL;
-
-//echo "[CLASS] " . get_class($message->author) . PHP_EOL;
-if (is_null($message->channel->guild_id) && is_null($author_member)) $is_dm = true; //True if direct message
-$author_username 												= $author_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
-$author_discriminator 											= $author_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-$author_id 														= $author_user->id;												//echo "author_id: " . $author_id . PHP_EOL;
-$author_avatar 													= $author_user->avatar;									//echo "author_avatar: " . $author_avatar . PHP_EOL;
-$author_check 													= "$author_username#$author_discriminator"; 					//echo "author_check: " . $author_check . PHP_EOL;
-
-if ($message_content_lower == ';invite') {
-	echo '[INVITE]' . PHP_EOL;
-	//$author_channel->sendMessage($discord->application->getInviteURLAttribute('[permission string]'));
-	//$author_channel->sendMessage($discord->application->getInviteURLAttribute('8&redirect_uri=https%3A%2F%2Fdiscord.com%2Foauth2%2Fauthorize%3Fclient_id%3D586694030553776242%26permissions%3D8%26scope%3Dbot&response_type=code&scope=identify%20email%20connections%20guilds.join%20gdm.join%20guilds%20applications.builds.upload%20messages.read%20bot%20webhook.incoming%20rpc.notifications.read%20rpc%20applications.builds.read%20applications.store.update%20applications.entitlements%20activities.read%20activities.write%20relationships.read'));
-	$author_channel->sendMessage($discord->application->getInviteURLAttribute('8'));
 	/*
-	$author_user->getPrivateChannel()->done(function($author_dmchannel) use ($discord){
-		$discord->generateOAuthInvite(8)->done(function($BOTINVITELINK) use ($author_dmchannel){
-			$author_dmchannel->sendMessage($BOTINVITELINK);
-		});
-	});
+	*********************
+	*********************
+	Required includes
+	*********************
+	*********************
 	*/
-	return;
-}
-/*
-*********************
-*********************
-Get the guild and guildmember collections for the author
-*********************
-*********************
-*/
 
-if (!$is_dm) { //Guild message
-	$author_guild 												= $author_channel->guild;
-	$author_guild_id 											= $author_guild->id; 											//echo "discord_guild_id: " . $author_guild_id . PHP_EOL;
-	$author_guild_name											= $author_guild->name;
-	$guild_owner_id												= $author_guild->owner_id;
-	if(is_null($author_member)) $author_member = $author_guild->members->offsetGet($author_id);
-	//Leave the guild if the owner is blacklisted
-	global $blacklisted_owners;
-	if ($blacklisted_owners) {
-		if (in_array($guild_owner_id, $blacklisted_owners)) {
-			//$author_guild->leave($author_guild_id)->done(null, function ($error){
-			$discord->guilds->leave($author_guild);
-		}
+	include_once "custom_functions.php";
+	include "constants.php"; //Redeclare $now every time
+
+	/*
+	*********************
+	*********************
+	// Load author data from message
+	*********************
+	*********************
+	*/
+	$author	= $message->author; //Member OR User object
+	if (isset($author) && is_object($author) && get_class($author) == "Discord\Parts\User\Member") {
+		$author_user = $author->user;
+		$author_member = $author;
+	} else {
+		$author_user = $author;
 	}
-	if (in_array($author_id, $blacklisted_owners)) return; //Ignore all commands from blacklisted guild owners
-	//Leave the guild if blacklisted
-	global $blacklisted_guilds;
-	if ($blacklisted_guilds) {
-		if (in_array($author_guild_id, $blacklisted_guilds)) {
-			//$author_guild->leave($author_guild_id)->done(null, function ($error){
-			$discord->guilds->leave($author_guild)->done(null, function ($error) {
-				if (strlen($error) < (2049)) {
-					echo "[ERROR] $error" . PHP_EOL; //Echo any errors
-				} else {
-					echo "[ERROR] [BLACKLISTED GUILD] $author_guild_id";
-				}
+	if (isset($author_member)) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
+
+	$author_channel 												= $message->channel;
+	$author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
+	$is_dm															= false; //echo "author_channel_class: " . $author_channel_class . PHP_EOL;
+
+	//echo "[CLASS] " . get_class($message->author) . PHP_EOL;
+	if (is_null($message->channel->guild_id) && is_null($author_member)) $is_dm = true; //True if direct message
+	$author_username 												= $author_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
+	$author_discriminator 											= $author_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
+	$author_id 														= $author_user->id;												//echo "author_id: " . $author_id . PHP_EOL;
+	$author_avatar 													= $author_user->avatar;									//echo "author_avatar: " . $author_avatar . PHP_EOL;
+	$author_check 													= "$author_username#$author_discriminator"; 					//echo "author_check: " . $author_check . PHP_EOL;
+
+	if ($message_content_lower == ';invite') {
+		echo '[INVITE]' . PHP_EOL;
+		//$author_channel->sendMessage($discord->application->getInviteURLAttribute('[permission string]'));
+		//$author_channel->sendMessage($discord->application->getInviteURLAttribute('8&redirect_uri=https%3A%2F%2Fdiscord.com%2Foauth2%2Fauthorize%3Fclient_id%3D586694030553776242%26permissions%3D8%26scope%3Dbot&response_type=code&scope=identify%20email%20connections%20guilds.join%20gdm.join%20guilds%20applications.builds.upload%20messages.read%20bot%20webhook.incoming%20rpc.notifications.read%20rpc%20applications.builds.read%20applications.store.update%20applications.entitlements%20activities.read%20activities.write%20relationships.read'));
+		$author_channel->sendMessage($discord->application->getInviteURLAttribute('8'));
+		/*
+		$author_user->getPrivateChannel()->done(function($author_dmchannel) use ($discord){
+			$discord->generateOAuthInvite(8)->done(function($BOTINVITELINK) use ($author_dmchannel){
+				$author_dmchannel->sendMessage($BOTINVITELINK);
 			});
+		});
+		*/
+		return;
+	}
+	/*
+	*********************
+	*********************
+	Get the guild and guildmember collections for the author
+	*********************
+	*********************
+	*/
+
+	if (!$is_dm) { //Guild message
+		$author_guild 												= $author_channel->guild;
+		$author_guild_id 											= $author_guild->id; 											//echo "discord_guild_id: " . $author_guild_id . PHP_EOL;
+		$author_guild_name											= $author_guild->name;
+		$guild_owner_id												= $author_guild->owner_id;
+		if(is_null($author_member)) $author_member = $author_guild->members->offsetGet($author_id);
+		//Leave the guild if the owner is blacklisted
+		global $blacklisted_owners;
+		if ($blacklisted_owners) {
+			if (in_array($guild_owner_id, $blacklisted_owners)) {
+				//$author_guild->leave($author_guild_id)->done(null, function ($error){
+				$discord->guilds->leave($author_guild);
+			}
 		}
-	}
-	//Leave the guild if not whitelisted
-	global $whitelisted_guilds;
-	if ($whitelisted_guilds) {
-		if (!in_array($author_guild_id, $whitelisted_guilds)) {
-			//$author_guild->leave()->done(null, function ($error){
-			$discord->guilds->leave($author_guild)->done(null, function ($error) {
-				var_dump($error->getMessage()); //Echo any errors
-			});
+		if (in_array($author_id, $blacklisted_owners)) return; //Ignore all commands from blacklisted guild owners
+		//Leave the guild if blacklisted
+		global $blacklisted_guilds;
+		if ($blacklisted_guilds) {
+			if (in_array($author_guild_id, $blacklisted_guilds)) {
+				//$author_guild->leave($author_guild_id)->done(null, function ($error){
+				$discord->guilds->leave($author_guild)->done(null, function ($error) {
+					if (strlen($error) < (2049)) {
+						echo "[ERROR] $error" . PHP_EOL; //Echo any errors
+					} else {
+						echo "[ERROR] [BLACKLISTED GUILD] $author_guild_id";
+					}
+				});
+			}
 		}
-	}
-	
-	$guild_folder = "\\guilds\\$author_guild_id"; //echo "guild_folder: $guild_folder" . PHP_EOL;
-	//Create a folder for the guild if it doesn't exist already
-	if (!CheckDir($guild_folder)) {
-		if (!CheckFile($guild_folder, "guild_owner_id.php"))
-			VarSave($guild_folder, "guild_owner_id.php", $guild_owner_id);
-		elseif ( ($old_guild_owner_id = VarLoad($guild_folder, "guild_owner_id.php")) && ($old_guild_owner_id != $guild_owner_id) )
-			VarSave($guild_folder, "guild_owner_id.php", $guild_owner_id);
-	}
-	if ($guild_owner_id == $author_id) $owner = true; //Enable usage of restricted commands
-	else $owner = false;
-	
-	if ($role->name == "Server Booster") $booster = true; //Author boosted the server
-	else $booster = false;
-	
-	//Load config variables for the guild
-	$guild_config_path = __DIR__  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
-	if (!CheckFile($guild_folder, "guild_config.php")) {
-		$file = 'guild_config_template.php';
-		if (!copy($file, $guild_config_path)) {
-			$message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
-		} else {
-			$author_channel->sendMessage("<@$guild_owner_id>, I'm here! Please ;setup the bot." . PHP_EOL . "While interacting with this bot, any conversations made through direct mention of the bot name are stored anonymously in a secure database. Avatars, IDs, Names, or any other unique user identifier is not stored with these messages. Through continuing to use this bot, you agree to allow it to track user information to support its functions and for debugging purposes. Your message data will never be used for anything more. If you wish to have any associated information removed, please contact Valithor#5937.");
-			//$author_channel->sendMessage("(Maintenance is currently ongoing and many commands are currently not working. We are aware of the issue and working on a fix.)");
+		//Leave the guild if not whitelisted
+		global $whitelisted_guilds;
+		if ($whitelisted_guilds) {
+			if (!in_array($author_guild_id, $whitelisted_guilds)) {
+				//$author_guild->leave()->done(null, function ($error){
+				$discord->guilds->leave($author_guild)->done(null, function ($error) {
+					var_dump($error->getMessage()); //Echo any errors
+				});
+			}
 		}
+		
+		$guild_folder = "\\guilds\\$author_guild_id"; //echo "guild_folder: $guild_folder" . PHP_EOL;
+		//Create a folder for the guild if it doesn't exist already
+		if (!CheckDir($guild_folder)) {
+			if (!CheckFile($guild_folder, "guild_owner_id.php"))
+				VarSave($guild_folder, "guild_owner_id.php", $guild_owner_id);
+			elseif ( ($old_guild_owner_id = VarLoad($guild_folder, "guild_owner_id.php")) && ($old_guild_owner_id != $guild_owner_id) )
+				VarSave($guild_folder, "guild_owner_id.php", $guild_owner_id);
+		}
+		if ($guild_owner_id == $author_id) $owner = true; //Enable usage of restricted commands
+		else $owner = false;
+		
+		if ($role->name == "Server Booster") $booster = true; //Author boosted the server
+		else $booster = false;
+		
+		//Load config variables for the guild
+		$guild_config_path = __DIR__  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+		if (!CheckFile($guild_folder, "guild_config.php")) {
+			$file = 'guild_config_template.php';
+			if (!copy($file, $guild_config_path)) {
+				$message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
+			} else {
+				$author_channel->sendMessage("<@$guild_owner_id>, I'm here! Please ;setup the bot." . PHP_EOL . "While interacting with this bot, any conversations made through direct mention of the bot name are stored anonymously in a secure database. Avatars, IDs, Names, or any other unique user identifier is not stored with these messages. Through continuing to use this bot, you agree to allow it to track user information to support its functions and for debugging purposes. Your message data will never be used for anything more. If you wish to have any associated information removed, please contact Valithor#5937.");
+				//$author_channel->sendMessage("(Maintenance is currently ongoing and many commands are currently not working. We are aware of the issue and working on a fix.)");
+			}
+		}
+		
+		include "$guild_config_path"; //Configurable channel IDs, role IDs, and message IDs used in the guild for special functions
+		
+		$author_guild_avatar = $author_guild->icon;
+		$author_guild_roles = $author_guild->roles;
+		if ($getverified_channel_id) $getverified_channel  = $author_guild->channels->get('id', $getverified_channel_id);
+		if ($verifylog_channel_id) $verifylog_channel = $author_guild->channels->get('id', $verifylog_channel_id); //Modlog is used if this is not declared
+		if ($watch_channel_id) $watch_channel  = $author_guild->channels->get('id', $watch_channel_id);
+		if ($modlog_channel_id) $modlog_channel  = $author_guild->channels->get('id', $modlog_channel_id);
+		if ($general_channel_id) $general_channel = $author_guild->channels->get('id', $general_channel_id);
+		if ($rolepicker_channel_id) $rolepicker_channel = $author_guild->channels->get('id', $rolepicker_channel_id);
+		if ($nsfw_rolepicker_channel_id) $nsfw_rolepicker_channel = $author_guild->channels->get('id', $nsfw_rolepicker_channel_id);
+		if ($games_rolepicker_channel_id) $games_rolepicker_channel = $author_guild->channels->get('id', $games_rolepicker_channel_id);
+		if ($games_channel_id) $games_channel = $author_guild->channels->get('id', $games_channel_id);
+		if ($gameroles_message_id) $gameroles_channel = $author_guild->channels->get('id', $gameroles_message_id);
+		if ($suggestion_pending_channel_id) $suggestion_pending_channel	= $author_guild->channels->get('id', strval($suggestion_pending_channel_id));
+		if ($suggestion_approved_channel_id) $suggestion_approved_channel = $author_guild->channels->get('id', strval($suggestion_approved_channel_id));
+		if ($tip_pending_channel_id) $tip_pending_channel = $author_guild->channels->get('id', strval($tip_pending_channel_id));
+		if ($tip_approved_channel_id) $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
+		
+		$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
+		if (CheckFile($guild_folder."/", 'custom_roles.php')){
+			include "$guild_custom_roles_path"; //Overwrite default custom_roles
+		}else{
+			global $customroles, $customroles_message_text;
+		}
+	} else { //Direct message
+		if ($author_id != $discord->user->id) { //Don't trigger on messages sent by this bot
+			global $server_invite;
+			//echo "[DM-EARLY BREAK]" . PHP_EOL;
+			echo "[DM] $author_check: $message_content" . PHP_EOL;
+			$dm_text = "Please use commands for this bot within a server unless otherwise prompted.";
+			//$message->reply("$dm_text \n$server_invite");
+			//$message->reply("$dm_text");
+		}
+		return;
 	}
-	
-	include "$guild_config_path"; //Configurable channel IDs, role IDs, and message IDs used in the guild for special functions
-	
-	$author_guild_avatar = $author_guild->icon;
-	$author_guild_roles = $author_guild->roles;
-	if ($getverified_channel_id) $getverified_channel  = $author_guild->channels->get('id', $getverified_channel_id);
-	if ($verifylog_channel_id) $verifylog_channel = $author_guild->channels->get('id', $verifylog_channel_id); //Modlog is used if this is not declared
-	if ($watch_channel_id) $watch_channel  = $author_guild->channels->get('id', $watch_channel_id);
-	if ($modlog_channel_id) $modlog_channel  = $author_guild->channels->get('id', $modlog_channel_id);
-	if ($general_channel_id) $general_channel = $author_guild->channels->get('id', $general_channel_id);
-	if ($rolepicker_channel_id) $rolepicker_channel = $author_guild->channels->get('id', $rolepicker_channel_id);
-	if ($nsfw_rolepicker_channel_id) $nsfw_rolepicker_channel = $author_guild->channels->get('id', $nsfw_rolepicker_channel_id);
-	if ($games_rolepicker_channel_id) $games_rolepicker_channel = $author_guild->channels->get('id', $games_rolepicker_channel_id);
-	if ($games_channel_id) $games_channel = $author_guild->channels->get('id', $games_channel_id);
-	if ($gameroles_message_id) $gameroles_channel = $author_guild->channels->get('id', $gameroles_message_id);
-	if ($suggestion_pending_channel_id) $suggestion_pending_channel	= $author_guild->channels->get('id', strval($suggestion_pending_channel_id));
-	if ($suggestion_approved_channel_id) $suggestion_approved_channel = $author_guild->channels->get('id', strval($suggestion_approved_channel_id));
-	if ($tip_pending_channel_id) $tip_pending_channel = $author_guild->channels->get('id', strval($tip_pending_channel_id));
-	if ($tip_approved_channel_id) $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
-	
-	$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
-	if (CheckFile($guild_folder."/", 'custom_roles.php')){
-		include "$guild_custom_roles_path"; //Overwrite default custom_roles
-	}else{
-		global $customroles, $customroles_message_text;
+
+	/*
+	*********************
+	*********************
+	Options
+	*********************
+	*********************
+	*/
+	if (!CheckFile($guild_folder, "command_symbol.php")) {
+		//Author must prefix text with this to use commands
+	} else $command_symbol = VarLoad($guild_folder, "command_symbol.php"); //Load saved option file (Not used yet, but might be later)
+
+	//Chat options
+	global $react_option, $vanity_option, $nsfw_option, $channel_option, $games_option, $gameroles_option;
+	if (!CheckFile($guild_folder, "react_option.php")) $react	= $react_option; //Bot will not react to messages if false
+	else $react  = VarLoad($guild_folder, "react_option.php"); //Load saved option file
+	if (!CheckFile($guild_folder, "vanity_option.php")) $vanity	= $vanity_option; //Allow SFW vanity like hug, nuzzle, kiss
+	else $vanity = VarLoad($guild_folder, "vanity_option.php"); //Load saved option file
+	if (!CheckFile($guild_folder, "nsfw_option.php")) $nsfw	= $nsfw_option; //Allow NSFW commands
+	else $nsfw  = VarLoad($guild_folder, "nsfw_option.php"); //Load saved option file
+	if (!CheckFile($guild_folder, "channel_option.php")) $channeloption	= $channel_option; //Allow channelrole reactions
+	else $channeloption  = VarLoad($guild_folder, "channel_option.php"); //Load saved option file
+	if (!CheckFile($guild_folder, "games_option.php")) $games	= $games_option; //Allow games like Yahtzee
+	else $games  = VarLoad($guild_folder, "games_option.php"); //Load saved option file
+	if (!CheckFile($guild_folder, "gameroles_option.php")) $gamerole	= $gameroles_option; //Allow gameroles
+	else $gamerole  = VarLoad($guild_folder, "gameroles_option.php"); //Load saved option file
+
+	//Role picker options
+	if (!$rolepicker_id) //Message rolepicker menus
+		$rolepicker_id = $discord->id; //Default to Palace Bot
+	global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $channel_option, $gameroles_option, $custom_option;
+	if (!CheckFile($guild_folder, "rolepicker_option.php")) $rp0 = $rolepicker_option; //Allow Rolepicker
+	else $rp0 = VarLoad($guild_folder, "rolepicker_option.php");
+	if ($species_message_id) {
+		if (!CheckFile($guild_folder, "species_option.php")) $rp1 = $species_option; //Species role picker
+		else $rp1 = VarLoad($guild_folder, "species_option.php");
 	}
-} else { //Direct message
-	if ($author_id != $discord->user->id) { //Don't trigger on messages sent by this bot
-		global $server_invite;
-		//echo "[DM-EARLY BREAK]" . PHP_EOL;
-		echo "[DM] $author_check: $message_content" . PHP_EOL;
-		$dm_text = "Please use commands for this bot within a server unless otherwise prompted.";
-		//$message->reply("$dm_text \n$server_invite");
-		//$message->reply("$dm_text");
+	if ($gender_message_id) {
+		if (!CheckFile($guild_folder, "gender_option.php")) $rp2 = $gender_option; //Gender role picker
+		else $rp2 = VarLoad($guild_folder, "gender_option.php");
 	}
-	return;
-}
+	if ($pronouns_message_id) {
+		if (!CheckFile($guild_folder, "pronouns_option.php")) $rp5 = $pronouns_option; //Custom role picker
+		else $rp5 = VarLoad($guild_folder, "pronouns_option.php");
+	}
+	if ($species_message_id) {
+		if (!CheckFile($guild_folder, "sexuality_option.php")) $rp3	= $sexuality_option; //Sexuality role picker
+		else $rp3 = VarLoad($guild_folder, "sexuality_option.php");
+	}
+	if ($customroles_message_id) {
+		if (!CheckFile($guild_folder, "custom_option.php")) $rp4 = $custom_option;//Custom role picker
+		else $rp4 = VarLoad($guild_folder, "custom_option.php");
+	}
+	if ($nsfw_message_id) {
+		if (!CheckFile($guild_folder, "nsfw_option.php")) $nsfw	= $nsfw_option; //NSFW/Adult role picker
+		else $nsfw = VarLoad($guild_folder, "nsfw_option.php");
+	}
+	if ($channelroles_message_id) {
+		if (!CheckFile($guild_folder, "channel_option.php")) $channeloption	= $channel_option;
+		else $channeloption = VarLoad($guild_folder, "channel_option.php");
+	}
+	if ($gameroles_message_id) {
+		if (!CheckFile($guild_folder, "gameroles_option.php")) $gamerole = $gameroles_option;
+		else $gamerole = VarLoad($guild_folder, "gameroles_option.php");
+	}
 
-/*
-*********************
-*********************
-Options
-*********************
-*********************
-*/
-if (!CheckFile($guild_folder, "command_symbol.php")) {
-	//Author must prefix text with this to use commands
-} else $command_symbol = VarLoad($guild_folder, "command_symbol.php"); //Load saved option file (Not used yet, but might be later)
+	//echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
+	$author_webhook = $author_user->webhook;
+	if ($author_webhook) return; //Don't process webhooks
+	if ($author_user->bot) return; //Don't process bots
 
-//Chat options
-global $react_option, $vanity_option, $nsfw_option, $channel_option, $games_option, $gameroles_option;
-if (!CheckFile($guild_folder, "react_option.php")) $react	= $react_option; //Bot will not react to messages if false
-else $react  = VarLoad($guild_folder, "react_option.php"); //Load saved option file
-if (!CheckFile($guild_folder, "vanity_option.php")) $vanity	= $vanity_option; //Allow SFW vanity like hug, nuzzle, kiss
-else $vanity = VarLoad($guild_folder, "vanity_option.php"); //Load saved option file
-if (!CheckFile($guild_folder, "nsfw_option.php")) $nsfw	= $nsfw_option; //Allow NSFW commands
-else $nsfw  = VarLoad($guild_folder, "nsfw_option.php"); //Load saved option file
-if (!CheckFile($guild_folder, "channel_option.php")) $channeloption	= $channel_option; //Allow channelrole reactions
-else $channeloption  = VarLoad($guild_folder, "channel_option.php"); //Load saved option file
-if (!CheckFile($guild_folder, "games_option.php")) $games	= $games_option; //Allow games like Yahtzee
-else $games  = VarLoad($guild_folder, "games_option.php"); //Load saved option file
-if (!CheckFile($guild_folder, "gameroles_option.php")) $gamerole	= $gameroles_option; //Allow gameroles
-else $gamerole  = VarLoad($guild_folder, "gameroles_option.php"); //Load saved option file
+	/*
+	*********************
+	*********************
+	Twitch Chat Integration
+	*********************
+	*********************
+	*/
 
-//Role picker options
-if (!$rolepicker_id) //Message rolepicker menus
-	$rolepicker_id = $discord->id; //Default to Palace Bot
-global $rolepicker_option, $species_option, $gender_option, $pronouns_option, $sexuality_option, $channel_option, $gameroles_option, $custom_option;
-if (!CheckFile($guild_folder, "rolepicker_option.php")) $rp0 = $rolepicker_option; //Allow Rolepicker
-else $rp0 = VarLoad($guild_folder, "rolepicker_option.php");
-if ($species_message_id) {
-	if (!CheckFile($guild_folder, "species_option.php")) $rp1 = $species_option; //Species role picker
-	else $rp1 = VarLoad($guild_folder, "species_option.php");
-}
-if ($gender_message_id) {
-	if (!CheckFile($guild_folder, "gender_option.php")) $rp2 = $gender_option; //Gender role picker
-	else $rp2 = VarLoad($guild_folder, "gender_option.php");
-}
-if ($pronouns_message_id) {
-	if (!CheckFile($guild_folder, "pronouns_option.php")) $rp5 = $pronouns_option; //Custom role picker
-	else $rp5 = VarLoad($guild_folder, "pronouns_option.php");
-}
-if ($species_message_id) {
-	if (!CheckFile($guild_folder, "sexuality_option.php")) $rp3	= $sexuality_option; //Sexuality role picker
-	else $rp3 = VarLoad($guild_folder, "sexuality_option.php");
-}
-if ($customroles_message_id) {
-	if (!CheckFile($guild_folder, "custom_option.php")) $rp4 = $custom_option;//Custom role picker
-	else $rp4 = VarLoad($guild_folder, "custom_option.php");
-}
-if ($nsfw_message_id) {
-	if (!CheckFile($guild_folder, "nsfw_option.php")) $nsfw	= $nsfw_option; //NSFW/Adult role picker
-	else $nsfw = VarLoad($guild_folder, "nsfw_option.php");
-}
-if ($channelroles_message_id) {
-	if (!CheckFile($guild_folder, "channel_option.php")) $channeloption	= $channel_option;
-	else $channeloption = VarLoad($guild_folder, "channel_option.php");
-}
-if ($gameroles_message_id) {
-	if (!CheckFile($guild_folder, "gameroles_option.php")) $gamerole = $gameroles_option;
-	else $gamerole = VarLoad($guild_folder, "gameroles_option.php");
-}
-
-//echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
-$author_webhook = $author_user->webhook;
-if ($author_webhook) return; //Don't process webhooks
-if ($author_user->bot) return; //Don't process bots
-
-/*
-*********************
-*********************
-Twitch Chat Integration
-*********************
-*********************
-*/
-
-if ($twitch){ //Passed down into the event from run.php
-	if($twitch_discord_output = $twitch->getDiscordOutput()){
-	
-		if ( //These values can be null, but we only want to do this if they are valid strings
-			($twitch_guild_id = $twitch->getGuildId())
-			&&
-			($twitch_channel_id = $twitch->getChannelId())
-		){
-			if ($message->id != $discord->id) //Don't output messages sent by this bot (or any other bot, really)
-			{
-				if ( //Only process if the message was sent in the designated channel
-					($twitch_guild_id == $author_guild_id)
-					&&
-					($twitch_channel_id == $author_channel_id)
-				){
-					$content = $message->content;
-					//search the message for anything containing a discord snowflake in the format of either <@id> or <@!id> and replace it with @username
-					preg_match_all('/<@([0-9]*)>/', $message->content, $matches1);
-					preg_match_all('/<@!([0-9]*)>/', $message->content, $matches2);
-					$matches = array_merge($matches1, $matches2);
-					if($matches){
-						foreach($matches as $array){
-							foreach ($array as $match){
-								if(is_numeric($match)){
-									if ($user = $discord->users->offsetGet($match))
-										$username = $user->username;
-									if (($member = $author_guild->members->offsetGet($match)) && $member->nick)
-										$nickname = $member->nick;
-									if ($nickname || $username)
-										$content = str_replace($match, '@'.($nickname ?? $username), $content);
+	if ($twitch){ //Passed down into the event from run.php
+		if($twitch_discord_output = $twitch->getDiscordOutput()){
+		
+			if ( //These values can be null, but we only want to do this if they are valid strings
+				($twitch_guild_id = $twitch->getGuildId())
+				&&
+				($twitch_channel_id = $twitch->getChannelId())
+			){
+				if ($message->id != $discord->id) //Don't output messages sent by this bot (or any other bot, really)
+				{
+					if ( //Only process if the message was sent in the designated channel
+						($twitch_guild_id == $author_guild_id)
+						&&
+						($twitch_channel_id == $author_channel_id)
+					){
+						$content = $message->content;
+						//search the message for anything containing a discord snowflake in the format of either <@id> or <@!id> and replace it with @username
+						preg_match_all('/<@([0-9]*)>/', $message->content, $matches1);
+						preg_match_all('/<@!([0-9]*)>/', $message->content, $matches2);
+						$matches = array_merge($matches1, $matches2);
+						if($matches){
+							foreach($matches as $array){
+								foreach ($array as $match){
+									if(is_numeric($match)){
+										if ($user = $discord->users->offsetGet($match))
+											$username = $user->username;
+										if (($member = $author_guild->members->offsetGet($match)) && $member->nick)
+											$nickname = $member->nick;
+										if ($nickname || $username)
+											$content = str_replace($match, '@'.($nickname ?? $username), $content);
+									}
 								}
 							}
+							$filter = "<@!";
+							$content = str_replace($filter, "", $content);
+							$filter = "<@";
+							$content = str_replace($filter, "", $content);
+							$filter = ">";
+							//$content = str_replace($filter, "", $content); //I kinda like this as a reply symbol, also prevents smiley faces like :> from being filtered
 						}
-						$filter = "<@!";
-						$content = str_replace($filter, "", $content);
-						$filter = "<@";
-						$content = str_replace($filter, "", $content);
-						$filter = ">";
-						//$content = str_replace($filter, "", $content); //I kinda like this as a reply symbol, also prevents smiley faces like :> from being filtered
-					}
-					$msg = '[DISCORD] ' . $author_user->username . ': ' . $content;
-					if(str_starts_with($message_content_lower, '#')){ //Send message only to designated channel
-						$channels = $twitch->getChannels();
-						$arr = explode(' ', $content);
-						foreach ($channels as $temp){
-							echo "temp: `$temp`" . PHP_EOL;
-							if (substr($arr[0], 1) == $temp) $target_channel = $temp;
-						}
-						echo "msg: `$msg`" . PHP_EOL;
-						echo "content: `$content`" . PHP_EOL;
-						echo "target_channel: `$target_channel`" . PHP_EOL;
-						if ($target_channel){
-							$msg = str_replace('#'.$target_channel, '', $msg);
-							$twitch->sendMessage($msg, $target_channel);
+						$msg = '[DISCORD] ' . $author_user->username . ': ' . $content;
+						if(str_starts_with($message_content_lower, '#')){ //Send message only to designated channel
+							$channels = $twitch->getChannels();
+							$arr = explode(' ', $content);
+							foreach ($channels as $temp){
+								echo "temp: `$temp`" . PHP_EOL;
+								if (substr($arr[0], 1) == $temp) $target_channel = $temp;
+							}
+							echo "msg: `$msg`" . PHP_EOL;
+							echo "content: `$content`" . PHP_EOL;
+							echo "target_channel: `$target_channel`" . PHP_EOL;
+							if ($target_channel){
+								$msg = str_replace('#'.$target_channel, '', $msg);
+								$twitch->sendMessage($msg, $target_channel);
+							}else $twitch->sendMessage($msg);
 						}else $twitch->sendMessage($msg);
-					}else $twitch->sendMessage($msg);
-				}
-			}
-		}
-	}
-}
-
-/*
-*********************
-*********************
-Load persistent variables for author
-*********************
-*********************
-*/
-
-$author_folder = $guild_folder."\\".$author_id;
-CheckDir($author_folder); //Check if folder exists and create if it doesn't
-if (CheckFile($author_folder, "watchers.php")) {
-	echo "[WATCH] $author_id" . PHP_EOL;
-	$watchers = VarLoad($author_folder, "watchers.php");
-	//	echo "WATCHERS: " . var_dump($watchers); //array of user IDs
-	$null_array = true; //Assume the object is empty
-	foreach ($watchers as $watcher) {
-		if ($watcher != null) {																									//echo "watcher: " . $watcher . PHP_EOL;
-			$null_array = false; //Mark the array as valid
-			if ($watcher_member = $author_guild->members->get('id', $watcher)){
-				if (get_class($watcher_member) == "Discord\Parts\User\Member") {
-					$watcher_user = $watcher_member->user;
-				} else {
-					$watcher_user = $watcher_member;
-				}
-				$watcher_user->getPrivateChannel()->done(
-					function ($watcher_dmchannel) use ($message) {	//Promise
-						//echo "watcher_dmchannel class: " . get_class($watcher_dmchannel) . PHP_EOL; //DMChannel
-						if (isset($watch_channel)) {
-							return $watch_channel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
-						} elseif (isset($watcher_dmchannel)) {
-							return $watcher_dmchannel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
-						}
-						return;
 					}
-				);
+				}
 			}
 		}
 	}
-	if ($null_array) { //Delete the null file
-		VarDelete($author_folder, "watchers.php");
-		echo "[REMOVE WATCH] $author_id" . PHP_EOL;
-	}
-}
 
-/*
-*********************
-*********************
-Guild-specific variables
-*********************
-*********************
-*/
+	/*
+	*********************
+	*********************
+	Load persistent variables for author
+	*********************
+	*********************
+	*/
 
-
-include 'CHANGEME.php';
-if ($author_id == $creator_id) $creator = true;
-
-//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
-//$adult 		= false; //This role current serves no purpose
-//$owner		= false; //This is populated directly from the guild
-//$dev		= false; //This is a higher rank than admin because they're assumed to have administrator privileges
-//$admin 		= false;
-//$mod		= false;
-//$assistant  = false; $role_assistant_id = "688346849349992494";
-//$tech  		= false; $role_tech_id 		= "688349304691490826";
-//$verified	= false;
-//$bot		= false;
-//$vzgbot		= false;
-//$muted		= false;
-
-$author_guild_roles_names 				= array(); 												//Names of all guild roles
-$author_guild_roles_ids 				= array(); 												//IDs of all guild roles
-foreach ($author_guild_roles as $role) {
-	$author_guild_roles_names[] 		= $role->name; 																		//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-	$author_guild_roles_ids[] 			= $role->id; 																		//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-	if ($role->name == "Palace Bot") //Author is this bot
-		$role_vzgbot_id = $role->id;
-}																															//echo "discord_guild_roles_names" . PHP_EOL; var_dump($author_guild_roles_names);
-																															//echo "discord_guild_roles_ids" . PHP_EOL; var_dump($author_guild_roles_ids);
-/*
-*********************
-*********************
-Get the guild-related collections for the author
-*********************
-*********************
-*/
-//Populate arrays of the info we need
-$author_member_roles_names 										= array();
-$author_member_roles_ids 										= array();
-foreach ($author_member_roles as $role) {
-	$author_member_roles_names[] 							= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-	$author_member_roles_ids[]								= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-	if ($role->id == $role_18_id)
-		$adult = true; //Author has the 18+ role
-	if ($role->id == $role_dev_id)
-		$dev = true; //Author has the dev role
-	if ($role->id == $role_owner_id)
-		$owner = true; //Author has the owner role
-	if ($role->id == $role_admin_id)
-		$admin = true; //Author has the admin role
-	if ($role->id == $role_mod_id)
-		$mod = true; //Author has the mod role
-	if ($role->id == $role_assistant_id)
-		$assistant = true; //Author has the assistant role
-	if ($role->id == $role_tech_id)
-		$tech = true; //Author has the tech role
-	if ($role->id == $role_verified_id)
-		$verified = true; //Author has the verified role
-	if ($role->id == $role_bot_id)
-		$bot = true; //Author has the bot role
-	if ($role->id == $role_vzgbot_id)
-		$vzgbot = true; //Author is this bot
-	if ($role->id == $role_muted_id){
-		$muted = true; //Author is muted
-	}
-}
-if ($creator || $owner || $dev) $bypass = true; //Ignore spam restrictions
-
-if ($muted) return; //Ignore commands by muted users
-
-if ($creator) echo "[CREATOR $author_guild_id/$author_id] " . PHP_EOL;
-if ($owner) echo "[OWNER $author_guild_id/$author_id] " . PHP_EOL;
-if ($dev) echo "[DEV $author_guild_id/$author_id] " . PHP_EOL;
-if ($admin) echo "[ADMIN $author_guild_id/$author_id] " . PHP_EOL;
-if ($mod) echo "[MOD $author_guild_id/$author_id] " . PHP_EOL;
-//echo PHP_EOL;
-
-global $gameroles, $gameroles_message_text;
-global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
-global $gender, $gender_message_text;
-global $pronouns, $pronouns_message_text;
-global $sexualities, $sexuality_message_text;
-global $nsfwroles, $nsfw_message_text;
-global $channelroles, $channelroles_message_text;
-global $customroles, $customroles_message_text;
-
-
-/*
-*********************
-*********************
-Automod Trigger
-*********************
-*********************
-*/
-if (CheckFile($guild_folder, "bad_full_words.php")){
-	$bad_full_words = VarLoad($guild_folder, "bad_full_words.php");
-}else{
-	$bad_full_words = array();
-	VarSave($guild_folder, "bad_full_words.php", $bad_full_words);
-}
-
-if($creator || $vzgbot || $bot || $owner || $dev || $admin || $mod || $muted || $author_perms['manage_guild'] || $author_perms['ban_members'] || $author_perms['kick_members']){
-	//Exempt
-}else{
-	foreach ($bad_full_words as $word){
-		//echo "[WORD] $word" . PHP_EOL;
-		if (str_contains($message_content_lower, ' ' . $word . ' ') || ($message_content_lower == $word)){ //Mute the offender
-			echo '[BAD WORD] $word' . PHP_EOL;
-			$removed_roles = array();
-			foreach ($author_member->roles as $role) {
-				$removed_roles[] = $role->id;
+	$author_folder = $guild_folder."\\".$author_id;
+	CheckDir($author_folder); //Check if folder exists and create if it doesn't
+	if (CheckFile($author_folder, "watchers.php")) {
+		echo "[WATCH] $author_id" . PHP_EOL;
+		$watchers = VarLoad($author_folder, "watchers.php");
+		//	echo "WATCHERS: " . var_dump($watchers); //array of user IDs
+		$null_array = true; //Assume the object is empty
+		foreach ($watchers as $watcher) {
+			if ($watcher != null) {																									//echo "watcher: " . $watcher . PHP_EOL;
+				$null_array = false; //Mark the array as valid
+				if ($watcher_member = $author_guild->members->get('id', $watcher)){
+					if (get_class($watcher_member) == "Discord\Parts\User\Member") {
+						$watcher_user = $watcher_member->user;
+					} else {
+						$watcher_user = $watcher_member;
+					}
+					$watcher_user->getPrivateChannel()->done(
+						function ($watcher_dmchannel) use ($message) {	//Promise
+							//echo "watcher_dmchannel class: " . get_class($watcher_dmchannel) . PHP_EOL; //DMChannel
+							if (isset($watch_channel)) {
+								return $watch_channel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
+							} elseif (isset($watcher_dmchannel)) {
+								return $watcher_dmchannel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
+							}
+							return;
+						}
+					);
+				}
 			}
-			VarSave($guild_folder."/".$author_id, "removed_roles.php", $removed_roles);
-			//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
-			foreach ($removed_roles as $role_id)
-				if ($role_id != $role_muted_id) $author_member->removeRole($role_id);
-			if ($role_muted_id) $author_member->addRole($role_muted_id);
-			return $message->react("🤐");
+		}
+		if ($null_array) { //Delete the null file
+			VarDelete($author_folder, "watchers.php");
+			echo "[REMOVE WATCH] $author_id" . PHP_EOL;
 		}
 	}
-}
 
-	
-/*
-*********************
-*********************
-Early Break
-*********************
-*********************
-*/
+	/*
+	*********************
+	*********************
+	Guild-specific variables
+	*********************
+	*********************
+	*/
 
-$called = false;
-$message_content_original = $message_content;
-$message_content_lower_original = $message_content_lower;
-if (str_starts_with($message_content_lower,  "<@!".$discord->id.">")) { //Allow calling commands by @mention
-	$message_content_lower = trim(substr($message_content_lower, (4+strlen($discord->id))));
-	$message_content = trim(substr($message_content, (4+strlen($discord->id))));
-	$called = true;
-} elseif (str_starts_with($message_content_lower,  "<@".$discord->id.">")) { //Allow calling commands by @mention
-	$message_content_lower = trim(substr($message_content_lower, (3+strlen($discord->id))));
-	$message_content = trim(substr($message_content, (3+strlen($discord->id))));
-	$called = true;
-} elseif (str_starts_with($message_content_lower, $command_symbol)) { //Allow calling comamnds by command symbol
-	$message_content_lower = trim(substr($message_content_lower, strlen($command_symbol)));
-	$message_content = trim(substr($message_content, strlen($command_symbol)));
-	$called = true;
-} elseif (str_starts_with($message_content_lower, '!s')) {
-	$message_content_lower = trim(substr($message_content_lower, 2));
-	$message_content = trim(substr($message_content, 2));
-	$called = true;
-}
-if (!$called) return;
+
+	include 'CHANGEME.php';
+	if ($author_id == $creator_id) $creator = true;
+
+	//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+	//$adult 		= false; //This role current serves no purpose
+	//$owner		= false; //This is populated directly from the guild
+	//$dev		= false; //This is a higher rank than admin because they're assumed to have administrator privileges
+	//$admin 		= false;
+	//$mod		= false;
+	//$assistant  = false; $role_assistant_id = "688346849349992494";
+	//$tech  		= false; $role_tech_id 		= "688349304691490826";
+	//$verified	= false;
+	//$bot		= false;
+	//$vzgbot		= false;
+	//$muted		= false;
+
+	$author_guild_roles_names 				= array(); 												//Names of all guild roles
+	$author_guild_roles_ids 				= array(); 												//IDs of all guild roles
+	foreach ($author_guild_roles as $role) {
+		$author_guild_roles_names[] 		= $role->name; 																		//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+		$author_guild_roles_ids[] 			= $role->id; 																		//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+		if ($role->name == "Palace Bot") //Author is this bot
+			$role_vzgbot_id = $role->id;
+	}																															//echo "discord_guild_roles_names" . PHP_EOL; var_dump($author_guild_roles_names);
+																																//echo "discord_guild_roles_ids" . PHP_EOL; var_dump($author_guild_roles_ids);
+	/*
+	*********************
+	*********************
+	Get the guild-related collections for the author
+	*********************
+	*********************
+	*/
+	//Populate arrays of the info we need
+	$author_member_roles_names 										= array();
+	$author_member_roles_ids 										= array();
+	foreach ($author_member_roles as $role) {
+		$author_member_roles_names[] 							= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+		$author_member_roles_ids[]								= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+		if ($role->id == $role_18_id)
+			$adult = true; //Author has the 18+ role
+		if ($role->id == $role_dev_id)
+			$dev = true; //Author has the dev role
+		if ($role->id == $role_owner_id)
+			$owner = true; //Author has the owner role
+		if ($role->id == $role_admin_id)
+			$admin = true; //Author has the admin role
+		if ($role->id == $role_mod_id)
+			$mod = true; //Author has the mod role
+		if ($role->id == $role_assistant_id)
+			$assistant = true; //Author has the assistant role
+		if ($role->id == $role_tech_id)
+			$tech = true; //Author has the tech role
+		if ($role->id == $role_verified_id)
+			$verified = true; //Author has the verified role
+		if ($role->id == $role_bot_id)
+			$bot = true; //Author has the bot role
+		if ($role->id == $role_vzgbot_id)
+			$vzgbot = true; //Author is this bot
+		if ($role->id == $role_muted_id){
+			$muted = true; //Author is muted
+		}
+	}
+	if ($creator || $owner || $dev) $bypass = true; //Ignore spam restrictions
+
+	if ($muted) return; //Ignore commands by muted users
+
+	if ($creator) echo "[CREATOR $author_guild_id/$author_id] " . PHP_EOL;
+	if ($owner) echo "[OWNER $author_guild_id/$author_id] " . PHP_EOL;
+	if ($dev) echo "[DEV $author_guild_id/$author_id] " . PHP_EOL;
+	if ($admin) echo "[ADMIN $author_guild_id/$author_id] " . PHP_EOL;
+	if ($mod) echo "[MOD $author_guild_id/$author_id] " . PHP_EOL;
+	//echo PHP_EOL;
+
+	global $gameroles, $gameroles_message_text;
+	global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
+	global $gender, $gender_message_text;
+	global $pronouns, $pronouns_message_text;
+	global $sexualities, $sexuality_message_text;
+	global $nsfwroles, $nsfw_message_text;
+	global $channelroles, $channelroles_message_text;
+	global $customroles, $customroles_message_text;
+
+
+	/*
+	*********************
+	*********************
+	Automod Trigger
+	*********************
+	*********************
+	*/
+	if (CheckFile($guild_folder, "bad_full_words.php")){
+		$bad_full_words = VarLoad($guild_folder, "bad_full_words.php");
+	}else{
+		$bad_full_words = array();
+		VarSave($guild_folder, "bad_full_words.php", $bad_full_words);
+	}
+
+	if($creator || $vzgbot || $bot || $owner || $dev || $admin || $mod || $muted || $author_perms['manage_guild'] || $author_perms['ban_members'] || $author_perms['kick_members']){
+		//Exempt
+	}else{
+		foreach ($bad_full_words as $word){
+			//echo "[WORD] $word" . PHP_EOL;
+			if (str_contains($message_content_lower, ' ' . $word . ' ') || ($message_content_lower == $word)){ //Mute the offender
+				echo '[BAD WORD] $word' . PHP_EOL;
+				$removed_roles = array();
+				foreach ($author_member->roles as $role) {
+					$removed_roles[] = $role->id;
+				}
+				VarSave($guild_folder."/".$author_id, "removed_roles.php", $removed_roles);
+				//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
+				foreach ($removed_roles as $role_id)
+					if ($role_id != $role_muted_id) $author_member->removeRole($role_id);
+				if ($role_muted_id) $author_member->addRole($role_muted_id);
+				return $message->react("🤐");
+			}
+		}
+	}
+
+		
+	/*
+	*********************
+	*********************
+	Early Break
+	*********************
+	*********************
+	*/
+
+	$called = false;
+	$message_content_original = $message_content;
+	$message_content_lower_original = $message_content_lower;
+	if (str_starts_with($message_content_lower,  "<@!".$discord->id.">")) { //Allow calling commands by @mention
+		$message_content_lower = trim(substr($message_content_lower, (4+strlen($discord->id))));
+		$message_content = trim(substr($message_content, (4+strlen($discord->id))));
+		$called = true;
+	} elseif (str_starts_with($message_content_lower,  "<@".$discord->id.">")) { //Allow calling commands by @mention
+		$message_content_lower = trim(substr($message_content_lower, (3+strlen($discord->id))));
+		$message_content = trim(substr($message_content, (3+strlen($discord->id))));
+		$called = true;
+	} elseif (str_starts_with($message_content_lower, $command_symbol)) { //Allow calling comamnds by command symbol
+		$message_content_lower = trim(substr($message_content_lower, strlen($command_symbol)));
+		$message_content = trim(substr($message_content, strlen($command_symbol)));
+		$called = true;
+	} elseif (str_starts_with($message_content_lower, '!s')) {
+		$message_content_lower = trim(substr($message_content_lower, 2));
+		$message_content = trim(substr($message_content, 2));
+		$called = true;
+	}
+	if (!$called) return;
 	/*
 	*********************
 	*********************
@@ -5875,3 +5876,4 @@ if (!$called) return;
 			return;
 		}
 	}
+}

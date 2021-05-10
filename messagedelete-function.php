@@ -24,11 +24,10 @@ function messageDelete($message, $discord){
 
 	//Load author info
 	$author_user = $message->user;
-	$author_member = $message->member;
 	$author_channel_id = $channel_id; //echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
 	
-	if (is_null($message->guild_id) && is_null($author_member)){ //True if direct message
+	if (is_null($message->guild_id) && !($author_member = $message->member)){ //True if direct message
 		$is_dm = true;
 		echo "[DM MESSAGE DELETED]" . PHP_EOL;
 		return; //Don't process DMs

@@ -467,7 +467,8 @@ try {
 		$discord->updatePresence($act, false, 'online');
 		
         $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord, $stats, $twitch, $browser) { //Handling of a message
-            include "message-include.php";
+			include_once 'message-function.php';
+			message($message, $discord, $loop, $token, $restcord, $stats, $twitch, $browser);
         });
             
         $discord->on('GUILD_MEMBER_ADD', function ($guildmember) use ($discord) { //Handling of a member joining the guild
@@ -510,9 +511,7 @@ try {
         $discord->on('MESSAGE_DELETE_BULK', function ($messages) use ($discord) { //Handling of multiple messages being deleted
 			echo "[messageDeleteBulk]" . PHP_EOL;
 			include_once 'messagedelete-function.php';
-            foreach ($messages as $message) {
-				messageDelete($message, $discord);
-			}
+            foreach ($messages as $message) messageDelete($message, $discord);
         });
         
         $discord->on('messageDeleteBulkRaw', function ($messages) use ($discord) { //Handling of multiple old/uncached messages being deleted
