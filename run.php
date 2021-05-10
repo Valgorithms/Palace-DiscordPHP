@@ -499,7 +499,8 @@ try {
         });
         
         $discord->on('MESSAGE_DELETE', function ($message) use ($discord) { //Handling of a message being deleted
-            include "messagedelete-include.php";
+            include_once 'messagedelete-function.php';
+			messageDelete($message, $discord);
         });
         
         $discord->on('messageDeleteRaw', function ($channel, $message_id) use ($discord) { //Handling of an old/uncached message being deleted
@@ -507,8 +508,10 @@ try {
         });
         
         $discord->on('MESSAGE_DELETE_BULK', function ($messages) use ($discord) { //Handling of multiple messages being deleted
+			echo "[messageDeleteBulk]" . PHP_EOL;
+			include_once 'messagedelete-function.php';
             foreach ($messages as $message) {
-				include "messagedelete-include.php";
+				messageDelete($message, $discord);
 			}
         });
         
@@ -517,15 +520,25 @@ try {
         });
         
         $discord->on('MESSAGE_REACTION_ADD', function ($reaction) use ($discord) { //Handling of a message being reacted to
-            include "messagereactionadd-include.php";
+			include_once 'messagereactionadd_function.php'; //declares processReaction
+			if (is_null($reaction->message->content)) {
+				//echo '[REACT TO EMPTY MESSAGE]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+				//echo '[MessageID] ' . $reaction->message->id . PHP_EOL;
+				$channel = $discord->getChannel($reaction->channel_id);
+				$channel->messages->fetch("{$reaction->message_id}")->done(function ($message) use ($reaction, $discord) : void {
+					processReactionAdd($reaction, $discord);
+				}, static function ($error) {
+					echo $e->getMessage() . PHP_EOL;
+				});
+			}else processReactionAdd($reaction, $discord);
         });
         
         $discord->on('MESSAGE_REACTION_REMOVE', function ($reaction) use ($discord) { //Handling of a message reaction being removed
-            include "messagereactionremove-include.php";
+            include_once "messagereactionremove-function.php";
+			processReactionRemove($reaction, $discord);
         });
         
         $discord->on('MESSAGE_REACTION_REMOVE_ALL', function ($message) use ($discord) { //Handling of all reactions being removed from a message
-            //$message_content = $message->content;
             echo "[messageReactionRemoveAll]" . PHP_EOL;
         });
         
@@ -542,7 +555,8 @@ try {
         });
             
         $discord->on('userUpdate', function ($user_new, $user_old) use ($discord) { //Handling of a user changing their username/avatar/etc
-            include "userupdate-include.php";
+            include_once "userupdate-function.php";
+			userUpdate($user_new, $user_old, $discord);
         });
             
         $discord->on('GUILD_ROLE_CREATE', function ($role) use ($discord) { //Handling of a role being created
@@ -563,7 +577,6 @@ try {
         
         $discord->on("error", function (\Throwable $e) {
             echo '[ERROR]' . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine() . PHP_EOL;
-            return true;
         });
         
         /*

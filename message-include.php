@@ -3968,12 +3968,14 @@ if (!$called) return;
 							$target_guild = $discord->guilds->get('id', $author_guild_id); //echo "target_guild: " . get_class($target_guild) . PHP_EOL;
 							$target_member = $target_guild->members->get('id', $target_id); //echo "target_member: " . get_class($target_member) . PHP_EOL;
 							$x = 0;
-							switch ($target_guild_id){
+							switch ($author_guild_id){
 								case '468979034571931648':
 									$target_member->removeRole("468982790772228127");
 									$target_member->removeRole("468983261708681216");
 									$target_member->addRole("469312086766518272");
 									break;
+								case '807759102624792576':
+									$target_member->removeRole("816839199906070561");
 								default:
 									break;
 							}
@@ -3997,7 +3999,7 @@ if (!$called) return;
 		if ($message_content_lower == 'get unverified') { //;get unverified
 			echo "[GET UNVERIFIED START]" . PHP_EOL;
 			$GLOBALS["UNVERIFIED"] = null;
-			if($author_guild->id == '468979034571931648'){
+			if ($author_guild->id == '468979034571931648') { //Civ13
 				$author_guild->members->freshen()->done(
 					function ($members) use ($message, $author_guild){
 						//$members = $fetched_guild->members->all(); //array
@@ -4032,8 +4034,7 @@ if (!$called) return;
 						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 					}
 				);
-			}else
-			if($author_guild->id == '807759102624792576'){
+			} elseif ($author_guild->id == '807759102624792576') { //Blue Colony
 				$author_guild->members->freshen()->done(
 					function ($members) use ($message, $author_guild){
 						//$members = $fetched_guild->members->all(); //array
@@ -4043,7 +4044,7 @@ if (!$called) return;
 							$target_guildmember_role_collection = $target_member->roles;
 							foreach ($target_guildmember_role_collection as $role) {
 								if ($role->name == "Verified") {
-									$target_get = true;
+									$target_skip = true;
 								}
 								if ($role->name == "Promoted") {
 									$target_skip = true;
@@ -4069,7 +4070,6 @@ if (!$called) return;
 					}
 				);
 			}
-			
 			return;
 		}
 		if ($message_content_lower == 'purge unverified') { //;purge unverified
