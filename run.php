@@ -37,6 +37,23 @@ include 'blacklisted_owners.php'; //Array of guild owner user IDs that are not a
 include 'blacklisted_guilds.php'; //Array of Guilds that are not allowed to use this bot
 include 'whitelisted_guilds.php'; //Only guilds in the $whitelisted_guilds array should be allowed to access the bot.
 
+//Custom functions
+include_once "custom_functions.php";
+///Event listener functions
+include_once 'message-function.php'; //message()
+include_once 'messageupdate-function.php'; //messageUpdate()
+include_once 'messageupdateraw-function.php'; //messageUpdateRaw()
+include_once 'messagedelete-function.php'; //messageDelete()
+include_once 'messagedeleteraw-function.php'; //messageDeleteRaw()
+include_once 'messagereactionadd-function.php'; //messageReactionAdd()
+include_once 'messagereactionremove-function.php'; //messageReactionRemove()
+include_once 'guildbanadd-function.php'; // guildBanAdd()
+include_once 'guildbanremove-function.php'; //guildBanRemove()
+include_once "guildmemberadd-function.php"; //guildMemberAdd()
+include_once 'guildmemberremove-function.php'; //guildMemberRemove()
+include_once 'guildmemberupdate-function.php'; //guildMemberUpdate()
+
+
 require __DIR__.'/../token.php';
 $logger = new Monolog\Logger('New logger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
@@ -393,8 +410,8 @@ set_exception_handler(function (Throwable $e) { //stops execution completely
 });
 */
 
-//$filesystem = \React\Filesystem\Filesystem::create($loop); //May be used in an future version of DPHP
-include_once "custom_functions.php";
+//$filesystem = \React\Filesystem\Filesystem::create($loop); //May be used in an future version of DPHP\
+//
 $rescue = VarLoad("_globals", "RESCUE.php"); //Check if recovering from a fatal crash
 $GLOBALS['presenceupdate'] = false;
 if ($rescue == true) { //Attempt to restore crashed session
@@ -467,49 +484,48 @@ try {
 		$discord->updatePresence($act, false, 'online');
 		
         $discord->on('message', function ($message, $discord) use ($loop, $token, $restcord, $stats, $twitch, $browser) { //Handling of a message
-            include "message-include.php";
+			message($message, $discord, $loop, $token, $restcord, $stats, $twitch, $browser);
         });
             
         $discord->on('GUILD_MEMBER_ADD', function ($guildmember) use ($discord) { //Handling of a member joining the guild
-            include "guildmemberadd-include.php";
+			guildMemberAdd($guildmember, $discord);
         });
         
         $discord->on('GUILD_MEMBER_REMOVE', function ($guildmember) use ($discord) { //Handling of a user leaving the guild
-            include 'guildmemberremove-include.php';
+			guildMemberRemove($guildmember, $discord);
         });
         
         $discord->on('GUILD_MEMBER_UPDATE', function ($member, $discord, $member_old)/* use ($discord) */{ //Handling of a member getting updated
-            include "guildmemberupdate-include.php";
+			guildMemberUpdate($member, $discord, $member_old);
         });
             
         $discord->on('GUILD_BAN_ADD', function ($ban) use ($discord) { //Handling of a user getting banned
-            include "guildbanadd-include.php";
+			guildBanAdd($ban, $discord);
         });
         
         $discord->on('GUILD_BAN_REMOVE', function ($ban) use ($discord) { //Handling of a user getting unbanned
-            include "guildbanremove-include.php";
+			guildBanRemove($ban, $discord);
         });
         
         $discord->on('MESSAGE_UPDATE', function ($message_new, $discord, $message_old){ //Handling of a message being changed
-            include "messageupdate-include.php";
+			messageUpdate($message_new, $discord, $message_old);
         });
         
         $discord->on('messageUpdateRaw', function ($channel, $data_array) use ($discord) { //Handling of an old/uncached message being changed
-            include "messageupdateraw-include.php";
+			messageUpdateRaw($channel, $data_array, $discord);
         });
         
         $discord->on('MESSAGE_DELETE', function ($message) use ($discord) { //Handling of a message being deleted
-            include "messagedelete-include.php";
+			messageDelete($message, $discord);
         });
         
         $discord->on('messageDeleteRaw', function ($channel, $message_id) use ($discord) { //Handling of an old/uncached message being deleted
-            include "messagedeleteraw-include.php";
+			messageDeleteRaw($channel, $message_id, $discord);
         });
         
         $discord->on('MESSAGE_DELETE_BULK', function ($messages) use ($discord) { //Handling of multiple messages being deleted
-            foreach ($messages as $message) {
-				include "messagedelete-include.php";
-			}
+			echo "[messageDeleteBulk]" . PHP_EOL;
+            foreach ($messages as $message) messageDelete($message, $discord);
         });
         
         $discord->on('messageDeleteBulkRaw', function ($messages) use ($discord) { //Handling of multiple old/uncached messages being deleted
@@ -517,15 +533,23 @@ try {
         });
         
         $discord->on('MESSAGE_REACTION_ADD', function ($reaction) use ($discord) { //Handling of a message being reacted to
-            include "messagereactionadd-include.php";
+			if (is_null($reaction->message->content)) {
+				//echo '[REACT TO EMPTY MESSAGE]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+				//echo '[MessageID] ' . $reaction->message->id . PHP_EOL;
+				$channel = $discord->getChannel($reaction->channel_id);
+				$channel->messages->fetch("{$reaction->message_id}")->done(function ($message) use ($reaction, $discord) : void {
+					messageReactionAdd($reaction, $discord);
+				}, static function ($error) {
+					echo $e->getMessage() . PHP_EOL;
+				});
+			}else messageReactionAdd($reaction, $discord);
         });
         
         $discord->on('MESSAGE_REACTION_REMOVE', function ($reaction) use ($discord) { //Handling of a message reaction being removed
-            include "messagereactionremove-include.php";
+			messageReactionRemove($reaction, $discord);
         });
         
         $discord->on('MESSAGE_REACTION_REMOVE_ALL', function ($message) use ($discord) { //Handling of all reactions being removed from a message
-            //$message_content = $message->content;
             echo "[messageReactionRemoveAll]" . PHP_EOL;
         });
         
@@ -542,7 +566,8 @@ try {
         });
             
         $discord->on('userUpdate', function ($user_new, $user_old) use ($discord) { //Handling of a user changing their username/avatar/etc
-            include "userupdate-include.php";
+            include_once "userupdate-function.php";
+			userUpdate($user_new, $user_old, $discord);
         });
             
         $discord->on('GUILD_ROLE_CREATE', function ($role) use ($discord) { //Handling of a role being created
@@ -563,7 +588,6 @@ try {
         
         $discord->on("error", function (\Throwable $e) {
             echo '[ERROR]' . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine() . PHP_EOL;
-            return true;
         });
         
         /*

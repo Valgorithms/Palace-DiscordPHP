@@ -1,5 +1,5 @@
 <?php 
-function processReaction($reaction, $discord){
+function messageReactionAdd($reaction, $discord){
 	$message = $message ?? $reaction->message;
 	$message_content = $message->content;
 	//$message->channel->sendMessage($message_content);
