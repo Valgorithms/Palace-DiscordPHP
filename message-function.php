@@ -2,8 +2,8 @@
 function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, $browser){
 	if (is_null($message) || empty($message)) return; //An invalid message object was passed
 	if (is_null($message->content)) return; //Don't process messages without content
-	if ($message["webhook_id"]) return; //Don't process webhooks
-	if ($message->author->bot) return; //Don't process messages sent by bots
+	if ($message->webhook_id || $message->user->webhook) return; //Don't process webhooks
+	if ($message->user->bot) return; //Don't process messages sent by bots
 
 	$message_content = $message->content;
 	if (!$message_content) return;
@@ -236,8 +236,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 
 	//echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
 	$author_webhook = $author_user->webhook;
-	if ($author_webhook) return; //Don't process webhooks
-	if ($author_user->bot) return; //Don't process bots
+
 
 	/*
 	*********************
@@ -3602,10 +3601,20 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			echo "[DEBUG GUILD INVITE] `$value`" . PHP_EOL;
 			if ($guild = $discord->guilds->offsetGet($value)){
-				foreach ($guild->invites as $invite){
-					if ($invite->code){
-						$url = 'https://discord.gg/' . $invite->code;
-						$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
+				if ($guild->vanity_url_code){
+					echo "[VANITY INVITE EXISTS] `$value`" . PHP_EOL;
+					$message->react("👍");
+					$url = 'https://discord.gg/' . $guild->vanity_url_code;
+					$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
+					return;
+				}
+				if ( ($bot_member = $guild->members->offsetGet($discord->id)) && ($bot_perms = $bot_member->getPermissions()) && $bot_perms['manage_guild']){
+					foreach ($guild->invites as $invite){
+						if ($invite->code){
+							$url = 'https://discord.gg/' . $invite->code;
+							$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
+							return;
+						}
 					}
 				}
 				foreach($guild->channels as $channel){

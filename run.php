@@ -41,8 +41,18 @@ include 'whitelisted_guilds.php'; //Only guilds in the $whitelisted_guilds array
 include_once "custom_functions.php";
 ///Event listener functions
 include_once 'message-function.php'; //message()
-include_once 'messagereactionadd-function.php'; //messageReactionAdd()
+include_once 'messageupdate-function.php'; //messageUpdate()
+include_once 'messageupdateraw-function.php'; //messageUpdateRaw()
 include_once 'messagedelete-function.php'; //messageDelete()
+include_once 'messagedeleteraw-function.php'; //messageDeleteRaw()
+include_once 'messagereactionadd-function.php'; //messageReactionAdd()
+include_once 'messagereactionremove-function.php'; //messageReactionRemove()
+include_once 'guildbanadd-function.php'; // guildBanAdd()
+include_once 'guildbanremove-function.php'; //guildBanRemove()
+include_once "guildmemberadd-function.php"; //guildMemberAdd()
+include_once 'guildmemberremove-function.php'; //guildMemberRemove()
+include_once 'guildmemberupdate-function.php'; //guildMemberUpdate()
+
 
 require __DIR__.'/../token.php';
 $logger = new Monolog\Logger('New logger');
@@ -478,40 +488,39 @@ try {
         });
             
         $discord->on('GUILD_MEMBER_ADD', function ($guildmember) use ($discord) { //Handling of a member joining the guild
-            include "guildmemberadd-include.php";
+			guildMemberAdd($guildmember, $discord);
         });
         
         $discord->on('GUILD_MEMBER_REMOVE', function ($guildmember) use ($discord) { //Handling of a user leaving the guild
-            include 'guildmemberremove-include.php';
+			guildMemberRemove($guildmember, $discord);
         });
         
         $discord->on('GUILD_MEMBER_UPDATE', function ($member, $discord, $member_old)/* use ($discord) */{ //Handling of a member getting updated
-            include "guildmemberupdate-include.php";
+			guildMemberUpdate($member, $discord, $member_old);
         });
             
         $discord->on('GUILD_BAN_ADD', function ($ban) use ($discord) { //Handling of a user getting banned
-            include "guildbanadd-include.php";
+			guildBanAdd($ban, $discord);
         });
         
         $discord->on('GUILD_BAN_REMOVE', function ($ban) use ($discord) { //Handling of a user getting unbanned
-            include "guildbanremove-include.php";
+			guildBanRemove($ban, $discord);
         });
         
         $discord->on('MESSAGE_UPDATE', function ($message_new, $discord, $message_old){ //Handling of a message being changed
-            include "messageupdate-include.php";
+			messageUpdate($message_new, $discord, $message_old);
         });
         
         $discord->on('messageUpdateRaw', function ($channel, $data_array) use ($discord) { //Handling of an old/uncached message being changed
-            include "messageupdateraw-include.php";
+			messageUpdateRaw($channel, $data_array, $discord);
         });
         
         $discord->on('MESSAGE_DELETE', function ($message) use ($discord) { //Handling of a message being deleted
-            include_once 'messagedelete-function.php';
 			messageDelete($message, $discord);
         });
         
         $discord->on('messageDeleteRaw', function ($channel, $message_id) use ($discord) { //Handling of an old/uncached message being deleted
-            include "messagedeleteraw-include.php";
+			messageDeleteRaw($channel, $message_id, $discord);
         });
         
         $discord->on('MESSAGE_DELETE_BULK', function ($messages) use ($discord) { //Handling of multiple messages being deleted
@@ -537,8 +546,7 @@ try {
         });
         
         $discord->on('MESSAGE_REACTION_REMOVE', function ($reaction) use ($discord) { //Handling of a message reaction being removed
-            include_once "messagereactionremove-function.php";
-			processReactionRemove($reaction, $discord);
+			messageReactionRemove($reaction, $discord);
         });
         
         $discord->on('MESSAGE_REACTION_REMOVE_ALL', function ($message) use ($discord) { //Handling of all reactions being removed from a message
