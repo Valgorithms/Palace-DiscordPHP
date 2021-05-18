@@ -1890,7 +1890,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				}
 			);
 		} else {
-			$author_user->getPrivateChannel()->done(
+			return $author_user->getPrivateChannel()->done(
 				function($author_dmchannel) use ($documentation){
 					$handle = fopen('help.txt', 'w+');
 					fwrite($handle, $documentation);
