@@ -1854,8 +1854,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if (!$tip_pending_channel) $documentation = $documentation . "~~";
 
 		$documentation_sanitized = str_replace("\n", "", $documentation);
-		$doc_length = strlen($documentation_sanitized);
-		if ($doc_length < 1024) {
+		$doc_length = strlen($documentation);
+		if ($doc_length <= 2048) {
 			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 			$embed
 				->setTitle("Commands for $author_guild_name")											// Set a title
@@ -1869,17 +1869,39 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 				->setURL("");							 												// Set the URL
 	//				Open a DM channel then send the rich embed message
-			$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
-				echo "[;HELP EMBED]" . PHP_EOL;
-				return $author_dmchannel->sendEmbed($embed);
-			});
-			return;
+			return $author_user->sendEmbed($embed)->then(
+				null,
+				function ($error) use ($author_user, $documentation) {
+					$author_user->getPrivateChannel()->done(
+						function($author_dmchannel) use ($documentation){
+							$handle = fopen('help.txt', 'w+');
+							fwrite($handle, $documentation);
+							fclose($handle);
+							$author_dmchannel->sendFile('help.txt')->done(
+								function ($result) {
+									unlink('help.txt');
+								},
+								function ($error) {
+									unlink('help.txt');
+								}
+							);
+						}
+					);
+				}
+			);
 		} else {
-			$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
-				echo "[;HELP MESSAGE]" . PHP_EOL;
-				$author_dmchannel->sendMessage($documentation);
-			});
-			return;
+			$author_user->getPrivateChannel()->done(
+				function($author_dmchannel) use ($documentation){
+					$handle = fopen('help.txt', 'w+');
+					fwrite($handle, $documentation);
+					fclose($handle);
+					$author_dmchannel->sendFile('help.txt')->done(
+						function ($result) {
+							unlink('help.txt');
+						}
+					);
+				}
+			);
 		}
 	}
 
