@@ -1898,6 +1898,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					$author_dmchannel->sendFile('help.txt')->done(
 						function ($result) {
 							unlink('help.txt');
+						},
+						function ($error) {
+							unlink('help.txt');
 						}
 					);
 				}
