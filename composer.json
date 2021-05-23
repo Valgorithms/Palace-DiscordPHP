@@ -22,7 +22,7 @@
     "scripts": {
         "cs": ["./vendor/bin/php-cs-fixer fix"],
         "unit": ["./vendor/bin/phpunit"]
-    }
+    },
 	"minimum-stability": "dev",
 	"prefer-stable": true,
 }
