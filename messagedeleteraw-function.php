@@ -1,5 +1,5 @@
 <?php
-function messageDeleteRaw($channel, $message_id, $discord){
+function messageDeleteRaw($channel, $message_id, $discord) {
 	echo "[messageDeleteRaw] " . $channel->guild_id . '/' . $channel->id . '/' . $message_id . PHP_EOL;		
 	$channel_id = $channel->id;
 	$log_message = "Message with id $message_id was deleted from <#$channel_id>\n" . PHP_EOL;

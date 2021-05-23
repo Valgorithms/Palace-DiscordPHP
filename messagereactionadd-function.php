@@ -1,5 +1,5 @@
 <?php 
-function messageReactionAdd($reaction, $discord){
+function messageReactionAdd($reaction, $discord) {
 	$message = $message ?? $reaction->message;
 	$message_content = $message->content;															//$message->channel->sendMessage($message_content);
 
@@ -64,7 +64,7 @@ function messageReactionAdd($reaction, $discord){
 	$message_id	= $message->id;														//echo "message_id: " . $message_id . PHP_EOL;
 	global $gameroles, $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwroles, $nsfwsubroles;
 	$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
-	if (CheckFile($guild_folder."/", 'custom_roles.php')){
+	if (CheckFile($guild_folder."/", 'custom_roles.php')) {
 		include "$guild_custom_roles_path"; //Overwrite default custom_roles
 	}else global $customroles;
 
@@ -193,7 +193,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($pronouns as $var_name => $value){
+						/*foreach ($pronouns as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -239,7 +239,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($species as $var_name => $value){
+						/*foreach ($species as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -285,7 +285,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($species2 as $var_name => $value){
+						/*foreach ($species2 as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -331,7 +331,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($species3 as $var_name => $value){
+						/*foreach ($species3 as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -373,7 +373,7 @@ function messageReactionAdd($reaction, $discord){
 								}
 							}
 						}
-						/*foreach ($sexualities as $var_name => $value){
+						/*foreach ($sexualities as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -416,7 +416,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($gender as $var_name => $value){
+						/*foreach ($gender as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -459,7 +459,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($pronouns as $var_name => $value){
+						/*foreach ($pronouns as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -502,7 +502,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($pronouns as $var_name => $value){
+						/*foreach ($pronouns as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -547,7 +547,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($customroles as $var_name => $value){
+						/*foreach ($customroles as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -582,7 +582,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($nsfwroles as $var_name => $value){
+						/*foreach ($nsfwroles as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}
@@ -617,7 +617,7 @@ function messageReactionAdd($reaction, $discord){
 							}
 						}
 						//$message->clearReactions();
-						/*foreach ($nsfwsubroles as $var_name => $value){
+						/*foreach ($nsfwsubroles as $var_name => $value) {
 							//$message->react($value);
 						}*/
 					}

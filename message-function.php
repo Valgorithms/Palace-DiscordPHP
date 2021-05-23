@@ -1,5 +1,5 @@
 <?php
-function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, $browser){
+function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, $browser) {
 	if (is_null($message) || empty($message)) return; //An invalid message object was passed
 	if (is_null($message->content)) return; //Don't process messages without content
 	if ($message->webhook_id || $message->user->webhook) return; //Don't process webhooks
@@ -50,8 +50,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		//$author_channel->sendMessage($discord->application->getInviteURLAttribute('8&redirect_uri=https%3A%2F%2Fdiscord.com%2Foauth2%2Fauthorize%3Fclient_id%3D586694030553776242%26permissions%3D8%26scope%3Dbot&response_type=code&scope=identify%20email%20connections%20guilds.join%20gdm.join%20guilds%20applications.builds.upload%20messages.read%20bot%20webhook.incoming%20rpc.notifications.read%20rpc%20applications.builds.read%20applications.store.update%20applications.entitlements%20activities.read%20activities.write%20relationships.read'));
 		$author_channel->sendMessage($discord->application->getInviteURLAttribute('8'));
 		/*
-		$author_user->getPrivateChannel()->done(function($author_dmchannel) use ($discord){
-			$discord->generateOAuthInvite(8)->done(function($BOTINVITELINK) use ($author_dmchannel){
+		$author_user->getPrivateChannel()->done(function($author_dmchannel) use ($discord) {
+			$discord->generateOAuthInvite(8)->done(function($BOTINVITELINK) use ($author_dmchannel) {
 				$author_dmchannel->sendMessage($BOTINVITELINK);
 			});
 		});
@@ -76,7 +76,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		global $blacklisted_owners;
 		if ($blacklisted_owners) {
 			if (in_array($guild_owner_id, $blacklisted_owners)) {
-				//$author_guild->leave($author_guild_id)->done(null, function ($error){
+				//$author_guild->leave($author_guild_id)->done(null, function ($error) {
 				$discord->guilds->leave($author_guild);
 			}
 		}
@@ -85,7 +85,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		global $blacklisted_guilds;
 		if ($blacklisted_guilds) {
 			if (in_array($author_guild_id, $blacklisted_guilds)) {
-				//$author_guild->leave($author_guild_id)->done(null, function ($error){
+				//$author_guild->leave($author_guild_id)->done(null, function ($error) {
 				$discord->guilds->leave($author_guild)->done(null, function ($error) {
 					if (strlen($error) < (2049)) {
 						echo "[ERROR] $error" . PHP_EOL; //Echo any errors
@@ -99,7 +99,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		global $whitelisted_guilds;
 		if ($whitelisted_guilds) {
 			if (!in_array($author_guild_id, $whitelisted_guilds)) {
-				//$author_guild->leave()->done(null, function ($error){
+				//$author_guild->leave()->done(null, function ($error) {
 				$discord->guilds->leave($author_guild)->done(null, function ($error) {
 					var_dump($error->getMessage()); //Echo any errors
 				});
@@ -152,7 +152,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($tip_approved_channel_id) $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
 		
 		$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
-		if (CheckFile($guild_folder."/", 'custom_roles.php')){
+		if (CheckFile($guild_folder."/", 'custom_roles.php')) {
 			include "$guild_custom_roles_path"; //Overwrite default custom_roles
 		}else{
 			global $customroles, $customroles_message_text;
@@ -246,30 +246,30 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*/
 
-	if ($twitch){ //Passed down into the event from run.php
-		if($twitch_discord_output = $twitch->getDiscordOutput()){
+	if ($twitch) { //Passed down into the event from run.php
+		if($twitch_discord_output = $twitch->getDiscordOutput()) {
 		
 			if ( //These values can be null, but we only want to do this if they are valid strings
 				($twitch_guild_id = $twitch->getGuildId())
 				&&
 				($twitch_channel_id = $twitch->getChannelId())
-			){
+			) {
 				if ($message->id != $discord->id) //Don't output messages sent by this bot (or any other bot, really)
 				{
 					if ( //Only process if the message was sent in the designated channel
 						($twitch_guild_id == $author_guild_id)
 						&&
 						($twitch_channel_id == $author_channel_id)
-					){
+					) {
 						$content = $message->content;
 						//search the message for anything containing a discord snowflake in the format of either <@id> or <@!id> and replace it with @username
 						preg_match_all('/<@([0-9]*)>/', $message->content, $matches1);
 						preg_match_all('/<@!([0-9]*)>/', $message->content, $matches2);
 						$matches = array_merge($matches1, $matches2);
-						if($matches){
-							foreach($matches as $array){
-								foreach ($array as $match){
-									if(is_numeric($match)){
+						if($matches) {
+							foreach($matches as $array) {
+								foreach ($array as $match) {
+									if(is_numeric($match)) {
 										if ($user = $discord->users->offsetGet($match))
 											$username = $user->username;
 										if (($member = $author_guild->members->offsetGet($match)) && $member->nick)
@@ -287,17 +287,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							//$content = str_replace($filter, "", $content); //I kinda like this as a reply symbol, also prevents smiley faces like :> from being filtered
 						}
 						$msg = '[DISCORD] ' . $author_user->username . ': ' . $content;
-						if(str_starts_with($message_content_lower, '#')){ //Send message only to designated channel
+						if(str_starts_with($message_content_lower, '#')) { //Send message only to designated channel
 							$channels = $twitch->getChannels();
 							$arr = explode(' ', $content);
-							foreach ($channels as $temp){
+							foreach ($channels as $temp) {
 								echo "temp: `$temp`" . PHP_EOL;
 								if (substr($arr[0], 1) == $temp) $target_channel = $temp;
 							}
 							echo "msg: `$msg`" . PHP_EOL;
 							echo "content: `$content`" . PHP_EOL;
 							echo "target_channel: `$target_channel`" . PHP_EOL;
-							if ($target_channel){
+							if ($target_channel) {
 								$msg = str_replace('#'.$target_channel, '', $msg);
 								$twitch->sendMessage($msg, $target_channel);
 							}else $twitch->sendMessage($msg);
@@ -326,7 +326,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		foreach ($watchers as $watcher) {
 			if ($watcher != null) {																									//echo "watcher: " . $watcher . PHP_EOL;
 				$null_array = false; //Mark the array as valid
-				if ($watcher_member = $author_guild->members->get('id', $watcher)){
+				if ($watcher_member = $author_guild->members->get('id', $watcher)) {
 					if (get_class($watcher_member) == "Discord\Parts\User\Member") {
 						$watcher_user = $watcher_member->user;
 					} else {
@@ -419,7 +419,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$bot = true; //Author has the bot role
 		if ($role->id == $role_vzgbot_id)
 			$vzgbot = true; //Author is this bot
-		if ($role->id == $role_muted_id){
+		if ($role->id == $role_muted_id) {
 			$muted = true; //Author is muted
 		}
 	}
@@ -451,19 +451,19 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*********************
 	*/
-	if (CheckFile($guild_folder, "bad_full_words.php")){
+	if (CheckFile($guild_folder, "bad_full_words.php")) {
 		$bad_full_words = VarLoad($guild_folder, "bad_full_words.php");
-	}else{
+	} else {
 		$bad_full_words = array();
 		VarSave($guild_folder, "bad_full_words.php", $bad_full_words);
 	}
 
-	if($creator || $vzgbot || $bot || $owner || $dev || $admin || $mod || $muted || $author_perms['manage_guild'] || $author_perms['ban_members'] || $author_perms['kick_members']){
+	if($creator || $vzgbot || $bot || $owner || $dev || $admin || $mod || $muted || $author_perms['manage_guild'] || $author_perms['ban_members'] || $author_perms['kick_members']) {
 		//Exempt
 	}else{
-		foreach ($bad_full_words as $word){
+		foreach ($bad_full_words as $word) {
 			//echo "[WORD] $word" . PHP_EOL;
-			if (str_contains($message_content_lower, ' ' . $word . ' ') || ($message_content_lower == $word)){ //Mute the offender
+			if (str_contains($message_content_lower, ' ' . $word . ' ') || ($message_content_lower == $word)) { //Mute the offender
 				echo '[BAD WORD] $word' . PHP_EOL;
 				$removed_roles = array();
 				foreach ($author_member->roles as $role) $removed_roles[] = $role->id;
@@ -531,7 +531,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (str_starts_with($subcommand, 'rem')) $switch = 'rem';
 			if (str_starts_with($subcommand, 'remove')) $switch = 'remove';
 			if (str_starts_with($subcommand, 'list')) $switch = 'list';
-			if ($switch){
+			if ($switch) {
 				$value = trim(str_replace($switch, "", $subcommand));
 				$filter = "<@";
 				$value = str_replace($filter, "", $value);
@@ -544,20 +544,20 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						return $message->react('❌');
 				if ($switch == 'add')
 					if ($target_user = $discord->users->offsetGet($value)) //Add to whitelist
-						if(!in_array($value, $whitelist_array)){
+						if(!in_array($value, $whitelist_array)) {
 							$whitelist_array[] = $value;
 							VarSave($guild_folder, "ownerwhitelist.php", $whitelist_array);
 							return $message->react("👍");
 						}
 				if ( ($switch == 'rem') || ($switch == 'remove')) //TODO
-					if(in_array($value, $whitelist_array)){ //Remove from whitelist
+					if(in_array($value, $whitelist_array)) { //Remove from whitelist
 						$pruned_whitelist_array = array();
 						foreach ($whitelist_array as $id)
 							if ($id != $value) $pruned_whitelist_array[] = $id;
 						VarSave($guild_folder, "ownerwhitelist.php", $pruned_whitelist_array);
 						return $message->react("👍");
 					}
-				if ($switch == 'list'){ //TODO
+				if ($switch == 'list') { //TODO
 					$string = "Whitelisted users: ";
 					foreach ($whitelist_array as $id)
 						$string .= "<@$id> ";
@@ -570,7 +570,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	if ($creator || $owner || $dev) {
-		if ($author_guild_id == '807759102624792576'){
+		if ($author_guild_id == '807759102624792576') {
 			if (str_starts_with($message_content_lower, 'host world')) 
 				if($handle = popen("start ". 'cmd /c "'. 'D:\GitHub' . '\World - Pull-Compile-Kill-Copy-Host.bat"', "r"))
 					return $message->react("👍");
@@ -1139,7 +1139,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						echo array_key_first($customroles);
 						for($j = $i+1; $j < count($customroles); $j++)
 							next($customroles);
-						return $new_message->react(next($customroles))->then(function ($result){
+						return $new_message->react(next($customroles))->then(function ($result) {
 						  //
 						});
 					  });
@@ -1147,7 +1147,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					}
 					$customroles = array_reverse($customroles);
 					$new_message->react(array_key_last($customroles))->done(
-						function ($result){
+						function ($result) {
 							//
 						}
 					);
@@ -1155,7 +1155,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					
 					$promise = $new_promise ?? $promise;
 					$promise->done(
-						function ($result){
+						function ($result) {
 							//
 						}, function ($error) { // return with error ?
 						  return;
@@ -1871,7 +1871,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				null,
 				function ($error) use ($author_user, $documentation) {
 					$author_user->getPrivateChannel()->done(
-						function($author_dmchannel) use ($documentation){
+						function($author_dmchannel) use ($documentation) {
 							$handle = fopen('help.txt', 'w+');
 							fwrite($handle, $documentation);
 							fclose($handle);
@@ -1889,7 +1889,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			);
 		} else {
 			return $author_user->getPrivateChannel()->done(
-				function($author_dmchannel) use ($documentation){
+				function($author_dmchannel) use ($documentation) {
 					$handle = fopen('help.txt', 'w+');
 					fwrite($handle, $documentation);
 					fclose($handle);
@@ -1914,8 +1914,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*/
 	
-	if($creator || $owner || $dev || $admin || $author_perms['manage_guild']){ //Allow high staff to edit the ban word list
-		if (str_starts_with($message_content_lower, 'automod')){ //;automod
+	if($creator || $owner || $dev || $admin || $author_perms['manage_guild']) { //Allow high staff to edit the ban word list
+		if (str_starts_with($message_content_lower, 'automod')) { //;automod
 			$subcommand = trim(substr($message_content_lower, 7));
 			echo "[SUBCOMMAND $subcommand]" . PHP_EOL;
 			
@@ -1925,20 +1925,20 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (str_starts_with($subcommand, 'remove')) $switch = 'remove';
 			if (str_starts_with($subcommand, 'list')) $switch = 'list';
 			
-			if($switch){
+			if($switch) {
 				$array = explode(' ', trim(str_replace($switch, "", $subcommand)));
 				echo "[ARRAY] "; var_dump($array); echo PHP_EOL; 
 				//return; //TODO
 				
-				if(!empty($array)){
-					foreach($array as $word){
+				if(!empty($array)) {
+					foreach($array as $word) {
 						if ($switch == 'add') //Add to banned words
-							if(!in_array($word, $bad_full_words)){
+							if(!in_array($word, $bad_full_words)) {
 								$bad_full_words[] = $word;
 								VarSave($guild_folder, "bad_full_words.php", $bad_full_words);
 							}else return $message->react("👎");
 						if (($switch == 'rem') || ($switch == 'remove')) //Remove from banned words
-							if(in_array($word, $bad_full_words)){ //Remove from whitelist (Rebuilds the array)
+							if(in_array($word, $bad_full_words)) { //Remove from whitelist (Rebuilds the array)
 								$pruned_bad_full_words_array = array();
 								foreach ($bad_full_words as $value)
 									if ($word != $value) $pruned_bad_full_words_array[] = $value;
@@ -1947,7 +1947,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							}else return $message->react("👎");
 					}
 				}
-				if ($switch == 'list'){ //Display all banned words
+				if ($switch == 'list') { //Display all banned words
 					$string = "Banned words: ";
 					foreach ($bad_full_words as $bannedword)
 						$string .= "`$bannedword` ";
@@ -1973,12 +1973,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*********************
 	*/
-	if (str_starts_with($message_content_lower, 'join #')){ //;join #channel
+	if (str_starts_with($message_content_lower, 'join #')) { //;join #channel
 		$filter = 'join #';
 		$value = explode(' ', str_replace($filter, "", $message_content_lower));
 		$twitch->joinChannel($value[0]);
 	}
-	if (str_starts_with($message_content_lower, 'leave #')){ //;leave #channel
+	if (str_starts_with($message_content_lower, 'leave #')) { //;leave #channel
 		$filter = 'leave #';
 		$value = explode(' ', str_replace($filter, "", $message_content_lower));
 		$twitch->leaveChannel($value[0]);
@@ -2031,18 +2031,18 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$arr = explode('d', $message_content_lower);
 				echo 'arr[0]: ' . $arr[0] . PHP_EOL;
 				echo 'arr[1]: ' . $arr[1] . PHP_EOL;
-				if(str_contains($arr[1], '+')){
+				if(str_contains($arr[1], '+')) {
 					$arr2 = explode('+', $arr[1]);
 					$arr[1] = $arr2[0];
 					$arr[2] = $arr2[1];
 				}
-				elseif(str_contains($arr[1], '-')){
+				elseif(str_contains($arr[1], '-')) {
 					$arr2 = explode('-', $arr[1]);
 					$arr[1] = $arr2[0];
 					$arr[2] = '-'.$arr2[1];
 				}
 				echo 'arr[2]: ' . $arr[2] . PHP_EOL;
-				if( is_numeric($arr[0]) && is_numeric($arr[1]) ){
+				if( is_numeric($arr[0]) && is_numeric($arr[1]) ) {
 					if ( ((int)$arr[0] < 1) || ((int)$arr[1] < 1) )
 						return $message->reply('Die count and side count must be positive!');
 					if (isset($arr[2]) && is_nan($arr[2]))
@@ -2056,10 +2056,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					echo 'result: '; var_dump($result); echo PHP_EOL;
 					$sum = array_sum($result) + $mod;
 					$output = "You rolled $sum!";
-					foreach ($result as $roll){
+					foreach ($result as $roll) {
 						$rolls .= "$roll, ";
 					}
-					if (isset($rolls)){
+					if (isset($rolls)) {
 						$rolls = substr(trim($rolls), 0, -1);
 						$output .= "\n`$rolls`";
 					}
@@ -2096,7 +2096,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$desc_string_array = array();
 				$desc_string = "";
 				$server_state = array();
-				foreach ($data_json as $varname => $varvalue){ //individual servers
+				foreach ($data_json as $varname => $varvalue) { //individual servers
 					$varvalue = json_encode($varvalue);
 					//echo "varname: " . $varname . PHP_EOL; //Index
 					//echo "varvalue: " . $varvalue . PHP_EOL; //Json
@@ -2120,14 +2120,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$server_state_dump = array(); // new assoc array for use with the embed
 				
 				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
-				foreach ($server_index as $index => $servername){
+				foreach ($server_index as $index => $servername) {
 					$assocArray = json_decode($server_state[$index], true);
-					foreach ($assocArray as $key => $value){
+					foreach ($assocArray as $key => $value) {
 						$value = urldecode($value);
 						//echo "$key:$value" . PHP_EOL;
 						$playerlist = "";
 						if($key/* && $value && ($value != "unknown")*/)
-							switch($key){
+							switch($key) {
 								case "version": //First key if online
 									//$server_state_dump[$index]["Status"] = "Online";
 									$server_state_dump[$index]["Server"] = "<" . $server_url[$index] . "> " . PHP_EOL . $server_index[$index]/* . " **(Online)**"*/;
@@ -2137,7 +2137,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 									$server_state_dump[$index]["Server"] = "" . $server_url[$index] . " " . PHP_EOL . $server_index[$index] . " (Offline)"; //Don't show offline
 									break;
 								case "host":
-									if( ($value == NULL) || ($value == "") ){
+									if( ($value == NULL) || ($value == "") ) {
 										$server_state_dump[$index]["Host"] = "Taislin";
 									}else $server_state_dump[$index]["Host"] = $value;
 									break;
@@ -2160,7 +2160,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 									$rd = explode (":", $value);
 									$remainder = ($rd[0] % 24);
 									$rd[0] = floor($rd[0] / 24);
-									if( ($rd[0] != 0) || ($remainder != 0) || ($rd[1] != 0) ){ //Round is starting
+									if( ($rd[0] != 0) || ($remainder != 0) || ($rd[1] != 0) ) { //Round is starting
 										$rt = $rd[0] . "d " . $remainder . "h " . $rd[1] . "m";
 									}else{
 										$rt = null; //"STARTING";
@@ -2172,7 +2172,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 									$rd = explode (":", $value);
 									$remainder = ($rd[0] % 24);
 									$rd[0] = floor($rd[0] / 24);
-									if( ($rd[0] != 0) || ($remainder != 0) || ($rd[1] != 0) ){ //Round is starting
+									if( ($rd[0] != 0) || ($remainder != 0) || ($rd[1] != 0) ) { //Round is starting
 										$rt = $rd[0] . "d " . $remainder . "h " . $rd[1] . "m";
 									}else{
 										$rt = null; //"STARTING";
@@ -2182,7 +2182,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 								case "cachetime":
 									$server_state_dump[$index]["Cache Time"] = gmdate("F j, Y, g:i a", $value) . " GMT";
 								default:
-									if ((substr($key, 0, 6) == "player") && ($key != "players") ){
+									if ((substr($key, 0, 6) == "player") && ($key != "players") ) {
 										$server_state_dump[$index]["Players"][] = $value;
 										//$playerlist = $playerlist . "$varvalue, ";
 										//"Players", urldecode($serverinfo[0]["players"])
@@ -2193,20 +2193,20 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				}
 				//Build the embed message
 				//echo "server_state_dump count:" . count($server_state_dump) . PHP_EOL;
-				for($x=0; $x < count($server_state_dump)+1; $x++){ //+1 because we commented Persistence
+				for($x=0; $x < count($server_state_dump)+1; $x++) { //+1 because we commented Persistence
 					//echo "x: " . $x . PHP_EOL;
 					if(is_array($server_state_dump[$x]))
-					foreach ($server_state_dump[$x] as $key => $value){ //Status / Byond / Host / Player Count / Epoch / Season / Map / Round Time / Station Time / Players
+					foreach ($server_state_dump[$x] as $key => $value) { //Status / Byond / Host / Player Count / Epoch / Season / Map / Round Time / Station Time / Players
 						if($key && $value)
-						if(is_array($value)){
+						if(is_array($value)) {
 							$output_string = implode(', ', $value);
 							$embed->addFieldValues($key . " (" . count($value) . ")", $output_string, true);
-						}elseif($key == "Host"){
+						}elseif($key == "Host") {
 							if(strpos($value, "(Offline") == false)
 							$embed->addFieldValues($key, $value, true);
-						}elseif($key == "Cache Time"){
+						}elseif($key == "Cache Time") {
 							//$embed->addFieldValues($key, $value, true);
-						}elseif($key == "Server"){
+						}elseif($key == "Server") {
 							$embed->addFieldValues($key, $value, false);
 						}else{
 							$embed->addFieldValues($key, $value, true);
@@ -2222,7 +2222,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					->setURL("");
 				$author_channel->sendEmbed($embed)->done(
 					null,
-					function ($error) use ($message){
+					function ($error) use ($message) {
 						var_dump($error->getMessage());
 						$message->react("👎");
 					}
@@ -2239,12 +2239,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		);
 		return;
 	}
-	if (str_starts_with($message_content_lower, 'remindme ')){ //;remindme
+	if (str_starts_with($message_content_lower, 'remindme ')) { //;remindme
 		echo "[REMINDER]" . PHP_EOL;
 		$arr = explode(' ', $message_content_lower);
 		//$filter = "remindme ";
 		//$value = str_replace($filter, "", $message_content_lower);
-		if(is_numeric($arr[1])){
+		if(is_numeric($arr[1])) {
 			//echo 'test: ' . strpos($message_content,'remindme')+strlen($arr[0])+strlen($arr[1]) . PHP_EOL;
 			$string = trim(substr($message_content, strpos($message_content,' ')+1+strlen($arr[1])));
 			$discord->getLoop()->addTimer($arr[1], function() use ($message, $string) {
@@ -2351,7 +2351,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$mention_role_id_queue_full 							= PHP_EOL . $mention_role_id_queue;
 		
 			//				Check if anyone had their roles changed
-			//				if ($mention_role_name_queue_default != $mention_role_name_queue){
+			//				if ($mention_role_name_queue_default != $mention_role_name_queue) {
 			if ($mention_role_name_queue_default != $mention_role_id_queue) {
 				//					Send the message
 				if ($react) $message->react("👍");
@@ -2513,7 +2513,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						$embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
 						$suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
 							//Repost the suggestion
-							$new_message->react("👍")->done(function($result) use ($new_message){
+							$new_message->react("👍")->done(function($result) use ($new_message) {
 								$new_message->react("👎");
 							});
 						});
@@ -2594,10 +2594,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				->setURL("");							 												// Set the URL
 			$suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
 				$new_message->react("👍")->done(
-					function($result) use ($new_message){
+					function($result) use ($new_message) {
 						$new_message->react("👎");
 					},
-					function ($error) use ($new_message){
+					function ($error) use ($new_message) {
 						var_dump($error->getMessage());
 					}
 				);
@@ -2628,7 +2628,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$valid = false;
 				$nums = array();
 				foreach ($pieces as $piece) {
-					if (is_numeric($piece)){
+					if (is_numeric($piece)) {
 						echo "approve: " . (int)$piece . PHP_EOL;
 						$nums[] = (int)$piece;
 						$valid = true;
@@ -2647,7 +2647,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						$embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
 						$tip_approved_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
 							//Repost the tip
-							$new_message->react("👍")->done(function($result) use ($new_message){
+							$new_message->react("👍")->done(function($result) use ($new_message) {
 								$new_message->react("👎");
 							});
 						});
@@ -2729,7 +2729,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 				->setURL("");							 												// Set the URL
 			$tip_pending_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
-				$new_message->react("👍")->done(function ($result) use ($new_message){
+				$new_message->react("👍")->done(function ($result) use ($new_message) {
 					$new_message->react("👎");
 				});
 				//Save the tip somewhere
@@ -3548,11 +3548,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*/
 
 	/*
-	if($creator || $owner || $dev || $admin || $mod){ //Only allow these roles to use this
+	if($creator || $owner || $dev || $admin || $mod) { //Only allow these roles to use this
 	}
 	*/
 	if ($creator || ($member->id == '68828609288077312') || ($member->id == '68847303431041024')) { //Special use-case
-		if ($message_content_lower == 'pull'){ //;pull
+		if ($message_content_lower == 'pull') { //;pull
 			//if(shell_exec("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpull.bat"'))
 			
 			if($handle = popen("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpullbot.bat"', "r"))
@@ -3582,7 +3582,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	if ($creator) { //Mostly just debug commands
-		if ($message_content_lower == 'debug'){ //;debug
+		if ($message_content_lower == 'debug') { //;debug
 			echo '[DEBUG]' . PHP_EOL;
 			ob_start();
 			
@@ -3594,13 +3594,13 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			file_put_contents('debug.txt', $debug_output);
 			ob_end_flush();
 		}
-		if ($message_content_lower == 'stats'){ //;stats
+		if ($message_content_lower == 'stats') { //;stats
 			$stats->handle($message);
 		}
-		if ($message_content_lower == 'jit'){ //;jit
+		if ($message_content_lower == 'jit') { //;jit
 			var_dump(opcache_get_status()['jit']);
 		}
-		if ($message_content_lower == 'debug invite'){ //;debuginvite
+		if ($message_content_lower == 'debug invite') { //;debuginvite
 			$author_channel->createInvite([
 				'max_age' => 60, // 1 minute
 				'max_uses' => 5, // 5 uses
@@ -3610,38 +3610,38 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$author_channel->sendMessage("Invite URL: $url");
 			});
 		}
-		if ($message_content_lower == 'debug guild names'){ //;debug all invites
+		if ($message_content_lower == 'debug guild names') { //;debug all invites
 			$guildstring = "";
-			foreach($discord->guilds as $guild){
+			foreach($discord->guilds as $guild) {
 				$guildstring .= "[{$guild->name} ({$guild->id}) :man::".count($guild->members)." <@{$guild->owner_id}>] \n";
 			}
 			foreach (str_split($guildstring, 2000) as $piece) {
 				$message->channel->sendMessage($piece);
 			}
 		}
-		if (str_starts_with($message_content_lower, 'debug guild invite ')){ //;debug guild invite guildid
+		if (str_starts_with($message_content_lower, 'debug guild invite ')) { //;debug guild invite guildid
 			$filter = "debug guild invite ";
 			$value = str_replace($filter, "", $message_content_lower);
 			echo "[DEBUG GUILD INVITE] `$value`" . PHP_EOL;
-			if ($guild = $discord->guilds->offsetGet($value)){
-				if ($guild->vanity_url_code){
+			if ($guild = $discord->guilds->offsetGet($value)) {
+				if ($guild->vanity_url_code) {
 					echo "[VANITY INVITE EXISTS] `$value`" . PHP_EOL;
 					$message->react("👍");
 					$url = 'https://discord.gg/' . $guild->vanity_url_code;
 					$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
 					return;
 				}
-				if ( ($bot_member = $guild->members->offsetGet($discord->id)) && ($bot_perms = $bot_member->getPermissions()) && $bot_perms['manage_guild']){
-					foreach ($guild->invites as $invite){
-						if ($invite->code){
+				if ( ($bot_member = $guild->members->offsetGet($discord->id)) && ($bot_perms = $bot_member->getPermissions()) && $bot_perms['manage_guild']) {
+					foreach ($guild->invites as $invite) {
+						if ($invite->code) {
 							$url = 'https://discord.gg/' . $invite->code;
 							$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
 							return;
 						}
 					}
 				}
-				foreach($guild->channels as $channel){
-					if($channel->type != 4){
+				foreach($guild->channels as $channel) {
+					if($channel->type != 4) {
 						$channel->createInvite([
 							'max_age' => 60, // 1 minute
 							'max_uses' => 1, // 1 use
@@ -3662,17 +3662,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			} else $message->react('❌'); //Guild is not in repository
 			return;
 		}
-		if ($message_content_lower == 'guildcount'){
+		if ($message_content_lower == 'guildcount') {
 			$message->channel->sendMessage(count($discord->guilds));
 		}
 		if (str_starts_with($message_content_lower, 'debug guild leave ')) { //;debug guild leave guildid
 			$filter = "debug guild leave ";
 			$value = str_replace($filter, "", $message_content_lower);
 			$discord->guilds->leave($value)->done(
-				function ($result) use ($message){
+				function ($result) use ($message) {
 					$message->react("👍");
 				},
-				function ($error) use ($message){
+				function ($error) use ($message) {
 					$message->react("👎");
 				}
 			);
@@ -3688,10 +3688,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				'name' => 'Test Server',
 			]);
 			$discord->guilds->save($guild_temp)->then( //Fails
-				function ($new_guild) use ($author_user){
+				function ($new_guild) use ($author_user) {
 					$new_guild->channels->freshen()->then(
-						function () use ($author_user, $channel, $new_guild){
-							foreach($new_guild->channels as $channel_new){
+						function () use ($author_user, $channel, $new_guild) {
+							foreach($new_guild->channels as $channel_new) {
 								$channel_new->createInvite([
 									'max_age' => 60, // 1 minute
 									'max_uses' => 5, // 5 uses
@@ -3701,7 +3701,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 										$author_user->sendMessage("Invite URL: $url");
 										$channel->sendMessage("Invite URL: $url");
 									},
-									function ($error){
+									function ($error) {
 										ob_flush();
 										ob_start();
 										var_dump($error);
@@ -3710,7 +3710,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 								);
 							}
 						},
-						function ($error){
+						function ($error) {
 							ob_flush();
 							ob_start();
 							var_dump($error);
@@ -3718,7 +3718,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						}
 					);
 				},
-				function ($error){
+				function ($error) {
 					ob_flush();
 					ob_start();
 					var_dump($error);
@@ -3788,7 +3788,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				->setURL("");							 												// Set the URL
 		//		Open a DM channel then send the rich embed message
 			/*
-			$author_user->getPrivateChannel()->done(function($author_dmchannel) use ($message, $embed){	//Promise
+			$author_user->getPrivateChannel()->done(function($author_dmchannel) use ($message, $embed) {	//Promise
 				echo 'SEND GENIMAGE EMBED' . PHP_EOL;
 				$author_dmchannel->sendEmbed($embed);
 			});
@@ -3959,18 +3959,18 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				}
 			);
 		}
-		if ($message_content_lower == 'fix unverified'){ //;fix unverified
+		if ($message_content_lower == 'fix unverified') { //;fix unverified
 			echo "[FIX UNVERIFIED]" . PHP_EOL;
 			$string = "";
-			foreach ($author_guild->members as $target_member){
+			foreach ($author_guild->members as $target_member) {
 				$has_role = false;
 				foreach($target_member->roles as $role)
 					if(!is_null($role->id)) $has_role = true;
-				if (!$has_role){
+				if (!$has_role) {
 					$string = $string . '<@'.$target_member->id.'> ';
-					if ($author_guild->id == "468979034571931648"){ //Civ13
+					if ($author_guild->id == "468979034571931648") { //Civ13
 						$target_member->addRole("469312086766518272");
-					}else if($author_guild->id == "807759102624792576"){ //World
+					}else if($author_guild->id == "807759102624792576") { //World
 						//$target_member->addRole("469312086766518272"); //This server is hopefully not the big dumb and doesn't have a "Peasent" role
 					}
 				}
@@ -3996,7 +3996,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							$target_guild = $discord->guilds->get('id', $author_guild_id); //echo "target_guild: " . get_class($target_guild) . PHP_EOL;
 							$target_member = $target_guild->members->get('id', $target_id); //echo "target_member: " . get_class($target_member) . PHP_EOL;
 							$x = 0;
-							switch ($author_guild_id){
+							switch ($author_guild_id) {
 								case '468979034571931648':
 									$target_member->removeRole("468982790772228127");
 									$target_member->removeRole("468983261708681216");
@@ -4029,7 +4029,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$GLOBALS["UNVERIFIED"] = null;
 			if ($author_guild->id == '468979034571931648') { //Civ13
 				$author_guild->members->freshen()->done(
-					function ($members) use ($message, $author_guild){
+					function ($members) use ($message, $author_guild) {
 						//$members = $fetched_guild->members->all(); //array
 						foreach ($members as $target_member) { //GuildMember
 							$target_skip = false;
@@ -4064,7 +4064,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				);
 			} elseif ($author_guild->id == '807759102624792576') { //Blue Colony
 				$author_guild->members->freshen()->done(
-					function ($members) use ($message, $author_guild){
+					function ($members) use ($message, $author_guild) {
 						//$members = $fetched_guild->members->all(); //array
 						foreach ($members as $target_member) { //GuildMember
 							$target_skip = false;
@@ -4227,7 +4227,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							$message->react("👍");
 						}
 						VarSave(null, "manual_saving.php", true);
-						//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+						//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 							//Trigger the php script remotely
 							$ch = curl_init(); //create curl resource
 							curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/savemanual2.php"); // set url
@@ -4269,7 +4269,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							$message->react("👍");
 						}
 						VarSave(null, "manual_saving.php", true);
-						//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+						//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 							//Trigger the php script remotely
 							$ch = curl_init(); //create curl resource
 							curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/savemanual3.php"); // set url
@@ -4307,7 +4307,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					if ($react) {
 						$message->react("👍");
 					}
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
 						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/deletemanual1.php"); // set url
@@ -4343,7 +4343,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					if ($react) {
 						$message->react("👍");
 					}
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
 						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual1.php"); // set url
@@ -4375,7 +4375,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					if ($react) {
 						$message->react("👍");
 					}
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
 						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual2.php"); // set url
@@ -4407,7 +4407,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					if ($react) {
 						$message->react("👍");
 					}
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
 						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual3.php"); // set url
@@ -4439,7 +4439,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					if ($react) {
 						$message->react("👍");
 					}
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
 						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/load1h.php"); // set url
@@ -4471,7 +4471,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					if ($react) {
 						$message->react("👍");
 					}
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
 						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/load2h.php"); // set url
@@ -4501,7 +4501,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				case 'host persistence':
 				case 'host pers':
 					echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
 						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/host.php"); // set url
@@ -4536,7 +4536,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				case 'kill persistence':
 				case 'kill pers':
 					echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
 						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/kill.php"); // set url
@@ -4571,7 +4571,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				case 'update pers':
 					echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
 					
-					//$message->react("⏰")->done(function($author_channel) use ($message){	//Promise
+					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						//$ch = curl_init(); //create curl resource
 						//curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/update.php"); // set url
@@ -4659,7 +4659,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return $message->reply('Current PHP version: ' . phpversion());
 				case 'crash': //;crash
 					return $message->react("☠️")->then(
-						function ($result){
+						function ($result) {
 							throw new \CharlotteDunois\Events\UnhandledErrorException('Unhandled error event', 0, (($arguments[0] ?? null) instanceof \Throwable ? $arguments[0] : null));
 						}
 					);
@@ -4684,7 +4684,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return $message->delete();
 				case 'freshen';
 					return $message->channel->guild->members->freshen()->done(
-						function ($members){
+						function ($members) {
 							//Do stuff 
 						}
 					);
@@ -4692,8 +4692,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	/*
-	if ($author_id == "352898973578690561"){ //magmacreeper
-		if ($message_content_lower == 'start'){ //;start
+	if ($author_id == "352898973578690561") { //magmacreeper
+		if ($message_content_lower == 'start') { //;start
 			echo "[START] $author_check" .  PHP_EOL;
 			//Trigger the php script remotely
 			$ch = curl_init(); //create curl resource
@@ -4703,7 +4703,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$message->reply(curl_exec($ch));
 			return;
 		}
-		if ($message_content_lower == 'pull'){ //;pull
+		if ($message_content_lower == 'pull') { //;pull
 			echo "[START] $author_check" .  PHP_EOL;
 			//Trigger the php script remotely
 			$ch = curl_init(); //create curl resource
@@ -4754,7 +4754,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						return $author_channel->sendMessage("**Vote errored! ($yes_count:$no_count)**");
 						//$message->reply($msg);
 					});
-					return $message->react("👍")->done(function($result) use ($message){
+					return $message->react("👍")->done(function($result) use ($message) {
 						return $message->react("👎");
 					});
 				});
@@ -4781,9 +4781,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				else {
 					//attempt to fetch user info
 					$discord->users->fetch($value)->done(
-						function ($mention_user) use ($discord, $author_channel){
+						function ($mention_user) use ($discord, $author_channel) {
 							include 'whois-include.php';
-						}, function ($error) use ($author_channel, $message){
+						}, function ($error) use ($author_channel, $message) {
 							return $message->react("👎");
 						}					
 					);
@@ -4817,14 +4817,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				*/
 				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 				$discord->users->fetch($value)->done(
-					function ($target_user) use ($message, $value){
+					function ($target_user) use ($message, $value) {
 						$target_username = $target_user->username;
 						$target_discriminator = $target_user->discriminator;
 						$target_id = $target_user->id;
 						$target_avatar = $target_user->avatar;
 						return $message->reply("Discord ID is registered to $target_check (<@$value>");
 					},
-					function ($error) use ($message, $value){
+					function ($error) use ($message, $value) {
 						return $message->reply("Unable to locate user for ID $value");
 					}
 				);
@@ -5025,7 +5025,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		
 		$author_channel->getMessageHistory()->done(function ($message_collection) use ($author_channel) {
 			//$author_channel->message->delete();
-			//foreach ($message_collection as $message){
+			//foreach ($message_collection as $message) {
 				//limitDelete handles this
 			//}
 		});
@@ -5037,8 +5037,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		$value = str_replace($filter, "", $message_content_lower);
 		if (is_numeric($value)) {
 			$author_channel->limitDelete($value);
-			/*$author_channel->fetchMessages()->done(function($message_collection) use ($author_channel){
-				foreach ($message_collection as $message){
+			/*$author_channel->fetchMessages()->done(function($message_collection) use ($author_channel) {
+				foreach ($message_collection as $message) {
 					$author_channel->message->delete();
 				}
 			});
@@ -5324,7 +5324,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		$mention_member = $GetMentionResult[1];
 		/*
 		$mentions_arr = $mentions_arr ?? $GetMentionResult[2];
-		foreach ( $mentions_arr as $mention_param ){ //This should skip because there is no member object
+		foreach ( $mentions_arr as $mention_param ) { //This should skip because there is no member object
 			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
 			$mention_json 											= json_decode($mention_param_encode, true); 				//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
 			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
@@ -5344,7 +5344,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			  var_dump($error->getMessage());
 			});
 
-			//$author_guild->bans->fetch($mention_id)->done(function ($ban) use ($guild){
+			//$author_guild->bans->fetch($mention_id)->done(function ($ban) use ($guild) {
 			//	$author_guild->bans->delete($ban);
 			//});
 
@@ -5854,9 +5854,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			//			Send the message
 						if($react) $message->react("👍");
 						//Log the verification
-						if($verifylog_channel){
+						if($verifylog_channel) {
 							$verifylog_channel->sendEmbed($embed);
-						}elseif($modlog_channel){
+						}elseif($modlog_channel) {
 							$modlog_channel->sendEmbed($embed);
 						}
 						*/
@@ -5867,7 +5867,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 								$msg = $msg . " Feel free to pick out some roles in <#$rolepicker_channel_id>.";
 							}
 							$general_channel->sendMessage($msg)->done(
-								function ($message) use ($discord){
+								function ($message) use ($discord) {
 									$discord->getLoop()->addTimer(300, function() use ($message) {
 										return $message->delete();
 									});

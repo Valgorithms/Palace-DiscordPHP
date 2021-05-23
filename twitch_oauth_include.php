@@ -33,7 +33,7 @@ function doCurl(string $url, string $type = 'GET', array $headers = [], array $p
 $check = $_GET['code'];
 $access_token = $_GET['access_token'];
 
-if ($access_token){
+if ($access_token) {
 	echo "access_token:" . $_GET['access_token'] .
 	"refresh_token:" . $_GET['refresh_token'] .
 	"expires_in:" . $_GET['expires_in'] .

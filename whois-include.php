@@ -6,7 +6,7 @@ $mention_check				= $mention_username."#".$mention_discriminator; echo "mention_
 $mention_nickname			= $mention_user->nick; echo "mention_nickname: $mention_nickname" . PHP_EOL;
 $mention_avatar 			= $mention_user->avatar; echo "mention_avatar: $mention_avatar" . PHP_EOL;
 
-if ($mention_member){
+if ($mention_member) {
 	$mention_joinedTimestamp = $mention_member->joined_at->timestamp;
 	$mention_joinedDate	= date("D M j H:i:s Y", $mention_joinedTimestamp); //echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
 	$mention_joinedDateTime = new \Carbon\Carbon('@' . $mention_joinedTimestamp);
@@ -26,7 +26,7 @@ if (is_array($mention_nicknames_array)) {
 	$mention_nicknames_array = array_reverse($mention_nicknames_array);
 	$x=0;
 	foreach ($mention_nicknames_array as $nickname) {
-		if ($nickname != ""){
+		if ($nickname != "") {
 			if ($x<5) {
 				$mention_nicknames = $mention_nicknames . $nickname . "\n";
 			}
@@ -45,7 +45,7 @@ if (is_array($mention_tags_array)) {
 	$mention_tags_array = array_reverse($mention_tags_array);
 	$x=0;
 	foreach ($mention_tags_array as $tag) {
-		if($tag != ""){
+		if($tag != "") {
 			if ($x<5) {
 				$mention_tags = $mention_tags . $tag . "\n";
 			}
@@ -58,8 +58,8 @@ if ($mention_tags == "") {
 }
 $guildstring = "";
 //Check if user is in a shared guild
-foreach($discord->guilds as $guild){
-	if($member = $guild->members->offsetGet($mention_id)){
+foreach($discord->guilds as $guild) {
+	if($member = $guild->members->offsetGet($mention_id)) {
 			$guildstring .= $guild->name . ' (' . $guild->id . ")\n";
 	}
 }

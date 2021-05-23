@@ -1,5 +1,5 @@
 <?php
-function guildMemberRemove($guildmember, $discord){
+function guildMemberRemove($guildmember, $discord) {
 	$author_guild_id = $guildmember->guild->id;
 	echo "[guildMemberRemove] $author_guild_id" . PHP_EOL;
 	$user = $guildmember->user ?? $discord->users->offsetGet($guildmember->id);
