@@ -160,7 +160,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($gamerole) { //Will eventually contain many games, so server owner should decide if they want it enabled
 						echo "game role reaction" . PHP_EOL;
 						foreach ($gameroles as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
@@ -202,7 +202,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($rp1) {
 						echo "species reaction" . PHP_EOL;
 						foreach ($species as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								echo "select_name: " . $select_name . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
@@ -248,7 +248,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($rp1) {
 						echo "species2 reaction" . PHP_EOL;
 						foreach ($species2 as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								echo "select_name: " . $select_name . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
@@ -294,7 +294,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($rp1) {
 						echo "species3 reaction" . PHP_EOL;
 						foreach ($species3 as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								echo "select_name: " . $select_name . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
@@ -340,7 +340,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($rp2) {
 						echo "sexuality reaction" . PHP_EOL;
 						foreach ($sexualities as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
@@ -382,7 +382,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($rp3) {
 						echo "gender reaction" . PHP_EOL;
 						foreach ($gender as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
@@ -425,7 +425,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($rp5) {
 						echo "pronouns reaction" . PHP_EOL;
 						foreach ($pronouns as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
@@ -468,7 +468,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($channeloption) {
 						echo "channel role reaction" . PHP_EOL;
 						foreach ($channelroles as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
@@ -512,7 +512,7 @@ function messageReactionAdd($reaction, $discord) {
 						echo "Custom roles reaction" . PHP_EOL;
 						//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
 						foreach ($customroles as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								echo "select_name: $select_name" . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
@@ -557,7 +557,7 @@ function messageReactionAdd($reaction, $discord) {
 						echo "NSFW roles reaction" . PHP_EOL;
 						//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
 						foreach ($nsfwroles as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								echo "select_name: $select_name" . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
@@ -592,7 +592,7 @@ function messageReactionAdd($reaction, $discord) {
 						echo "NSFW subroles reaction" . PHP_EOL;
 						//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
 						foreach ($nsfwsubroles as $var_name => $value) {
-							if ($value == $emoji_name)) {
+							if ($value == $emoji_name) {
 								$select_name = $var_name;
 								echo "select_name: $select_name" . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
