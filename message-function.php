@@ -535,7 +535,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$value = trim(str_replace($switch, "", $subcommand));
 				$filter = "<@!";
 				$value = str_replace($filter, "", $value);
-				$filter = "<@";
+				$filter = "<@";	
 				$value = str_replace($filter, "", $value);
 				$filter = ">";
 				$value = str_replace($filter, "", $value);
@@ -5398,12 +5398,21 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'kick ')) { //;kick
 		echo "[KICK]" . PHP_EOL;
 		//Get an array of people mentioned
-		$mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
-		$GetMentionResult = GetMention([&$author_guild, $message_content_lower, "kick ", 1, &$restcord]);
-		if (!(is_array($GetMentionResult))) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-		$mention_user = $GetMentionResult[0];
-		$mention_member = $GetMentionResult[1];
-		$mentions_arr = $mentions_arr ?? $GetMentionResult[2];
+		if(!($mentions_arr = $message->mentions)) { //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+			$mentions_arr = array();
+			$value = str_replace($filter, "", $message_content_lower);
+			$value = str_replace("<@!", "", $value);
+			$value = str_replace("<@", "", $value);
+			$value = str_replace(">", "", $value);
+			$arr = explode(' ', $value);
+			foreach ($arr as $val) {
+				if (is_numeric($val))
+					if (preg_match('/^[0-9]{16,18}$/', $val))
+						if ($target_user = $discord->users->offsetGet($val))
+							$mentions_arr[] = $target_user;
+			}
+		}
+		if(empty($mentions_arr)) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
 		foreach ($mentions_arr as $mention_param) {
 			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
 			$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
@@ -5425,33 +5434,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$target_guildmember_roles_ids = array();
 				foreach ($target_guildmember_role_collection as $role) {
 					$target_guildmember_roles_ids[] = $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-					if ($role->id == $role_18_id) {
-						$target_adult = true; //Author has the 18+ role
-					}
-					if ($role->id == $role_dev_id) {
-						$target_dev = true; //Author has the dev role
-					}
-					if ($role->id == $role_owner_id) {
-						$target_owner = true; //Author has the owner role
-					}
-					if ($role->id == $role_admin_id) {
-						$target_admin = true; //Author has the admin role
-					}
-					if ($role->id == $role_mod_id) {
-						$target_mod = true; //Author has the mod role
-					}
-					if ($role->id == $role_verified_id) {
-						$target_verified = true; //Author has the verified role
-					}
-					if ($role->id == $role_bot_id) {
-						$target_bot = true; //Author has the bot role
-					}
-					if ($role->id == $role_vzgbot_id) {
-						$target_vzgbot = true; //Author is this bot
-					}
-					if ($role->id == $role_muted_id) {
-						$target_muted = true; //Author is this bot
-					}
+					if ($role->id == $role_18_id) $target_adult = true; //Author has the 18+ role
+					if ($role->id == $role_dev_id) $target_dev = true; //Author has the dev role
+					if ($role->id == $role_owner_id) $target_owner = true; //Author has the owner role
+					if ($role->id == $role_admin_id) $target_admin = true; //Author has the admin role
+					if ($role->id == $role_mod_id) $target_mod = true; //Author has the mod role
+					if ($role->id == $role_verified_id) $target_verified = true; //Author has the verified role
+					if ($role->id == $role_bot_id) $target_bot = true; //Author has the bot role
+					if ($role->id == $role_vzgbot_id) $target_vzgbot = true; //Author is this bot
+					if ($role->id == $role_muted_id) $target_muted = true; //Author is this bot
 				}
 				if ((!$target_dev && !$target_owner && !$target_admin && !$target_mod && !$target_vzg) || ($creator || $owner || $dev)) { //Bot creator, guild owner, and devs can kick anyone
 					if ($mention_id == $creator_id) return; //Don't kick the creator
