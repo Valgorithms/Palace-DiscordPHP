@@ -466,9 +466,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (str_contains($message_content_lower, ' ' . $word . ' ') || ($message_content_lower == $word)){ //Mute the offender
 				echo '[BAD WORD] $word' . PHP_EOL;
 				$removed_roles = array();
-				foreach ($author_member->roles as $role) {
-					$removed_roles[] = $role->id;
-				}
+				foreach ($author_member->roles as $role) $removed_roles[] = $role->id;
 				VarSave($guild_folder."/".$author_id, "removed_roles.php", $removed_roles);
 				//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
 				foreach ($removed_roles as $role_id)
@@ -491,11 +489,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	$called = false;
 	$message_content_original = $message_content;
 	$message_content_lower_original = $message_content_lower;
-	if (str_starts_with($message_content_lower,  "<@!".$discord->id.">")) { //Allow calling commands by @mention
+	if (str_starts_with($message_content_lower,  "<@!".$discord->id."> ")) { //Allow calling commands by @mention
 		$message_content_lower = trim(substr($message_content_lower, (4+strlen($discord->id))));
 		$message_content = trim(substr($message_content, (4+strlen($discord->id))));
 		$called = true;
-	} elseif (str_starts_with($message_content_lower,  "<@".$discord->id.">")) { //Allow calling commands by @mention
+	} elseif (str_starts_with($message_content_lower,  "<@".$discord->id."> ")) { //Allow calling commands by @mention
 		$message_content_lower = trim(substr($message_content_lower, (3+strlen($discord->id))));
 		$message_content = trim(substr($message_content, (3+strlen($discord->id))));
 		$called = true;
@@ -503,7 +501,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		$message_content_lower = trim(substr($message_content_lower, strlen($command_symbol)));
 		$message_content = trim(substr($message_content, strlen($command_symbol)));
 		$called = true;
-	} elseif (str_starts_with($message_content_lower, '!s')) {
+	} elseif (str_starts_with($message_content_lower, '!s ')) {
 		$message_content_lower = trim(substr($message_content_lower, 2));
 		$message_content = trim(substr($message_content, 2));
 		$called = true;
