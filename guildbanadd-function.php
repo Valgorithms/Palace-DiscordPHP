@@ -1,5 +1,5 @@
 <?php
-function guildBanAdd($ban, $discord){
+function guildBanAdd($ban, $discord) {
 	include_once "custom_functions.php";
 
 	$guild_id = $ban->guild_id;

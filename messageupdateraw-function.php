@@ -1,5 +1,5 @@
 <?php
-function messageUpdateRaw($channel, $data_array, $discord){
+function messageUpdateRaw($channel, $data_array, $discord) {
 	$type				= $data_array['type'];
 	$tts				= $data_array['tts'];
 	$timestamp			= $data_array['timestamp'];

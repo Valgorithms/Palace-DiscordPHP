@@ -1,5 +1,5 @@
 <?php
-function userUpdate($user_new, $user_old, $discord){
+function userUpdate($user_new, $user_old, $discord) {
 	//This event listener will never be used for guild-related functions because guildMemberUpdate already does everything we want, but is useful for logging purposes
 	//For example, this will get triggered if a Nitro user changes their discriminator
 	echo "[USER UPDATE]" . PHP_EOL;

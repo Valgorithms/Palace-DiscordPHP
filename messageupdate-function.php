@@ -1,5 +1,5 @@
 <?php
-function messageUpdate($message_new, $discord, $message_old){
+function messageUpdate($message_new, $discord, $message_old) {
 	//This event listener gets triggered willy-nilly so we need to do some checks here if we want to get anything useful out of it
 
 	$message_content_new = $message_new->content; //Null if message is too old or if only an embed was sent
@@ -24,7 +24,7 @@ function messageUpdate($message_new, $discord, $message_old){
 	$author_channel 			= $message_new->channel;
 	$author_channel_id			= $author_channel->id; 												//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
-	if (is_null($message->channel->guild_id) && is_null($author_member)){
+	if (is_null($message->channel->guild_id) && is_null($author_member)) {
 		$is_dm = true; //True if direct message
 		//return; //Don't try to process direct messages
 	}

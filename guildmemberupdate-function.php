@@ -1,5 +1,5 @@
 <?php
-function guildMemberUpdate($member, $discord, $member_old){
+function guildMemberUpdate($member, $discord, $member_old) {
 	if (is_null($member)) return; //either the loadAllMembers option or the privileged GUILD_MEMBERS intent may be missing
 	if ($member->id === $discord->id) return; //Don't process changes for the bot (not compatible with $diff)
 	include_once "custom_functions.php";
@@ -11,7 +11,7 @@ function guildMemberUpdate($member, $discord, $member_old){
 	if (isset($blacklisted_owners)) {
 		if (in_array($member->guild->owner_id, $blacklisted_owners)) {
 			/*
-			$author_guild->leave($author_guild_id)->done(null, function ($error){
+			$author_guild->leave($author_guild_id)->done(null, function ($error) {
 				var_dump($error->getMessage()); //Echo any errors
 			});
 			*/
@@ -23,7 +23,7 @@ function guildMemberUpdate($member, $discord, $member_old){
 	if (isset($blacklisted_guilds)) {
 		if (in_array($author_guild_id, $blacklisted_guilds)) {
 			/*
-			$author_guild->leave($author_guild_id)->done(null, function ($error){
+			$author_guild->leave($author_guild_id)->done(null, function ($error) {
 				var_dump($error->getMessage()); //Echo any errors
 			});
 			*/
@@ -43,7 +43,7 @@ function guildMemberUpdate($member, $discord, $member_old){
 		}
 	}
 
-	if($member){
+	if($member) {
 		/*
 		ob_flush();
 		ob_start();
@@ -60,7 +60,7 @@ function guildMemberUpdate($member, $discord, $member_old){
 		$new_tag		= $new_user['username'] . '#' . $new_user['discriminator'];
 		$new_avatar		= $new_user['avatar'];
 	}
-	if ($member_old){
+	if ($member_old) {
 		/*
 		ob_flush();
 		ob_start();

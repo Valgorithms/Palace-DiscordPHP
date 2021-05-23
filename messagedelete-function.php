@@ -1,5 +1,5 @@
 <?php
-function messageDelete($message, $discord){
+function messageDelete($message, $discord) {
 	//id, author, channel, guild, member
 	//createdAt, editedAt, createdTimestamp, editedTimestamp, content, cleanContent, attachments, embeds, mentions, pinned, type, reactions, webhookID
 	$message_content = $message->content;
@@ -27,7 +27,7 @@ function messageDelete($message, $discord){
 	$author_channel_id = $channel_id; //echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
 	
-	if (is_null($message->guild_id) && !($author_member = $message->member)){ //True if direct message
+	if (is_null($message->guild_id) && !($author_member = $message->member)) { //True if direct message
 		$is_dm = true;
 		echo "[DM MESSAGE DELETED]" . PHP_EOL;
 		return; //Don't process DMs
@@ -82,8 +82,8 @@ function messageDelete($message, $discord){
 	if ($modlog_channel) {
 		/*
 		//old method (Yasmin)
-		if ($data_string){ //Embed the changes as a text file
-			$modlog_channel->sendMessage('', array('embed' => $embed, 'files' => [['name' => "message.txt", 'data' => $data_string]]))->done(null, function ($error){
+		if ($data_string) { //Embed the changes as a text file
+			$modlog_channel->sendMessage('', array('embed' => $embed, 'files' => [['name' => "message.txt", 'data' => $data_string]]))->done(null, function ($error) {
 				echo $error.PHP_EOL; //Echo any errors
 			});
 		}else{

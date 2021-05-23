@@ -15,7 +15,7 @@ define('MAIN_INCLUDED', 1); //Token and SQL credential files are protected, this
 ini_set('memory_limit', '-1'); //Unlimited memory usage
 //use RestCord\DiscordClient;
 
-function execInBackground($cmd){
+function execInBackground($cmd) {
     if (substr(php_uname(), 0, 7) == "Windows") {
         pclose(popen("start ". $cmd, "r")); //pclose(popen("start /B ". $cmd, "r"));
     }//else exec($cmd . " > /dev/null &");
@@ -93,7 +93,7 @@ $rtmp = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerRequestI
 			});
 });
 $rtmp->on('error',
-	function (Throwable $t){
+	function (Throwable $t) {
 		file_put_contents('stream.txt', $t);
 	}
 );
@@ -188,11 +188,11 @@ $options['responses']['discord'] = $options['social']['discord'];
 $twitch = new Twitch\Twitch($options);
 $browser = new \React\Http\Browser($discord->getLoop()/*, $connector*/);
 
-function webapiFail($part, $id){
+function webapiFail($part, $id) {
 	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
 	return new \GuzzleHttp\Psr7\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
 }
-function webapiSnow($string){
+function webapiSnow($string) {
 	return preg_match('/^[0-9]{16,18}$/', $string);
 }
 $GLOBALS['querycount'] = 0;
@@ -210,7 +210,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 	$GLOBALS['querycount'] = $GLOBALS['querycount'] + 1;
 	echo 'querycount:' . $GLOBALS['querycount'] . PHP_EOL;
 	//logInfo('[webapi] Request', ['path' => $path]);
-	switch ($sub){
+	switch ($sub) {
 		case 'channel':
 			if (!$id || !webapiSnow($id) || !$return = $discord->getChannel($id))
 				return webapiFail('channel_id', $id);
@@ -265,7 +265,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'user':
-			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id)){
+			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id)) {
 				return webapiFail('user_id', $id);
 			}
 			break;
@@ -276,7 +276,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'restart':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //Restricted for obvious reasons
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') { //Restricted for obvious reasons
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
@@ -286,7 +286,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'lookup':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){ //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') { //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
@@ -295,16 +295,16 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'owner':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id))
 				return webapiFail('user_id', $id);
 			$return = false;
-			if ($user = $discord->users->offsetGet($id)){ //Search all guilds the bot is in and check if the user id exists as a guild owner
-				foreach ($discord->guilds as $guild){
-					if ($id == $guild->owner_id){
+			if ($user = $discord->users->offsetGet($id)) { //Search all guilds the bot is in and check if the user id exists as a guild owner
+				foreach ($discord->guilds as $guild) {
+					if ($id == $guild->owner_id) {
 						$return = true;
 						break 1;
 					}
@@ -313,7 +313,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'whitelist':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0'){
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
 				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
@@ -321,8 +321,8 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 				return webapiFail('user_id', $id);
 			$return = false;
 			$result = array();
-			if ($user = $discord->users->offsetGet($id)){ //If they're not actively in a discord server shared with the bot they probably shouldn't have access to this
-				foreach ($discord->guilds as $guild){
+			if ($user = $discord->users->offsetGet($id)) { //If they're not actively in a discord server shared with the bot they probably shouldn't have access to this
+				foreach ($discord->guilds as $guild) {
 					$target_folder = "\\guilds\\".$guild->id;
 					$whitelist_array = array();
 					if(!CheckFile($target_folder, "ownerwhitelist.php")) {
@@ -330,30 +330,30 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 					}else{
 						$whitelist_array = VarLoad($target_folder, "ownerwhitelist.php");
 					}
-					if ( ($id == $guild->owner_id) || ($id == '116927250145869826') ){ //Valithor and guild owners can access
+					if ( ($id == $guild->owner_id) || ($id == '116927250145869826') ) { //Valithor and guild owners can access
 						$result[] = $guild->id;
-					}elseif(!empty($whitelist_array)){ //Check array stored in guild folder to see if they've been added as whitelisted
-						foreach ($whitelist_array as $target_id){ //Add the guild ID to an array if access is whitelisted
+					}elseif(!empty($whitelist_array)) { //Check array stored in guild folder to see if they've been added as whitelisted
+						foreach ($whitelist_array as $target_id) { //Add the guild ID to an array if access is whitelisted
 							if($target_id == $id) $result[] = $guild->id;
 						}
 					}
 				}
-				if (!empty($result)){ //Guild IDs
+				if (!empty($result)) { //Guild IDs
 					$return = $result;
 				}
 			}
 			break;
 
 		case 'avatar':
-			if (!$id || !webapiSnow($id)){
+			if (!$id || !webapiSnow($id)) {
 				return webapiFail('user_id', $id);
 			}
-			if (!$user = $discord->users->offsetGet($id)){
+			if (!$user = $discord->users->offsetGet($id)) {
 				$discord->users->fetch($id)->done(
-					function ($user){
+					function ($user) {
 						$return = $user->avatar;
 						return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'text/json'], json_encode($return));
-					}, function ($error){
+					}, function ($error) {
 						return webapiFail('user_id', $id);
 					}
 				);
@@ -507,7 +507,7 @@ try {
 			guildBanRemove($ban, $discord);
         });
         
-        $discord->on('MESSAGE_UPDATE', function ($message_new, $discord, $message_old){ //Handling of a message being changed
+        $discord->on('MESSAGE_UPDATE', function ($message_new, $discord, $message_old) { //Handling of a message being changed
 			messageUpdate($message_new, $discord, $message_old);
         });
         
@@ -592,7 +592,7 @@ try {
         
         /*
         $discord->wsmanager()->on('debug', function ($debug) {
-            switch ($debug){
+            switch ($debug) {
                 case "Shard 0 received WS packet with OP code 0": //Spammy
                 case "Shard 0 handling WS event PRESENCE_UPDATE": //Spammy
                     break;

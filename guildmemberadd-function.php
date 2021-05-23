@@ -1,5 +1,5 @@
 <?php
-function guildMemberAdd($guildmember, $discord){
+function guildMemberAdd($guildmember, $discord) {
 	$author_guild_id = $guildmember->guild->id;
 	echo "guildMemberAdd ($author_guild_id)" . PHP_EOL;
 	$user = $guildmember->user;
