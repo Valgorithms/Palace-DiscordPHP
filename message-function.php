@@ -533,9 +533,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (str_starts_with($subcommand, 'list')) $switch = 'list';
 			if ($switch) {
 				$value = trim(str_replace($switch, "", $subcommand));
-				$filter = "<@";
+				$filter = "<@!";
 				$value = str_replace($filter, "", $value);
-				$filter = "!";
+				$filter = "<@";
 				$value = str_replace($filter, "", $value);
 				$filter = ">";
 				$value = str_replace($filter, "", $value);
