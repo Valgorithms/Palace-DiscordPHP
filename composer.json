@@ -1,8 +1,26 @@
 {
+    "name": "vzgcoders/palace",
+    "description": "ValZarGaming's offical Discord bot for moderation and fun built in ReactPHP.",
+    "authors": [
+        {
+            "name": "Valithor Obsidion",
+            "email": "valzargaming@gmail.com"
+        }
+    ],
     "require": {
         "php": "^8.0.0",
         "team-reflex/discord-php": "dev-master",
         "react/filesystem": "^0.1.1",
 		"vzgcoders/twitchphp": "dev-main"
+    },
+    "suggest": {
+        "ext-uv": "For a faster, and more performant loop. PHP >=7 only. Preferred.",
+        "ext-libev": "For a faster, and more performant loop",
+        "ext-event": "For a faster, and more performant loop",
+        "ext-mbstring": "For accurate calculations of string length when handling non-english characters."
+    },
+    "scripts": {
+        "cs": ["./vendor/bin/php-cs-fixer fix"],
+        "unit": ["./vendor/bin/phpunit"]
     }
 }
