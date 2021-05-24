@@ -43,7 +43,7 @@ function CheckDir($foldername)
 {
     //echo "CheckDir" . PHP_EOL;
     include("constants.php");
-    $path = $DIR.$foldername."/";
+    $path = getcwd().$foldername."/";
     $exist = false;
     //Create folder if it doesn't already exist
     if (!file_exists($path)) {
@@ -63,7 +63,7 @@ function CheckFile($foldername, $filename)
     }  else $folder_symbol = "";
     //echo "CheckDir" . PHP_EOL;
     include("constants.php");
-    $path = $DIR.$foldername.$folder_symbol.$filename;
+    $path = getcwd().$foldername.$folder_symbol.$filename;
     //Create folder if it doesn't already exist
     if (file_exists($path)) {
         $exist = true;
@@ -74,7 +74,7 @@ function CheckFile($foldername, $filename)
 }
 
 //Saves a variable to a file
-//Target is a full path, IE $DIR.target.php
+//Target is a full path, IE getcwd().target.php
 function VarSave($foldername, $filename, $variable)
 {
     if ($foldername !== null) {
@@ -82,7 +82,7 @@ function VarSave($foldername, $filename, $variable)
     }  else $folder_symbol = "";
     //echo "VarSave" . PHP_EOL;
     include("constants.php");
-    $path = $DIR.$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
+    $path = getcwd().$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
     //Create folder if it doesn't already exist
     if (!file_exists($path)) {
         mkdir($path, 0777, true);
@@ -94,7 +94,7 @@ function VarSave($foldername, $filename, $variable)
 }
 
 //Loads a variable from a file
-//Target is a full path, IE $DIR.target.php
+//Target is a full path, IE getcwd().target.php
 function VarLoad($foldername, $filename)
 {
     if ($foldername !== null) {
@@ -102,7 +102,7 @@ function VarLoad($foldername, $filename)
     }  else $folder_symbol = "";
     //echo "[VarLoad]" . PHP_EOL;
     include("constants.php");
-    $path = $DIR.$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
+    $path = getcwd().$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
     //Make sure the file exists
     if (!file_exists($path.$filename)) {
         return null;
@@ -120,7 +120,7 @@ function VarDelete($foldername, $filename)
     }  else $folder_symbol = "";
     echo "VarDelete" . PHP_EOL;
     include("constants.php");
-    $path = $DIR.$foldername.$folder_symbol.$filename; //echo "PATH: $path" . PHP_EOL;
+    $path = getcwd().$foldername.$folder_symbol.$filename; //echo "PATH: $path" . PHP_EOL;
     //Make sure the file exists first
     if (CheckFile($foldername, $filename)) {
         //Delete the file
@@ -345,7 +345,7 @@ function SetCooldown($foldername, $filename)
         $folder_symbol = "/";
     }  else $folder_symbol = "";
     include("constants.php");
-    $path = $DIR.$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
+    $path = getcwd().$foldername.$folder_symbol; //echo "PATH: $path" . PHP_EOL;
     $now = new DateTime();
     VarSave($foldername, $filename, $now);
 }

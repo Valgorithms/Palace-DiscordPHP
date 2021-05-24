@@ -53,7 +53,7 @@ class Stats
     {
         return str_replace(
             "\n", ' ',
-            `cd __DIR__/vendor/team-reflex/discord-php; git rev-parse --abbrev-ref HEAD; git log --oneline -1`
+            `cd ` . getcwd() . `/vendor/team-reflex/discord-php; git rev-parse --abbrev-ref HEAD; git log --oneline -1`
         );
     }
 

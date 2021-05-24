@@ -1,4 +1,4 @@
 <?php
-$BASE_DIR = __DIR__ . "/../";
-$DIR = __DIR__ . "\\";
+$BASE_DIR = getcwd() . "/../";
+$DIR = getcwd() . "\\";
 $now = new DateTime();
