@@ -8,7 +8,8 @@ $gameroles = array(
 	"Escape From Tarkov" => "🇷🇺",
 	"Genshin Impact" => "👱‍♀️",
 	"Minecraft" => "⛏️",
-	"Phasmophobia" => "👻"
+	"Phasmophobia" => "👻",
+	"Subnautica" => "🤿"
 );
 //Message copy-pasta:
 $gameroles_message_text = "**Role Menu: Games**
@@ -22,4 +23,5 @@ $gameroles_message_text = "**Role Menu: Games**
 :blond_haired_woman: : `Genshin Impact`
 :pick: : `Minecraft`
 :ghost: : `Phasmophobia`
+:diving_mask: : `Subnautica`
 ";
