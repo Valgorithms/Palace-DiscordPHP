@@ -36,7 +36,7 @@ function guildMemberRemove($guildmember, $discord) {
 		$author_guild_id = $guildmember->guild->id;
 		//Load config variables for the guild
 		$guild_folder = "\\guilds\\$author_guild_id";
-		$guild_config_path = __DIR__  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+		$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 		include "$guild_config_path";
 		
 		try {

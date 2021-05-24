@@ -42,7 +42,7 @@ function messageUpdate($message_new, $discord, $message_old) {
 	}
 
 	//Load config variables for the guild
-	$guild_config_path = __DIR__  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd()  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	if (!CheckFile($guild_folder, "guild_config.php")) {
 		$file = 'guild_config_template.php';
 		if (!copy($file, $guild_config_path)) {

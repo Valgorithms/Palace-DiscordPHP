@@ -24,7 +24,7 @@ function guildBanAdd($ban, $discord) {
 	}
 
 	//Load config variables for the guild
-	$guild_config_path = __DIR__  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	if (!include "$guild_config_path") {
 		echo "CONFIG CATCH!" . PHP_EOL;
 		$counter = $GLOBALS[$guild_id."_config_counter"] ?? 0;
@@ -32,7 +32,7 @@ function guildBanAdd($ban, $discord) {
 			$GLOBALS[$guild_id."_config_counter"]++;
 		} else {
 			$discord->guilds->leave($guild);
-			rmdir(__DIR__  . $guild_folder);
+			rmdir(getcwd()  . $guild_folder);
 			echo "[GUILD DIR REMOVED - BAN]" . PHP_EOL;
 		}
 	}
