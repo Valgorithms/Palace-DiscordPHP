@@ -361,7 +361,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*/
 
 
-	include 'CHANGEME.php';
+	include getcwd() . 'CHANGEME.php';
 	if ($author_id == $creator_id) $creator = true;
 
 	//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
