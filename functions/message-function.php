@@ -871,8 +871,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				return $message->delete();
 				break;
 			case 'updateconfig': //;updateconfig
-				$file = 'guild_config_template.php';
-				if (sha1_file($guild_config_path) == sha1_file('guild_config_template.php')) return $message->reply("Guild configuration is already up to date!");
+				$file = __DIR__ . 'guild_config_template.php';
+				if (sha1_file($guild_config_path) == sha1_file(__DIR__ . /'guild_config_template.php')) return $message->reply("Guild configuration is already up to date!");
 				else {
 					if (!copy($file, $guild_config_path)) return $message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
 					else return $author_channel->sendMessage("The server's configuration file was recently updated by <@$author_id>. Please check the ;currentsetup");
@@ -2006,7 +2006,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if ($games) {
 		if ( is_null($games_channel_id) || ($author_channel_id == $games_channel_id) ) { //Commands that can only be used in the dedicated games channel
 			//yahtzee
-			include "yahtzee.php";
+			include '..\yahtzee.php';
 			//machi koro
 			//include_once (getcwd() . "/machikoro/classes.php");
 			//include (getcwd() . "/machikoro/game.php");
