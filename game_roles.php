@@ -1,6 +1,4 @@
 <?php
-include_once 'custom_functions.php';
-
 $gameroles = array(
 	"LFG" => "🔍",
 	"Call of Duty" => "🪖",

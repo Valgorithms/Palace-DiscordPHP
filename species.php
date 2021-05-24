@@ -1,6 +1,4 @@
 <?php
-include_once 'custom_functions.php';
-
 $species = array(
     "aquatic" => "🐟", //:fish:
     "avian" => "🐦", //:bird:

@@ -10,7 +10,7 @@ ini_set('max_execution_time', 0);
 //Always subtract 1 when counting roles because everyone has an @everyone role
 $vm = false; //Set this to true if using a VM that can be paused
 
-include __DIR__ . '/vendor/autoload.php';
+include getcwd() . '/vendor/autoload.php';
 define('MAIN_INCLUDED', 1); //Token and SQL credential files are protected, this must be defined to access
 ini_set('memory_limit', '-1'); //Unlimited memory usage
 //use RestCord\DiscordClient;
@@ -54,7 +54,7 @@ include_once 'functions/guildmemberremove-function.php'; //guildMemberRemove()
 include_once 'functions/guildmemberupdate-function.php'; //guildMemberUpdate()
 
 
-require __DIR__.'/../token.php';
+require getcwd().'/../token.php';
 $logger = new Monolog\Logger('New logger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
 $loop = React\EventLoop\Factory::create();
@@ -416,7 +416,7 @@ $rescue = VarLoad("_globals", "RESCUE.php"); //Check if recovering from a fatal 
 $GLOBALS['presenceupdate'] = false;
 if ($rescue == true) { //Attempt to restore crashed session
     echo "[RESCUE START]" . PHP_EOL;
-    $rescue_dir = __DIR__ . '/_globals';
+    $rescue_dir = getcwd() . '/_globals';
     $rescue_vars = scandir($rescue_dir);
     foreach ($rescue_vars as $var) {
         $backup_var = VarLoad("_globals", "$var");
@@ -672,7 +672,7 @@ try {
     
     echo "RESTARTING BOT" . PHP_EOL;
     $discord->destroy();
-    $restart_cmd = 'cmd /c "'. __DIR__ . '\run.bat"'; //echo $restart_cmd . PHP_EOL;
+    $restart_cmd = 'cmd /c "'. getcwd() . '\run.bat"'; //echo $restart_cmd . PHP_EOL;
     //system($restart_cmd);
     execInBackground($restart_cmd);
     die();

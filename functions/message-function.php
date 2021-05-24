@@ -121,7 +121,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		else $booster = false;
 		
 		//Load config variables for the guild
-		$guild_config_path = __DIR__  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+		$guild_config_path = getcwd()  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 		if (!CheckFile($guild_folder, "guild_config.php")) {
 			$file = 'guild_config_template.php';
 			if (!copy($file, $guild_config_path)) {
@@ -151,7 +151,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($tip_pending_channel_id) $tip_pending_channel = $author_guild->channels->get('id', strval($tip_pending_channel_id));
 		if ($tip_approved_channel_id) $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
 		
-		$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
+		$guild_custom_roles_path = getcwd()  . "\\$guild_folder\\custom_roles.php";
 		if (CheckFile($guild_folder."/", 'custom_roles.php')) {
 			include "$guild_custom_roles_path"; //Overwrite default custom_roles
 		}else{
@@ -361,7 +361,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*/
 
 
-	include 'CHANGEME.php';
+	if(!(include getcwd() . 'CHANGEME.PHP')) include getcwd() . '/vendor/vzgcoders/palace/CHANGEME.php';
 	if ($author_id == $creator_id) $creator = true;
 
 	//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
@@ -871,15 +871,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				return $message->delete();
 				break;
 			case 'updateconfig': //;updateconfig
-				$file = 'guild_config_template.php';
-				if (sha1_file($guild_config_path) == sha1_file('guild_config_template.php')) return $message->reply("Guild configuration is already up to date!");
+				$file = __DIR__ . 'guild_config_template.php';
+				if (sha1_file($guild_config_path) == sha1_file(__DIR__ . '\guild_config_template.php')) return $message->reply("Guild configuration is already up to date!");
 				else {
 					if (!copy($file, $guild_config_path)) return $message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
 					else return $author_channel->sendMessage("The server's configuration file was recently updated by <@$author_id>. Please check the ;currentsetup");
 				}
 				break;
 			case 'clearconfig': //;clearconfig
-				$files = glob(__DIR__  . "$guild_folder" . '/*');
+				$files = glob(getcwd()  . "$guild_folder" . '/*');
 				// Deleting all the files in the list
 				foreach ($files as $file) {
 					if (is_file($file)) {
@@ -2006,10 +2006,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if ($games) {
 		if ( is_null($games_channel_id) || ($author_channel_id == $games_channel_id) ) { //Commands that can only be used in the dedicated games channel
 			//yahtzee
-			include "yahtzee.php";
+			include '..\yahtzee.php';
 			//machi koro
-			//include_once (__DIR__ . "/machikoro/classes.php");
-			//include (__DIR__ . "/machikoro/game.php");
+			//include_once (getcwd() . "/machikoro/classes.php");
+			//include (getcwd() . "/machikoro/game.php");
 		}
 		
 		/*Commands that can be used anywhere*/
@@ -3894,7 +3894,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$rescue = VarLoad("_globals", "RESCUE.php"); //Check if recovering from a fatal crash
 			if ($rescue) { //Attempt to restore crashed session
 				echo "[RESCUE START]" . PHP_EOL;
-				$rescue_dir = __DIR__ . '/_globals';
+				$rescue_dir = getcwd() . '/_globals';
 				$rescue_vars = scandir($rescue_dir);
 				foreach ($rescue_vars as $var) {
 					$backup_var = VarLoad("_globals", "$var");

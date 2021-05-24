@@ -36,7 +36,7 @@ imagedestroy($src);
 //Save the image
 
 $img_rand = rand(0, 99999999999); //Some big number to make the URLs unique because Discord caches image links
-$img_dir_path = __DIR__ . "\\";
+$img_dir_path = getcwd() . "\\";
 $cache_folder = "cache\\" . $author_id . "\\";
 CheckDir($cache_folder);
 $full_folder_path = $img_dir_path . $cache_folder; //echo "full_folder_path: " . $full_folder_path . PHP_EOL;

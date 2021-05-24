@@ -57,13 +57,13 @@ function messageReactionAdd($reaction, $discord) {
 	$guild_folder = "\\guilds\\$author_guild_id";
 	CheckDir($guild_folder);
 	//Load config variables for the guild
-	$guild_config_path = __DIR__  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	include "$guild_config_path";
 
 	//Role picker stuff
 	$message_id	= $message->id;														//echo "message_id: " . $message_id . PHP_EOL;
 	global $gameroles, $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwroles, $nsfwsubroles;
-	$guild_custom_roles_path = __DIR__  . "\\$guild_folder\\custom_roles.php";
+	$guild_custom_roles_path = getcwd()  . "\\$guild_folder\\custom_roles.php";
 	if (CheckFile($guild_folder."/", 'custom_roles.php')) {
 		include "$guild_custom_roles_path"; //Overwrite default custom_roles
 	}else global $customroles;

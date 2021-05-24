@@ -1,6 +1,4 @@
 <?php
-include_once 'custom_functions.php';
-
 $gender = array(
     "gender Fluid" => "💧",
     "non Binary" => "⛔",

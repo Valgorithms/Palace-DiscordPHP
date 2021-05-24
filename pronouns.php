@@ -1,6 +1,4 @@
 <?php
-include_once 'custom_functions.php';
-
 $pronouns = array(
     "They/Them" => "1️⃣",
     "She/Her" => "2️⃣",
