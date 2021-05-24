@@ -40,18 +40,18 @@ include 'whitelisted_guilds.php'; //Only guilds in the $whitelisted_guilds array
 //Custom functions
 include_once "custom_functions.php";
 ///Event listener functions
-include_once 'message-function.php'; //message()
-include_once 'messageupdate-function.php'; //messageUpdate()
-include_once 'messageupdateraw-function.php'; //messageUpdateRaw()
-include_once 'messagedelete-function.php'; //messageDelete()
-include_once 'messagedeleteraw-function.php'; //messageDeleteRaw()
-include_once 'messagereactionadd-function.php'; //messageReactionAdd()
-include_once 'messagereactionremove-function.php'; //messageReactionRemove()
-include_once 'guildbanadd-function.php'; // guildBanAdd()
-include_once 'guildbanremove-function.php'; //guildBanRemove()
-include_once "guildmemberadd-function.php"; //guildMemberAdd()
-include_once 'guildmemberremove-function.php'; //guildMemberRemove()
-include_once 'guildmemberupdate-function.php'; //guildMemberUpdate()
+include_once 'functions/message-function.php'; //message()
+include_once 'functions/messageupdate-function.php'; //messageUpdate()
+include_once 'functions/messageupdateraw-function.php'; //messageUpdateRaw()
+include_once 'functions/messagedelete-function.php'; //messageDelete()
+include_once 'functions/messagedeleteraw-function.php'; //messageDeleteRaw()
+include_once 'functions/messagereactionadd-function.php'; //messageReactionAdd()
+include_once 'functions/messagereactionremove-function.php'; //messageReactionRemove()
+include_once 'functions/guildbanadd-function.php'; // guildBanAdd()
+include_once 'functions/guildbanremove-function.php'; //guildBanRemove()
+include_once 'functions/guildmemberadd-function.php'; //guildMemberAdd()
+include_once 'functions/guildmemberremove-function.php'; //guildMemberRemove()
+include_once 'functions/guildmemberupdate-function.php'; //guildMemberUpdate()
 
 
 require __DIR__.'/../token.php';
@@ -100,7 +100,7 @@ $rtmp->on('error',
 $rsocket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55554'), $loop);
 $rtmp->listen($rsocket);
 */
-require 'secret.php'; //$secret
+require __DIR__.'/../secret.php'; //$secret
 $options = array(
 	//Required
 	'secret' => $secret, // Client secret
