@@ -29,7 +29,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*/
 	$author	= $message->author; //Member OR User object
-	$author_user = $message->user;
+	$author_user = $message->user ?? $discord->getUser($message->author->id);
 	if ($author_member = $message->member) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
 
 	$author_channel 												= $message->channel;
