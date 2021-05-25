@@ -1697,12 +1697,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($creator || $owner) {
 			$documentation = $documentation . "\n__**Owner:**__\n";
 			//Website BCP
-			$documentation = $documentation . "`bcp (add/rem/list)` allows another users access to the bot control panel on the valzargaming.com\n";
+			$documentation = $documentation . "`bcp (add/rem/list)` allows another users access to the bot control panel on valzargaming.com\n";
 		}
 		if ($creator || $owner || $dev) { //toggle options
 			$documentation = $documentation . "\n__**Owner / Dev:**__\n";
 			//toggle options
-			$documentation = $documentation . "*Bot settings:*\n";
+			$documentation = $documentation . "*Toggle settings:*\n";
 			//react
 			$documentation = $documentation . "`react`\n";
 			//vanity
@@ -1761,7 +1761,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			//warn
 			$documentation = $documentation . "`warn <@user_id> reason` logs an infraction\n";
 			//infractions
-			$documentation = $documentation . "`infractions <@user_id>` replies with a list of infractions for someone\n";
+			$documentation = $documentation . "`infractions <@user_id>` replies with a list of infractions\n";
 			//removeinfraction
 			$documentation = $documentation . "`removeinfraction <@user_id> #`\n";
 			//kick
@@ -1797,14 +1797,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			//Strikeout invalid options
 			if (!$role_muted_id) $documentation = $documentation . "~~"; //Strikeout invalid options
 			//whois
-			$documentation = $documentation . "`whois` displays known information about a user\n";
+			$documentation = $documentation . "`whois` displays known info about a user\n";
 			//lookup
 			$documentation = $documentation . "`lookup` retrieves a username#discriminator using either a discord id or mention\n";
 		}
 		if ($vanity) {
 			$documentation = $documentation . "\n__**Vanity:**__\n";
 			//cooldown
-			$documentation = $documentation . "`cooldown` or `cd` tells you how much time you must wait before using another Vanity command \n";
+			$documentation = $documentation . "`cooldown` or `cd` tells you how much time must pass before using another command \n";
 			//hug/snuggle
 			$documentation = $documentation . "`hug` or `snuggle`\n";
 			//kiss/smooch
@@ -1824,10 +1824,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($games) {
 			$documentation = $documentation . "\n__**Games:**__\n";
 			//yahtzee
-			$documentation = $documentation . "`yahtzee start` Starts a new game of Yahtzee\n";
+			$documentation = $documentation . "`yahtzee start` Starts a new game\n";
 			$documentation = $documentation . "`yahtzee end` Ends the game and deletes all progress\n";
-			$documentation = $documentation . "`yahtzee pause` Pauses the game and can be resumed later \n";
-			$documentation = $documentation . "`yahtzee resume` Resumes the paused game \n";
+			$documentation = $documentation . "`yahtzee pause`\n";
+			$documentation = $documentation . "`yahtzee resume`\n";
 			//roll
 			$documentation = $documentation . "`roll #d#(+/-#)`\n";
 		}
@@ -1838,7 +1838,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		//roles / roles @
 		$documentation = $documentation . "`roles` displays the roles for the author or user being mentioned\n";
 		//avatar
-		$documentation = $documentation . "`avatar` displays the profile picture of the author or user being mentioned\n";
+		$documentation = $documentation . "`avatar` displays the avatar of the author or user being mentioned\n";
 		//poll
 		$documentation = $documentation . "`poll # message` creates a message for people to vote on\n";
 		//remindme
