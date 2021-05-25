@@ -579,7 +579,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'setup': //;setup
 				$documentation = $documentation . "`currentsetup` send DM with current settings\n";
 				$documentation = $documentation . "`updateconfig` updates the configuration file (needed for updates)\n";
-				$documentation = $documentation . "`clearconfig` deletes all configuration information for the srver\n";
+				$documentation = $documentation . "`clearconfig` deletes all configuration information for the server\n";
+				$documentation = $documentation . "`help` displays all other commands\n";
 				//Roles
 				$documentation = $documentation . "\n**Roles:**\n";
 				$documentation = $documentation . "`setup dev @role`\n";
