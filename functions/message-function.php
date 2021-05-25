@@ -648,7 +648,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 						->setURL("");							 												// Set the URL
 					//Open a DM channel then send the rich embed message
-					$author_user->sendEmbed($embed);
+					$author_user->sendMessage('', false, $embed);
 					return;
 				} else {
 					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
