@@ -124,7 +124,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		$guild_config_path = getcwd()  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 		if (!CheckFile($guild_folder, "guild_config.php")) {
 			$file = 'guild_config_template.php';
-			if (!copy($file, $guild_config_path)) {
+			if (!copy(getcwd() . '/vendor/vzgcoders/palace/' . $file, $guild_config_path)) {
 				$message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
 			} else {
 				$author_channel->sendMessage("<@$guild_owner_id>, I'm here! Please ;setup the bot." . PHP_EOL . "While interacting with this bot, any conversations made through direct mention of the bot name are stored anonymously in a secure database. Avatars, IDs, Names, or any other unique user identifier is not stored with these messages. Through continuing to use this bot, you agree to allow it to track user information to support its functions and for debugging purposes. Your message data will never be used for anything more. If you wish to have any associated information removed, please contact Valithor#5937.");
@@ -874,7 +874,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$file = __DIR__ . 'guild_config_template.php';
 				if (sha1_file($guild_config_path) == sha1_file(__DIR__ . '\guild_config_template.php')) return $message->reply("Guild configuration is already up to date!");
 				else {
-					if (!copy($file, $guild_config_path)) return $message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
+					if (!copy(getcwd() . '/vendor/vzgcoders/palace/' . $file, $guild_config_path)) return $message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
 					else return $author_channel->sendMessage("The server's configuration file was recently updated by <@$author_id>. Please check the ;currentsetup");
 				}
 				break;
@@ -4658,11 +4658,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					echo '[PHP]' . PHP_EOL;
 					return $message->reply('Current PHP version: ' . phpversion());
 				case 'crash': //;crash
-					return $message->react("☠️")->then(
-						function ($result) {
-							throw new \CharlotteDunois\Events\UnhandledErrorException('Unhandled error event', 0, (($arguments[0] ?? null) instanceof \Throwable ? $arguments[0] : null));
-						}
-					);
+					$message->react("☠️");
+					return;
 				case 'debug role': //;debug role
 					echo '[DEBUG ROLE]' . PHP_EOL;
 					$new_role = $discord->factory(
