@@ -489,11 +489,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	$called = false;
 	$message_content_original = $message_content;
 	$message_content_lower_original = $message_content_lower;
-	if (str_starts_with($message_content_lower,  "<@!".$discord->id."> ")) { //Allow calling commands by @mention
+	if (str_starts_with($message_content_lower,  "<@!".$discord->id."> ")) { //Allow calling commands by <@user_id>
 		$message_content_lower = trim(substr($message_content_lower, (4+strlen($discord->id))));
 		$message_content = trim(substr($message_content, (4+strlen($discord->id))));
 		$called = true;
-	} elseif (str_starts_with($message_content_lower,  "<@".$discord->id."> ")) { //Allow calling commands by @mention
+	} elseif (str_starts_with($message_content_lower,  "<@".$discord->id."> ")) { //Allow calling commands by <@user_id>
 		$message_content_lower = trim(substr($message_content_lower, (3+strlen($discord->id))));
 		$message_content = trim(substr($message_content, (3+strlen($discord->id))));
 		$called = true;
@@ -597,20 +597,20 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				*/
 				//Channels
 				$documentation = $documentation . "**Channels:**\n";
-				$documentation = $documentation . "`setup general #channel` The primary chat channel, also welcomes new users to everyone\n";
-				$documentation = $documentation . "`setup welcome #channel` Simple welcome message tagging new user\n";
-				$documentation = $documentation . "`setup welcomelog #channel` Detailed message about the user\n";
-				$documentation = $documentation . "`setup log #channel` Detailed log channel\n"; //Modlog
-				$documentation = $documentation . "`setup verify channel #channel` Where users get verified\n";
-				$documentation = $documentation . "`setup watch #channel` ;watch messages are duplicated here instead of in a DM\n";
+				$documentation = $documentation . "`setup general <#channel_id>` The primary chat channel, also welcomes new users to everyone\n";
+				$documentation = $documentation . "`setup welcome <#channel_id>` Simple welcome message tagging new user\n";
+				$documentation = $documentation . "`setup welcomelog <#channel_id>` Detailed message about the user\n";
+				$documentation = $documentation . "`setup log <#channel_id>` Detailed log channel\n"; //Modlog
+				$documentation = $documentation . "`setup verify channel <#channel_id>` Where users get verified\n";
+				$documentation = $documentation . "`setup watch <#channel_id>` ;watch messages are duplicated here instead of in a DM\n";
 				/* Deprecated
-				$documentation = $documentation . "`setup rolepicker channel #channel` Where users pick a role\n";
+				$documentation = $documentation . "`setup rolepicker channel <#channel_id>` Where users pick a role\n";
 				*/
-				$documentation = $documentation . "`setup games channel #channel` Where users can play games\n";
-				$documentation = $documentation . "`setup suggestion pending #channel` \n";
-				$documentation = $documentation . "`setup suggestion approved #channel` \n";
-				$documentation = $documentation . "`setup tip pending #channel` \n";
-				$documentation = $documentation . "`setup tip approved #channel` \n";
+				$documentation = $documentation . "`setup games channel <#channel_id>` Where users can play games\n";
+				$documentation = $documentation . "`setup suggestion pending <#channel_id>` \n";
+				$documentation = $documentation . "`setup suggestion approved <#channel_id>` \n";
+				$documentation = $documentation . "`setup tip pending <#channel_id>` \n";
+				$documentation = $documentation . "`setup tip approved <#channel_id>` \n";
 				//Messages
 				$documentation = $documentation . "**Messages:**\n";
 				/* Deprecated
@@ -674,7 +674,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$documentation = $documentation . "`rolepicker @user` $rolepicker_id\n";
 				//Channels
 				$documentation = $documentation . "**Channels:**\n";
-				$documentation = $documentation . "`general #channel` <#{$general_channel->id}>\n";
+				$documentation = $documentation . "`general <#channel_id>` <#{$general_channel->id}>\n";
 				if ($welcome_public_channel_id) {
 					$welcome_public_channel = $author_guild->channels->get('id', $welcome_public_channel_id);
 				}
@@ -682,29 +682,29 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					$welcome_log_channel = $author_guild->channels->get('id', $welcome_log_channel_id);
 				}
 				if ($welcome_public_channel_id) {
-					$documentation = $documentation . "`welcome #channel` <#{$welcome_public_channel->id}>\n";
+					$documentation = $documentation . "`welcome <#channel_id>` <#{$welcome_public_channel->id}>\n";
 				}
-				$documentation = $documentation . "`welcomelog #channel` <#{$welcome_log_channel->id}>\n";
-				$documentation = $documentation . "`log #channel` <#{$modlog_channel->id}>\n";
-				$documentation = $documentation . "`verify channel #channel` <#{$getverified_channel->id}>\n";
+				$documentation = $documentation . "`welcomelog <#channel_id>` <#{$welcome_log_channel->id}>\n";
+				$documentation = $documentation . "`log <#channel_id>` <#{$modlog_channel->id}>\n";
+				$documentation = $documentation . "`verify channel <#channel_id>` <#{$getverified_channel->id}>\n";
 				if ($verifylog_channel_id) {
-					$documentation = $documentation . "`verifylog #channel` <#{$verifylog_channel->id}>\n";
+					$documentation = $documentation . "`verifylog <#channel_id>` <#{$verifylog_channel->id}>\n";
 				} else {
-					$documentation = $documentation . "`verifylog #channel` (defaulted to log channel)\n";
+					$documentation = $documentation . "`verifylog <#channel_id>` (defaulted to log channel)\n";
 				}
 				if ($watch_channel_id) {
-					$documentation = $documentation . "`watch #channel` <#{$watch_channel->id}>\n";
+					$documentation = $documentation . "`watch <#channel_id>` <#{$watch_channel->id}>\n";
 				} else {
-					$documentation = $documentation . "`watch #channel` (defaulted to direct message only)\n";
+					$documentation = $documentation . "`watch <#channel_id>` (defaulted to direct message only)\n";
 				}
-				$documentation = $documentation . "`rolepicker channel #channel`  <#{$rolepicker_channel->id}>\n";
-				$documentation = $documentation . "`nsfw rolepicker channel #channel`  <#{$nsfw_rolepicker_channel->id}>\n";
-				$documentation = $documentation . "`games rolepicker channel #channel`  <#{$games_rolepicker_channel->id}>\n";
-				$documentation = $documentation . "`games #channel` <#{$games_channel->id}>\n";
-				$documentation = $documentation . "`suggestion pending #channel` <#{$suggestion_pending_channel->id}>\n";
-				$documentation = $documentation . "`suggestion approved #channel` <#{$suggestion_approved_channel->id}>\n";
-				$documentation = $documentation . "`tip pending #channel` <#{$tip_pending_channel->id}>\n";
-				$documentation = $documentation . "`tip approved #channel` <#{$tip_approved_channel->id}>\n";
+				$documentation = $documentation . "`rolepicker channel <#channel_id>`  <#{$rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`nsfw rolepicker channel <#channel_id>`  <#{$nsfw_rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`games rolepicker channel <#channel_id>`  <#{$games_rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`games <#channel_id>` <#{$games_channel->id}>\n";
+				$documentation = $documentation . "`suggestion pending <#channel_id>` <#{$suggestion_pending_channel->id}>\n";
+				$documentation = $documentation . "`suggestion approved <#channel_id>` <#{$suggestion_approved_channel->id}>\n";
+				$documentation = $documentation . "`tip pending <#channel_id>` <#{$tip_pending_channel->id}>\n";
+				$documentation = $documentation . "`tip approved <#channel_id>` <#{$tip_approved_channel->id}>\n";
 				//Messages
 				$documentation = $documentation . "**Messages:**\n";
 				if ($gameroles_message_id) {
@@ -1758,17 +1758,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$documentation = $documentation . "`vw` or `vwatch` gives the verified role to the mentioned and watches them\n";
 			if (!$role_verified_id) $documentation = $documentation . "~~";
 			//warn
-			$documentation = $documentation . "`warn @mention reason` logs an infraction\n";
+			$documentation = $documentation . "`warn <@user_id> reason` logs an infraction\n";
 			//infractions
-			$documentation = $documentation . "`infractions @mention` replies with a list of infractions for someone\n";
+			$documentation = $documentation . "`infractions <@user_id>` replies with a list of infractions for someone\n";
 			//removeinfraction
-			$documentation = $documentation . "`removeinfraction @mention #`\n";
+			$documentation = $documentation . "`removeinfraction <@user_id> #`\n";
 			//kick
-			$documentation = $documentation . "`kick @mention reason`\n";
+			$documentation = $documentation . "`kick <@user_id> reason`\n";
 			//ban
-			$documentation = $documentation . "`ban @mention reason`\n";
+			$documentation = $documentation . "`ban <@user_id> reason`\n";
 			//unban
-			$documentation = $documentation . "`unban @mention`\n";
+			$documentation = $documentation . "`unban <@user_id>`\n";
 			//Strikeout invalid options
 			if (!$suggestion_pending_channel) $documentation = $documentation . "~~";
 			//suggest approve
@@ -1790,9 +1790,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			//Strikeout invalid options
 			if (!$role_muted_id) $documentation = $documentation . "~~"; //Strikeout invalid options
 			//mute/m
-			$documentation = $documentation . "`mute @mention reason`\n";
+			$documentation = $documentation . "`mute <@user_id> reason`\n";
 			//unmute
-			$documentation = $documentation . "`unmute @mention reason`\n";
+			$documentation = $documentation . "`unmute <@user_id> reason`\n";
 			//Strikeout invalid options
 			if (!$role_muted_id) $documentation = $documentation . "~~"; //Strikeout invalid options
 			//whois
@@ -4995,7 +4995,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					->setColor(0xe1452d)																	// Set a color (the thing on the left side)
 	//					->setDescription("Infractions for $mention_check")										// Set a description (below title, above fields)
 					->addFieldValues("Infractions for $mention_check", "$mention_infraction_queue_full")			// New line after this
-	//					->addFieldValues("⠀", "Use '" . "removeinfraction @mention #' to remove")	// New line after this
+	//					->addFieldValues("⠀", "Use '" . "removeinfraction <@user_id> #' to remove")	// New line after this
 					
 	//					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 	//					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')			 	// Set an image (below everything except footer)
@@ -5048,7 +5048,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
 //				->setDescription("Infractions for $mention_check")										// Set a description (below title, above fields)
 				->addFieldValues("Clear", "Deleted $value messages in <#$author_channel_id>")			// New line after this
-//				->addFieldValues("⠀", "Use '" . "removeinfraction @mention #' to remove")	// New line after this
+//				->addFieldValues("⠀", "Use '" . "removeinfraction <@user_id> #' to remove")	// New line after this
 				
 				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 //				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')			 	// Set an image (below everything except footer)
@@ -5531,7 +5531,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			return $message->reply("Nobody in the guild was mentioned!");
 		}
 	}
-	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions @mention #
+	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions <@user_id> #
 		echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
 		//	Get an array of people mentioned
 		$mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
