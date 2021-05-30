@@ -34,12 +34,12 @@ $command = $slash_client->createGuildSpecificCommand('115233111977099271', 'pala
 
 
 // register global command `/ping`
-$slash->registerCommand('ping', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) use ($discord) {
+$slash->registerCommand('ping', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) {
 	$interaction->replyWithSource('Pong!');
 });
 
 // register guild command `/palace-test`
-$slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) use ($discord) {
+$slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) {
 	/*
 	echo 'Interactions: ' . PHP_EOL;
 	var_dump($interaction);
