@@ -54,27 +54,7 @@ $slash->linkDiscord($discord);
 
 // register global command `/ping`
 $slash->registerCommand('ping', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) use ($discord) {
-	$guild = $interaction->guild;
-    $channel = $interaction->channel;
-    $member = $interaction->member;
-	
-	$interaction->acknowledge(true);
 	$interaction->replyWithSource('Pong!');
-    // do some cool stuff here
-    // good idea to var_dump interaction and choices to see what they contain
-
-    // once finished, you MUST either acknowledge or reply to a message
-    //$interaction->acknowledge(); // acknowledges the message, doesn't show source message
-    //$interaction->acknowledge(true); // acknowledges the message and shows the source message
-
-    // to reply to the message
-    //$interaction->reply('Hello, world!'); // replies to the message, doesn't show source message
-    //$interaction->replyWithSource('Hello, world!'); // replies to the message and shows the source message
-
-    // the `reply` methods take 4 parameters: content, tts, embed and allowed_mentions
-    // all but content are optional.
-    // read the discord developer documentation to see what to pass to these options:
-    // https://discord.com/developers/docs/resources/channel#create-message
 });
 
 
@@ -87,10 +67,7 @@ $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interactio
 	
 	echo 'Choices: ' . PHP_EOL;
 	var_dump($choices);
-	echo PHP_EOL;
-	
-	$interaction->acknowledge(true);
-	
+	echo PHP_EOL;	
 	$guild = $interaction->guild;
     $channel = $interaction->channel;
     $member = $interaction->member;
