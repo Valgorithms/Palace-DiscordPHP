@@ -70,6 +70,7 @@ $discord = new \Discord\Discord([
 	'loop' => $loop,
 	'intents' => Intents::getDefaultIntents() | Intents::GUILD_MEMBERS, // default intents as well as guild members
 ]);
+$browser = new \React\Http\Browser($discord->getLoop()/*, $connector*/);
 include 'slash.php'; //$slash
 include 'stats_object.php';
 $stats = new Stats();
@@ -187,7 +188,6 @@ $options['responses']['discord'] = $options['social']['discord'];
 //$options['commands'] => $commands; // Import your own Twitch/Commands object to add additional functions
 
 $twitch = new Twitch\Twitch($options);
-$browser = new \React\Http\Browser($discord->getLoop()/*, $connector*/);
 
 function webapiFail($part, $id) {
 	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
