@@ -16,14 +16,11 @@ $slash->linkDiscord($discord);
 //$command = $client->getCommand('command_id', 'optionally_guild_id');
 
 /// CREATING COMMANDS
-
-// creates a global command
-$command = $slash_client->createGlobalCommand('ping', 'command_description', [
+$command = $slash_client->createGlobalCommand('ping', 'Pong!', [ //Global command
     // optional array of options
 ]);
 
-// creates a guild specific command
-$command = $slash_client->createGuildSpecificCommand('115233111977099271', 'palace-test', 'command_description', [
+$command = $slash_client->createGuildSpecificCommand('115233111977099271', 'palace-test', 'command_description', [ //Guild command
     // optional array of options
 ]);
 
@@ -36,31 +33,14 @@ $command = $slash_client->createGuildSpecificCommand('115233111977099271', 'pala
 //$client->deleteCommand($command);
 
 
-
-
-
-
-
-
-
-/*Listen for events*/
-echo '[SLASH LISTEN]' . PHP_EOL;
-$slash = new \Discord\Slash\Client([
-	'public_key' => "$public_key",
-    'loop' => $discord->getLoop(), // reactphp event loop, default creates a new loop
-]);
-
-$slash->linkDiscord($discord);
-
 // register global command `/ping`
 $slash->registerCommand('ping', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) use ($discord) {
 	$interaction->replyWithSource('Pong!');
 });
 
-
-
 // register guild command `/palace-test`
 $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) use ($discord) {
+	/*
 	echo 'Interactions: ' . PHP_EOL;
 	var_dump($interaction);
 	echo PHP_EOL;
@@ -71,6 +51,7 @@ $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interactio
 	$guild = $interaction->guild;
     $channel = $interaction->channel;
     $member = $interaction->member;
+	*/
     // do some cool stuff here
     // good idea to var_dump interaction and choices to see what they contain
 
@@ -81,9 +62,4 @@ $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interactio
     // to reply to the message
     //$interaction->reply('Hello, world!'); // replies to the message, doesn't show source message
     $interaction->replyWithSource('Hello, world!'); // replies to the message and shows the source message
-
-    // the `reply` methods take 4 parameters: content, tts, embed and allowed_mentions
-    // all but content are optional.
-    // read the discord developer documentation to see what to pass to these options:
-    // https://discord.com/developers/docs/resources/channel#create-message
 });
