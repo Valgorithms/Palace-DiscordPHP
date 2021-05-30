@@ -54,22 +54,23 @@ include_once 'functions/guildmemberremove-function.php'; //guildMemberRemove()
 include_once 'functions/guildmemberupdate-function.php'; //guildMemberUpdate()
 
 
-require getcwd().'/../token.php';
+require getcwd().'/../token.php'; //$token, $public_key
 $logger = new Monolog\Logger('New logger');
 $logger->pushHandler(new Monolog\Handler\StreamHandler('php://stdout'));
 $loop = React\EventLoop\Factory::create();
 use Discord\WebSockets\Intents;
 $discord = new \Discord\Discord([
-	'loop' => $loop,
+	'token' => "$token",
 	'socket_options' => [
         'dns' => '8.8.8.8', // can change dns
 	],
-    'token' => "$token",
     'loadAllMembers' => true,
     'storeMessages' => true,
 	'logger' => $logger,
+	'loop' => $loop,
 	'intents' => Intents::getDefaultIntents() | Intents::GUILD_MEMBERS, // default intents as well as guild members
 ]);
+include 'slash.php'; //$slash
 include 'stats_object.php';
 $stats = new Stats();
 $stats->init($discord);
