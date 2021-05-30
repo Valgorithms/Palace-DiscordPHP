@@ -1,10 +1,13 @@
 <?php
-/*Register the command*/
-echo '[SLASH REGISTER]' . PHP_EOL;
-$slash_client = new \Discord\Slash\RegisterClient("$token");
+echo '[SLASH INIT]' . PHP_EOL;
+$slash_client = new \Discord\Slash\RegisterClient("$token"); //Register commands
+$slash = new \Discord\Slash\Client([ //Listen for events
+	'public_key' => "$public_key",
+    'loop' => $discord->getLoop(), // reactphp event loop, default creates a new loop
+]);
+$slash->linkDiscord($discord);
 
 /// GETTING COMMANDS
-
 // gets a list of all GLOBAL comamnds (not guild-specific)
 //$commands = $client->getCommands();
 // gets a list of all guild-specific commands to the given guild
