@@ -1824,8 +1824,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($games) {
 			$documentation = $documentation . "\n__**Games:**__\n";
 			//yahtzee
-			$documentation = $documentation . "`yahtzee start` Starts a new game\n";
-			$documentation = $documentation . "`yahtzee end` Ends the game and deletes all progress\n";
+			$documentation = $documentation . "`yahtzee start` starts a new game\n";
+			$documentation = $documentation . "`yahtzee end` ends the game and deletes all progress\n";
 			$documentation = $documentation . "`yahtzee pause`\n";
 			$documentation = $documentation . "`yahtzee resume`\n";
 			//roll
