@@ -24,6 +24,7 @@ $command = $slash_client->createGlobalCommand('ping', 'Pong!', [ //Global comman
 $command = $slash_client->createGuildSpecificCommand('115233111977099271', 'palace-test', 'command_description', [ //Guild command
     // optional array of options
 ]);
+*/
 
 /// UPDATING COMMANDS
 // change the command name etc.....
