@@ -43,7 +43,6 @@ $slash->registerCommand('ping', function (\Discord\Slash\Parts\Interaction $inte
 /*
 // register guild command `/palace-test`
 $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) {
-	/*
 	echo 'Interactions: ' . PHP_EOL;
 	var_dump($interaction);
 	echo PHP_EOL;
@@ -54,7 +53,6 @@ $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interactio
 	$guild = $interaction->guild;
     $channel = $interaction->channel;
     $member = $interaction->member;
-	*/
     // do some cool stuff here
     // good idea to var_dump interaction and choices to see what they contain
 	
