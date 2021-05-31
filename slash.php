@@ -20,6 +20,7 @@ $command = $slash_client->createGlobalCommand('ping', 'Pong!', [ //Global comman
     // optional array of options
 ]);
 
+/*
 $command = $slash_client->createGuildSpecificCommand('115233111977099271', 'palace-test', 'command_description', [ //Guild command
     // optional array of options
 ]);
@@ -38,6 +39,7 @@ $slash->registerCommand('ping', function (\Discord\Slash\Parts\Interaction $inte
 	$interaction->replyWithSource('Pong!');
 });
 
+/*
 // register guild command `/palace-test`
 $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) {
 	/*
@@ -54,12 +56,11 @@ $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interactio
 	*/
     // do some cool stuff here
     // good idea to var_dump interaction and choices to see what they contain
+	
+	
 
     // once finished, you MUST either acknowledge or reply to a message
-    //$interaction->acknowledge(); // acknowledges the message, doesn't show source message
-    //$interaction->acknowledge(true); // acknowledges the message and shows the source message
-
-    // to reply to the message
-    //$interaction->reply('Hello, world!'); // replies to the message, doesn't show source message
+    //$interaction->acknowledge(); // acknowledges the message and shows source message
     $interaction->replyWithSource('Hello, world!'); // replies to the message and shows the source message
 });
+*/
