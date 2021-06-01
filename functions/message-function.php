@@ -2249,7 +2249,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			//echo 'test: ' . strpos($message_content,'remindme')+strlen($arr[0])+strlen($arr[1]) . PHP_EOL;
 			$string = trim(substr($message_content, strpos($message_content,' ')+1+strlen($arr[1])));
 			$discord->getLoop()->addTimer($arr[1], function() use ($message, $string) {
-				return $message->channel->sendMessage("This is your requested reminder!\n `$string`", false, null, ['parse' => ['users', 'roles'],'replied_user' => true], $message);
+				return $message->channel->sendMessage("This is your requested reminder!\n `$string`", false, null, false, $message);
 			});
 			
 			if ($react) $message->react("👍");
@@ -2512,7 +2512,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					if (!$array = VarLoad($guild_folder, "guild_suggestions.php")) return;
 					if (isset($array[$num]) && ($array[$num] != "Approved") && ($array[$num] != "Denied")) {
 						$embed = new \Discord\Parts\Embed\Embed($discord, $array[$num]);
-						$suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
+						$suggestion_approved_channel->sendMessage("{$embed->title}", false, $embed, false)->done(function ($new_message) use ($guild_folder, $embed) {
 							//Repost the suggestion
 							$new_message->react("👍")->done(function($result) use ($new_message) {
 								$new_message->react("👎");
@@ -2568,7 +2568,6 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (!$value) return $message->reply("Invalid input! Please enter text for your suggestion");
 			//Build the embed message
 			$message_sanitized = str_replace("*", "", $value);
-			$message_sanitized = str_replace("@", "", $message_sanitized);
 			$message_sanitized = str_replace("_", "", $message_sanitized);
 			$message_sanitized = str_replace("`", "", $message_sanitized);
 			$message_sanitized = str_replace("\n", "", $message_sanitized);
@@ -2593,7 +2592,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
 				->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 				->setURL("");							 												// Set the URL
-			$suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
+			$suggestion_pending_channel->sendMessage("{$embed->title}", false, $embed, false)->done(function ($new_message) use ($guild_folder, $embed) {
 				$new_message->react("👍")->done(
 					function($result) use ($new_message) {
 						$new_message->react("👎");
@@ -2704,7 +2703,6 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (!$value) return $message->reply("Invalid input! Please enter text for your tip");
 			//Build the embed message
 			$message_sanitized = str_replace("*", "", $value);
-			$message_sanitized = str_replace("@", "", $message_sanitized);
 			$message_sanitized = str_replace("_", "", $message_sanitized);
 			$message_sanitized = str_replace("`", "", $message_sanitized);
 			$message_sanitized = str_replace("\n", "", $message_sanitized);
@@ -2729,7 +2727,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
 				->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 				->setURL("");							 												// Set the URL
-			$tip_pending_channel->sendMessage("{$embed->title}", false, $embed)->done(function ($new_message) use ($guild_folder, $embed) {
+			$tip_pending_channel->sendMessage("{$embed->title}", false, $embed, false)->done(function ($new_message) use ($guild_folder, $embed) {
 				$new_message->react("👍")->done(function ($result) use ($new_message) {
 					$new_message->react("👎");
 				});
