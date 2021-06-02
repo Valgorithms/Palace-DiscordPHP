@@ -2235,7 +2235,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				echo '[ERROR]' . PHP_EOL;
 				var_dump($error->getMessage());
 				$message->react("❌");
-				$discord->getChannel('315259546308444160')->sendMessage("<@116927250145869826>, Webserver is down!"); //Alert Valithor
+				$discord->getChannel('315259546308444160')->sendMessage("<@116927250145869826>, Webserver is down! " . $message->link); //Alert Valithor
 			}
 		);
 		return;
