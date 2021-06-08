@@ -4819,7 +4819,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						$target_discriminator = $target_user->discriminator;
 						$target_id = $target_user->id;
 						$target_avatar = $target_user->avatar;
-						return $message->reply("Discord ID is registered to $target_check <@$value> (" . $target_username . '#' . $target_discriminator . ")");
+						$target_check = $target_username . '#' . $target_discriminator;
+						return $message->reply("Discord ID is registered to $target_check (<@$value>)");
 					},
 					function ($error) use ($message, $value) {
 						return $message->reply("Unable to locate user for ID $value");
