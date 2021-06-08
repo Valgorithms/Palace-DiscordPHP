@@ -394,6 +394,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*/
 	//Populate arrays of the info we need
+	$author_member_roles											= $author_member->roles;
 	$author_member_roles_names 										= array();
 	$author_member_roles_ids 										= array();
 	foreach ($author_member_roles as $role) {

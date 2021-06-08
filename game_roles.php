@@ -5,6 +5,7 @@ $gameroles = array(
     "Crusaders of the Lost Idols" => "⚔️",
 	"DayZ" => "👨‍🌾",
     "Deep Rock Galactic" => "🍻",
+	"Eco" => "🌎",
 	"Escape From Tarkov" => "🇷🇺",
 	"Genshin Impact" => "👱‍♀️",
 	"Minecraft" => "⛏️",
@@ -19,6 +20,7 @@ $gameroles_message_text = "**Role Menu: Games**
 :crossed_swords: : `Crusaders of the Lost Idols`
 :man_farmer: : `DayZ`
 :beers: : `Deep Rock Galactic`
+:earth_americas: : `Eco`
 :flag_ru: : `Escape From Tarkov`
 :blond_haired_woman: : `Genshin Impact`
 :pick: : `Minecraft`
