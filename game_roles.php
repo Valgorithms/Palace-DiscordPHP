@@ -18,7 +18,7 @@ $gameroles_message_text = "**Role Menu: Games**
 
 :military_helmet: : `Call of Duty`
 :crossed_swords: : `Crusaders of the Lost Idols`
-::earth_americas: : `Eco`
+:earth_americas: : `Eco`
 :man_farmer: : `DayZ`
 :beers: : `Deep Rock Galactic`
 :flag_ru: : `Escape From Tarkov`
