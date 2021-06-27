@@ -473,7 +473,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				foreach ($removed_roles as $role_id)
 					if ($role_id != $role_muted_id) $author_member->removeRole($role_id);
 				if ($role_muted_id) $author_member->addRole($role_muted_id);
-				return $message->react("🤐");
+				//return $message->react("🤐");
+				return $message->delete();
 			}
 		}
 	}
