@@ -134,6 +134,11 @@ $options = array(
 		'valzargaming',
 		'daathren',
 	],
+	'badwords' => [ // List of blacklisted words or phrases in their entirety; User will be immediately banned with reason 'badword' if spoken in chat
+		'Buy followers, primes and viewers',
+		'bigfollows . com',
+		'stearncomminuty',
+	],
 	'social' => [ //NYI
 		'twitter' => 'https://twitter.com/daathren',
 		'instagram' => 'https://www.instagram.com/daathren',
