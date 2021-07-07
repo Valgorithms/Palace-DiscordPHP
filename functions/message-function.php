@@ -3552,7 +3552,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if($creator || $owner || $dev || $admin || $mod) { //Only allow these roles to use this
 	}
 	*/
-	if ($creator || ($member->id == '68828609288077312') || ($member->id == '68847303431041024')) { //Special use-case
+	if ($creator || ($author_id == '68828609288077312') || ($author_id == '68847303431041024')) { //Special use-case
 		if ($message_content_lower == 'pull') { //;pull
 			//if(shell_exec("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpull.bat"'))
 			
