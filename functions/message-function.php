@@ -1872,9 +1872,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	//				Open a DM channel then send the rich embed message
 			return $author_user->sendMessage('', false, $embed)->then(
 				null,
-				function ($error) use ($author_user, $documentation) {
+				function ($error) use ($author_user, $documentation, $message) {
 					$author_user->getPrivateChannel()->done(
-						function($author_dmchannel) use ($documentation) {
+						function($author_dmchannel) use ($documentation, $message) {
 							$handle = fopen('help.txt', 'w+');
 							fwrite($handle, $documentation);
 							fclose($handle);
@@ -1882,10 +1882,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 								function ($result) {
 									unlink('help.txt');
 								},
-								function ($error) {
+								function ($error) use ($message) {
 									unlink('help.txt');
+									$message->reply("Unable to send you a DM! Please check your privacy settings and try again.");
 								}
 							);
+						},
+						function ($error) use ($message) {
+							$message->reply("Unable to send you a DM! Please check your privacy settings and try again.");
 						}
 					);
 				}
