@@ -551,7 +551,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							VarSave($guild_folder, "ownerwhitelist.php", $whitelist_array);
 							return $message->react("👍");
 						}
-				if ( ($switch == 'rem') || ($switch == 'remove')) //TODO
+				if ( ($switch == 'rem') || ($switch == 'remove'))
 					if(in_array($value, $whitelist_array)) { //Remove from whitelist
 						$pruned_whitelist_array = array();
 						foreach ($whitelist_array as $id)
@@ -559,7 +559,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						VarSave($guild_folder, "ownerwhitelist.php", $pruned_whitelist_array);
 						return $message->react("👍");
 					}
-				if ($switch == 'list') { //TODO
+				if ($switch == 'list') {
 					$string = "Whitelisted users: ";
 					foreach ($whitelist_array as $id)
 						$string .= "<@$id> ";
@@ -567,8 +567,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				}
 				return $message->react("👎");
 			}
-			return;
-			//check for empty subcommand and subcommands
+			return; //check for empty subcommand and subcommands
 		}
 	}
 	if ($creator || $owner || $dev) {
@@ -1939,7 +1938,6 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if($switch) {
 				$array = explode(' ', trim(str_replace($switch, "", $subcommand)));
 				echo "[ARRAY] "; var_dump($array); echo PHP_EOL; 
-				//return; //TODO
 				
 				if(!empty($array)) {
 					foreach($array as $word) {
