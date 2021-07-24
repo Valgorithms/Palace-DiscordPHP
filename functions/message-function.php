@@ -5862,7 +5862,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							if ($rolepicker_channel) $msg = $msg . " Feel free to pick out some roles in <#$rolepicker_channel_id>.";
 							$general_channel->sendMessage($msg)->done(
 								function ($message) use ($discord) {
-									$discord->getLoop()->addTimer(300, function() use ($message) {
+									$discord->getLoop()->addTimer(3000, function() use ($message) {
 										return $message->delete();
 									});
 								}
