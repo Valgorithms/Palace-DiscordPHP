@@ -18,19 +18,17 @@ function guildMemberRemove($guildmember, $discord) {
 		
 		$target_guildmember_role_collection 		= $guildmember->roles;					//This is the Role object for the GuildMember
 		
-		$target_guildmember_roles_mentions			= array();
+		$target_guildmember_roles_mentions = array();
 		foreach ($target_guildmember_role_collection as $role) {
-	//		$target_guildmember_roles_names[] 	= $role->name;
-			$target_guildmember_roles_mentions[] = "<@&{$role->id}>";
+	//		$target_guildmember_roles_names[] = $role->name;
+			$target_guildmember_roles_mentions[] = '<@&' . $role->id . '>';
 		}
 		$mention_role_id_queue = "";
 		foreach ($target_guildmember_roles_mentions as $mention_role) {
 			//$mention_role_name_queue 	= $mention_role_name_queue . $mention_role;
-			$mention_role_id_queue 	= $mention_role_id_queue . "$mention_role";
+			$mention_role_id_queue = $mention_role_id_queue . "$mention_role";
 		}
-		if (($mention_role_id_queue === null) || ($mention_role_id_queue == "")) { //String cannot be empty or the embed will throw an exception
-			$mention_role_id_queue = "?"; //Invisible unicode
-		}
+		if (!$mention_role_id_queue) $mention_role_id_queue = "?"; //String cannot be empty or the embed will throw an exception
 		
 		$guild_memberCount										= $guildmember->guild->member_count;
 		$author_guild_id = $guildmember->guild->id;
