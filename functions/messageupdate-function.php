@@ -107,7 +107,7 @@ function messageUpdate($message_new, $discord, $message_old) {
 				->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
 				->setURL("");                             												// Set the URL
 			
-				return $modlog_channel->sendMessage("A message was updated but it was too long to log within an embed. Please see the attached file.", array('embed' => $embed, 'files' => [['name' => "changes.txt", 'data' => $changes_file]]))->done(
+				return $modlog_channel->sendMessage("A message was updated but it was too long to log within an embed. Please see the attached file.", false, array('embed' => $embed, 'files' => [['name' => "changes.txt", 'data' => $changes_file]]))->done(
 					null,
 					function ($error) {
 						echo $error.PHP_EOL; //Echo any errors
