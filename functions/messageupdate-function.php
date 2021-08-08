@@ -55,7 +55,7 @@ function messageUpdate($message_new, $discord, $message_old) {
 	include "$guild_config_path";
 
 
-	$modlog_channel	= $guild->channels->offsetGet($modlog_channel_id);
+	if($modlog_channel_id) $modlog_channel	= $guild->channels->offsetGet($modlog_channel_id);
 
 	$author_username 			= $author_user->username; 											//echo "author_username: " . $author_username . PHP_EOL;
 	$author_discriminator 		= $author_user->discriminator;										//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
