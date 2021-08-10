@@ -636,7 +636,7 @@ function messageReactionAdd($reaction, $discord) {
 						$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 						$embed
 							->setColor(0xa7c5fd)
-							->setDescription("<@$author_id>\n**Removed role**\n<@&$target_role_id>")
+							->setDescription("<@$respondent_id>\n**Removed role**\n<@&$target_role_id>")
 							->setTimestamp()
 							->setFooter("Palace Bot by Valithor#5947")
 							->setURL(""); 
@@ -664,7 +664,7 @@ function messageReactionAdd($reaction, $discord) {
 							$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 							$embed
 								->setColor(0xa7c5fd)
-								->setDescription("<@$author_id>\n**Added role**\n<@&$target_role_id>")
+								->setDescription("<@$respondent_id>\n**Added role**\n<@&$target_role_id>")
 								->setTimestamp()
 								->setFooter("Palace Bot by Valithor#5947")
 								->setURL("");
