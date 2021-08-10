@@ -630,7 +630,27 @@ function messageReactionAdd($reaction, $discord) {
 					$role_index = array_search(strtolower($select_name), $guild_roles_names);
 					$target_role_id = $guild_roles_ids[$role_index];
 					echo "target_role_id: " . $target_role_id . PHP_EOL;
-					if ($respondent_member->id != $discord->id) $respondent_member->removeRole($guild_roles_role[$target_role_id]); //$target_role_id);
+					if ($respondent_member->id != $discord->id) {
+						$respondent_member->removeRole($guild_roles_role[$target_role_id]); //$target_role_id);
+						//Post a message tagging the user, then delete it after a few seconds
+						$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+						$embed
+							->setColor(0xa7c5fd)
+							->setDescription("<@$respondent_id>\n**Removed role**\n<@&$target_role_id>")
+							->setTimestamp()
+							->setFooter("Palace Bot by Valithor#5947")
+							->setURL(""); 
+						$author_channel->sendEmbed($embed)->done(
+							function ($new_message) use ($discord) {
+								$discord->getLoop()->addTimer(10, function () use ($new_message) {
+									return $new_message->delete();
+								});
+							},
+							function ($error) {
+								//
+							}
+						);
+					}
 					echo "Role removed: $select_name" . PHP_EOL;
 				} else {
 					//echo "Respondent does not already have the role" . PHP_EOL;
@@ -638,7 +658,27 @@ function messageReactionAdd($reaction, $discord) {
 						//Add the role
 						$role_index = array_search(strtolower($select_name), $guild_roles_names);
 						$target_role_id = $guild_roles_ids[$role_index];
-						if ($respondent_member->id != $discord->id) $respondent_member->addRole($guild_roles_role[$target_role_id]); // $target_role_id);
+						if ($respondent_member->id != $discord->id) {
+							$respondent_member->addRole($guild_roles_role[$target_role_id]); // $target_role_id);
+							//Post a message tagging the user, then delete it after a few seconds
+							$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+							$embed
+								->setColor(0xa7c5fd)
+								->setDescription("<@$respondent_id>\n**Added role**\n<@&$target_role_id>")
+								->setTimestamp()
+								->setFooter("Palace Bot by Valithor#5947")
+								->setURL("");
+							$author_channel->sendEmbed($embed)->done(
+								function ($new_message) use ($discord) {
+									$discord->getLoop()->addTimer(10, function () use ($new_message) {
+										return $new_message->delete();
+									});
+								},
+								function ($error) {
+									//
+								}
+							);
+						}
 						echo "Role added: $select_name" . PHP_EOL;
 					} else echo "Guild does not have this role" . PHP_EOL;
 				}
