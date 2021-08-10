@@ -9,6 +9,7 @@ $channelroles = array(
 	"Screenshots" => "📷",
 	"Stories" => "📖",
 	"Code" => "⌨️",
+	"Science" => "🧑‍🔬",
 	"Politics" => "⚖️",
 	"Bot Commands" => "🤖",
 	"Github" => "🖥️"
@@ -25,6 +26,7 @@ $channelroles_message_text = "**Role Menu: Channels**
 :camera: : `Screenshots`
 :book: : `Stories`
 :keyboard: : `Code`
+:scientist: : `Science`
 :scales: : `Politics`
 :robot: : `Bot Commands`
 :desktop: : `Github`
