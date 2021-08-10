@@ -21,8 +21,8 @@ function messageUpdate($message_new, $discord, $message_old) {
 	} else {
 		$author_user = $author;
 	}
-	$author_channel 			= $message_new->channel;
-	$author_channel_id			= $author_channel->id; 												//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
+	$author_channel = $message_new->channel;
+	$author_channel_id = $author_channel->id; 												//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
 	if (is_null($message->channel->guild_id) && is_null($author_member)) {
 		$is_dm = true; //True if direct message
@@ -60,13 +60,12 @@ function messageUpdate($message_new, $discord, $message_old) {
 	$author_username 			= $author_user->username; 											//echo "author_username: " . $author_username . PHP_EOL;
 	$author_discriminator 		= $author_user->discriminator;										//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
 	$author_id 					= $author_user->id;													//echo "author_id: " . $author_id . PHP_EOL;
-	$author_avatar 				= $author_user->avatar;										//echo "author_avatar: " . $author_avatar . PHP_EOL;
+	$author_avatar 				= $author_user->avatar;												//echo "author_avatar: " . $author_avatar . PHP_EOL;
 	$author_check 				= "$author_username#$author_discriminator"; 						//echo "author_check: " . $author_check . PHP_EOL;
 
 	$changes = "";
-	//if (($message_content_new != $message_content_old) || (($message_content_old == "") || ($message_content_old == NULL))) 	{
 	if ($message_content_new != $message_content_old) {
-		//			Build the string for the reply
+		//Build the string for the reply
 		$changes .= "[Link](https://discord.com/channels/$author_guild_id/$author_channel_id/$message_id_new)\n";
 		$changes .= "**Channel:** <#$author_channel_id>\n";
 		$changes .= "**Message ID:** $message_id_new\n";
