@@ -12,10 +12,10 @@ function guildMemberUpdate($member, $discord, $member_old) {
 		if (in_array($member->guild->owner_id, $blacklisted_owners)) {
 			/*
 			$author_guild->leave($author_guild_id)->done(null, function ($error) {
-				var_dump($error->getMessage()); //Echo any errors
+				var_dump($error->getMessage()); //if($GLOBALS['debug_echo']) echo any errors
 			});
 			*/
-			echo "[LEAVE BLACKLISTED OWNER GUILD - $author_guild_id]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[LEAVE BLACKLISTED OWNER GUILD - $author_guild_id]" . PHP_EOL;
 			$discord->guilds->leave($author_guild);
 		}
 	}
@@ -24,10 +24,10 @@ function guildMemberUpdate($member, $discord, $member_old) {
 		if (in_array($author_guild_id, $blacklisted_guilds)) {
 			/*
 			$author_guild->leave($author_guild_id)->done(null, function ($error) {
-				var_dump($error->getMessage()); //Echo any errors
+				var_dump($error->getMessage()); //if($GLOBALS['debug_echo']) echo any errors
 			});
 			*/
-			echo "[LEAVE BLACKLISTED GUILD - $author_guild_id]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[LEAVE BLACKLISTED GUILD - $author_guild_id]" . PHP_EOL;
 			$discord->guilds->leave($author_guild);
 		}
 	}
@@ -76,7 +76,7 @@ function guildMemberUpdate($member, $discord, $member_old) {
 		$old_avatar		= $old_user['avatar'];
 	}
 
-	echo "guildMemberUpdate ($author_guild_id - $member_id)" . PHP_EOL;
+	if($GLOBALS['debug_echo']) echo "guildMemberUpdate ($author_guild_id - $member_id)" . PHP_EOL;
 
 	$user_folder = "\\users\\$member_id";
 	CheckDir($user_folder);
@@ -87,9 +87,9 @@ function guildMemberUpdate($member, $discord, $member_old) {
 	}
 
 	//Load config variables for the guild
-	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	if (!include "$guild_config_path") {
-		echo "CONFIG CATCH!" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "CONFIG CATCH!" . PHP_EOL;
 		$counter = $GLOBALS[$author_guild_id."_config_counter"] ?? 0;
 		if ($counter <= 10) {
 			$GLOBALS[$author_guild_id."_config_counter"]++;
@@ -100,7 +100,7 @@ function guildMemberUpdate($member, $discord, $member_old) {
 				}
 			);
 			rmdir(getcwd()  . $guild_folder);
-			echo "GUILD DIR REMOVED" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "GUILD DIR REMOVED" . PHP_EOL;
 		}
 	}
 
@@ -111,24 +111,24 @@ function guildMemberUpdate($member, $discord, $member_old) {
 	$old_member_roles_ids = array();
 
 	foreach ($old_roles as $role) {
-		$old_member_roles_names[] = $role['name']; 											//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-		$old_member_roles_ids[]	= $role['id']; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+		$old_member_roles_names[] = $role['name']; 											//if($GLOBALS['debug_echo']) echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+		$old_member_roles_ids[]	= $role['id']; 												//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 	}
 
 	$new_member_roles_names = array();
 	$new_member_roles_ids = array();
 
 	foreach ($new_roles as $role) {
-		$new_member_roles_names[] = $role['name']; 											//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-		$new_member_roles_ids[]	= $role['id']; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+		$new_member_roles_names[] = $role['name']; 											//if($GLOBALS['debug_echo']) echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+		$new_member_roles_ids[]	= $role['id']; 												//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 	}
 
 
 	//		Compare changes
 	$changes = "";
 	if ($old_tag != $new_tag) {
-		//echo "old_tag: " . $old_tag . PHP_EOL;
-		//echo "new_tag: " . $new_tag . PHP_EOL;
+		//if($GLOBALS['debug_echo']) echo "old_tag: " . $old_tag . PHP_EOL;
+		//if($GLOBALS['debug_echo']) echo "new_tag: " . $new_tag . PHP_EOL;
 		if ($old_tag && $new_tag)
 			$changes = $changes . "Tag Changed:\n`$old_tag`→`$new_tag`\n";
 		elseif ($old_tag && !$new_tag)
@@ -146,8 +146,8 @@ function guildMemberUpdate($member, $discord, $member_old) {
 		VarSave($user_folder, "tags.php", $array);
 	}
 	if ($old_avatar != $new_avatar) {
-		//echo "old_avatar: " . $old_avatar . PHP_EOL;
-		//echo "new_avatar: " . $new_avatar . PHP_EOL;
+		//if($GLOBALS['debug_echo']) echo "old_avatar: " . $old_avatar . PHP_EOL;
+		//if($GLOBALS['debug_echo']) echo "new_avatar: " . $new_avatar . PHP_EOL;
 		if ($old_avatar && $new_avatar)
 			$changes = $changes . "Avatar Changed:\n`$old_avatar`→`$new_tag`\n";
 		elseif ($old_avatar && !$new_avatar)
@@ -166,8 +166,8 @@ function guildMemberUpdate($member, $discord, $member_old) {
 		VarSave($user_folder, "avatars.php", $array);
 	}
 	if ($old_username != $new_username) {
-		//echo "old_username: " . $old_username . PHP_EOL;
-		//echo "new_username: " . $new_username . PHP_EOL;
+		//if($GLOBALS['debug_echo']) echo "old_username: " . $old_username . PHP_EOL;
+		//if($GLOBALS['debug_echo']) echo "new_username: " . $new_username . PHP_EOL;
 		if ($old_username && $new_username)
 			$changes = $changes . "Username Changed:\n`$old_username`→`$new_username`\n";
 		elseif ($old_username && !$new_username)
@@ -186,8 +186,8 @@ function guildMemberUpdate($member, $discord, $member_old) {
 		VarSave($user_folder, "usernames.php", $array);
 	}
 	if ($old_nick != $new_nick) {
-		//echo "old_nick: " . $old_nick . PHP_EOL;
-		//echo "new_nick: " . $new_nick . PHP_EOL;
+		//if($GLOBALS['debug_echo']) echo "old_nick: " . $old_nick . PHP_EOL;
+		//if($GLOBALS['debug_echo']) echo "new_nick: " . $new_nick . PHP_EOL;
 		if ($old_nick && $new_nick)
 			$changes = $changes . "Nickname Changed:\n`$old_nick`→`$new_nick`\n";
 		elseif ($old_nick && !$new_nick)
@@ -241,7 +241,7 @@ function guildMemberUpdate($member, $discord, $member_old) {
 		}
 	}
 
-	//echo "switch: " . $switch . PHP_EOL;
+	//if($GLOBALS['debug_echo']) echo "switch: " . $switch . PHP_EOL;
 	//if( ($switch != "") || ($switch != NULL)) //User was kicked (They have no roles anymore)
 	if (($modlog_channel_id != null) && ($modlog_channel_id != "")) {
 		if ($changes != "") {

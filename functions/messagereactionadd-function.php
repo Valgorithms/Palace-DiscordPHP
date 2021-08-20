@@ -5,7 +5,7 @@ function messageReactionAdd($reaction, $discord) {
 
 	//Load guild info
 	$guild	= $reaction->guild;
-	$author_guild_id = $reaction->guild_id; //echo "author_guild_id: $author_guild_id" . PHP_EOL;
+	$author_guild_id = $reaction->guild_id; //if($GLOBALS['debug_echo']) echo "author_guild_id: $author_guild_id" . PHP_EOL;
 	$author_guild = $discord->guilds->get('id', $author_guild_id);
 
 	if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\Member") { //Load author info
@@ -13,7 +13,7 @@ function messageReactionAdd($reaction, $discord) {
 		$author_member = $message->author;
 	} else $author_user = $author;
 	$author_channel = $message->channel;
-	$author_channel_id	= $author_channel->id; 														//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
+	$author_channel_id	= $author_channel->id; 														//if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 
 	/*Disabling this so that the bot will automatically create the roles the first time they are added. They can be manually removed later.
 	if ("{$discord->id}" == $reaction->user->id)
@@ -22,26 +22,26 @@ function messageReactionAdd($reaction, $discord) {
 
 	$is_dm = false;
 	if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
-		echo '[MESSAGE REACT DM]' . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo '[MESSAGE REACT DM]' . PHP_EOL;
 		$is_dm = true;
 		return; //Don't try and process direct messages
 	}
 
-	$author_username 			= $author_user->username; 											//echo "author_username: " . $author_username . PHP_EOL;
-	$author_discriminator 		= $author_user->discriminator;										//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-	$author_id 					= $author_user->id;													//echo "author_id: " . $author_id . PHP_EOL;
-	$author_avatar 				= $author_user->avatar;												//echo "author_avatar: " . $author_avatar . PHP_EOL;
-	$author_check 				= "$author_username#$author_discriminator"; 						//echo "author_check: " . $author_check . PHP_EOL;
+	$author_username 			= $author_user->username; 											//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
+	$author_discriminator 		= $author_user->discriminator;										//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
+	$author_id 					= $author_user->id;													//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
+	$author_avatar 				= $author_user->avatar;												//if($GLOBALS['debug_echo']) echo "author_avatar: " . $author_avatar . PHP_EOL;
+	$author_check 				= "$author_username#$author_discriminator"; 						//if($GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;
 	$author_folder				= $author_guild_id."\\".$author_id;
 
 	//var_dump($reaction);
 	$respondent_user = $reaction->user;
 	//Load respondent info
-	$respondent_username 		= $respondent_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
-	$respondent_discriminator 	= $respondent_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-	$respondent_id 				= $respondent_user->id;												//echo "author_id: " . $author_id . PHP_EOL;
-	$respondent_avatar 			= $respondent_user->avatar;											//echo "author_avatar: " . $author_avatar . PHP_EOL;
-	$respondent_check 			= "$respondent_username#$respondent_discriminator"; 				//echo "respondent_check: " . $respondent_check . PHP_EOL;
+	$respondent_username 		= $respondent_user->username; 										//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
+	$respondent_discriminator 	= $respondent_user->discriminator;									//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
+	$respondent_id 				= $respondent_user->id;												//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
+	$respondent_avatar 			= $respondent_user->avatar;											//if($GLOBALS['debug_echo']) echo "author_avatar: " . $author_avatar . PHP_EOL;
+	$respondent_check 			= "$respondent_username#$respondent_discriminator"; 				//if($GLOBALS['debug_echo']) echo "respondent_check: " . $respondent_check . PHP_EOL;
 	$respondent_member			= $reaction->member ?? $author_guild->members->offsetGet($respondent_id);
 
 	/*
@@ -50,18 +50,18 @@ function messageReactionAdd($reaction, $discord) {
 	//
 	*/
 
-	echo "[messageReactionAdd]" . PHP_EOL;
+	if($GLOBALS['debug_echo']) echo "[messageReactionAdd]" . PHP_EOL;
 	$message_content_lower = strtolower($message_content);
 
 	//Create a folder for the guild if it doesn't exist already
 	$guild_folder = "\\guilds\\$author_guild_id";
 	CheckDir($guild_folder);
 	//Load config variables for the guild
-	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	include "$guild_config_path";
 
 	//Role picker stuff
-	$message_id	= $message->id;														//echo "message_id: " . $message_id . PHP_EOL;
+	$message_id	= $message->id;														//if($GLOBALS['debug_echo']) echo "message_id: " . $message_id . PHP_EOL;
 	global $gameroles, $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwroles, $nsfwsubroles;
 	$guild_custom_roles_path = getcwd()  . "\\$guild_folder\\custom_roles.php";
 	if (CheckFile($guild_folder."/", 'custom_roles.php')) {
@@ -73,30 +73,30 @@ function messageReactionAdd($reaction, $discord) {
 	//animated, managed, requireColons
 	//createdTimestamp, createdAt
 	$emoji = $reaction->emoji;
-	$emoji_id = $emoji->id;																			//echo "emoji_id: " . $emoji_id . PHP_EOL; //Unicode if null
+	$emoji_id = $emoji->id;																			//if($GLOBALS['debug_echo']) echo "emoji_id: " . $emoji_id . PHP_EOL; //Unicode if null
 
 	$unicode = false;
-	if (is_null($emoji_id)) $unicode = true;														//echo "unicode: " . $unicode . PHP_EOL;
-	$emoji_name = $emoji->name;																		//echo "emoji_name: " . $emoji_name . PHP_EOL;
-	$emoji_identifier = $emoji->id;																	//echo "emoji_identifier: " . $emoji_identifier . PHP_EOL;
+	if (is_null($emoji_id)) $unicode = true;														//if($GLOBALS['debug_echo']) echo "unicode: " . $unicode . PHP_EOL;
+	$emoji_name = $emoji->name;																		//if($GLOBALS['debug_echo']) echo "emoji_name: " . $emoji_name . PHP_EOL;
+	$emoji_identifier = $emoji->id;																	//if($GLOBALS['debug_echo']) echo "emoji_identifier: " . $emoji_identifier . PHP_EOL;
 
 	if ($unicode) $response = "$emoji_name";
 	else $response = "<:$emoji_identifier>";
 	//$message->reply("Response: $response");
 
 
-	//echo "$author_check's message was reacted to by $respondent_check" . PHP_EOL;
+	//if($GLOBALS['debug_echo']) echo "$author_check's message was reacted to by $respondent_check" . PHP_EOL;
 
 	//Check rolepicker option
 	global $rolepicker_option, $species_option, $sexuality_option, $gender_option, $gameroles_option, $custom_option;
 	if ($rolepicker_id) {
 		if (!CheckFile($guild_folder, "rolepicker_option.php")) $rp0 = $rolepicker_option; //Species role picker
 		else $rp0 = VarLoad($guild_folder, "rolepicker_option.php");
-	} else $rp0 = false; //echo "rp0: $rp0" . PHP_EOL;
+	} else $rp0 = false; //if($GLOBALS['debug_echo']) echo "rp0: $rp0" . PHP_EOL;
 
 
 
-	//echo $author_id.':'.$rolepicker_id.PHP_EOL;
+	//if($GLOBALS['debug_echo']) echo $author_id.':'.$rolepicker_id.PHP_EOL;
 
 	if ($rp0) {
 		if ($author_id == $rolepicker_id) {
@@ -112,7 +112,7 @@ function messageReactionAdd($reaction, $discord) {
 			if ($sexuality_message_id) {
 				if (!CheckFile($guild_folder, "sexuality_option.php")) $rp2 = $sexuality_option; //Sexuality role picker
 				else $rp2 = VarLoad($guild_folder, "sexuality_option.php");
-			} else $rp2 = false; //echo "rp2: $rp2" . PHP_EOL;
+			} else $rp2 = false; //if($GLOBALS['debug_echo']) echo "rp2: $rp2" . PHP_EOL;
 			if ($gender_message_id) {
 				if (!CheckFile($guild_folder, "gender_option.php")) $rp3 = $gender_option; //Gender role picker
 				else $rp3 = VarLoad($guild_folder, "gender_option.php");
@@ -128,19 +128,19 @@ function messageReactionAdd($reaction, $discord) {
 			if ($customroles_message_id) {
 				if (!CheckFile($guild_folder, "custom_option.php")) $rp4 = $custom_option; //Custom role picker
 				else $rp4 = VarLoad($guild_folder, "custom_option.php");
-			} else $rp4 = false; //echo "rp4: $rp4" . PHP_EOL;
+			} else $rp4 = false; //if($GLOBALS['debug_echo']) echo "rp4: $rp4" . PHP_EOL;
 			if ($nsfw_message_id) {
 				if (!CheckFile($guild_folder, "nsfw_option.php")) $nsfw	= $nsfw_option; //Custom role picker
 				else $nsfw = VarLoad($guild_folder, "nsfw_option.php");
-			} else $nsfw = false; //echo "nsfw: $nsfw" . PHP_EOL;
+			} else $nsfw = false; //if($GLOBALS['debug_echo']) echo "nsfw: $nsfw" . PHP_EOL;
 		
 			//Load guild roles info
 			$guild_roles											= $guild->roles;
 			$guild_roles_names 										= array();
 			$guild_roles_ids 										= array();
 			foreach ($guild_roles as $role) {
-				$guild_roles_names[] 								= strtolower("{$role->name}"); 				//echo "role name: " . $role->name . PHP_EOL; //var_dump($role->name);
-				$guild_roles_ids[]									= $role->id; 								//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+				$guild_roles_names[] 								= strtolower("{$role->name}"); 				//if($GLOBALS['debug_echo']) echo "role name: " . $role->name . PHP_EOL; //var_dump($role->name);
+				$guild_roles_ids[]									= $role->id; 								//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 				$guild_roles_role["{$role->id}"]					= $role;
 			}
 			//Load respondent roles info
@@ -148,8 +148,8 @@ function messageReactionAdd($reaction, $discord) {
 			$respondent_member_roles_names 									= array();
 			$respondent_member_roles_ids 									= array();
 			foreach ($respondent_member_role_collection as $role) {
-				$respondent_member_roles_names[] 							= strtolower("{$role->name}"); 		//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-				$respondent_member_roles_ids[]  = $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+				$respondent_member_roles_names[] 							= strtolower("{$role->name}"); 		//if($GLOBALS['debug_echo']) echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+				$respondent_member_roles_ids[]  = $role->id; 													//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 				$respondent_member_roles_role["{$role->id}"] = $role;
 			}
 		
@@ -158,7 +158,7 @@ function messageReactionAdd($reaction, $discord) {
 			switch ($message_id) {
 				case ($gameroles_message_id):
 					if ($gamerole) { //Will eventually contain many games, so server owner should decide if they want it enabled
-						echo "game role reaction" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "game role reaction" . PHP_EOL;
 						foreach ($gameroles as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
@@ -184,11 +184,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 							}
 						}
@@ -200,11 +200,11 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($species_message_id):
 					if ($rp1) {
-						echo "species reaction" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "species reaction" . PHP_EOL;
 						foreach ($species as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
-								echo "select_name: " . $select_name . PHP_EOL;
+								if($GLOBALS['debug_echo']) echo "select_name: " . $select_name . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
 									$new_role = $discord->factory(
@@ -227,11 +227,11 @@ function messageReactionAdd($reaction, $discord) {
 									);
 									*/
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 								//Messages can have a max of 20 different reacts, but species has more than 20 options
 								//Clear reactions to avoid discord ratelimit
@@ -246,11 +246,11 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($species2_message_id):
 					if ($rp1) {
-						echo "species2 reaction" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "species2 reaction" . PHP_EOL;
 						foreach ($species2 as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
-								echo "select_name: " . $select_name . PHP_EOL;
+								if($GLOBALS['debug_echo']) echo "select_name: " . $select_name . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
 									/*
@@ -273,11 +273,11 @@ function messageReactionAdd($reaction, $discord) {
 									]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 								//Messages can have a max of 20 different reacts, but species has more than 20 options
 								//Clear reactions to avoid discord ratelimit
@@ -292,11 +292,11 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($species3_message_id):
 					if ($rp1) {
-						echo "species3 reaction" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "species3 reaction" . PHP_EOL;
 						foreach ($species3 as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
-								echo "select_name: " . $select_name . PHP_EOL;
+								if($GLOBALS['debug_echo']) echo "select_name: " . $select_name . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
 									/*
@@ -319,11 +319,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 								//Messages can have a max of 20 different reacts, but species has more than 20 options
 								//Clear reactions to avoid discord ratelimit
@@ -338,7 +338,7 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($sexuality_message_id):
 					if ($rp2) {
-						echo "sexuality reaction" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "sexuality reaction" . PHP_EOL;
 						foreach ($sexualities as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
@@ -365,11 +365,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 							}
 						}
@@ -380,7 +380,7 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($gender_message_id):
 					if ($rp3) {
-						echo "gender reaction" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "gender reaction" . PHP_EOL;
 						foreach ($gender as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
@@ -407,11 +407,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 							}
 						}
@@ -423,7 +423,7 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($pronouns_message_id):
 					if ($rp5) {
-						echo "pronouns reaction" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "pronouns reaction" . PHP_EOL;
 						foreach ($pronouns as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
@@ -450,11 +450,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 							}
 						}
@@ -466,7 +466,7 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($channelroles_message_id):
 					if ($channeloption) {
-						echo "channel role reaction" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "channel role reaction" . PHP_EOL;
 						foreach ($channelroles as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
@@ -493,11 +493,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 							}
 						}
@@ -509,12 +509,12 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($customroles_message_id):
 					if ($rp4) {
-						echo "Custom roles reaction" . PHP_EOL;
-						//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
+						if($GLOBALS['debug_echo']) echo "Custom roles reaction" . PHP_EOL;
+						//if($GLOBALS['debug_echo']) echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
 						foreach ($customroles as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
-								echo "select_name: $select_name" . PHP_EOL;
+								if($GLOBALS['debug_echo']) echo "select_name: $select_name" . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
 									/*
@@ -538,11 +538,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 							}
 						}
@@ -554,12 +554,12 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($nsfw_message_id):
 					if ($nsfw) {
-						echo "NSFW roles reaction" . PHP_EOL;
-						//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
+						if($GLOBALS['debug_echo']) echo "NSFW roles reaction" . PHP_EOL;
+						//if($GLOBALS['debug_echo']) echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
 						foreach ($nsfwroles as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
-								echo "select_name: $select_name" . PHP_EOL;
+								if($GLOBALS['debug_echo']) echo "select_name: $select_name" . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
 									$new_role = $discord->factory(
@@ -573,11 +573,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 							}
 						}
@@ -589,12 +589,12 @@ function messageReactionAdd($reaction, $discord) {
 					break;
 				case ($nsfwsubrole_message_id):
 					if ($nsfw) {
-						echo "NSFW subroles reaction" . PHP_EOL;
-						//echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
+						if($GLOBALS['debug_echo']) echo "NSFW subroles reaction" . PHP_EOL;
+						//if($GLOBALS['debug_echo']) echo "emoji_name: $emoji_name" . PHP_EOL; //Should be unicode
 						foreach ($nsfwsubroles as $var_name => $value) {
 							if ($value == $emoji_name) {
 								$select_name = $var_name;
-								echo "select_name: $select_name" . PHP_EOL;
+								if($GLOBALS['debug_echo']) echo "select_name: $select_name" . PHP_EOL;
 								if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 									//Create the role
 									$new_role = $discord->factory(
@@ -608,11 +608,11 @@ function messageReactionAdd($reaction, $discord) {
 										]
 									);
 									$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($respondent_member) : void {
-										//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+										//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 									}, static function ($error) {
-										echo $e->getMessage() . PHP_EOL;
+										if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 									});
-									echo "[ROLE $select_name CREATED]" . PHP_EOL;
+									if($GLOBALS['debug_echo']) echo "[ROLE $select_name CREATED]" . PHP_EOL;
 								}
 							}
 						}
@@ -629,7 +629,7 @@ function messageReactionAdd($reaction, $discord) {
 					//Remove the role
 					$role_index = array_search(strtolower($select_name), $guild_roles_names);
 					$target_role_id = $guild_roles_ids[$role_index];
-					echo "target_role_id: " . $target_role_id . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "target_role_id: " . $target_role_id . PHP_EOL;
 					if ($respondent_member->id != $discord->id) {
 						$respondent_member->removeRole($guild_roles_role[$target_role_id]); //$target_role_id);
 						//Post a message tagging the user, then delete it after a few seconds
@@ -651,9 +651,9 @@ function messageReactionAdd($reaction, $discord) {
 							}
 						);
 					}
-					echo "Role removed: $select_name" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "Role removed: $select_name" . PHP_EOL;
 				} else {
-					//echo "Respondent does not already have the role" . PHP_EOL;
+					//if($GLOBALS['debug_echo']) echo "Respondent does not already have the role" . PHP_EOL;
 					if (in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
 						//Add the role
 						$role_index = array_search(strtolower($select_name), $guild_roles_names);
@@ -679,8 +679,8 @@ function messageReactionAdd($reaction, $discord) {
 								}
 							);
 						}
-						echo "Role added: $select_name" . PHP_EOL;
-					} else echo "Guild does not have this role" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "Role added: $select_name" . PHP_EOL;
+					} else if($GLOBALS['debug_echo']) echo "Guild does not have this role" . PHP_EOL;
 				}
 			}
 		}

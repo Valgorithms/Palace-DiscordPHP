@@ -34,7 +34,7 @@ $check = $_GET['code'];
 $access_token = $_GET['access_token'];
 
 if ($access_token) {
-	echo "access_token:" . $_GET['access_token'] .
+	if($GLOBALS['debug_echo']) echo "access_token:" . $_GET['access_token'] .
 	"refresh_token:" . $_GET['refresh_token'] .
 	"expires_in:" . $_GET['expires_in'] .
 	"scope:" . $_GET['scope'] .
@@ -43,7 +43,7 @@ if ($access_token) {
 }
 
 if ( is_null($access_token) && !is_null($check) ) {
-	echo doCurl("https://id.twitch.tv/oauth2/token?client_id=$client_id&client_secret=$client_secret&code=$check&grant_type=authorization_code&redirect_uri=$redirect_uri", 'POST');
+	if($GLOBALS['debug_echo']) echo doCurl("https://id.twitch.tv/oauth2/token?client_id=$client_id&client_secret=$client_secret&code=$check&grant_type=authorization_code&redirect_uri=$redirect_uri", 'POST');
 	return;
 } else {
 	$scopes = array(
@@ -68,6 +68,6 @@ if ( is_null($access_token) && !is_null($check) ) {
 	$auth_url .= '&scope=' . $req_scope;
 	$auth_url .= '&force_verify=true';
 
-	echo '<a href="' . $auth_url . '">Please Click this Link to Authenticate with Twitch</a>';
+	if($GLOBALS['debug_echo']) echo '<a href="' . $auth_url . '">Please Click this Link to Authenticate with Twitch</a>';
 }
 ?>

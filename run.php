@@ -86,7 +86,7 @@ $rtmp = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerRequestI
 			function () use ($file) {
 				return $file->open('r', true)
 					->then(function ($stream) {
-						//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+						//if($GLOBALS['debug_echo']) echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 						//return new React\Http\Message\Response(200, ['Content-Type' => 'video/mp4'], $stream); //video/mp4
 					});
 			},
@@ -210,11 +210,11 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 	$ip = (isset($path[4]) ? (string) $path[4] : false);
 	$idarray = array(); //get from post data
 	
-	if ($ip) echo '[REQUESTING IP] ' . $ip . PHP_EOL ;
+	if ($ip) if($GLOBALS['debug_echo']) echo '[REQUESTING IP] ' . $ip . PHP_EOL ;
 	if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0')
-		echo "[REMOTE_ADDR]" . $request->getServerParams()['REMOTE_ADDR'].PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[REMOTE_ADDR]" . $request->getServerParams()['REMOTE_ADDR'].PHP_EOL;
 	$GLOBALS['querycount'] = $GLOBALS['querycount'] + 1;
-	echo 'querycount:' . $GLOBALS['querycount'] . PHP_EOL;
+	if($GLOBALS['debug_echo']) echo 'querycount:' . $GLOBALS['querycount'] . PHP_EOL;
 	//logInfo('[webapi] Request', ['path' => $path]);
 	switch ($sub) {
 		case 'channel':
@@ -283,7 +283,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 
 		case 'restart':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') { //Restricted for obvious reasons
-				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			$return = 'restarting';
@@ -293,7 +293,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 
 		case 'lookup':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') { //This can be abused to cause 429's with Restcord and should only be used by the website. All other cases should use 'user'
-				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id))
@@ -302,7 +302,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 
 		case 'owner':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
-				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id))
@@ -320,7 +320,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 
 		case 'whitelist':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
-				echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id))
@@ -400,12 +400,12 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 $socket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55555'), $loop);
 $webapi->listen($socket);
 $webapi->on('error', function ($e) {
-	echo('[webapi] ' . $e->getMessage());
+	if($GLOBALS['debug_echo']) echo('[webapi] ' . $e->getMessage());
 });
 
 /*
 $socket->on('connection', function (React\Socket\ConnectionInterface $connection) {
-    echo $connection->getRemoteAddress() . PHP_EOL;
+    if($GLOBALS['debug_echo']) echo $connection->getRemoteAddress() . PHP_EOL;
 	if (substr($connection->getRemoteAddress(), 0, 12) != "tcp://10.0.0") return true;
 });
 */
@@ -421,7 +421,7 @@ set_exception_handler(function (Throwable $e) { //stops execution completely
 $rescue = VarLoad(getcwd() . "\_globals", "RESCUE.php"); //Check if recovering from a fatal crash
 $GLOBALS['presenceupdate'] = false;
 if ($rescue == true) { //Attempt to restore crashed session
-    echo "[RESCUE START]" . PHP_EOL;
+    if($GLOBALS['debug_echo']) echo "[RESCUE START]" . PHP_EOL;
     $rescue_dir = getcwd() . '\_globals';
     $rescue_vars = scandir($rescue_dir);
     foreach ($rescue_vars as $var) {
@@ -432,23 +432,23 @@ if ($rescue == true) { //Attempt to restore crashed session
         $GLOBALS["$value"] = $backup_var;
         
         $target_dir = $rescue_dir . "/" . $var;
-        echo $target_dir . PHP_EOL;
+        if($GLOBALS['debug_echo']) echo $target_dir . PHP_EOL;
         unlink($target_dir);
     }
     VarSave(getcwd() . "\_globals", "rescue.php", false);
-    echo "[RESCUE DONE]" . PHP_EOL;
+    if($GLOBALS['debug_echo']) echo "[RESCUE DONE]" . PHP_EOL;
 }
 $dt = new DateTime("now"); // convert UNIX timestamp to PHP DateTime
-echo "[LOGIN] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
+if($GLOBALS['debug_echo']) echo "[LOGIN] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
 try {
     $discord->on('error', function ($error) { //Handling of thrown errors
-        echo "[ERROR] $error" . PHP_EOL;
+        if($GLOBALS['debug_echo']) echo "[ERROR] $error" . PHP_EOL;
         $exception = null;
         try {
-            echo '[ERROR]' . $error->getMessage() . " in file " . $error->getFile() . " on line " . $error->getLine() . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo '[ERROR]' . $error->getMessage() . " in file " . $error->getFile() . " on line " . $error->getLine() . PHP_EOL;
         } catch (Throwable $exception) {
         } catch (Exception $e) {
-            echo '[ERROR]' . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine() . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo '[ERROR]' . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine() . PHP_EOL;
         }
         if ($exception) {
             throw $exception;
@@ -479,9 +479,9 @@ try {
         );
         */
         $tag = $discord->user->username . "#" . $discord->user->discriminator;
-        echo "[READY] Logged in as $tag (" . $discord->id . ')' . PHP_EOL;
+        if($GLOBALS['debug_echo']) echo "[READY] Logged in as $tag (" . $discord->id . ')' . PHP_EOL;
         $dt = new DateTime("now"); // convert UNIX timestamp to PHP DateTime
-        echo "[READY TIMESTAMP] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
+        if($GLOBALS['debug_echo']) echo "[READY TIMESTAMP] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
        
 		$act  = $discord->factory(\Discord\Parts\User\Activity::class, [
 		'name' => 'over the Palace',
@@ -530,23 +530,23 @@ try {
         });
         
         $discord->on('MESSAGE_DELETE_BULK', function ($messages) use ($discord) { //Handling of multiple messages being deleted
-			echo "[messageDeleteBulk]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[messageDeleteBulk]" . PHP_EOL;
             foreach ($messages as $message) messageDelete($message, $discord);
         });
         
         $discord->on('messageDeleteBulkRaw', function ($messages) use ($discord) { //Handling of multiple old/uncached messages being deleted
-            echo "[messageDeleteBulkRaw]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[messageDeleteBulkRaw]" . PHP_EOL;
         });
         
         $discord->on('MESSAGE_REACTION_ADD', function ($reaction) use ($discord) { //Handling of a message being reacted to
 			if (is_null($reaction->message->content)) {
-				//echo '[REACT TO EMPTY MESSAGE]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
-				//echo '[MessageID] ' . $reaction->message->id . PHP_EOL;
+				//if($GLOBALS['debug_echo']) echo '[REACT TO EMPTY MESSAGE]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+				//if($GLOBALS['debug_echo']) echo '[MessageID] ' . $reaction->message->id . PHP_EOL;
 				$channel = $discord->getChannel($reaction->channel_id);
 				$channel->messages->fetch("{$reaction->message_id}")->done(function ($message) use ($reaction, $discord) : void {
 					messageReactionAdd($reaction, $discord);
 				}, static function ($error) {
-					echo $e->getMessage() . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo $e->getMessage() . PHP_EOL;
 				});
 			}else messageReactionAdd($reaction, $discord);
         });
@@ -556,19 +556,19 @@ try {
         });
         
         $discord->on('MESSAGE_REACTION_REMOVE_ALL', function ($message) use ($discord) { //Handling of all reactions being removed from a message
-            echo "[messageReactionRemoveAll]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[messageReactionRemoveAll]" . PHP_EOL;
         });
         
         $discord->on('CHANNEL_CREATE', function ($channel) use ($discord) { //Handling of a channel being created
-            echo "[channelCreate]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[channelCreate]" . PHP_EOL;
         });
         
         $discord->on('CHANNEL_DELETE', function ($channel) use ($discord) { //Handling of a channel being deleted
-            echo "[channelDelete]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[channelDelete]" . PHP_EOL;
         });
         
         $discord->on('CHANNEL_UPDATE', function ($channel) use ($discord) { //Handling of a channel being changed
-            echo "[channelUpdate]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[channelUpdate]" . PHP_EOL;
         });
             
         $discord->on('userUpdate', function ($user_new, $user_old) use ($discord) { //Handling of a user changing their username/avatar/etc
@@ -577,23 +577,23 @@ try {
         });
             
         $discord->on('GUILD_ROLE_CREATE', function ($role) use ($discord) { //Handling of a role being created
-            echo "[roleCreate]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[roleCreate]" . PHP_EOL;
         });
         
         $discord->on('GUILD_ROLE_DELETE', function ($role) use ($discord) { //Handling of a role being deleted
-            echo "[roleDelete]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[roleDelete]" . PHP_EOL;
         });
         
         $discord->on('GUILD_ROLE_UPDATE', function ($role_new, $role_old) use ($discord) { //Handling of a role being changed
-            echo "[roleUpdate]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[roleUpdate]" . PHP_EOL;
         });
         
         $discord->on('voiceStateUpdate', function ($member_new, $member_old) use ($discord) { //Handling of a member's voice state changing (leaves/joins/etc.)
-            echo "[voiceStateUpdate]" . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo "[voiceStateUpdate]" . PHP_EOL;
         });
         
         $discord->on("error", function (\Throwable $e) {
-            echo '[ERROR]' . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine() . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo '[ERROR]' . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine() . PHP_EOL;
         });
         
         /*
@@ -603,18 +603,18 @@ try {
                 case "Shard 0 handling WS event PRESENCE_UPDATE": //Spammy
                     break;
                 default:
-                    echo "[WS DEBUG] $debug" . PHP_EOL;
+                    if($GLOBALS['debug_echo']) echo "[WS DEBUG] $debug" . PHP_EOL;
             }
         });
         */
         
         $discord->on('debug', function ($debug) {
-            echo '[DEBUG]' . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo '[DEBUG]' . PHP_EOL;
             $dt = new DateTime("now"); // convert UNIX timestamp to PHP DateTime
             switch ($debug) {
                 case 0:
                 default:
-                    echo "[CLIENT DEBUG] {".$dt->format('d-m-Y H:i:s')."} $debug" . PHP_EOL;
+                    if($GLOBALS['debug_echo']) echo "[CLIENT DEBUG] {".$dt->format('d-m-Y H:i:s')."} $debug" . PHP_EOL;
             }
         });
     }); //end main function ready
@@ -641,14 +641,14 @@ try {
             }
         }
         if ($warn) {
-            echo PHP_EOL . PHP_EOL . "Handler captured error $number: '$message' in $filename on line $fileline" . PHP_EOL . PHP_EOL;
+            if($GLOBALS['debug_echo']) echo PHP_EOL . PHP_EOL . "Handler captured error $number: '$message' in $filename on line $fileline" . PHP_EOL . PHP_EOL;
         }
         //die();
     });
     $twitch->run();
     $discord->run();
 } catch (Throwable $e) { //Restart the bo
-    echo "Captured Throwable: " . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine(). PHP_EOL;
+    if($GLOBALS['debug_echo']) echo "Captured Throwable: " . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine(). PHP_EOL;
 
     //Rescue global variables
     $GLOBALS["RESCUE"] = true;
@@ -659,26 +659,26 @@ try {
         "restcord",
         "MachiKoro_Games"
     );
-    echo "Skipped: ";
+    if($GLOBALS['debug_echo']) echo "Skipped: ";
     foreach ($GLOBALS as $key => $value) {
         $temp = array($value);
         if (!in_array($key, $blacklist_globals)) {
             try {
                 VarSave(getcwd() . "\_globals", "$key.php", $value);
             } catch (Throwable $e) { //This will probably crash the bot
-                echo "$key, ";
+                if($GLOBALS['debug_echo']) echo "$key, ";
             }
         } else {
-            echo "$key, ";
+            if($GLOBALS['debug_echo']) echo "$key, ";
         }
     }
-    echo PHP_EOL;
+    if($GLOBALS['debug_echo']) echo PHP_EOL;
   
     //sleep(5);
     
-    echo "RESTARTING BOT" . PHP_EOL;
+    if($GLOBALS['debug_echo']) echo "RESTARTING BOT" . PHP_EOL;
     $discord->destroy();
-    $restart_cmd = 'cmd /c "'. getcwd() . '\run.bat"'; //echo $restart_cmd . PHP_EOL;
+    $restart_cmd = 'cmd /c "'. getcwd() . '\run.bat"'; //if($GLOBALS['debug_echo']) echo $restart_cmd . PHP_EOL;
     //system($restart_cmd);
     execInBackground($restart_cmd);
     die();

@@ -1,13 +1,13 @@
 <?php
 //This code is dynamically driven by run.php and cannot be encapsulated into a function
 if (php_sapi_name() == "cli") {
-    //echo "CLI" . PHP_EOL;
+    //if($GLOBALS['debug_echo']) echo "CLI" . PHP_EOL;
 } else { //Browser
     return true;
 }
 
 //Create the image
-echo "CREATE CACHED IMAGE" . PHP_EOL;
+if($GLOBALS['debug_echo']) echo "CREATE CACHED IMAGE" . PHP_EOL;
 $my_img = imagecreate(300, 80);
 imagesetthickness($my_img, 1);
 
@@ -39,10 +39,10 @@ $img_rand = rand(0, 99999999999); //Some big number to make the URLs unique beca
 $img_dir_path = getcwd() . "\\";
 $cache_folder = "cache\\" . $author_id . "\\";
 CheckDir($cache_folder);
-$full_folder_path = $img_dir_path . $cache_folder; //echo "full_folder_path: " . $full_folder_path . PHP_EOL;
+$full_folder_path = $img_dir_path . $cache_folder; //if($GLOBALS['debug_echo']) echo "full_folder_path: " . $full_folder_path . PHP_EOL;
 
 //Delete old images before creating the new one
-//echo "DELETING OLD IMAGES" . PHP_EOL;
+//if($GLOBALS['debug_echo']) echo "DELETING OLD IMAGES" . PHP_EOL;
 $files = glob($full_folder_path . "*"); //Get all file names
 foreach ($files as $file) { //Iterate files
   if (is_file($file)) {
@@ -55,7 +55,7 @@ clearstatcache();
 $img_output_path =  $cache_folder . $img_rand . "cachedimage.png";
 
 //Save the file
-//echo "SAVING NEW IMAGE" . PHP_EOL;
+//if($GLOBALS['debug_echo']) echo "SAVING NEW IMAGE" . PHP_EOL;
 imagepng($my_img, $img_dir_path . $img_output_path);
 
 
