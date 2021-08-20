@@ -8,7 +8,7 @@ function guildBanAdd($ban, $discord) {
 	$user = $ban->user ?? $discord->users->offsetGet($user_id);
 	$reason = $ban->reason;
 
-	echo "[guildBanAdd] ($guild_id)" . PHP_EOL;
+	if($GLOBALS['debug_echo']) echo "[guildBanAdd] ($guild_id)" . PHP_EOL;
 	$author_guild_name = $guild->name;
 	//$author_guild_avatar = $guild->icon;
 	$author_username = $user->username;
@@ -24,16 +24,16 @@ function guildBanAdd($ban, $discord) {
 	}
 
 	//Load config variables for the guild
-	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	if (!include "$guild_config_path") {
-		echo "CONFIG CATCH!" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "CONFIG CATCH!" . PHP_EOL;
 		$counter = $GLOBALS[$guild_id."_config_counter"] ?? 0;
 		if ($counter <= 10) {
 			$GLOBALS[$guild_id."_config_counter"]++;
 		} else {
 			$discord->guilds->leave($guild);
 			rmdir(getcwd()  . $guild_folder);
-			echo "[GUILD DIR REMOVED - BAN]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[GUILD DIR REMOVED - BAN]" . PHP_EOL;
 		}
 	}
 

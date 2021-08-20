@@ -1,9 +1,9 @@
 <?php
-echo "----- BOT DISCONNECTED FROM DISCORD WITH CODE $code FOR REASON: $erMsg -----" . PHP_EOL;
+if($GLOBALS['debug_echo']) echo "----- BOT DISCONNECTED FROM DISCORD WITH CODE $code FOR REASON: $erMsg -----" . PHP_EOL;
 
 switch ($code) {
     case '4004':
-        echo "[CRITICAL] TOKEN INVALIDATED BY DISCORD!" . PHP_EOL;
+        if($GLOBALS['debug_echo']) echo "[CRITICAL] TOKEN INVALIDATED BY DISCORD!" . PHP_EOL;
         //Use Restcord to send a message
         $guild = $restcord->guild->getGuild(['guild.id' => 116927365652807686]);
         try {
@@ -32,12 +32,12 @@ if ($vm == true) {
 }
 $discord = new \CharlotteDunois\Yasmin\Client(array(), $loop); //Create a new client using the same React loop
 
-echo "[RESTART LOOP]" . PHP_EOL;
+if($GLOBALS['debug_echo']) echo "[RESTART LOOP]" . PHP_EOL;
 $dt = new DateTime("now");  // convert UNIX timestamp to PHP DateTime
-echo "[TIME] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
+if($GLOBALS['debug_echo']) echo "[TIME] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
 
 $discord->login($token)->done(null, function ($error) {
-    echo "[LOGIN ERROR] " . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine(). PHP_EOL; //Echo any errors
+    if($GLOBALS['debug_echo']) echo "[LOGIN ERROR] " . $e->getMessage() . " in file " . $e->getFile() . " on line " . $e->getLine(). PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
 });
 
 if (($vm == true) && (($code == "1000") || ($code == "4000") || ($code == "4003"))) {

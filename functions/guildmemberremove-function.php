@@ -1,17 +1,17 @@
 <?php
 function guildMemberRemove($guildmember, $discord) {
 	$author_guild_id = $guildmember->guild->id;
-	echo "[guildMemberRemove] $author_guild_id" . PHP_EOL;
+	if($GLOBALS['debug_echo']) echo "[guildMemberRemove] $author_guild_id" . PHP_EOL;
 	$user = $guildmember->user ?? $discord->users->offsetGet($guildmember->id);
 	//TODO: Varload welcome setting
 	$welcome = true;
 
 	if ($welcome === true) {
-		$user_username 								= $user->username; 													//echo "author_username: " . $author_username . PHP_EOL;
-		$user_id 									= $user->id;														//echo "new_user_id: " . $new_user_id . PHP_EOL;
-		$user_discriminator 						= $user->discriminator;												//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-		$user_avatar 								= $user->avatar;											//echo "author_id: " . $author_id . PHP_EOL;
-		$user_check 								= "$user_username#$user_discriminator"; 							//echo "author_check: " . $author_check . PHP_EOL;\
+		$user_username 								= $user->username; 													//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
+		$user_id 									= $user->id;														//if($GLOBALS['debug_echo']) echo "new_user_id: " . $new_user_id . PHP_EOL;
+		$user_discriminator 						= $user->discriminator;												//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
+		$user_avatar 								= $user->avatar;											//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
+		$user_check 								= "$user_username#$user_discriminator"; 							//if($GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;\
 		$user_tag									= $user_check;
 		$user_createdTimestamp						= $user->createdTimestamp();
 		$user_createdFormatted						= date("D M j Y H:i:s", $user_createdTimestamp);
@@ -34,7 +34,7 @@ function guildMemberRemove($guildmember, $discord) {
 		$author_guild_id = $guildmember->guild->id;
 		//Load config variables for the guild
 		$guild_folder = "\\guilds\\$author_guild_id";
-		$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+		$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 		include "$guild_config_path";
 		
 		try {
@@ -42,7 +42,7 @@ function guildMemberRemove($guildmember, $discord) {
 				$welcome_log_channel	= $guildmember->guild->channels->get('id', $welcome_log_channel_id);
 			}
 		} catch (Exception $e) {
-			//RuntimeException: Unknown property													//echo 'AUTHOR NOT IN GUILD' . PHP_EOL;
+			//RuntimeException: Unknown property													//if($GLOBALS['debug_echo']) echo 'AUTHOR NOT IN GUILD' . PHP_EOL;
 		}
 		
 		//			Build the embed
@@ -62,7 +62,7 @@ function guildMemberRemove($guildmember, $discord) {
 		
 		if ($welcome_log_channel) {
 			/*
-			echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 			ob_flush();
 			ob_start();
 			var_dump($embed);
@@ -85,7 +85,7 @@ function guildMemberRemove($guildmember, $discord) {
 			return;
 		} elseif ($modlog_channel) { //Send a detailed embed with user info
 			/*
-			echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 			ob_flush();
 			ob_start();
 			var_dump($embed);

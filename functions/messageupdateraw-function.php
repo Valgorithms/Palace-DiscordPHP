@@ -8,14 +8,14 @@ function messageUpdateRaw($channel, $data_array, $discord) {
 	$mentions			= $data_array['mentions'];
 	$mention_roles		= $data_array['mention_roles'];
 	$mention_everyone	= $data_array['mention_everyone'];
-	$member				= $data_array['member']; //echo "member: " . var_dump($member) . PHP_EOL; //username, id, discriminator,avatar
-	$id					= $data_array['id']; //echo "id: " . var_dump($id) . PHP_EOL; //username, id, discriminator,avatar
+	$member				= $data_array['member']; //if($GLOBALS['debug_echo']) echo "member: " . var_dump($member) . PHP_EOL; //username, id, discriminator,avatar
+	$id					= $data_array['id']; //if($GLOBALS['debug_echo']) echo "id: " . var_dump($id) . PHP_EOL; //username, id, discriminator,avatar
 	$flags				= $data_array['flags'];
 	$embeds				= $data_array['embeds'];
 	$edited_timestamp	= $data_array['edited_timestamp'];
 	$content			= $data_array['content'];
 	$channel_id			= $data_array['channel_id'];
-	$author				= $data_array['author']; //echo "author: " . var_dump($author) . PHP_EOL; //username, id, discriminator,avatar
+	$author				= $data_array['author']; //if($GLOBALS['debug_echo']) echo "author: " . var_dump($author) . PHP_EOL; //username, id, discriminator,avatar
 	$attachments		= $data_array['attachments'];
 	$guild_id			= $data_array['guild_id'];
 
@@ -23,7 +23,7 @@ function messageUpdateRaw($channel, $data_array, $discord) {
 	$author_guild_id = $guild->id;
 	//Load config variables for the guild
 	$guild_folder = "\\guilds\\$author_guild_id";
-	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	include "$guild_config_path";
 
 	$modlog_channel		= $guild->channels->get('id', $modlog_channel_id);
@@ -36,18 +36,18 @@ function messageUpdateRaw($channel, $data_array, $discord) {
 		//Load author info
 		$author_user													= $message->author; //User object
 		$author_channel 												= $message->channel;
-		$author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
+		$author_channel_id												= $author_channel->id; 											//if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 		$is_dm = false;
 		if (is_object($author_user) && get_class($author_user) != "Discord\Parts\User\Member") { //True if direct message
 			$is_dm = true;
 			return true; //Don't process DMs
 		}
 		
-		$author_username 												= $author_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
-		$author_discriminator 											= $author_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-		$author_id 														= $author_user->id;												//echo "author_id: " . $author_id . PHP_EOL;
-		$author_avatar 													= $author_user->avatar;									//echo "author_avatar: " . $author_avatar . PHP_EOL;
-		$author_check 													= "$author_username#$author_discriminator"; 					//echo "author_check: " . $author_check . PHP_EOL;
+		$author_username 												= $author_user->username; 										//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
+		$author_discriminator 											= $author_user->discriminator;									//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
+		$author_id 														= $author_user->id;												//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
+		$author_avatar 													= $author_user->avatar;									//if($GLOBALS['debug_echo']) echo "author_avatar: " . $author_avatar . PHP_EOL;
+		$author_check 													= "$author_username#$author_discriminator"; 					//if($GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;
 		
 	//			Build the embed
 		$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);

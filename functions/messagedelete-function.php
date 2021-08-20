@@ -8,47 +8,47 @@ function messageDelete($message, $discord) {
 	$message_id = $message->id;
 	$message_embeds	= $message->embeds; //collection of embeds, needs a foreach method
 	if (is_null($message_content) && is_null($message_embeds)) {
-		echo '[messageDelete No-Cache] ' . $guild_id . '/' . $channel_id . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo '[messageDelete No-Cache] ' . $guild_id . '/' . $channel_id . PHP_EOL;
 		$content = "Message $message_id deleted from <#$channel_id>";
 		
 		$guild = $discord->guilds->get('id', $guild_id);
 		$guild_folder = "\\guilds\\$guild_id";
-		$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+		$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 		include "$guild_config_path";
 		
 		if ($modlog_channel_id && ($modlog_channel = $guild->channels->offsetGet($modlog_channel_id))) $modlog_channel->sendMessage($content);
 		return;
 	} //Don't process blank messages, bots, or webhooks
-	echo '[messageDelete] ' . $message->guild_id . '/' . $channel_id . PHP_EOL;
+	if($GLOBALS['debug_echo']) echo '[messageDelete] ' . $message->guild_id . '/' . $channel_id . PHP_EOL;
 	$message_content_lower = strtolower($message_content);
 
 	//Load author info
 	$author_user = $message->user;
-	$author_channel_id = $channel_id; //echo "author_channel_id: " . $author_channel_id . PHP_EOL;
+	$author_channel_id = $channel_id; //if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
 	
 	if (is_null($message->guild_id) && !($author_member = $message->member)) { //True if direct message
 		$is_dm = true;
-		echo "[DM MESSAGE DELETED]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[DM MESSAGE DELETED]" . PHP_EOL;
 		return; //Don't process DMs
 	}
 	if ("{$discord->id}" == "{$author_user->id}") {
-		echo "[SELF MESSAGE DELETED]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[SELF MESSAGE DELETED]" . PHP_EOL;
 		return; //Don't log messages made by this bot
 	}
 
-	$author_username = $author_user->username; //echo "author_username: " . $author_username . PHP_EOL;
-	$author_discriminator = $author_user->discriminator; //echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-	$author_id = $author_user->id; //echo "author_id: " . $author_id . PHP_EOL;
-	$author_avatar = $author_user->avatar; //echo "author_avatar: " . $author_avatar . PHP_EOL;
-	$author_check = "$author_username#$author_discriminator"; //echo "author_check: " . $author_check . PHP_EOL;
+	$author_username = $author_user->username; //if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
+	$author_discriminator = $author_user->discriminator; //if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
+	$author_id = $author_user->id; //if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
+	$author_avatar = $author_user->avatar; //if($GLOBALS['debug_echo']) echo "author_avatar: " . $author_avatar . PHP_EOL;
+	$author_check = "$author_username#$author_discriminator"; //if($GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;
 
 	//Load guild info
 	if (!$guild = $discord->guilds->offsetGet($guild_id)) return; //Probably a DM, we don't care for it
 
 	//Load config variables for the guild
 	$guild_folder = "\\guilds\\$guild_id";
-	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	include "$guild_config_path";
 
 	if ($author_channel_id == $modlog_channel_id) return; //Don't log deletion of messages in the log channel
@@ -84,7 +84,7 @@ function messageDelete($message, $discord) {
 		//old method (Yasmin)
 		if ($data_string) { //Embed the changes as a text file
 			$modlog_channel->sendMessage('', array('embed' => $embed, 'files' => [['name' => "message.txt", 'data' => $data_string]]))->done(null, function ($error) {
-				echo $error.PHP_EOL; //Echo any errors
+				if($GLOBALS['debug_echo']) echo $error.PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
 			});
 		}else{
 			$modlog_channel->sendEmbed($embed);
@@ -93,17 +93,17 @@ function messageDelete($message, $discord) {
 		$message_array['embed'] = $embed;
 		//$content = $message->content ?? '';
 		$content = '';
-		if (!$message_embeds && !$data_string) { //echo "!message_embeds && !data_string" . PHP_EOL;
+		if (!$message_embeds && !$data_string) { //if($GLOBALS['debug_echo']) echo "!message_embeds && !data_string" . PHP_EOL;
 			return $modlog_channel->sendMessage($content, false, $embed)->done(null, function ($error) {
-				echo $error.PHP_EOL; //Echo any errors
+				if($GLOBALS['debug_echo']) echo $error.PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
 			});
-		} elseif (!$message_embeds && $data_string) { //echo "!message_embeds && data_string" . PHP_EOL;
+		} elseif (!$message_embeds && $data_string) { //if($GLOBALS['debug_echo']) echo "!message_embeds && data_string" . PHP_EOL;
 			//Message overflow
 			$message_array['files'] = [['name' => "message.txt", 'data' => $data_string]]; //THIS IS A LIST, NOT AN ARRAY
 			return $modlog_channel->sendMessage($content, false, $embed)->done(null, function ($error) {
-				echo $error.PHP_EOL; //Echo any errors
+				if($GLOBALS['debug_echo']) echo $error.PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
 			});
-		} elseif ($message_embeds && !$data_string) { //echo "message_embeds && !data_string" . PHP_EOL;
+		} elseif ($message_embeds && !$data_string) { //if($GLOBALS['debug_echo']) echo "message_embeds && !data_string" . PHP_EOL;
 			//No message overflow, process message_embeds onto the first message
 			
 			return $modlog_channel->sendMessage($content, false, $embed)->then(function ($new_message) use ($message, $embed, $message_embeds, $modlog_channel) {
@@ -124,7 +124,7 @@ function messageDelete($message, $discord) {
 					$embed_count++;
 				}
 			});
-		} elseif ($message_embeds && $data_string) { //echo "message_embeds && data_string" . PHP_EOL;
+		} elseif ($message_embeds && $data_string) { //if($GLOBALS['debug_echo']) echo "message_embeds && data_string" . PHP_EOL;
 			//Message overflow as an attachment, do not process message_mebeds until after the first message
 			return $modlog_channel->sendMessage('', false, $message_array)->then(function ($new_message) use ($message, $embed, $message_embeds, $modlog_channel, $data_string) {
 				//Message overflow
@@ -134,7 +134,7 @@ function messageDelete($message, $discord) {
 					foreach ($message_embeds as $deleted_embed) {
 						$deleted_embed->setTimestamp(null);
 						$modlog_channel->sendMessage("Deleted embed $embed_count ", false, $deleted_embed)->done(null, function ($error) {
-							echo $error.PHP_EOL; //Echo any errors
+							if($GLOBALS['debug_echo']) echo $error.PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
 						});
 						$embed_count++;
 					}

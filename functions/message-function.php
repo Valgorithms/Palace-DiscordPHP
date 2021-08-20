@@ -33,19 +33,19 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if ($author_member = $message->member) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
 
 	$author_channel 												= $message->channel;
-	$author_channel_id												= $author_channel->id; 											//echo "author_channel_id: " . $author_channel_id . PHP_EOL;
-	$is_dm															= false; //echo "author_channel_class: " . $author_channel_class . PHP_EOL;
+	$author_channel_id												= $author_channel->id; 											//if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
+	$is_dm															= false; //if($GLOBALS['debug_echo']) echo "author_channel_class: " . $author_channel_class . PHP_EOL;
 
-	//echo "[CLASS] " . get_class($message->author) . PHP_EOL;
+	//if($GLOBALS['debug_echo']) echo "[CLASS] " . get_class($message->author) . PHP_EOL;
 	if (is_null($message->channel->guild_id) && is_null($author_member)) $is_dm = true; //True if direct message
-	$author_username 												= $author_user->username; 										//echo "author_username: " . $author_username . PHP_EOL;
-	$author_discriminator 											= $author_user->discriminator;									//echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-	$author_id 														= $author_user->id;												//echo "author_id: " . $author_id . PHP_EOL;
-	$author_avatar 													= $author_user->avatar;									//echo "author_avatar: " . $author_avatar . PHP_EOL;
-	$author_check 													= "$author_username#$author_discriminator"; 					//echo "author_check: " . $author_check . PHP_EOL;
+	$author_username 												= $author_user->username; 										//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
+	$author_discriminator 											= $author_user->discriminator;									//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
+	$author_id 														= $author_user->id;												//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
+	$author_avatar 													= $author_user->avatar;									//if($GLOBALS['debug_echo']) echo "author_avatar: " . $author_avatar . PHP_EOL;
+	$author_check 													= "$author_username#$author_discriminator"; 					//if($GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;
 
 	if ($message_content_lower == ';invite') {
-		echo '[INVITE]' . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo '[INVITE]' . PHP_EOL;
 		//$author_channel->sendMessage($discord->application->getInviteURLAttribute('[permission string]'));
 		//$author_channel->sendMessage($discord->application->getInviteURLAttribute('8&redirect_uri=https%3A%2F%2Fdiscord.com%2Foauth2%2Fauthorize%3Fclient_id%3D586694030553776242%26permissions%3D8%26scope%3Dbot&response_type=code&scope=identify%20email%20connections%20guilds.join%20gdm.join%20guilds%20applications.builds.upload%20messages.read%20bot%20webhook.incoming%20rpc.notifications.read%20rpc%20applications.builds.read%20applications.store.update%20applications.entitlements%20activities.read%20activities.write%20relationships.read'));
 		$author_channel->sendMessage($discord->application->getInviteURLAttribute('8'));
@@ -68,7 +68,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 
 	if (!$is_dm) { //Guild message
 		$author_guild 												= $author_channel->guild;
-		$author_guild_id 											= $author_guild->id; 											//echo "discord_guild_id: " . $author_guild_id . PHP_EOL;
+		$author_guild_id 											= $author_guild->id; 											//if($GLOBALS['debug_echo']) echo "discord_guild_id: " . $author_guild_id . PHP_EOL;
 		$author_guild_name											= $author_guild->name;
 		$guild_owner_id												= $author_guild->owner_id;
 		if(is_null($author_member)) $author_member = $author_guild->members->offsetGet($author_id);
@@ -88,9 +88,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				//$author_guild->leave($author_guild_id)->done(null, function ($error) {
 				$discord->guilds->leave($author_guild)->done(null, function ($error) {
 					if (strlen($error) < (2049)) {
-						echo "[ERROR] $error" . PHP_EOL; //Echo any errors
+						if($GLOBALS['debug_echo']) echo "[ERROR] $error" . PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
 					} else {
-						echo "[ERROR] [BLACKLISTED GUILD] $author_guild_id";
+						if($GLOBALS['debug_echo']) echo "[ERROR] [BLACKLISTED GUILD] $author_guild_id";
 					}
 				});
 			}
@@ -101,12 +101,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (!in_array($author_guild_id, $whitelisted_guilds)) {
 				//$author_guild->leave()->done(null, function ($error) {
 				$discord->guilds->leave($author_guild)->done(null, function ($error) {
-					var_dump($error->getMessage()); //Echo any errors
+					var_dump($error->getMessage()); //if($GLOBALS['debug_echo']) echo any errors
 				});
 			}
 		}
 		
-		$guild_folder = "\\guilds\\$author_guild_id"; //echo "guild_folder: $guild_folder" . PHP_EOL;
+		$guild_folder = "\\guilds\\$author_guild_id"; //if($GLOBALS['debug_echo']) echo "guild_folder: $guild_folder" . PHP_EOL;
 		//Create a folder for the guild if it doesn't exist already
 		if (!CheckDir($guild_folder)) {
 			if (!CheckFile($guild_folder, "guild_owner_id.php"))
@@ -121,7 +121,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		else $booster = false;
 		
 		//Load config variables for the guild
-		$guild_config_path = getcwd()  . "\\$guild_folder\\guild_config.php";														//echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+		$guild_config_path = getcwd()  . "\\$guild_folder\\guild_config.php";														//if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 		if (!CheckFile($guild_folder, "guild_config.php")) {
 			$file = 'guild_config_template.php';
 			if (!copy(getcwd() . '/vendor/vzgcoders/palace/' . $file, $guild_config_path)) {
@@ -160,8 +160,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	} else { //Direct message
 		if ($author_id != $discord->user->id) { //Don't trigger on messages sent by this bot
 			global $server_invite;
-			//echo "[DM-EARLY BREAK]" . PHP_EOL;
-			echo "[DM] $author_check: $message_content" . PHP_EOL;
+			//if($GLOBALS['debug_echo']) echo "[DM-EARLY BREAK]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[DM] $author_check: $message_content" . PHP_EOL;
 			$dm_text = "Please use commands for this bot within a server unless otherwise prompted.";
 			//$message->reply("$dm_text \n$server_invite");
 			//$message->reply("$dm_text");
@@ -234,7 +234,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		else $gamerole = VarLoad($guild_folder, "gameroles_option.php");
 	}
 
-	//echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
+	//if($GLOBALS['debug_echo']) echo "$author_check <@$author_id> ($author_guild_id): {$message_content}", PHP_EOL;
 	$author_webhook = $author_user->webhook;
 
 
@@ -291,12 +291,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							$channels = $twitch->getChannels();
 							$arr = explode(' ', $content);
 							foreach ($channels as $temp) {
-								echo "temp: `$temp`" . PHP_EOL;
+								if($GLOBALS['debug_echo']) echo "temp: `$temp`" . PHP_EOL;
 								if (substr($arr[0], 1) == $temp) $target_channel = $temp;
 							}
-							echo "msg: `$msg`" . PHP_EOL;
-							echo "content: `$content`" . PHP_EOL;
-							echo "target_channel: `$target_channel`" . PHP_EOL;
+							if($GLOBALS['debug_echo']) echo "msg: `$msg`" . PHP_EOL;
+							if($GLOBALS['debug_echo']) echo "content: `$content`" . PHP_EOL;
+							if($GLOBALS['debug_echo']) echo "target_channel: `$target_channel`" . PHP_EOL;
 							if ($target_channel) {
 								$msg = str_replace('#'.$target_channel, '', $msg);
 								$twitch->sendMessage($msg, $target_channel);
@@ -319,12 +319,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	$author_folder = $guild_folder."\\".$author_id;
 	CheckDir($author_folder); //Check if folder exists and create if it doesn't
 	if (CheckFile($author_folder, "watchers.php")) {
-		echo "[WATCH] $author_id" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[WATCH] $author_id" . PHP_EOL;
 		$watchers = VarLoad($author_folder, "watchers.php");
-		//	echo "WATCHERS: " . var_dump($watchers); //array of user IDs
+		//	if($GLOBALS['debug_echo']) echo "WATCHERS: " . var_dump($watchers); //array of user IDs
 		$null_array = true; //Assume the object is empty
 		foreach ($watchers as $watcher) {
-			if ($watcher != null) {																									//echo "watcher: " . $watcher . PHP_EOL;
+			if ($watcher != null) {																									//if($GLOBALS['debug_echo']) echo "watcher: " . $watcher . PHP_EOL;
 				$null_array = false; //Mark the array as valid
 				if ($watcher_member = $author_guild->members->get('id', $watcher)) {
 					if (get_class($watcher_member) == "Discord\Parts\User\Member") {
@@ -334,7 +334,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					}
 					$watcher_user->getPrivateChannel()->done(
 						function ($watcher_dmchannel) use ($message) {	//Promise
-							//echo "watcher_dmchannel class: " . get_class($watcher_dmchannel) . PHP_EOL; //DMChannel
+							//if($GLOBALS['debug_echo']) echo "watcher_dmchannel class: " . get_class($watcher_dmchannel) . PHP_EOL; //DMChannel
 							if (isset($watch_channel)) {
 								return $watch_channel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
 							} elseif (isset($watcher_dmchannel)) {
@@ -348,7 +348,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 		if ($null_array) { //Delete the null file
 			VarDelete($author_folder, "watchers.php");
-			echo "[REMOVE WATCH] $author_id" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[REMOVE WATCH] $author_id" . PHP_EOL;
 		}
 	}
 
@@ -364,7 +364,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if(!(include getcwd() . 'CHANGEME.PHP')) include getcwd() . '/vendor/vzgcoders/palace/CHANGEME.php';
 	if ($author_id == $creator_id) $creator = true;
 
-	//echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
+	//if($GLOBALS['debug_echo']) echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
 	//$adult 		= false; //This role current serves no purpose
 	//$owner		= false; //This is populated directly from the guild
 	//$dev		= false; //This is a higher rank than admin because they're assumed to have administrator privileges
@@ -380,12 +380,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	$author_guild_roles_names 				= array(); 												//Names of all guild roles
 	$author_guild_roles_ids 				= array(); 												//IDs of all guild roles
 	foreach ($author_guild_roles as $role) {
-		$author_guild_roles_names[] 		= $role->name; 																		//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-		$author_guild_roles_ids[] 			= $role->id; 																		//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+		$author_guild_roles_names[] 		= $role->name; 																		//if($GLOBALS['debug_echo']) echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+		$author_guild_roles_ids[] 			= $role->id; 																		//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 		if ($role->name == "Palace Bot") //Author is this bot
 			$role_vzgbot_id = $role->id;
-	}																															//echo "discord_guild_roles_names" . PHP_EOL; var_dump($author_guild_roles_names);
-																																//echo "discord_guild_roles_ids" . PHP_EOL; var_dump($author_guild_roles_ids);
+	}																															//if($GLOBALS['debug_echo']) echo "discord_guild_roles_names" . PHP_EOL; var_dump($author_guild_roles_names);
+																																//if($GLOBALS['debug_echo']) echo "discord_guild_roles_ids" . PHP_EOL; var_dump($author_guild_roles_ids);
 	/*
 	*********************
 	*********************
@@ -398,8 +398,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	$author_member_roles_names 										= array();
 	$author_member_roles_ids 										= array();
 	foreach ($author_member_roles as $role) {
-		$author_member_roles_names[] 							= $role->name; 												//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-		$author_member_roles_ids[]								= $role->id; 												//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+		$author_member_roles_names[] 							= $role->name; 												//if($GLOBALS['debug_echo']) echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+		$author_member_roles_ids[]								= $role->id; 												//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 		if ($role->id == $role_18_id)
 			$adult = true; //Author has the 18+ role
 		if ($role->id == $role_dev_id)
@@ -428,12 +428,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 
 	if ($muted) return; //Ignore commands by muted users
 
-	if ($creator) echo "[CREATOR $author_guild_id/$author_id] " . PHP_EOL;
-	if ($owner) echo "[OWNER $author_guild_id/$author_id] " . PHP_EOL;
-	if ($dev) echo "[DEV $author_guild_id/$author_id] " . PHP_EOL;
-	if ($admin) echo "[ADMIN $author_guild_id/$author_id] " . PHP_EOL;
-	if ($mod) echo "[MOD $author_guild_id/$author_id] " . PHP_EOL;
-	//echo PHP_EOL;
+	if ($creator) if($GLOBALS['debug_echo']) echo "[CREATOR $author_guild_id/$author_id] " . PHP_EOL;
+	if ($owner) if($GLOBALS['debug_echo']) echo "[OWNER $author_guild_id/$author_id] " . PHP_EOL;
+	if ($dev) if($GLOBALS['debug_echo']) echo "[DEV $author_guild_id/$author_id] " . PHP_EOL;
+	if ($admin) if($GLOBALS['debug_echo']) echo "[ADMIN $author_guild_id/$author_id] " . PHP_EOL;
+	if ($mod) if($GLOBALS['debug_echo']) echo "[MOD $author_guild_id/$author_id] " . PHP_EOL;
+	//if($GLOBALS['debug_echo']) echo PHP_EOL;
 
 	global $gameroles, $gameroles_message_text;
 	global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
@@ -463,9 +463,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		//Exempt
 	}else{
 		foreach ($bad_full_words as $word) {
-			//echo "[WORD] $word" . PHP_EOL;
+			//if($GLOBALS['debug_echo']) echo "[WORD] $word" . PHP_EOL;
 			if (str_contains($message_content_lower, ' ' . $word . ' ') || ($message_content_lower == $word)) { //Mute the offender
-				echo '[BAD WORD] $word' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[BAD WORD] $word' . PHP_EOL;
 				$removed_roles = array();
 				foreach ($author_member->roles as $role) $removed_roles[] = $role->id;
 				VarSave($guild_folder."/".$author_id, "removed_roles.php", $removed_roles);
@@ -526,7 +526,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$whitelist_array = VarLoad($guild_folder, "ownerwhitelist.php");
 			}
 			$subcommand = trim(substr($message_content_lower, 3));
-			echo "[SUBCOMMAND $subcommand]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[SUBCOMMAND $subcommand]" . PHP_EOL;
 			
 			$switch = null;
 			if (str_starts_with($subcommand, 'add')) $switch = 'add';
@@ -653,7 +653,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return;
 				} else {
 					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
-						echo "[;SETUP MESSAGE]" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "[;SETUP MESSAGE]" . PHP_EOL;
 						$author_dmchannel->sendMessage($documentation);
 					});
 					return;
@@ -761,7 +761,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				}
 				
 				$documentation_sanitized = str_replace("\n", "", $documentation);
-				$doc_length = strlen($documentation_sanitized); echo "doc_length: " . $doc_length . PHP_EOL;
+				$doc_length = strlen($documentation_sanitized); if($GLOBALS['debug_echo']) echo "doc_length: " . $doc_length . PHP_EOL;
 				if ($doc_length < 1024) {
 					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 					$embed
@@ -776,15 +776,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 						->setURL("");							 												// Set the URL
 			//				Open a DM channel then send the rich embed message
-					echo "embed class: " . get_class($embed) . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "embed class: " . get_class($embed) . PHP_EOL;
 					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
-						echo "[;CURRENTSETUP EMBED]" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "[;CURRENTSETUP EMBED]" . PHP_EOL;
 						$author_dmchannel->sendEmbed($embed);
 						return;
 					});
 				} else {
 					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
-						echo "[;CURRENTSETUP MESSAGE]" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "[;CURRENTSETUP MESSAGE]" . PHP_EOL;
 						$author_dmchannel->sendMessage($documentation);
 					});
 				}
@@ -861,12 +861,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					->setURL("");							 												// Set the URL
 		//				Open a DM channel then send the rich embed message
 				$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
-					echo "[;SETTINGS EMBED]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[;SETTINGS EMBED]" . PHP_EOL;
 					return $author_dmchannel->sendEmbed($embed);
 				});
 				} else {
 					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
-						echo "[;SETTINGS MESSAGE]" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "[;SETTINGS MESSAGE]" . PHP_EOL;
 						return $author_dmchannel->sendMessage($documentation);
 					});
 				}
@@ -990,7 +990,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				return;
 				break;
 			case 'message gender': //;message gender
-				echo '[GENDER MESSAGE GEN]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[GENDER MESSAGE GEN]' . PHP_EOL;
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($gender_message_text)->done(function ($new_message) use ($guild_folder, $gender, $message) {
 					VarSave($guild_folder, "gender_message_id.php", strval($new_message->id));
@@ -1016,7 +1016,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				break;
 			case 'message pronoun': //;message pronoun
 			case 'message pronouns': //;message pronouns
-				echo '[GENDER MESSAGE GEN]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[GENDER MESSAGE GEN]' . PHP_EOL;
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($pronouns_message_text)->done(function ($new_message) use ($guild_folder, $pronouns, $message) {
 					VarSave($guild_folder, "pronouns_message_id.php", strval($new_message->id));
@@ -1118,7 +1118,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				return;
 				break;
 			case 'message customroles': //;message customroles
-				echo '[MESSAGE CUSTOMROLES]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[MESSAGE CUSTOMROLES]' . PHP_EOL;
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($customroles_message_text)->done(function ($new_message) use ($guild_folder, $customroles, $message) { //React in order
 					VarSave($guild_folder, "customroles_message_id.php", strval($new_message->id));
@@ -1129,7 +1129,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					*/
 					
 					/*
-					echo "customroles[0]:" . $customroles[array_key_first($customroles)] . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "customroles[0]:" . $customroles[array_key_first($customroles)] . PHP_EOL;
 					$promise = $new_message->react($customroles[array_key_first($customroles)])->then(function ($result) {
 						//
 					});
@@ -1138,7 +1138,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					$customroles = array_reverse($customroles);
 					for ($i = 1; $i < count($customroles); $i++) {
 					  $new_promise = $new_promise->then(function () use ($customroles, $i, $new_message) {
-						echo array_key_first($customroles);
+						if($GLOBALS['debug_echo']) echo array_key_first($customroles);
 						for($j = $i+1; $j < count($customroles); $j++)
 							next($customroles);
 						return $new_message->react(next($customroles))->then(function ($result) {
@@ -1184,7 +1184,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'react':
 				if (!CheckFile($guild_folder, "react_option.php")) {
 					VarSave($guild_folder, "react_option.php", $react_option);
-					echo "[NEW REACT OPTION FILE]";
+					if($GLOBALS['debug_echo']) echo "[NEW REACT OPTION FILE]";
 				}
 				$react_var = VarLoad($guild_folder, "react_option.php");
 				$react_flip = !$react_var;
@@ -1196,7 +1196,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'vanity': //toggle vanity functions ;vanity
 				if (!CheckFile($guild_folder, "vanity_option.php")) {
 					VarSave($guild_folder, "vanity_option.php", $vanity_option);
-					echo "[NEW VANITY OPTION FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW VANITY OPTION FILE]" . PHP_EOL;
 				}
 				$vanity_var = VarLoad($guild_folder, "vanity_option.php");
 				$vanity_flip = !$vanity_var;
@@ -1209,7 +1209,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'nsfw':
 				if (!CheckFile($guild_folder, "nsfw_option.php")) {
 					VarSave($guild_folder, "nsfw_option.php", $nsfw_option);
-					echo "[NEW NSFW OPTION FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW NSFW OPTION FILE]" . PHP_EOL;
 				}
 				$nsfw_var = VarLoad($guild_folder, "nsfw_option.php");
 				$nsfw_flip = !$nsfw_var;
@@ -1221,7 +1221,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'games':
 				if (!CheckFile($guild_folder, "games_option.php")) {
 					VarSave($guild_folder, "games_option.php", $games_option);
-					echo "[NEW GAMES OPTION FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW GAMES OPTION FILE]" . PHP_EOL;
 				}
 				$games_var = VarLoad($guild_folder, "games_option.php");
 				$games_flip = !$games_var;
@@ -1233,7 +1233,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'rolepicker':
 				if (!CheckFile($guild_folder, "rolepicker_option.php")) {
 					VarSave($guild_folder, "rolepicker_option.php", $rolepicker_option);
-					echo "[NEW ROLEPICKER FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW ROLEPICKER FILE]" . PHP_EOL;
 				}
 				$rolepicker_var = VarLoad($guild_folder, "rolepicker_option.php");
 				$rolepicker_flip = !$rolepicker_var;
@@ -1246,7 +1246,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'gameroles':
 				if (!CheckFile($guild_folder, "gameroles_option.php")) {
 					VarSave($guild_folder, "gameroles_option.php", $gameroles_option);
-					echo "[NEW GAME ROLES OPTION FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW GAME ROLES OPTION FILE]" . PHP_EOL;
 				}
 				$gameroles_var = VarLoad($guild_folder, "gameroles_option.php");
 				$gameroles_flip = !$gameroles_var;
@@ -1258,7 +1258,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'species':
 				if (!CheckFile($guild_folder, "species_option.php")) {
 					VarSave($guild_folder, "species_option.php", $species_option);
-					echo "[NEW SPECIES FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW SPECIES FILE]" . PHP_EOL;
 				}
 				$species_var = VarLoad($guild_folder, "species_option.php");
 				$species_flip = !$species_var;
@@ -1270,7 +1270,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'gender':
 				if (!CheckFile($guild_folder, "gender_option.php")) {
 					VarSave($guild_folder, "gender_option.php", $gender_option);
-					echo "[NEW GENDER FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW GENDER FILE]" . PHP_EOL;
 				}
 				$gender_var = VarLoad($guild_folder, "gender_option.php");
 				$gender_flip = !$gender_var;
@@ -1283,7 +1283,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'pronouns':
 				if (!CheckFile($guild_folder, "pronouns_option.php")) {
 					VarSave($guild_folder, "pronouns_option.php", $pronouns_option);
-					echo "[NEW pronouns FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW pronouns FILE]" . PHP_EOL;
 				}
 				$pronouns_var = VarLoad($guild_folder, "pronouns_option.php");
 				$pronouns_flip = !$pronouns_var;
@@ -1299,7 +1299,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'sexuality':
 				if (!CheckFile($guild_folder, "sexuality_option.php")) {
 					VarSave($guild_folder, "sexuality_option.php", $sexuality_option);
-					echo "[NEW SEXUALITY FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW SEXUALITY FILE]" . PHP_EOL;
 				}
 				$sexuality_var = VarLoad($guild_folder, "sexuality_option.php");
 				$sexuality_flip = !$sexuality_var;
@@ -1312,7 +1312,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'channelroles':
 				if (!CheckFile($guild_folder, "channel_option.php")) {
 					VarSave($guild_folder, "channel_option.php", $channel_option);
-					echo "[NEW CHANNELROLE FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW CHANNELROLE FILE]" . PHP_EOL;
 				}
 				$channel_var = VarLoad($guild_folder, "channel_option.php");
 				$channel_flip = !$channel_var;
@@ -1324,7 +1324,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			case 'customroles':
 				if (!CheckFile($guild_folder, "custom_option.php")) {
 					VarSave($guild_folder, "custom_option.php", $custom_option);
-					echo "[NEW CUSTOM ROLE OPTION FILE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[NEW CUSTOM ROLE OPTION FILE]" . PHP_EOL;
 				}
 				$custom_var = VarLoad($guild_folder, "custom_option.php");
 				$custom_flip = !$custom_var;
@@ -1396,7 +1396,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<@&", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value);//echo "value: '$value';" . PHP_EOL;
+			$value = trim($value);//if($GLOBALS['debug_echo']) echo "value: '$value';" . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "role_muted_id.php", $value);
 				return $message->reply("Muted role ID saved!");
@@ -1507,7 +1507,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", $value);
 				return $message->reply("Rolepicker channel ID saved!");
@@ -1518,7 +1518,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "nsfw_rolepicker_channel_id.php", $value);
 				return $message->reply("NSFW Rolepicker channel ID saved!");
@@ -1529,7 +1529,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "games_rolepicker_channel_id.php", $value);
 				return $message->reply("Games Rolepicker channel ID saved!");
@@ -1540,7 +1540,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "games_channel_id.php", $value);
 				return $message->reply("Games channel ID saved!");
@@ -1551,7 +1551,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "gameroles_message_id.php", $value);
 				return$message->reply("Game roles channel ID saved!");
@@ -1562,7 +1562,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "suggestion_pending_channel_id.php", $value);
 				return $message->reply("Suggestion pending channel ID saved!");
@@ -1573,7 +1573,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "suggestion_approved_channel_id.php", $value);
 				return $message->reply("Suggestion approved channel ID saved!");
@@ -1584,7 +1584,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "tip_pending_channel_id.php", $value);
 				return $message->reply("Tip pending channel ID saved!");
@@ -1595,7 +1595,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "tip_approved_channel_id.php", $value);
 				return $message->reply("Tip approved channel ID saved!");
@@ -1610,7 +1610,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace("<@", "", $value);
 			$value = str_replace("<@", "", $value);
 			$value = str_replace(">", "", $value);
-			$value = trim($value); //echo "value: " . $value . PHP_EOL;
+			$value = trim($value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				VarSave($guild_folder, "rolepicker_id.php", $value);
 				return $message->reply("Rolepicker user ID saved!");
@@ -1927,7 +1927,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if($creator || $owner || $dev || $admin || $author_perms['manage_guild']) { //Allow high staff to edit the ban word list
 		if (str_starts_with($message_content_lower, 'automod')) { //;automod
 			$subcommand = trim(substr($message_content_lower, 7));
-			echo "[SUBCOMMAND $subcommand]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[SUBCOMMAND $subcommand]" . PHP_EOL;
 			
 			$switch = null;
 			if (str_starts_with($subcommand, 'add')) $switch = 'add';
@@ -1937,7 +1937,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			
 			if($switch) {
 				$array = explode(' ', trim(str_replace($switch, "", $subcommand)));
-				echo "[ARRAY] "; var_dump($array); echo PHP_EOL; 
+				if($GLOBALS['debug_echo']) echo "[ARRAY] "; var_dump($array); if($GLOBALS['debug_echo']) echo PHP_EOL; 
 				
 				if(!empty($array)) {
 					foreach($array as $word) {
@@ -2032,14 +2032,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		$spam_limit['sec'] = 30;
 		$spam_limit_seconds = TimeArrayToSeconds($spam_limit);
 		if (str_starts_with($message_content_lower, 'roll ')) { //;roll #d#
-			echo '[ROLL]' . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo '[ROLL]' . PHP_EOL;
 			$cooldown = CheckCooldownMem($author_id, "spam", $spam_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				$filter = "roll ";
 				$message_content_lower = str_replace($filter, "", $message_content_lower);
 				$arr = explode('d', $message_content_lower);
-				echo 'arr[0]: ' . $arr[0] . PHP_EOL;
-				echo 'arr[1]: ' . $arr[1] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo 'arr[0]: ' . $arr[0] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo 'arr[1]: ' . $arr[1] . PHP_EOL;
 				if(str_contains($arr[1], '+')) {
 					$arr2 = explode('+', $arr[1]);
 					$arr[1] = $arr2[0];
@@ -2050,7 +2050,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					$arr[1] = $arr2[0];
 					$arr[2] = '-'.$arr2[1];
 				}
-				echo 'arr[2]: ' . $arr[2] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo 'arr[2]: ' . $arr[2] . PHP_EOL;
 				if( is_numeric($arr[0]) && is_numeric($arr[1]) ) {
 					if ( ((int)$arr[0] < 1) || ((int)$arr[1] < 1) )
 						return $message->reply('Die count and side count must be positive!');
@@ -2062,7 +2062,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					$result = array();
 					for ($x = 1; $x <= $count; $x++)
 						$result[] = rand(1,(int)$side);
-					echo 'result: '; var_dump($result); echo PHP_EOL;
+					if($GLOBALS['debug_echo']) echo 'result: '; var_dump($result); if($GLOBALS['debug_echo']) echo PHP_EOL;
 					$sum = array_sum($result) + $mod;
 					$output = "You rolled $sum!";
 					foreach ($result as $roll) {
@@ -2085,7 +2085,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	if ($message_content_lower == 'ping') { //;ping
-		echo '[PING]' . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo '[PING]' . PHP_EOL;
 		//$pingdiff = $message->timestamp->floatDiffInRealSeconds();
 		//$message->reply("your message took $pingdiff to arrive.");
 		return $message->reply("Pong!");
@@ -2093,12 +2093,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if ( ($message_content_lower == '_players') || ($message_content_lower == '_serverstatus') ) { //;players
 		//Sends a message containing data for each server we host as collected from serverinfo.json
 		//This method does not have to be called locally, so it can be moved to VZG Verifier
-		echo "[SERVER STATE] $author_check" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[SERVER STATE] $author_check" . PHP_EOL;
 		$browser->get('https://www.valzargaming.com/servers/serverinfo_get.php')->done( //Hosted on the website, NOT the bot's server
 			function ($response) use ($author_channel, $discord, $message) {
-				echo '[RESPONSE]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[RESPONSE]' . PHP_EOL;
 				include "../servers/serverinfo.php"; //$servers[1]["key"] = address / alias / port / servername
-				echo '[RESPONSE SERVERINFO INCLUDED]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[RESPONSE SERVERINFO INCLUDED]' . PHP_EOL;
 				$string = var_export((string)$response->getBody(), true);
 				
 				$data_json = json_decode($response->getBody());
@@ -2107,13 +2107,13 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$server_state = array();
 				foreach ($data_json as $varname => $varvalue) { //individual servers
 					$varvalue = json_encode($varvalue);
-					//echo "varname: " . $varname . PHP_EOL; //Index
-					//echo "varvalue: " . $varvalue . PHP_EOL; //Json
+					//if($GLOBALS['debug_echo']) echo "varname: " . $varname . PHP_EOL; //Index
+					//if($GLOBALS['debug_echo']) echo "varvalue: " . $varvalue . PHP_EOL; //Json
 					$server_state["$varname"] = $varvalue;
 					
 					$desc_string = $desc_string . $varname . ": " . urldecode($varvalue) . "\n";
-					//echo "desc_string length: " . strlen($desc_string) . PHP_EOL;
-					//echo "desc_string: " . $desc_string . PHP_EOL;
+					//if($GLOBALS['debug_echo']) echo "desc_string length: " . strlen($desc_string) . PHP_EOL;
+					//if($GLOBALS['debug_echo']) echo "desc_string: " . $desc_string . PHP_EOL;
 					$desc_string_array[] = $desc_string ?? "null";
 					$desc_string = "";
 				}
@@ -2133,7 +2133,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					$assocArray = json_decode($server_state[$index], true);
 					foreach ($assocArray as $key => $value) {
 						$value = urldecode($value);
-						//echo "$key:$value" . PHP_EOL;
+						//if($GLOBALS['debug_echo']) echo "$key:$value" . PHP_EOL;
 						$playerlist = "";
 						if($key/* && $value && ($value != "unknown")*/)
 							switch($key) {
@@ -2201,9 +2201,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					}
 				}
 				//Build the embed message
-				//echo "server_state_dump count:" . count($server_state_dump) . PHP_EOL;
+				//if($GLOBALS['debug_echo']) echo "server_state_dump count:" . count($server_state_dump) . PHP_EOL;
 				for($x=0; $x < count($server_state_dump)+1; $x++) { //+1 because we commented Persistence
-					//echo "x: " . $x . PHP_EOL;
+					//if($GLOBALS['debug_echo']) echo "x: " . $x . PHP_EOL;
 					if(is_array($server_state_dump[$x]))
 					foreach ($server_state_dump[$x] as $key => $value) { //Status / Byond / Host / Player Count / Epoch / Season / Map / Round Time / Station Time / Players
 						if($key && $value)
@@ -2222,7 +2222,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						}
 					}
 				}
-				echo '[RESPONSE FOR LOOP DONE]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[RESPONSE FOR LOOP DONE]' . PHP_EOL;
 				//Finalize the embed
 				$embed
 					->setColor(0xe1452d)
@@ -2236,11 +2236,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						$message->react("👎");
 					}
 				);
-				echo '[RESPONSE SEND EMBED DONE]' . PHP_EOL;
-				echo '[RESPONSE RETURNING]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[RESPONSE SEND EMBED DONE]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[RESPONSE RETURNING]' . PHP_EOL;
 				return;
 			}, function ($error) use ($discord, $message) {
-				echo '[ERROR]' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[ERROR]' . PHP_EOL;
 				var_dump($error->getMessage());
 				$message->react("❌");
 				$discord->getChannel('315259546308444160')->sendMessage("<@116927250145869826>, Webserver is down! " . $message->link); //Alert Valithor
@@ -2249,12 +2249,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		return;
 	}
 	if (str_starts_with($message_content_lower, 'remindme ')) { //;remindme
-		echo "[REMINDER]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[REMINDER]" . PHP_EOL;
 		$arr = explode(' ', $message_content_lower);
 		//$filter = "remindme ";
 		//$value = str_replace($filter, "", $message_content_lower);
 		if(is_numeric($arr[1])) {
-			//echo 'test: ' . strpos($message_content,'remindme')+strlen($arr[0])+strlen($arr[1]) . PHP_EOL;
+			//if($GLOBALS['debug_echo']) echo 'test: ' . strpos($message_content,'remindme')+strlen($arr[0])+strlen($arr[1]) . PHP_EOL;
 			$string = trim(substr($message_content, strpos($message_content,' ')+1+strlen($arr[1])));
 			$discord->getLoop()->addTimer($arr[1], function() use ($message, $string) {
 				return $message->channel->sendMessage("This is your requested reminder!\n `$string`", false, null, false, $message);
@@ -2265,7 +2265,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}else return $message->reply("Invalid input! Please use the format `;remindme #` where # is seconds.");
 	}	
 	if ($message_content_lower == 'roles') { //;roles
-		echo "[GET AUTHOR ROLES]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[GET AUTHOR ROLES]" . PHP_EOL;
 		//	Build the string for the reply
 		$author_role_name_queue 									= "";
 		//	$author_role_name_queue_full 								= "Here's a list of roles for you:" . PHP_EOL;
@@ -2296,15 +2296,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		return $author_channel->sendEmbed($embed);
 	}
 	if (str_starts_with($message_content_lower, 'roles ')) {//;roles @
-		echo "[GET MENTIONED ROLES]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[GET MENTIONED ROLES]" . PHP_EOL;
 		//	Get an array of people mentioned
-		$mentions_arr 						= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		$mentions_arr 						= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 		if (!strpos($message_content_lower, "<")) { //String doesn't contain a mention
 			$filter = "roles ";
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<@!", "", $value);
 			$value = str_replace("<@", "", $value);
-			$value = str_replace(">", "", $value); //echo "value: " . $value . PHP_EOL;
+			$value = str_replace(">", "", $value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
@@ -2315,25 +2315,25 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 		//$mention_role_name_queue_full								= "Here's a list of roles for the requested users:" . PHP_EOL;
 		$mention_role_name_queue_default							= "";
-		//	$mentions_arr_check = (array)$mentions_arr;																					//echo "mentions_arr_check: " . PHP_EOL; var_dump ($mentions_arr_check); //Shows the collection object
-	//	$mentions_arr_check2 = empty((array) $mentions_arr_check);																	//echo "mentions_arr_check2: " . PHP_EOL; var_dump ($mentions_arr_check2); //Shows the collection object
-		foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+		//	$mentions_arr_check = (array)$mentions_arr;																					//if($GLOBALS['debug_echo']) echo "mentions_arr_check: " . PHP_EOL; var_dump ($mentions_arr_check); //Shows the collection object
+	//	$mentions_arr_check2 = empty((array) $mentions_arr_check);																	//if($GLOBALS['debug_echo']) echo "mentions_arr_check2: " . PHP_EOL; var_dump ($mentions_arr_check2); //Shows the collection object
+		foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 	//		id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
 			
-			$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-			$mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+			$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+			$mention_check 											= $mention_username ."#".$mention_discriminator; 				//if($GLOBALS['debug_echo']) echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
 			
 	//				Get the roles of the mentioned user
 			$target_guildmember 									= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
 			$target_guildmember_role_collection 					= $target_guildmember->roles;					//This is the Role object for the GuildMember
 			
 	//				Get the avatar URL of the mentioned user
-			$target_guildmember_user								= $target_guildmember->user;									//echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
-			$mention_avatar 										= "{$target_guildmember_user->avatar}";					//echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
+			$target_guildmember_user								= $target_guildmember->user;									//if($GLOBALS['debug_echo']) echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
+			$mention_avatar 										= "{$target_guildmember_user->avatar}";					//if($GLOBALS['debug_echo']) echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//if($GLOBALS['debug_echo']) echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
 			
 	//				Populate arrays of the info we need
 	//				$target_guildmember_roles_names 						= array();
@@ -2341,8 +2341,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			
 			foreach ($target_guildmember_role_collection as $role) {
 				
-	//				$target_guildmember_roles_names[] 				= $role->name; 													//echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
-					$target_guildmember_roles_ids[] 				= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+	//				$target_guildmember_roles_names[] 				= $role->name; 													//if($GLOBALS['debug_echo']) echo "role[$x] name: " . PHP_EOL; //var_dump($role->name);
+					$target_guildmember_roles_ids[] 				= $role->id; 													//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 				
 				
 			}
@@ -2399,9 +2399,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	$avatar_limit['hour']	= 0;
 	$avatar_limit['min']	= 10;
 	$avatar_limit['sec']	= 0;
-	$avatar_limit_seconds = TimeArrayToSeconds($avatar_limit);																		//echo "TimeArrayToSeconds: " . $avatar_limit_seconds . PHP_EOL;
+	$avatar_limit_seconds = TimeArrayToSeconds($avatar_limit);																		//if($GLOBALS['debug_echo']) echo "TimeArrayToSeconds: " . $avatar_limit_seconds . PHP_EOL;
 	if ($message_content_lower == 'avatar') { //;avatar
-		echo "[GET AUTHOR AVATAR]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[GET AUTHOR AVATAR]" . PHP_EOL;
 		//$cooldown = CheckCooldown($author_folder, "avatar_time.php", $avatar_limit); //	Check Cooldown Timer
 		$cooldown = CheckCooldownMem($author_id, "avatar", $avatar_limit);
 		if (($cooldown[0]) || ($bypass)) {
@@ -2432,17 +2432,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	if (str_starts_with($message_content_lower, 'avatar ')) {//;avatar @
-		echo "GETTING AVATAR FOR MENTIONED" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "GETTING AVATAR FOR MENTIONED" . PHP_EOL;
 		//$cooldown = CheckCooldown($author_folder, "avatar_time.php", $avatar_limit); //Check Cooldown Timer
 		$cooldown = CheckCooldownMem($author_id, "avatar", $avatar_limit);
 		if (($cooldown[0]) || ($bypass)) {
-			$mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+			$mentions_arr = $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 			if (!strpos($message_content_lower, "<")) { //String doesn't contain a mention
 			$filter = "avatar ";
 				$value = str_replace($filter, "", $message_content_lower);
 				$value = str_replace("<@!", "", $value);
 				$value = str_replace("<@", "", $value);
-				$value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
+				$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 				if (is_numeric($value)) {
 					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 					$mention_member				= $author_guild->members->get('id', $value);
@@ -2451,19 +2451,19 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				} else return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
 				if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
 			}
-			foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+			foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 	//			id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-				$mention_param_encode 								= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-				$mention_json 										= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-				$mention_id 										= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-				$mention_username 									= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+				$mention_param_encode 								= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+				$mention_json 										= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+				$mention_id 										= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+				$mention_username 									= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
 				
-				$mention_discriminator 								= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-				$mention_check 										= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+				$mention_discriminator 								= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+				$mention_check 										= $mention_username ."#".$mention_discriminator; 				//if($GLOBALS['debug_echo']) echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
 
 	//			Get the avatar URL of the mentioned user
 				$target_guildmember 								= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
-				$target_guildmember_user							= $target_guildmember->user;									//echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
+				$target_guildmember_user							= $target_guildmember->user;									//if($GLOBALS['debug_echo']) echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
 				$mention_avatar 									= "{$target_guildmember_user->avatar}";
 				
 				//			Build the embed
@@ -2509,7 +2509,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$nums = array();
 				foreach ($pieces as $piece) {
 					if (is_numeric($piece)) {
-						echo "approve: $piece" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "approve: $piece" . PHP_EOL;
 						$nums[] = $piece;
 						$valid = true;
 					}
@@ -2546,7 +2546,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$nums = array();
 				foreach ($pieces as $piece) {
 					if (is_numeric($piece)) {
-						echo "deny: $piece" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "deny: $piece" . PHP_EOL;
 						$nums[] = $piece;
 						$valid = true;
 					}
@@ -2632,12 +2632,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (str_starts_with($message_content_lower, 'tip approve ')) { //;tip approve
 				$filter = "tip approve ";
 				$value = str_replace($filter, "", $message_content_lower);
-				$pieces = explode(" ", $value); echo "pieces: "; var_dump($pieces); echo PHP_EOL;
+				$pieces = explode(" ", $value); if($GLOBALS['debug_echo']) echo "pieces: "; var_dump($pieces); if($GLOBALS['debug_echo']) echo PHP_EOL;
 				$valid = false;
 				$nums = array();
 				foreach ($pieces as $piece) {
 					if (is_numeric($piece)) {
-						echo "approve: " . (int)$piece . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "approve: " . (int)$piece . PHP_EOL;
 						$nums[] = (int)$piece;
 						$valid = true;
 					}
@@ -2678,7 +2678,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$nums = array();
 				foreach ($pieces as $piece) {
 					if (is_numeric($piece)) {
-						echo "deny: " . (int)$piece . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "deny: " . (int)$piece . PHP_EOL;
 						$nums[] = (int)$piece;
 						$valid = true;
 					}
@@ -2859,7 +2859,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 		
 		if (($message_content_lower == 'cooldown') || ($message_content_lower == 'cd')) {//;cooldown ;cd
-			echo "[COOLDOWN CHECK]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[COOLDOWN CHECK]" . PHP_EOL;
 			//		Check Cooldown Timer
 			//$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
 			$cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
@@ -2873,17 +2873,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		if ( (str_starts_with($message_content_lower, 'hug ')) || (str_starts_with($message_content_lower, 'snuggle ')) ) { //;hug ;snuggle
-			echo "[HUG/SNUGGLE]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[HUG/SNUGGLE]" . PHP_EOL;
 			//		Check Cooldown Timer
 			//$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
 			$cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				//			Get an array of people mentioned
-				$mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+				$mentions_arr 										= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 				foreach ($mentions_arr as $mention_param) {
-					$mention_param_encode 							= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-					$mention_json 									= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-					$mention_id 									= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+					$mention_param_encode 							= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+					$mention_json 									= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+					$mention_id 									= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 					
 					if ($author_id != $mention_id) {
 						$hug_messages								= array();
@@ -2953,17 +2953,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		if ( (str_starts_with($message_content_lower, 'kiss ')) || (str_starts_with($message_content_lower, 'smooch ')) ) { //;kiss ;smooch
-			echo "[KISS]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[KISS]" . PHP_EOL;
 			//		Check Cooldown Timer
 			//$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
 			$cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				//			Get an array of people mentioned
-				$mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+				$mentions_arr 										= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 				foreach ($mentions_arr as $mention_param) {
-					$mention_param_encode 							= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-					$mention_json 									= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-					$mention_id 									= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+					$mention_param_encode 							= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+					$mention_json 									= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+					$mention_id 									= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 					
 					if ($author_id != $mention_id) {
 						$kiss_messages								= array();
@@ -2972,7 +2972,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						$kiss_messages[]							= "<@$author_id> has given <@$mention_id> the sweetest kiss on the cheek! Yay!";
 						$kiss_messages[]							= "<@$author_id> gives <@$mention_id> a kiss on the snoot.";
 						$kiss_messages[]							= "<@$author_id> rubs their snoot on <@$mention_id>, how sweet!";
-						$index_selection							= GetRandomArrayIndex($kiss_messages);						//echo "random kiss_message: " . $kiss_messages[$index_selection];
+						$index_selection							= GetRandomArrayIndex($kiss_messages);						//if($GLOBALS['debug_echo']) echo "random kiss_message: " . $kiss_messages[$index_selection];
 						//					Send the message
 						$author_channel->sendMessage($kiss_messages[$index_selection]);
 						//Increment give stat counter of author
@@ -3034,17 +3034,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		if (str_starts_with($message_content_lower, 'nuzzle ')) { //;nuzzle @
-			echo "[NUZZLE]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[NUZZLE]" . PHP_EOL;
 			//		Check Cooldown Timer
 			//$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
 			$cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				//			Get an array of people mentioned
-				$mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+				$mentions_arr 										= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 				foreach ($mentions_arr as $mention_param) {
-					$mention_param_encode 							= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-					$mention_json 									= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-					$mention_id 									= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+					$mention_param_encode 							= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+					$mention_json 									= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+					$mention_id 									= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 					
 					if ($author_id != $mention_id) {
 						$nuzzle_messages							= array();
@@ -3054,7 +3054,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						$nuzzle_messages[]							= "<@$author_id> rubs their snoot softly against <@$mention_id>, look at those cuties!";
 						$nuzzle_messages[]							= "<@$author_id> takes their snoot and nuzzles <@$mention_id> cutely.";
 						$index_selection							= GetRandomArrayIndex($nuzzle_messages);
-						//					echo "random nuzzle_messages: " . $nuzzle_messages[$index_selection];
+						//					if($GLOBALS['debug_echo']) echo "random nuzzle_messages: " . $nuzzle_messages[$index_selection];
 						//					Send the message
 						$author_channel->sendMessage($nuzzle_messages[$index_selection]);
 						//Increment give stat counter of author
@@ -3116,24 +3116,24 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		if (str_starts_with($message_content_lower, 'boop ')) { //;boop @
-			echo "[BOOP]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[BOOP]" . PHP_EOL;
 			//		Check Cooldown Timer
 			//$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
 			$cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				//			Get an array of people mentioned
-				$mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+				$mentions_arr 										= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 				foreach ($mentions_arr as $mention_param) {
-					$mention_param_encode 							= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-					$mention_json 									= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-					$mention_id 									= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+					$mention_param_encode 							= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+					$mention_json 									= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+					$mention_id 									= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 					
 					if ($author_id != $mention_id) {
 						$boop_messages								= array();
 						$boop_messages[]							= "<@$author_id> slowly and strategically booped the snoot of <@$mention_id>.";
 						$boop_messages[]							= "With a playful smile, <@$author_id> booped <@$mention_id>'s snoot.";
 						$index_selection							= GetRandomArrayIndex($boop_messages);
-						//					echo "random boop_messages: " . $boop_messages[$index_selection];
+						//					if($GLOBALS['debug_echo']) echo "random boop_messages: " . $boop_messages[$index_selection];
 						//					Send the message
 						$author_channel->sendMessage($boop_messages[$index_selection]);
 						//Increment give stat counter of author
@@ -3195,17 +3195,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		if (str_starts_with($message_content_lower, 'bap ')) { //;bap @
-			echo "[BAP]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[BAP]" . PHP_EOL;
 			//				Check Cooldown Timer
 			//$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
 			$cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				//					Get an array of people mentioned
-				$mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+				$mentions_arr 										= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 				foreach ($mentions_arr as $mention_param) {
-					$mention_param_encode 							= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-					$mention_json 									= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-					$mention_id 									= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+					$mention_param_encode 							= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+					$mention_json 									= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+					$mention_id 									= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 					
 					if ($author_id != $mention_id) {
 						$bap_messages								= array();
@@ -3213,7 +3213,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						$bap_messages[]								= "<@$author_id> glared at <@$mention_id>, giving them a bap on the snoot!";
 						$bap_messages[]								= "Snoot of <@$mention_id> was attacked by <@$author_id>!";
 						$index_selection							= GetRandomArrayIndex($bap_messages);
-						//							echo "random bap_messages: " . $bap_messages[$index_selection];
+						//							if($GLOBALS['debug_echo']) echo "random bap_messages: " . $bap_messages[$index_selection];
 						//					Send the message
 						$author_channel->sendMessage($bap_messages[$index_selection]);
 						//Increment give stat counter of author
@@ -3275,23 +3275,23 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		if (str_starts_with($message_content_lower, 'pet ')) { //;pet @
-			echo "[PET]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[PET]" . PHP_EOL;
 			//				Check Cooldown Timer
 			//$cooldown = CheckCooldown($author_folder, "vanity_time.php", $vanity_limit);
 			$cooldown = CheckCooldownMem($author_id, "vanity", $vanity_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				//					Get an array of people mentioned
-				$mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+				$mentions_arr 										= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 				foreach ($mentions_arr as $mention_param) {
-					$mention_param_encode 							= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-					$mention_json 									= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-					$mention_id 									= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+					$mention_param_encode 							= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+					$mention_json 									= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+					$mention_id 									= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 					
 					if ($author_id != $mention_id) {
 						$pet_messages								= array();
 						$pet_messages[]								= "<@$author_id> pets <@$mention_id>";
 						$index_selection							= GetRandomArrayIndex($pet_messages);
-						//							echo "random pet_messages: " . $pet_messages[$index_selection];
+						//							if($GLOBALS['debug_echo']) echo "random pet_messages: " . $pet_messages[$index_selection];
 						//					Send the message
 						$author_channel->sendMessage($pet_messages[$index_selection]);
 						//Increment give stat counter of author
@@ -3414,26 +3414,26 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		if (str_starts_with($message_content_lower, 'vstats ')) { //;vstats @
-			echo "[GET MENTIONED VANITY STATS]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[GET MENTIONED VANITY STATS]" . PHP_EOL;
 			//		Check Cooldown Timer
 			//$cooldown = CheckCooldown($author_folder, "vstats_limit.php", $vstats_limit);
 			$cooldown = CheckCooldownMem($author_id, "vstats", $vanity_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				//			Get an array of people mentioned
-				$mentions_arr 										= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
-				foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+				$mentions_arr 										= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+				foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 	//				id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-					$mention_param_encode 							= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-					$mention_json 									= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-					$mention_id 									= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-					$mention_username 								= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
-					$mention_discriminator 							= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-					$mention_check 									= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+					$mention_param_encode 							= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+					$mention_json 									= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+					$mention_id 									= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+					$mention_username 								= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+					$mention_discriminator 							= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+					$mention_check 									= $mention_username ."#".$mention_discriminator; 				//if($GLOBALS['debug_echo']) echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
 					
 	//				Get the avatar URL
 					$target_guildmember 							= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
-					$target_guildmember_user						= $target_guildmember->user;									//echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
-					$mention_avatar 								= "{$target_guildmember_user->avatar}";					//echo "mention_avatar: " . $mention_avatar . PHP_EOL;
+					$target_guildmember_user						= $target_guildmember->user;									//if($GLOBALS['debug_echo']) echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
+					$mention_avatar 								= "{$target_guildmember_user->avatar}";					//if($GLOBALS['debug_echo']) echo "mention_avatar: " . $mention_avatar . PHP_EOL;
 					
 					
 					//Load target get statistics
@@ -3574,7 +3574,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$process->start($discord->getLoop());
 
 			$process->on('exit', function ($exitcode) use ($stdout) {
-				echo 'exit with ' . $exitcode . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo 'exit with ' . $exitcode . PHP_EOL;
 
 				// rewind to start and then read full file (demo only, this is blocking).
 				// reading from shared file is only safe if you have some synchronization in place
@@ -3590,10 +3590,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	}
 	if ($creator) { //Mostly just debug commands
 		if ($message_content_lower == 'debug') { //;debug
-			echo '[DEBUG]' . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo '[DEBUG]' . PHP_EOL;
 			ob_start();
 			
-			//echo print_r(get_defined_vars(), true); //REALLY REALLY BAD IDEA
+			//if($GLOBALS['debug_echo']) echo print_r(get_defined_vars(), true); //REALLY REALLY BAD IDEA
 			print_r(get_defined_constants(true));
 			
 			$debug_output = ob_get_contents();
@@ -3629,10 +3629,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if (str_starts_with($message_content_lower, 'debug guild invite ')) { //;debug guild invite guildid
 			$filter = "debug guild invite ";
 			$value = str_replace($filter, "", $message_content_lower);
-			echo "[DEBUG GUILD INVITE] `$value`" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[DEBUG GUILD INVITE] `$value`" . PHP_EOL;
 			if ($guild = $discord->guilds->offsetGet($value)) {
 				if ($guild->vanity_url_code) {
-					echo "[VANITY INVITE EXISTS] `$value`" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[VANITY INVITE EXISTS] `$value`" . PHP_EOL;
 					$message->react("👍");
 					$url = 'https://discord.gg/' . $guild->vanity_url_code;
 					$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
@@ -3686,7 +3686,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}		
 		if (str_starts_with($message_content_lower, 'debug guild create')) { //;debug guild create
 			return; //Only works for bots that are in less than 10 guilds
-			echo '[DEBUG GUILD CREATE]' . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo '[DEBUG GUILD CREATE]' . PHP_EOL;
 			/*
 			$guild = $discord->factory(\Discord\Parts\Guild\Guild::class);
 			$guild->name = 'Doll House';
@@ -3777,7 +3777,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($message_content_lower == 'genimage') {
 			include "imagecreate_include.php"; //Generates $img_output_path
 			$image_path = "https://www.valzargaming.com/discord%20-%20palace/" . $img_output_path;
-			//echo "image_path: " . $image_path . PHP_EOL;
+			//if($GLOBALS['debug_echo']) echo "image_path: " . $image_path . PHP_EOL;
 			//	Build the embed message
 			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 			$embed
@@ -3796,7 +3796,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		//		Open a DM channel then send the rich embed message
 			/*
 			$author_user->getPrivateChannel()->done(function($author_dmchannel) use ($message, $embed) {	//Promise
-				echo 'SEND GENIMAGE EMBED' . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo 'SEND GENIMAGE EMBED' . PHP_EOL;
 				$author_dmchannel->sendEmbed($embed);
 			});
 			*/
@@ -3805,36 +3805,36 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($message_content_lower == 'promote') { //;promote
 			$author_member->addRole($role_dev_id)->done(
 				null,
-				function ($error) { //echo "role_admin_id: $role_admin_id" . PHP_EOL;
+				function ($error) { //if($GLOBALS['debug_echo']) echo "role_admin_id: $role_admin_id" . PHP_EOL;
 					var_dump($error->getMessage());
 				}
 			);
 		}
 		if ($message_content_lower == 'demote') { //;demote
 			$author_member->removeRole($role_dev_id)->done(
-				null, //echo "role_admin_id: $role_admin_id" . PHP_EOL;
+				null, //if($GLOBALS['debug_echo']) echo "role_admin_id: $role_admin_id" . PHP_EOL;
 				function ($error) {
 					var_dump($error->getMessage());
 				}
 			);
 		}
 		if ($message_content_lower == 'processmessages') {
-			//$verifylog_channel																				//TextChannel				//echo "channel_messages class: " . get_class($verifylog_channel) . PHP_EOL;
+			//$verifylog_channel																				//TextChannel				//if($GLOBALS['debug_echo']) echo "channel_messages class: " . get_class($verifylog_channel) . PHP_EOL;
 			//$author_messages = $verifylog_channel->fetchMessages(); 											//Promise
-			//echo "author_messages class: " . get_class($author_messages) . PHP_EOL; 							//Promise
+			//if($GLOBALS['debug_echo']) echo "author_messages class: " . get_class($author_messages) . PHP_EOL; 							//Promise
 			$verifylog_channel->getMessageHistory()->done(function ($message_collection) use ($verifylog_channel) {	//Resolve the promise
 				//$verifylog_channel and the new $message_collection can be used here
-				//echo "message_collection class: " . get_class($message_collection) . PHP_EOL; 				//Collection messages
-				//foreach ($message_collection as $message) {														//Model/Message				//echo "message_collection message class:" . get_class($message) . PHP_EOL;
+				//if($GLOBALS['debug_echo']) echo "message_collection class: " . get_class($message_collection) . PHP_EOL; 				//Collection messages
+				//foreach ($message_collection as $message) {														//Model/Message				//if($GLOBALS['debug_echo']) echo "message_collection message class:" . get_class($message) . PHP_EOL;
 					//DO STUFF HERE TO MESSAGES
 				//}
 			});
 			return;
 		}
 		if ($message_content_lower == 'restart') {
-			echo "[RESTART LOOP]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[RESTART LOOP]" . PHP_EOL;
 			$dt = new DateTime("now");  // convert UNIX timestamp to PHP DateTime
-			echo "[TIME] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
+			if($GLOBALS['debug_echo']) echo "[TIME] " . $dt->format('d-m-Y H:i:s') . PHP_EOL; // output = 2017-01-01 00:00:00
 			//$loop->stop();
 			$discord_class = get_class($discord);
 			//$discord->destroy();
@@ -3842,14 +3842,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$discord->login($token)->done(
 				null,
 				function ($error) {
-					echo "[LOGIN ERROR] $error".PHP_EOL; //Echo any errors
+					if($GLOBALS['debug_echo']) echo "[LOGIN ERROR] $error".PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
 				}
 			);
 			//$loop->run();
-			echo "[LOOP RESTARTED]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[LOOP RESTARTED]" . PHP_EOL;
 		}
 		if (str_starts_with($message_content_lower, 'timer ')) { //;timer
-			echo "[TIMER]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[TIMER]" . PHP_EOL;
 			$filter = "timer ";
 			$value = str_replace($filter, "", $message_content_lower);
 			if (is_numeric($value)) {
@@ -3860,7 +3860,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			return;
 		}
 		if (str_starts_with($message_content_lower, 'resolveid ')) { //;timer
-			echo "[RESOLVEID]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[RESOLVEID]" . PHP_EOL;
 			$filter = "resolveid ";
 			$value = str_replace($filter, "", $message_content_lower);
 			if (is_numeric($value)) { //resolve with restcord
@@ -3872,7 +3872,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			include "xml.php";
 		}
 		if ($message_content_lower == 'backup') { //;backup
-			echo "[SAVEGLOBAL]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[SAVEGLOBAL]" . PHP_EOL;
 			$GLOBALS["RESCUE"] = true;
 			$blacklist_globals = array(
 				"GLOBALS",
@@ -3880,27 +3880,27 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				"discord",
 				"restcord"
 			);
-			echo "Skipped: ";
+			if($GLOBALS['debug_echo']) echo "Skipped: ";
 			foreach ($GLOBALS as $key => $value) {
 				$temp = array($value);
 				if (!in_array($key, $blacklist_globals)) {
 					try {
 						VarSave("_globals", "$key.php", $value);
 					} catch (Throwable $e) { //This will probably crash the bot
-						echo "$key, ";
+						if($GLOBALS['debug_echo']) echo "$key, ";
 					}
 				} else {
-					echo "$key, ";
+					if($GLOBALS['debug_echo']) echo "$key, ";
 				}
 			}
-			echo PHP_EOL;
+			if($GLOBALS['debug_echo']) echo PHP_EOL;
 		}
 		if ($message_content_lower == 'rescue') { //;rescue
-			echo "[RESCUE]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[RESCUE]" . PHP_EOL;
 			include_once "custom_functions.php";
 			$rescue = VarLoad("_globals", "RESCUE.php"); //Check if recovering from a fatal crash
 			if ($rescue) { //Attempt to restore crashed session
-				echo "[RESCUE START]" . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo "[RESCUE START]" . PHP_EOL;
 				$rescue_dir = getcwd() . '/_globals';
 				$rescue_vars = scandir($rescue_dir);
 				foreach ($rescue_vars as $var) {
@@ -3911,15 +3911,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					$GLOBALS["$value"] = $backup_var;
 					
 					$target_dir = $rescue_dir . "/" . $var;
-					echo $target_dir . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo $target_dir . PHP_EOL;
 					unlink($target_dir);
 				}
 				VarSave("_globals", "rescue.php", false);
-				echo "[RESCUE DONE]" . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo "[RESCUE DONE]" . PHP_EOL;
 			}
 		}
 		if ($message_content_lower == 'get unregistered') { //;get unregistered
-			echo "[GET UNREGISTERED START]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[GET UNREGISTERED START]" . PHP_EOL;
 			$GLOBALS["UNREGISTERED"] = null;
 			$author_guild->members->freshen()->done(
 				function ($members) use ($message, $author_guild) {
@@ -3937,7 +3937,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						}
 						if (!$target_skip) {
 							//Query SQL for ss13 where discord =
-							$target_id = $target_member->id; //echo "target_id: " . $target_id . PHP_EOL;
+							$target_id = $target_member->id; //if($GLOBALS['debug_echo']) echo "target_id: " . $target_id . PHP_EOL;
 							include "../connect.php";
 							$sqlgettargetinfo = "
 								SELECT
@@ -3949,25 +3949,25 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							if ($resultsqlgettargetinfo = mysqli_query($con, $sqlgettargetinfo)) {
 								$rowselect = mysqli_fetch_array($resultsqlgettargetinfo);
 								if (!$ckey = $rowselect['ss13']) {
-									//echo "$target_id: No ckey found" . PHP_EOL;
+									//if($GLOBALS['debug_echo']) echo "$target_id: No ckey found" . PHP_EOL;
 									$GLOBALS["UNREGISTERED"][] = $target_id;
 								} else {
-									//echo "$target_id: $ckey" . PHP_EOL;
+									//if($GLOBALS['debug_echo']) echo "$target_id: $ckey" . PHP_EOL;
 								}
 							} else {
-								//echo "$target_id: No registration found" . PHP_EOL;
+								//if($GLOBALS['debug_echo']) echo "$target_id: No registration found" . PHP_EOL;
 								$GLOBALS["UNREGISTERED"][] = $target_id;
 							}
 						}
 					}
-					echo count($GLOBALS["UNREGISTERED"]) . " UNREGISTERED ACCOUNTS" . PHP_EOL;
-					echo "[GET UNREGISTERED DONE]" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo count($GLOBALS["UNREGISTERED"]) . " UNREGISTERED ACCOUNTS" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[GET UNREGISTERED DONE]" . PHP_EOL;
 					return $message->react("👍");
 				}
 			);
 		}
 		if ($message_content_lower == 'fix unverified') { //;fix unverified
-			echo "[FIX UNVERIFIED]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[FIX UNVERIFIED]" . PHP_EOL;
 			$string = "";
 			foreach ($author_guild->members as $target_member) {
 				$has_role = false;
@@ -3987,21 +3987,21 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			return;
 		}
 		if ($message_content_lower == 'unverify unregistered') { //;unverify unregistered
-			echo "[UNVERIFY UNREGISTERED START]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[UNVERIFY UNREGISTERED START]" . PHP_EOL;
 			if ($GLOBALS["UNREGISTERED"]) {
-				echo "UNREGISTERED 0: " . $GLOBALS["UNREGISTERED"][0] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo "UNREGISTERED 0: " . $GLOBALS["UNREGISTERED"][0] . PHP_EOL;
 				$GLOBALS["UNREGISTERED_COUNT"] = count($GLOBALS["UNREGISTERED"]);
-				echo "UNREGISTERED_COUNT: " . $GLOBALS["UNREGISTERED_COUNT"] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo "UNREGISTERED_COUNT: " . $GLOBALS["UNREGISTERED_COUNT"] . PHP_EOL;
 				$GLOBALS["UNREGISTERED_X"] = 0;
 				$GLOBALS['UNREGISTERED_TIMER'] = $loop->addPeriodicTimer(5, function () use ($discord, $loop, $author_guild_id) {
 					//FIX THIS
 					if ($GLOBALS["UNREGISTERED_X"] < $GLOBALS["UNREGISTERED_COUNT"]) {
 						$target_id = $GLOBALS["UNREGISTERED"][$GLOBALS["UNREGISTERED_X"]]; //GuildMember
-						//echo "UNREGISTERED ID: $target_id" . PHP_EOL;
+						//if($GLOBALS['debug_echo']) echo "UNREGISTERED ID: $target_id" . PHP_EOL;
 						if ($target_id) {
-							echo "UNVERIFYING $target_id" . PHP_EOL;
-							$target_guild = $discord->guilds->get('id', $author_guild_id); //echo "target_guild: " . get_class($target_guild) . PHP_EOL;
-							$target_member = $target_guild->members->get('id', $target_id); //echo "target_member: " . get_class($target_member) . PHP_EOL;
+							if($GLOBALS['debug_echo']) echo "UNVERIFYING $target_id" . PHP_EOL;
+							$target_guild = $discord->guilds->get('id', $author_guild_id); //if($GLOBALS['debug_echo']) echo "target_guild: " . get_class($target_guild) . PHP_EOL;
+							$target_member = $target_guild->members->get('id', $target_id); //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
 							$x = 0;
 							switch ($author_guild_id) {
 								case '468979034571931648':
@@ -4021,18 +4021,18 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							$GLOBALS["UNREGISTERED_COUNT"] = null;
 							$GLOBALS['UNREGISTERED_X'] = null;
 							$GLOBALS['UNREGISTERED_TIMER'] = null;
-							echo "[UNREGISTERED TIMER DONE]";
+							if($GLOBALS['debug_echo']) echo "[UNREGISTERED TIMER DONE]";
 							return;
 						}
 					}
 				});
 				$message->react("👍");
 			} else $message->react("👎");
-			echo "[CHECK UNREGISTERED DONE]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[CHECK UNREGISTERED DONE]" . PHP_EOL;
 			return;
 		}
 		if ($message_content_lower == 'get unverified') { //;get unverified
-			echo "[GET UNVERIFIED START]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[GET UNVERIFIED START]" . PHP_EOL;
 			$GLOBALS["UNVERIFIED"] = null;
 			if ($author_guild->id == '468979034571931648') { //Civ13
 				$author_guild->members->freshen()->done(
@@ -4060,13 +4060,13 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 								}
 							}
 							if (!$target_skip && $target_get) {
-								$mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
+								$mention_id = $target_member->id; //if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL;
 								$GLOBALS["UNVERIFIED"][] = $mention_id;
 							}
 						}
 						$message->react("👍");
-						echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
-						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 					}
 				);
 			} elseif ($author_guild->id == '807759102624792576') { //Blue Colony
@@ -4095,35 +4095,35 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 								}
 							}
 							if (!$target_skip && $target_get) {
-								$mention_id = $target_member->id; //echo "mention_id: " . $mention_id . PHP_EOL;
+								$mention_id = $target_member->id; //if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL;
 								$GLOBALS["UNVERIFIED"][] = $mention_id;
 							}
 						}
 						$message->react("👍");
-						echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
-						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 					}
 				);
 			}
 			return;
 		}
 		if ($message_content_lower == 'purge unverified') { //;purge unverified
-			echo "[PURGE UNVERIFIED START]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED START]" . PHP_EOL;
 			if ($GLOBALS["UNVERIFIED"]) {
-				echo "UNVERIFIED 0: " . $GLOBALS["UNVERIFIED"][0] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo "UNVERIFIED 0: " . $GLOBALS["UNVERIFIED"][0] . PHP_EOL;
 				$GLOBALS["UNVERIFIED_COUNT"] = count($GLOBALS["UNVERIFIED"]);
-				echo "UNVERIFIED_COUNT: " . $GLOBALS["UNVERIFIED_COUNT"] . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo "UNVERIFIED_COUNT: " . $GLOBALS["UNVERIFIED_COUNT"] . PHP_EOL;
 				$GLOBALS["UNVERIFIED_X"] = 0;
 				$GLOBALS['UNVERIFIED_TIMER'] = $loop->addPeriodicTimer(3, function () use ($discord, $loop, $author_guild_id) {
 					//FIX THIS
 					if ($GLOBALS["UNVERIFIED_X"] < $GLOBALS["UNVERIFIED_COUNT"]) {
 						$target_id = $GLOBALS["UNVERIFIED"][$GLOBALS["UNVERIFIED_X"]]; //GuildMember
-						//echo "author_guild_id: " . $author_guild_id;
-						//echo "UNVERIFIED ID: $target_id" . PHP_EOL;
+						//if($GLOBALS['debug_echo']) echo "author_guild_id: " . $author_guild_id;
+						//if($GLOBALS['debug_echo']) echo "UNVERIFIED ID: $target_id" . PHP_EOL;
 						if ($target_id) {
-							echo "PURGING $target_id" . PHP_EOL;
+							if($GLOBALS['debug_echo']) echo "PURGING $target_id" . PHP_EOL;
 							$target_guild = $discord->guilds->get('id', $author_guild_id);
-							if($target_member = $target_guild->members->offsetGet($target_id)) //echo "target_member: " . get_class($target_member) . PHP_EOL;
+							if($target_member = $target_guild->members->offsetGet($target_id)) //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
 							$target_guild->members->kick($target_member); //$target_member->kick("unverified purge");
 							$GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
 							return;
@@ -4132,14 +4132,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							$GLOBALS["UNVERIFIED_COUNT"] = null;
 							$GLOBALS['UNVERIFIED_X'] = null;
 							$GLOBALS['UNVERIFIED_TIMER'] = null;
-							echo "[PURGE UNVERIFIED TIMER DONE]" . PHP_EOL;
+							if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED TIMER DONE]" . PHP_EOL;
 							return;
 						}
 					}
 				});
 				if ($react) $message->react("👍");
 			} elseif ($react) $message->react("👎");
-			echo "[PURGE UNVERIFIED DONE]" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED DONE]" . PHP_EOL;
 			return;
 		}
 	}
@@ -4158,7 +4158,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		//Don't let people use these in #general
 		switch ($message_content_lower) {
 			case 'status': //;status
-				echo "[STATUS] $author_check" . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo "[STATUS] $author_check" . PHP_EOL;
 				$ch = curl_init(); //create curl resource
 				curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/serverstate.txt"); // set url
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
@@ -4169,7 +4169,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($creator || $owner || $dev || $tech || $assistant) {
 			switch ($message_content_lower) {
 				case 'resume': //;resume
-					echo "[RESUME] $author_check" .  PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[RESUME] $author_check" .  PHP_EOL;
 					//Trigger the php script remotely
 					$ch = curl_init(); //create curl resource
 					curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/resume.php"); // set url
@@ -4179,7 +4179,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return;
 					break;
 				case 'save 1': //;save 1
-					echo "[SAVE SLOT 1] $author_check" .  PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[SAVE SLOT 1] $author_check" .  PHP_EOL;
 					$manual_saving = VarLoad(null, "manual_saving.php");
 					if ($manual_saving) {
 						if ($react) {
@@ -4222,7 +4222,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return;
 					break;
 				case 'save 2': //;save 2
-					echo "[SAVE SLOT 2] $author_check" .  PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[SAVE SLOT 2] $author_check" .  PHP_EOL;
 					$manual_saving = VarLoad(null, "manual_saving.php");
 					if ($manual_saving) {
 						if ($react) {
@@ -4264,7 +4264,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return;
 					break;
 				case 'save 3': //;save 3
-					echo "[SAVE SLOT 3] $author_check" .  PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[SAVE SLOT 3] $author_check" .  PHP_EOL;
 					$manual_saving = VarLoad(null, "manual_saving.php");
 					if ($manual_saving) {
 						if ($react) {
@@ -4310,7 +4310,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						return;
 						break;
 					}
-					echo "[DELETE SLOT 1] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[DELETE SLOT 1] $author_check" . PHP_EOL;
 					if ($react) {
 						$message->react("👍");
 					}
@@ -4346,7 +4346,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($creator || $owner || $dev || $tech) {
 			switch ($message_content_lower) {
 				case 'load 1': //;load 1
-					echo "[LOAD SLOT 1] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[LOAD SLOT 1] $author_check" . PHP_EOL;
 					if ($react) {
 						$message->react("👍");
 					}
@@ -4378,7 +4378,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return;
 					break;
 				case 'load 2': //;load 2
-					echo "[LOAD SLOT 2] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[LOAD SLOT 2] $author_check" . PHP_EOL;
 					if ($react) {
 						$message->react("👍");
 					}
@@ -4410,7 +4410,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return;
 					break;
 				case 'load 3': //;load 3
-					echo "[LOAD SLOT 3] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[LOAD SLOT 3] $author_check" . PHP_EOL;
 					if ($react) {
 						$message->react("👍");
 					}
@@ -4442,7 +4442,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return;
 					break;
 				case 'load1h': //;load1h
-					echo "[LOAD 1H] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[LOAD 1H] $author_check" . PHP_EOL;
 					if ($react) {
 						$message->react("👍");
 					}
@@ -4474,7 +4474,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					return;
 					break;
 				case 'load2h': //;load2h
-					echo "[LOAD 2H] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[LOAD 2H] $author_check" . PHP_EOL;
 					if ($react) {
 						$message->react("👍");
 					}
@@ -4507,7 +4507,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					break;
 				case 'host persistence':
 				case 'host pers':
-					echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
@@ -4542,7 +4542,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					break;
 				case 'kill persistence':
 				case 'kill pers':
-					echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
@@ -4576,7 +4576,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					break;
 				case 'update persistence':
 				case 'update pers':
-					echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo "[HOST PERSISTENCE] $author_check" . PHP_EOL;
 					
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
@@ -4662,13 +4662,13 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($creator) {
 			switch ($message_content_lower) {
 				case "php": //;php
-					echo '[PHP]' . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo '[PHP]' . PHP_EOL;
 					return $message->reply('Current PHP version: ' . phpversion());
 				case 'crash': //;crash
 					$message->react("☠️");
 					return;
 				case 'debug role': //;debug role
-					echo '[DEBUG ROLE]' . PHP_EOL;
+					if($GLOBALS['debug_echo']) echo '[DEBUG ROLE]' . PHP_EOL;
 					$new_role = $discord->factory(
 						Discord\Parts\Guild\Role::class,
 						[
@@ -4680,10 +4680,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						]
 					);
 					$author_guild->createRole($new_role->getUpdatableAttributes())->done(function ($role) use ($author_member) : void {
-						//echo '[ROLECREATE SUCCEED]' . PHP_EOL;
+						//if($GLOBALS['debug_echo']) echo '[ROLECREATE SUCCEED]' . PHP_EOL;
 						$author_member->addRole($role->id);
 					}, static function ($error) {
-						echo $error->getMessage() . PHP_EOL;
+						if($GLOBALS['debug_echo']) echo $error->getMessage() . PHP_EOL;
 					});
 					return $message->delete();
 				case 'freshen';
@@ -4698,7 +4698,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	/*
 	if ($author_id == "352898973578690561") { //magmacreeper
 		if ($message_content_lower == 'start') { //;start
-			echo "[START] $author_check" .  PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[START] $author_check" .  PHP_EOL;
 			//Trigger the php script remotely
 			$ch = curl_init(); //create curl resource
 			curl_setopt($ch, CURLOPT_URL, "http://10.0.0.97/magmacreeper/start.php"); // set url
@@ -4708,7 +4708,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			return;
 		}
 		if ($message_content_lower == 'pull') { //;pull
-			echo "[START] $author_check" .  PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[START] $author_check" .  PHP_EOL;
 			//Trigger the php script remotely
 			$ch = curl_init(); //create curl resource
 			curl_setopt($ch, CURLOPT_URL, "http://10.0.0.97/magmacreeper/pull.php"); // set url
@@ -4723,7 +4723,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if ($creator || $owner || $dev || $admin || $mod) { //Only allow these roles to use this
 		if (str_starts_with($message_content_lower, 'poll ')) { //;poll
 			//return; //Reactions are bugged?!
-			echo "[POLL] $author_check" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[POLL] $author_check" . PHP_EOL;
 			$filter = "poll ";
 			$poll = str_replace($filter, "", $message_content);
 			$filter = "@";
@@ -4746,7 +4746,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						//$msg = '';
 						foreach ($storage as $emoji => $count) {
 							var_dump($emoji);
-							echo PHP_EOL;
+							if($GLOBALS['debug_echo']) echo PHP_EOL;
 							if ($emoji == "👍") $yes_count = (int)$count-1;
 							if ($emoji == "👎") $no_count = (int)$count-1;
 							//$msg .= $emoji.': '.$count.', ';
@@ -4765,7 +4765,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			} else return $message->reply("Invalid input!");
 		}
 		if (str_starts_with($message_content_lower, 'whois ')) { //;whois
-			echo "[WHOIS] $author_check" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[WHOIS] $author_check" . PHP_EOL;
 			$filter = "whois ";
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<@!", "", $value);
@@ -4799,7 +4799,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			return;
 		}
 		if (str_starts_with($message_content_lower, 'lookup ')) { //;lookup
-			echo "[LOOKUP] $author_check" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[LOOKUP] $author_check" . PHP_EOL;
 			$filter = "lookup ";
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<@!", "", $value);
@@ -4807,7 +4807,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace(">", "", $value);
 			$value = trim($value);
 			if (is_numeric($value)) {
-				echo '[VALID] ' . $value . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo '[VALID] ' . $value . PHP_EOL;
 				/*
 				try {
 					$restcord_user = $restcord->user->getUser(['user.id' => intval($value)]);
@@ -4837,9 +4837,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		/*if (str_starts_with($message_content_lower, 'watch ')) { //;watch @
-			echo "[WATCH] $author_check" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[WATCH] $author_check" . PHP_EOL;
 			//			Get an array of people mentioned
-			$mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+			$mentions_arr 												= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 			if ($watch_channel) {
 				$mention_watch_name_mention_default		= "<@$author_id>";
 			}
@@ -4862,11 +4862,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
 			}
 			
-			foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+			foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 		//		id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-				$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-				$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-				$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+				$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+				$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+				$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 				
 		//		Place watch info in target's folder
 				$watchers[] = VarLoad($guild_folder."/".$mention_id, "$watchers.php");
@@ -4900,9 +4900,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 		*/
 		if (str_starts_with($message_content_lower, 'unwatch ')) { //;unwatch @
-			echo "[UNWATCH] $author_check" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[UNWATCH] $author_check" . PHP_EOL;
 			//	Get an array of people mentioned
-			$mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+			$mentions_arr 												= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 			$mention_watch_name_queue_default							= "<@$author_id> is no longer watching the following users:" . PHP_EOL;
 			$mention_watch_name_queue_full 								= "";
 			
@@ -4922,11 +4922,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
 			}
 			
-			foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+			foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 		//		id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-				$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-				$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-				$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+				$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+				$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+				$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 				
 		//		Place watch info in target's folder
 				$watchers[] = VarLoad($guild_folder."/".$mention_id, "$watchers.php");
@@ -4942,9 +4942,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			else return $author_channel->sendMessage($mention_watch_name_queue_default . $mention_watch_name_queue_full . PHP_EOL);
 		}
 		if (str_starts_with($message_content_lower, 'infractions ')) { //;infractions @
-			echo "[INFRACTIONS] $author_check" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[INFRACTIONS] $author_check" . PHP_EOL;
 			//		Get an array of people mentioned
-			$mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+			$mentions_arr = $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 			$GetMentionResult = GetMention([&$author_guild,  substr($message_content_lower, 12, strlen($message_content_lower)), null, 1, &$restcord]);
 			if (!$GetMentionResult) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
 
@@ -4968,19 +4968,19 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$mention_user = $GetMentionResult[0];
 			$mention_member = $GetMentionResult[1];
 			$mentions_arr = $mentions_arr ?? $GetMentionResult[2];
-			foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+			foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 				if ($x == 0) { //We only want the first person mentioned
 	//				id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-					$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-					$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-					$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-					$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
-					$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-					$mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+					$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+					$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+					$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+					$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+					$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+					$mention_check 											= $mention_username ."#".$mention_discriminator; 				//if($GLOBALS['debug_echo']) echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
 					
 	//				Place infraction info in target's folder
-					$infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php"); //echo "path: $guild_folder\\$mention_id/infractions.php" . PHP_EOL;
-					//echo "infractions:" . PHP_EOL; var_dump($infractions);
+					$infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php"); //if($GLOBALS['debug_echo']) echo "path: $guild_folder\\$mention_id/infractions.php" . PHP_EOL;
+					//if($GLOBALS['debug_echo']) echo "infractions:" . PHP_EOL; var_dump($infractions);
 					$y = 0;
 					$mention_infraction_queue = "";
 					$mention_infraction_queue_full = "";
@@ -5025,7 +5025,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	}
 	
 	if ($author_perms['manage_messages'] && $message_content_lower == 'clearall') { //;clearall Clear as many messages in the author's channel at once as possible
-		echo "[CLEARALL] $author_check" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[CLEARALL] $author_check" . PHP_EOL;
 		$author_channel->limitDelete(100);
 		
 		$author_channel->getMessageHistory()->done(function ($message_collection) use ($author_channel) {
@@ -5037,7 +5037,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		return;
 	};
 	if ($author_perms['manage_messages'] && str_starts_with($message_content_lower, 'clear ')) { //;clear #
-		echo "[CLEAR #] $author_check" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[CLEAR #] $author_check" . PHP_EOL;
 		$filter = "clear ";
 		$value = str_replace($filter, "", $message_content_lower);
 		if (is_numeric($value)) {
@@ -5077,9 +5077,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		return;
 	};
 	/*if ($author_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'vwatch ')) || (str_starts_with($message_content_lower, 'vw ')))) { //;vwatch @
-		echo "[VWATCH] $author_check" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[VWATCH] $author_check" . PHP_EOL;
 		//		Get an array of people mentioned
-		$mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		$mentions_arr 												= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 		if ($watch_channel) {
 			$mention_watch_name_mention_default		= "<@$author_id>";
 		}
@@ -5108,11 +5108,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
 		}
 		
-		foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+		foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 	//				id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 			
 	//				Place watch info in target's folder
 			$watchers[] = VarLoad($guild_folder."/".$mention_id, "$watchers.php");
@@ -5122,9 +5122,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$mention_watch_name_queue 								= "**<@$mention_id>** ";
 			$mention_watch_name_queue_full 							= $mention_watch_name_queue_full . PHP_EOL . $mention_watch_name_queue;
 			
-			echo "mention_id: " . $mention_id . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL;
 			$target_guildmember 									= $message->channel->guild->members->get('id', $mention_id);
-			$target_guildmember_role_collection 					= $target_guildmember->roles;									//echo "target_guildmember_role_collection: " . (count($author_guildmember_role_collection)-1);
+			$target_guildmember_role_collection 					= $target_guildmember->roles;									//if($GLOBALS['debug_echo']) echo "target_guildmember_role_collection: " . (count($author_guildmember_role_collection)-1);
 			
 			//				Populate arrays of the info we need
 			$target_verified = false;
@@ -5144,7 +5144,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						var_dump($error->getMessage());
 					}
 				);
-				echo "Verify role added to $mention_id" . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo "Verify role added to $mention_id" . PHP_EOL;
 			}
 		}
 		//			Send a message
@@ -5179,9 +5179,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	}
 	*/
 	if ($author_perms['ban_members'] && str_starts_with($message_content_lower, 'ban ')) { //;ban
-		echo "[BAN]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[BAN]" . PHP_EOL;
 		//Get an array of people mentioned
-		$mentions_arr 	= $message->mentions; //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		$mentions_arr 	= $message->mentions; //if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 		
 		$GetMentionResult = GetMention([&$author_guild,  substr($message_content_lower, 4, strlen($message_content_lower)), null, 1, &$restcord]);
 		if (!$GetMentionResult) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
@@ -5202,11 +5202,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		$mention_member = $GetMentionResult[1];
 		$mentions_arr = $mentions_arr ?? $GetMentionResult[2];
 		foreach ($mentions_arr as $mention_param) {
-			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 				//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 				//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
 			$mention_check 											= $mention_username ."#".$mention_discriminator;
 			
 			if ($author_id != $mention_id) { //Don't let anyone ban themselves
@@ -5215,8 +5215,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$target_guildmember_role_collection 				= $target_guildmember->roles;					//This is the Role object for the GuildMember
 				
 	//  				Get the avatar URL of the mentioned user
-				//					$target_guildmember_user							= $target_guildmember->user;									//echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
-				//					$mention_avatar 									= "{$target_guildmember_user->avatar}";					//echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
+				//					$target_guildmember_user							= $target_guildmember->user;									//if($GLOBALS['debug_echo']) echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
+				//					$mention_avatar 									= "{$target_guildmember_user->avatar}";					//if($GLOBALS['debug_echo']) echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//if($GLOBALS['debug_echo']) echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
 
 				//  				Populate arrays of the info we need
 				//  				$target_guildmember_roles_names 					= array();
@@ -5229,7 +5229,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$target_guildmember_roles_ids = array();
 				foreach ($target_guildmember_role_collection as $role) {
 					
-						$target_guildmember_roles_ids[] 						= $role->id; 											//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+						$target_guildmember_roles_ids[] 						= $role->id; 											//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 						if ($role->id == $role_dev_id) {
 							$target_dev 		= true;
 						}							//Author has the dev role
@@ -5289,7 +5289,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		$value = str_replace($filter, "", $message_content_lower);
 		$value = str_replace("<@!", "", $value);
 		$value = str_replace("<@", "", $value);
-		$value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
+		$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 		if (is_numeric($value)) { //resolve with restcord
 			//$restcord->guild
 			$restcord_param = ['guild.id' => (int)$author_guild_id, 'user.id' => (int)$value];
@@ -5297,7 +5297,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				//$restcord_result = $restcord->guild->createGuildBan($restcord_param);
 			} catch (Exception $e) {
 				$restcord_result = "Unable to locate user for ID $value";
-				echo $e . PHP_EOL;
+				if($GLOBALS['debug_echo']) echo $e . PHP_EOL;
 			}
 			//$message->reply($restcord_result);
 		} else {
@@ -5307,9 +5307,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		return;
 	}
 	if ($author_perms['ban_members'] && str_starts_with($message_content_lower, 'unban ')) { //;ban
-		echo "[UNBAN]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[UNBAN]" . PHP_EOL;
 		//Get an array of people mentioned
-		$mentions_arr 	= $message->mentions; //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		$mentions_arr 	= $message->mentions; //if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 		
 		$GetMentionResult = GetMention([&$author_guild,  substr($message_content_lower, 6, strlen($message_content_lower)), null, 1, &$restcord]);
 		if (!$GetMentionResult) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
@@ -5330,11 +5330,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		/*
 		$mentions_arr = $mentions_arr ?? $GetMentionResult[2];
 		foreach ( $mentions_arr as $mention_param ) { //This should skip because there is no member object
-			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 				//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 				//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
 			$mention_check 											= $mention_username ."#".$mention_discriminator;
 			//Build the string to log
 			$filter = "unban <@!$mention_id>";
@@ -5401,9 +5401,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		return;
 	}
 	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'kick ')) { //;kick
-		echo "[KICK]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[KICK]" . PHP_EOL;
 		//Get an array of people mentioned
-		if(!($mentions_arr = $message->mentions)) { //echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		if(!($mentions_arr = $message->mentions)) { //if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 			$mentions_arr = array();
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<@!", "", $value);
@@ -5419,11 +5419,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 		if(empty($mentions_arr)) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
 		foreach ($mentions_arr as $mention_param) {
-			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
 			$mention_check 											= $mention_username ."#".$mention_discriminator;
 			 
 			if ($author_id != $mention_id) { //Don't let anyone kick themselves
@@ -5438,7 +5438,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$target_vzgbot = false;
 				$target_guildmember_roles_ids = array();
 				foreach ($target_guildmember_role_collection as $role) {
-					$target_guildmember_roles_ids[] = $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+					$target_guildmember_roles_ids[] = $role->id; 													//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 					if ($role->id == $role_18_id) $target_adult = true; //Author has the 18+ role
 					if ($role->id == $role_dev_id) $target_dev = true; //Author has the dev role
 					if ($role->id == $role_owner_id) $target_owner = true; //Author has the owner role
@@ -5461,7 +5461,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					$message->channel->guild->members->kick($target_guildmember);
 					/*
 					$target_guildmember->kick($reason)->done(null, function ($error) {
-						var_dump($error->getMessage()); //Echo any errors
+						var_dump($error->getMessage()); //if($GLOBALS['debug_echo']) echo any errors
 					});
 					*?
 					if ($react) {
@@ -5496,24 +5496,24 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
 	}
 	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'warn ')) { //;warn @
-		echo "[WARN] $author_check" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[WARN] $author_check" . PHP_EOL;
 		//$message->reply("Not yet implemented!");
 //		Get an array of people mentioned
-		$mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		$mentions_arr 												= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 		if ($modlog_channel) {
 			$mention_warn_name_mention_default		= "<@$author_id>";
 		}
 		$mention_warn_queue_default									= $mention_warn_name_mention_default." warned the following users:" . PHP_EOL;
 		$mention_warn_queue_full 									= "";
 		
-		foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+		foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 //			id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
-			$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-			$mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+			$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+			$mention_check 											= $mention_username ."#".$mention_discriminator; 				//if($GLOBALS['debug_echo']) echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
 			
 //			Build the string to log
 			$filter = "warn <@!$mention_id>";
@@ -5540,9 +5540,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions <@user_id> #
-		echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
 		//	Get an array of people mentioned
-		$mentions_arr = $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		$mentions_arr = $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 
 		$filter = "removeinfraction ";
 		$value = str_replace($filter, "", $message_content_lower);
@@ -5559,15 +5559,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
 		
 		$x = 0;
-		foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+		foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 			if ($x == 0) { //We only want the first person mentioned
 	//			id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-				$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-				$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-				$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-				$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
-				$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-				$mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+				$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+				$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+				$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+				$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+				$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+				$mention_check 											= $mention_username ."#".$mention_discriminator; 				//if($GLOBALS['debug_echo']) echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
 				
 	//			Get infraction info in target's folder
 				$infractions = VarLoad($guild_folder."/".$mention_id, "infractions.php");
@@ -5593,7 +5593,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	if ($author_perms['manage_roles'] && str_starts_with($message_content_lower, 'mute ')) { //;mute
-		echo "[MUTE]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[MUTE]" . PHP_EOL;
 		//			Get an array of people mentioned
 		$mentions_arr 												= $message->mentions;
 		if (!strpos($message_content_lower, "<")) { //String doesn't contain a mention
@@ -5601,7 +5601,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<@!", "", $value);
 			$value = str_replace("<@", "", $value);
-			$value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
+			$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
@@ -5611,11 +5611,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
 		}
 		foreach ($mentions_arr as $mention_param) {
-			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
 			$mention_check 											= $mention_username ."#".$mention_discriminator;
 			
 			if ($author_id != $mention_id) { //Don't let anyone mute themselves
@@ -5635,7 +5635,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$removed_roles = array();
 				foreach ($target_guildmember_role_collection as $role) {
 						$removed_roles[] = $role->id;
-						$target_guildmember_roles_ids[] = $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+						$target_guildmember_roles_ids[] = $role->id; 													//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 						if ($role->id == $role_dev_id) $target_dev = true; //Author has the dev role
 						if ($role->id == $role_owner_id) $target_owner = true; //Author has the owner role
 						if ($role->id == $role_admin_id) $target_admin = true; //Author has the admin role
@@ -5687,15 +5687,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
 	}
 	if ($author_perms['manage_roles'] && str_starts_with($message_content_lower, 'unmute ')) { //;unmute
-		echo "[UNMUTE]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo "[UNMUTE]" . PHP_EOL;
 		//			Get an array of people mentioned
-		$mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+		$mentions_arr 												= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 		if (!strpos($message_content_lower, "<")) { //String doesn't contain a mention
 			$filter = "unmute ";
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<@!", "", $value);
 			$value = str_replace("<@", "", $value);
-			$value = str_replace(">", "", $value);//echo "value: " . $value . PHP_EOL;
+			$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
 				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
@@ -5705,11 +5705,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			if (is_null($mention_member)) return $message->reply("Invalid input! Please enter an ID or @mention the user");
 		}
 		foreach ($mentions_arr as $mention_param) {
-			$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_username 										= $mention_json['username']; 									//echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
+			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+			$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+			$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
 			$mention_check 											= $mention_username ."#".$mention_discriminator;
 			
 			
@@ -5728,7 +5728,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$target_guildmember_roles_ids = array();
 				
 				foreach ($target_guildmember_role_collection as $role) {
-						$target_guildmember_roles_ids[]= $role->id; 													//echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
+						$target_guildmember_roles_ids[]= $role->id; 													//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
 						if ($role->id == $role_dev_id) $target_dev = true; //Author has the dev role
 						if ($role->id == $role_owner_id) $target_owner = true; //Author has the owner role
 						if ($role->id == $role_admin_id) $target_admin = true; //Author has the admin role
@@ -5780,9 +5780,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	}
 	if ($author_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'v ')) || (str_starts_with($message_content_lower, 'verify ')))) { //Verify ;v ;verify
 		if ($role_verified_id) { //This command only works if the Verified Role is setup
-			echo "[VERIFY] $author_check" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[VERIFY] $author_check" . PHP_EOL;
 			//	Get an array of people mentioned
-			$mentions_arr 												= $message->mentions; 									//echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
+			$mentions_arr 												= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
 			$mention_role_name_queue_default							= "<@$author_id> verified the following users:" . PHP_EOL;
 			$mention_role_name_queue_full 								= $mention_role_name_queue_default;
 			
@@ -5803,23 +5803,23 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			} else return $message->reply("Invalid input! Please enter a valid ID or @mention the user.");
 			if (is_null($mention_member)) return $message->reply("Invalid ID or user not found! Are they in the server?");
 			
-			foreach ($mentions_arr as $mention_param) {																				//echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
+			foreach ($mentions_arr as $mention_param) {																				//if($GLOBALS['debug_echo']) echo "mention_param: " . PHP_EOL; var_dump ($mention_param);
 		//		id, username, discriminator, bot, avatar, email, mfaEnabled, verified, webhook, createdTimestamp
-				$mention_param_encode 									= json_encode($mention_param); 									//echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-				$mention_json 											= json_decode($mention_param_encode, true); 					//echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-				$mention_id 											= $mention_json['id']; 											//echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
+				$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
+				$mention_json 											= json_decode($mention_param_encode, true); 					//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
+				$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
 				
-		//		$mention_discriminator 									= $mention_json['discriminator']; 								//echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
-				//		$mention_check 											= $mention_username ."#".$mention_discriminator; 				//echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
+		//		$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_discriminator: " . $mention_discriminator . PHP_EOL; //Just the discord ID
+				//		$mention_check 											= $mention_username ."#".$mention_discriminator; 				//if($GLOBALS['debug_echo']) echo "mention_check: " . $mention_check . PHP_EOL; //Just the discord ID
 				
 				if (is_numeric($mention_id)) {
 					//		Get the roles of the mentioned user
 					$target_guildmember 									= $message->channel->guild->members->get('id', $mention_id);
-					$target_guildmember_role_collection 					= $target_guildmember->roles;									//echo "target_guildmember_role_collection: " . (count($author_guildmember_role_collection)-1);
+					$target_guildmember_role_collection 					= $target_guildmember->roles;									//if($GLOBALS['debug_echo']) echo "target_guildmember_role_collection: " . (count($author_guildmember_role_collection)-1);
 
 					//		Get the avatar URL of the mentioned user
-					$target_guildmember_user								= $target_guildmember->user;									//echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
-					$mention_avatar 										= "{$target_guildmember_user->avatar}";					//echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
+					$target_guildmember_user								= $target_guildmember->user;									//if($GLOBALS['debug_echo']) echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
+					$mention_avatar 										= "{$target_guildmember_user->avatar}";					//if($GLOBALS['debug_echo']) echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//if($GLOBALS['debug_echo']) echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
 					
 					$target_verified = false; //Default
 					foreach ($target_guildmember_role_collection as $role)
@@ -5830,7 +5830,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							function ($error) {
 								var_dump($error->getMessage());
 							}
-						); //echo "Verify role added ($role_verified_id)" . PHP_EOL;
+						); //if($GLOBALS['debug_echo']) echo "Verify role added ($role_verified_id)" . PHP_EOL;
 					
 						//			Build the embed
 						/*
@@ -5879,7 +5879,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	}
 	if (($author_perms['manage_messages'] && $author_perms['manage_roles']) && (($message_content_lower == 'cv') || ($message_content_lower == 'clearv'))) { //;clearv ;cv Clear all messages in the get-verified channel
 		if ($getverified_channel_id) { //This command only works if the Get Verified Channel is setup
-			echo "[CV] $author_check" . PHP_EOL;
+			if($GLOBALS['debug_echo']) echo "[CV] $author_check" . PHP_EOL;
 			if ($getverified_channel) {
 				$getverified_channel->limitDelete(100);
 				//Delete any messages that aren't cached
