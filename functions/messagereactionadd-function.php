@@ -65,9 +65,8 @@ function messageReactionAdd($reaction, $discord) {
 	global $gameroles, $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwroles, $nsfwsubroles;
 	$guild_custom_roles_path = getcwd()  . "$guild_folder\\custom_roles.php";
 	echo 'guild_custom_roles_path: ' . $guild_custom_roles_path;
-	if (CheckFile($guild_custom_roles_path)) {
-		include "$guild_custom_roles_path"; //Overwrite default custom_roles
-	}else global $customroles;
+	if(!include "$guild_custom_roles_path") //Overwrite default custom_roles
+		global $customroles;
 
 	//Load emoji info
 	//guild, user
