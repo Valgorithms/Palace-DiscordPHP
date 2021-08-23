@@ -15,7 +15,7 @@ function messageDeleteRaw($channel, $message_id, $discord) {
 	$guild = $channel->guild ?? $discord->guilds->offsetGet($author_guild_id);
 	//Load config variables for the guild
 	$guild_folder = "\\guilds\\$author_guild_id";
-	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	include "$guild_config_path"; //$modlog_channel_id
 	$modlog_channel	= $guild->channels->get('id', $modlog_channel_id);
 	if($modlog_channel) $modlog_channel->sendEmbed($embed);

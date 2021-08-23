@@ -57,13 +57,32 @@ function messageReactionAdd($reaction, $discord) {
 	$guild_folder = "\\guilds\\$author_guild_id";
 	CheckDir($guild_folder);
 	//Load config variables for the guild
-	$guild_config_path = getcwd()  . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	include "$guild_config_path";
 
 	//Role picker stuff
 	$message_id	= $message->id;														//if($GLOBALS['debug_echo']) echo "message_id: " . $message_id . PHP_EOL;
-	global $gameroles, $species, $species2, $species3, $sexualities, $gender, $pronouns, $channelroles, $nsfwroles, $nsfwsubroles;
-	$guild_custom_roles_path = getcwd()  . "$guild_folder\\custom_roles.php";
+	global $species, $species2, $species3, $nsfwsubroles;
+	//Attempt to load guild-specified declarations and override with a globally declared default if none exists
+	$guild_game_roles_path = getcwd() . "$guild_folder\\game_roles.php";
+	if (!include "$guild_game_roles_path")
+		global $gameroles, $gameroles_message_text;
+	$guild_gender_roles_path = getcwd() . "$guild_folder\\gender.php";
+	if (!include "$guild_gender_roles_path")
+		global $gender, $gender_message_text;
+	$guild_pronouns_roles_path = getcwd() . "$guild_folder\\pronouns.php";
+	if (!include "$guild_pronouns_roles_path")
+		global $pronouns, $pronouns_message_text;
+	$guild_sexualities_roles_path = getcwd() . "$guild_folder\\sexualities.php";
+	if (!include "$guild_sexualities_roles_path")
+		global $sexualities, $sexuality_message_text;
+	$guild_nsfw_roles_path = getcwd() . "$guild_folder\\nsfw_roles.php";
+	if (!include "$guild_nsfw_roles_path")
+		global $nsfwroles, $nsfw_message_text;
+	$guild_channel_roles_path = getcwd() . "$guild_folder\\channel_roles.php";
+	if (!include "$guild_channel_roles_path")
+		global $channelroles, $channelroles_message_text;
+	$guild_custom_roles_path = getcwd() . "$guild_folder\\custom_roles.php";
 	if (!include "$guild_custom_roles_path")
 		global $customroles;
 

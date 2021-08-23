@@ -121,7 +121,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		else $booster = false;
 		
 		//Load config variables for the guild
-		$guild_config_path = getcwd()  . "\\$guild_folder\\guild_config.php";														//if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+		$guild_config_path = getcwd() . "\\$guild_folder\\guild_config.php";														//if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 		if (!CheckFile($guild_folder, "guild_config.php")) {
 			$file = 'guild_config_template.php';
 			if (!copy(getcwd() . '/vendor/vzgcoders/palace/' . $file, $guild_config_path)) {
@@ -427,18 +427,30 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	if ($admin) if($GLOBALS['debug_echo']) echo "[ADMIN $author_guild_id/$author_id] " . PHP_EOL;
 	if ($mod) if($GLOBALS['debug_echo']) echo "[MOD $author_guild_id/$author_id] " . PHP_EOL;
 	//if($GLOBALS['debug_echo']) echo PHP_EOL;
-
-	global $gameroles, $gameroles_message_text;
-	global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text;
-	global $gender, $gender_message_text;
-	global $pronouns, $pronouns_message_text;
-	global $sexualities, $sexuality_message_text;
-	global $nsfwroles, $nsfw_message_text;
-	global $channelroles, $channelroles_message_text;
-	$guild_custom_roles_path = getcwd()  . "$guild_folder\\custom_roles.php";
-	if (!include "$guild_custom_roles_path") //Overwrite default customroles
+	
+	global $species, $species2, $species3, $species_message_text, $species2_message_text, $species3_message_text, $nsfwsubroles;
+	//Attempt to load guild-specified declarations and override with a globally declared default if none exists
+	$guild_game_roles_path = getcwd() . "$guild_folder\\game_roles.php";
+	if (!include "$guild_game_roles_path")
+		global $gameroles, $gameroles_message_text;
+	$guild_gender_roles_path = getcwd() . "$guild_folder\\gender.php";
+	if (!include "$guild_gender_roles_path")
+		global $gender, $gender_message_text;
+	$guild_pronouns_roles_path = getcwd() . "$guild_folder\\pronouns.php";
+	if (!include "$guild_pronouns_roles_path")
+		global $pronouns, $pronouns_message_text;
+	$guild_sexualities_roles_path = getcwd() . "$guild_folder\\sexualities.php";
+	if (!include "$guild_sexualities_roles_path")
+		global $sexualities, $sexuality_message_text;
+	$guild_nsfw_roles_path = getcwd() . "$guild_folder\\nsfw_roles.php";
+	if (!include "$guild_nsfw_roles_path")
+		global $nsfwroles, $nsfw_message_text;
+	$guild_channel_roles_path = getcwd() . "$guild_folder\\channel_roles.php";
+	if (!include "$guild_channel_roles_path")
+		global $channelroles, $channelroles_message_text;
+	$guild_custom_roles_path = getcwd() . "$guild_folder\\custom_roles.php";
+	if (!include "$guild_custom_roles_path")
 		global $customroles, $customroles_message_text;
-
 
 	/*
 	*********************
@@ -878,7 +890,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				}
 				break;
 			case 'clearconfig': //;clearconfig
-				$files = glob(getcwd()  . "$guild_folder" . '/*');
+				$files = glob(getcwd() . "$guild_folder" . '/*');
 				// Deleting all the files in the list
 				foreach ($files as $file) {
 					if (is_file($file)) {
