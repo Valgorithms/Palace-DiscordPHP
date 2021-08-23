@@ -628,7 +628,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$documentation = $documentation . "`message species2`\n";
 				$documentation = $documentation . "`message species3`\n";
 				$documentation = $documentation . "`message gender`\n";
+				$documentation = $documentation . "`message pronouns`\n";
 				$documentation = $documentation . "`message sexuality`\n";
+				$documentation = $documentation . "`message channels`\n";
 				$documentation = $documentation . "`message adult`\n";
 				$documentation = $documentation . "`message customroles`\n";
 				//TODO REVIEW AND ADD MISSING
