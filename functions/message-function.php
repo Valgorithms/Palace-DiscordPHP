@@ -152,7 +152,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($tip_approved_channel_id) $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
 		
 		$guild_custom_roles_path = getcwd()  . "\\$guild_folder\\custom_roles.php";
-		if (CheckFile($guild_folder."/", 'custom_roles.php')) {
+		if (CheckFile($guild_folder."\\", 'custom_roles.php')) {
 			include "$guild_custom_roles_path"; //Overwrite default custom_roles
 		}else{
 			global $customroles, $customroles_message_text;
