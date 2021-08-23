@@ -2,7 +2,7 @@
 function userUpdate($user_new, $user_old, $discord) {
 	//This event listener will never be used for guild-related functions because guildMemberUpdate already does everything we want, but is useful for logging purposes
 	//For example, this will get triggered if a Nitro user changes their discriminator
-	if($GLOBALS['debug_echo']) echo "[USER UPDATE]" . PHP_EOL;
+	if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[USER UPDATE]" . PHP_EOL;
 	//id, username, discriminator bot, webhook, email, mfaEnabled, verified, tag, createdTimestamp, createdAt
 	$user_id				= $user_new->id;
 
@@ -22,8 +22,8 @@ function userUpdate($user_new, $user_old, $discord) {
 	$changes = "";
 
 	if ($old_tag != $new_tag) {
-		//if($GLOBALS['debug_echo']) echo "old_tag: " . $old_tag . PHP_EOL;
-		//if($GLOBALS['debug_echo']) echo "new_tag: " . $new_tag . PHP_EOL;
+		//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "old_tag: " . $old_tag . PHP_EOL;
+		//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "new_tag: " . $new_tag . PHP_EOL;
 		$changes = $changes . "Old tag: $old_tag\nNew tag: $new_tag\n";
 		
 		//Place user info in target's folder
@@ -42,8 +42,8 @@ function userUpdate($user_new, $user_old, $discord) {
 	}
 
 	if ($old_avatar != $new_avatar) {
-		//if($GLOBALS['debug_echo']) echo "old_avatar: " . $old_avatar . PHP_EOL;
-		//if($GLOBALS['debug_echo']) echo "new_avatar: " . $new_avatar . PHP_EOL;
+		//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "old_avatar: " . $old_avatar . PHP_EOL;
+		//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "new_avatar: " . $new_avatar . PHP_EOL;
 		$changes = $changes . "Old avatar: $old_avatar\nNew avatar: $new_avatar\n";
 		
 		//Place user info in target's folder
@@ -51,6 +51,6 @@ function userUpdate($user_new, $user_old, $discord) {
 	}
 
 	if ($changes != "") {
-		if($GLOBALS['debug_echo']) echo "[USER UPDATE] $old_username => :\n" . $changes . PHP_EOL;
+		if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[USER UPDATE] $old_username => :\n" . $changes . PHP_EOL;
 	}
 }

@@ -1,19 +1,19 @@
 <?php
-$mention_username			= $mention_user->username; if($GLOBALS['debug_echo']) echo "mention_username: $mention_username" . PHP_EOL;
-$mention_id					= $mention_user->id; if($GLOBALS['debug_echo']) echo "mention_id: $mention_id" . PHP_EOL;
-$mention_discriminator		= $mention_user->discriminator; if($GLOBALS['debug_echo']) echo "mention_discriminator: $mention_discriminator" . PHP_EOL;
-$mention_check				= $mention_username."#".$mention_discriminator; if($GLOBALS['debug_echo']) echo "mention_check: $mention_check" . PHP_EOL;
-$mention_nickname			= $mention_user->nick; if($GLOBALS['debug_echo']) echo "mention_nickname: $mention_nickname" . PHP_EOL;
-$mention_avatar 			= $mention_user->avatar; if($GLOBALS['debug_echo']) echo "mention_avatar: $mention_avatar" . PHP_EOL;
+$mention_username			= $mention_user->username; if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "mention_username: $mention_username" . PHP_EOL;
+$mention_id					= $mention_user->id; if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "mention_id: $mention_id" . PHP_EOL;
+$mention_discriminator		= $mention_user->discriminator; if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "mention_discriminator: $mention_discriminator" . PHP_EOL;
+$mention_check				= $mention_username."#".$mention_discriminator; if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "mention_check: $mention_check" . PHP_EOL;
+$mention_nickname			= $mention_user->nick; if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "mention_nickname: $mention_nickname" . PHP_EOL;
+$mention_avatar 			= $mention_user->avatar; if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "mention_avatar: $mention_avatar" . PHP_EOL;
 
 if ($mention_member) {
 	$mention_joinedTimestamp = $mention_member->joined_at->timestamp;
-	$mention_joinedDate	= date("D M j H:i:s Y", $mention_joinedTimestamp); //if($GLOBALS['debug_echo']) echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
+	$mention_joinedDate	= date("D M j H:i:s Y", $mention_joinedTimestamp); //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Joined Server: " . $mention_joinedDate . PHP_EOL;
 	$mention_joinedDateTime = new \Carbon\Carbon('@' . $mention_joinedTimestamp);
 	$mention_joinedAge = \Carbon\Carbon::now()->diffInDays($mention_member->joined_at) . " days"; //var_dump( \Carbon\Carbon::now());
 }
 //$mention_created			= $mention_user->createdAt;
-$mention_createdTimestamp = $mention_user->createdTimestamp(); //if($GLOBALS['debug_echo']) echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
+$mention_createdTimestamp = $mention_user->createdTimestamp(); //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "mention_createdTimestamp: " . $mention_createdTimestamp . PHP_EOL;
 $mention_createdDate = date("D M j H:i:s Y", $mention_createdTimestamp);
 $mention_createdAge = \Carbon\Carbon::now()->diffInDays($mention_createdDate) . " days";
 
@@ -37,7 +37,7 @@ if (is_array($mention_nicknames_array)) {
 if ($mention_nicknames == "") {
 	$mention_nicknames = "No nicknames tracked";
 }
-//if($GLOBALS['debug_echo']) echo "mention_nicknames: " . $mention_nicknames . PHP_EOL;
+//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "mention_nicknames: " . $mention_nicknames . PHP_EOL;
 
 $mention_tags_array = VarLoad($mention_folder, "tags.php");
 $mention_tags = "";

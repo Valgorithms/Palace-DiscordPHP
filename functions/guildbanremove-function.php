@@ -8,7 +8,7 @@ function guildBanRemove($ban, $discord) {
 	$user = $ban->user ?? $discord->users->offsetGet($user_id);
 	$reason = $ban->reason;
 
-	if($GLOBALS['debug_echo']) echo "[guildBanRemove] ($guild_id)" . PHP_EOL;
+	if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[guildBanRemove] ($guild_id)" . PHP_EOL;
 	$guild_name = $guild->name;
 	//$author_guild_avatar = $guild->icon;
 	$author_username = $user->username;
@@ -24,16 +24,16 @@ function guildBanRemove($ban, $discord) {
 	}
 
 	//Load config variables for the guild
-	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	if (!include "$guild_config_path") {
-		if($GLOBALS['debug_echo']) echo "CONFIG CATCH!" . PHP_EOL;
+		if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "CONFIG CATCH!" . PHP_EOL;
 		$counter = $GLOBALS[$guild_id."_config_counter"] ?? 0;
 		if ($counter <= 10) {
 			$GLOBALS[$guild_id."_config_counter"]++;
 		} else {
 			$discord->guilds->leave($guild);
 			rmdir(getcwd() . $guild_folder);
-			if($GLOBALS['debug_echo']) echo "[GUILD DIR REMOVED - BAN]" . PHP_EOL;
+			if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[GUILD DIR REMOVED - BAN]" . PHP_EOL;
 		}
 	}
 

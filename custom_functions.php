@@ -41,14 +41,14 @@ function is_dir_empty($dir)
 //Checks if a folder exists and creates one if it doesn't
 function CheckDir($foldername)
 {
-    //if($GLOBALS['debug_echo']) echo "CheckDir" . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "CheckDir" . PHP_EOL;
     include("constants.php");
     $path = getcwd().$foldername."/";
     $exist = false;
     //Create folder if it doesn't already exist
     if (!file_exists($path)) {
         mkdir($path, 0777, true);
-        if($GLOBALS['debug_echo']) echo "NEW DIR CREATED: $path" . PHP_EOL;
+        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "NEW DIR CREATED: $path" . PHP_EOL;
     } else {
         $exist = true;
     }
@@ -61,7 +61,7 @@ function CheckFile($foldername, $filename)
     if ($foldername !== null) {
         $folder_symbol = "/";
     }  else $folder_symbol = "";
-    //if($GLOBALS['debug_echo']) echo "CheckDir" . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "CheckDir" . PHP_EOL;
     include("constants.php");
     $path = getcwd().$foldername.$folder_symbol.$filename;
     //Create folder if it doesn't already exist
@@ -80,13 +80,13 @@ function VarSave($foldername, $filename, $variable)
     if ($foldername !== null) {
         $folder_symbol = "/";
     }  else $folder_symbol = "";
-    //if($GLOBALS['debug_echo']) echo "VarSave" . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "VarSave" . PHP_EOL;
     include("constants.php");
-    $path = getcwd().$foldername.$folder_symbol; //if($GLOBALS['debug_echo']) echo "PATH: $path" . PHP_EOL;
+    $path = getcwd().$foldername.$folder_symbol; //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "PATH: $path" . PHP_EOL;
     //Create folder if it doesn't already exist
     if (!file_exists($path)) {
         mkdir($path, 0777, true);
-        if($GLOBALS['debug_echo']) echo "NEW DIR CREATED: $path" . PHP_EOL;
+        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "NEW DIR CREATED: $path" . PHP_EOL;
     }
     //Save variable to a file
     $serialized_variable = serialize($variable);
@@ -100,15 +100,15 @@ function VarLoad($foldername, $filename)
     if ($foldername !== null) {
         $folder_symbol = "/";
     }  else $folder_symbol = "";
-    //if($GLOBALS['debug_echo']) echo "[VarLoad]" . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[VarLoad]" . PHP_EOL;
     include("constants.php");
-    $path = getcwd().$foldername.$folder_symbol; //if($GLOBALS['debug_echo']) echo "PATH: $path" . PHP_EOL;
+    $path = getcwd().$foldername.$folder_symbol; //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "PATH: $path" . PHP_EOL;
     //Make sure the file exists
     if (!file_exists($path.$filename)) {
         return null;
     }
     //Load a variable from a file
-    $loadedvar = file_get_contents($path.$filename); //if($GLOBALS['debug_echo']) echo "FULL PATH: $path$filename" . PHP_EOL;
+    $loadedvar = file_get_contents($path.$filename); //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "FULL PATH: $path$filename" . PHP_EOL;
     $unserialized = unserialize($loadedvar);
     return $unserialized;
 }
@@ -118,16 +118,16 @@ function VarDelete($foldername, $filename)
     if ($foldername !== null) {
         $folder_symbol = "/";
     }  else $folder_symbol = "";
-    if($GLOBALS['debug_echo']) echo "VarDelete" . PHP_EOL;
+    if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "VarDelete" . PHP_EOL;
     include("constants.php");
-    $path = getcwd().$foldername.$folder_symbol.$filename; //if($GLOBALS['debug_echo']) echo "PATH: $path" . PHP_EOL;
+    $path = getcwd().$foldername.$folder_symbol.$filename; //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "PATH: $path" . PHP_EOL;
     //Make sure the file exists first
     if (CheckFile($foldername, $filename)) {
         //Delete the file
         unlink($path);
         clearstatcache();
     } else {
-        if($GLOBALS['debug_echo']) echo "NO FILE TO DELETE" . PHP_EOL;
+        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "NO FILE TO DELETE" . PHP_EOL;
     }
 }
 
@@ -140,10 +140,10 @@ Timers and Cooldowns
 */
 
 function TimeCompare($foldername, $filename)
-{ //if($GLOBALS['debug_echo']) echo "foldername, filename: $foldername, $filename" . PHP_EOL;
+{ //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "foldername, filename: $foldername, $filename" . PHP_EOL;
     include("constants.php");
     $then = VarLoad($foldername, $filename); //instance of now;
-    //if($GLOBALS['debug_echo']) echo "then: " . PHP_EOL; var_dump ($then) . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "then: " . PHP_EOL; var_dump ($then) . PHP_EOL;
     //check if file exists
     if ($then) {
         $sincetime = date_diff($now, $then);
@@ -153,7 +153,7 @@ function TimeCompare($foldername, $filename)
         $timecompare['h'] = $sinceHour 		= $sincetime->h;
         $timecompare['i'] = $sinceMinute 	= $sincetime->i;
         $timecompare['s'] = $sinceSecond 	= $sincetime->s;
-        if($GLOBALS['debug_echo']) echo 'Timer found to compare!' . PHP_EOL;
+        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'Timer found to compare!' . PHP_EOL;
         return $timecompare;
     } else {
         //File not found, so return 0's
@@ -164,21 +164,21 @@ function TimeCompare($foldername, $filename)
         $timecompare['h'] = $sinceHour 		= $sincetime->h;
         $timecompare['i'] = $sinceMinute 	= $sincetime->i;
         $timecompare['s'] = $sinceSecond 	= $sincetime->s;
-        if($GLOBALS['debug_echo']) echo 'Timer not found to compare!' . PHP_EOL;
-        //if($GLOBALS['debug_echo']) echo "timecompare: " . PHP_EOL; var_dump($timecompare) . PHP_EOL;
+        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'Timer not found to compare!' . PHP_EOL;
+        //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "timecompare: " . PHP_EOL; var_dump($timecompare) . PHP_EOL;
         return $timecompare;
     }
-    //if($GLOBALS['debug_echo']) echo 'Timer not found to compare!' . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'Timer not found to compare!' . PHP_EOL;
 }
 
 
 function TimeCompareMem($author_id, $variable)
-{ //if($GLOBALS['debug_echo']) echo "foldername, filename: $foldername, $filename" . PHP_EOL;
+{ //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "foldername, filename: $foldername, $filename" . PHP_EOL;
     include("constants.php");
     //$then = VarLoad($foldername, $filename); //instance of now;
     $varname = $author_id . $variable . "_cooldown"; //Check this
     $then = $GLOBALS["$varname"];
-    //if($GLOBALS['debug_echo']) echo "then: " . PHP_EOL; var_dump ($then) . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "then: " . PHP_EOL; var_dump ($then) . PHP_EOL;
     //check if file exists
     if ($then) {
         $sincetime = date_diff($now, $then);
@@ -188,7 +188,7 @@ function TimeCompareMem($author_id, $variable)
         $timecompare['h'] = $sinceHour 		= $sincetime->h;
         $timecompare['i'] = $sinceMinute 	= $sincetime->i;
         $timecompare['s'] = $sinceSecond 	= $sincetime->s;
-        if($GLOBALS['debug_echo']) echo 'Timer found to compare!' . PHP_EOL;
+        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'Timer found to compare!' . PHP_EOL;
         return $timecompare;
     } else {
         //File not found, so return 0's
@@ -199,43 +199,43 @@ function TimeCompareMem($author_id, $variable)
         $timecompare['h'] = $sinceHour 		= $sincetime->h;
         $timecompare['i'] = $sinceMinute 	= $sincetime->i;
         $timecompare['s'] = $sinceSecond 	= $sincetime->s;
-        if($GLOBALS['debug_echo']) echo 'Timer not found to compare!' . PHP_EOL;
-        //if($GLOBALS['debug_echo']) echo "timecompare: " . PHP_EOL; var_dump($timecompare) . PHP_EOL;
+        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'Timer not found to compare!' . PHP_EOL;
+        //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "timecompare: " . PHP_EOL; var_dump($timecompare) . PHP_EOL;
         return $timecompare;
     }
-    //if($GLOBALS['debug_echo']) echo 'Timer not found to compare!' . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'Timer not found to compare!' . PHP_EOL;
 }
 
 function TimeLimitCheck($time, $y, $m, $d, $h, $i, $s)
 {
-    //if($GLOBALS['debug_echo']) echo "time['s']: " . $time['s'] . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "time['s']: " . $time['s'] . PHP_EOL;
     if (!$time) {
         return true;
     } //Nothing to check, assume true
     if (!$y) {
         $y = 0;
-    }//if($GLOBALS['debug_echo']) echo '$y: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$y: ' . $s . PHP_EOL;
     if (!$m) {
         $m = 0;
-    }//if($GLOBALS['debug_echo']) echo '$m: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$m: ' . $s . PHP_EOL;
     if (!$d) {
         $d = 0;
-    }//if($GLOBALS['debug_echo']) echo '$d: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$d: ' . $s . PHP_EOL;
     if (!$h) {
         $h = 0;
-    }//if($GLOBALS['debug_echo']) echo '$h: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$h: ' . $s . PHP_EOL;
     if (!$i) {
         $i = 0;
-    }//if($GLOBALS['debug_echo']) echo '$i: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$i: ' . $s . PHP_EOL;
     if (!$s) {
         $s = 0;
-    }//if($GLOBALS['debug_echo']) echo '$s: ' . $s . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "time['y'] " . $time['y'] . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "time['m'] " . $time['m'] . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "time['d'] " . $time['d'] . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "time['h'] " . $time['h'] . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "time['i'] " . $time['i'] . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "time['s'] " . $time['s'] . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$s: ' . $s . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "time['y'] " . $time['y'] . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "time['m'] " . $time['m'] . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "time['d'] " . $time['d'] . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "time['h'] " . $time['h'] . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "time['i'] " . $time['i'] . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "time['s'] " . $time['s'] . PHP_EOL;
     //Calculate total number of seconds needed to continue.
     $required_time =
     ($s) +
@@ -244,7 +244,7 @@ function TimeLimitCheck($time, $y, $m, $d, $h, $i, $s)
     ($d * 86400) +
     ($m * 2629746) +
     ($y * 31556952);
-    //if($GLOBALS['debug_echo']) echo 'required_time: ' . $required_time . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'required_time: ' . $required_time . PHP_EOL;
     //Calculate total number of seconds passed.
     $passed_time =
     ($time['s']) +
@@ -253,7 +253,7 @@ function TimeLimitCheck($time, $y, $m, $d, $h, $i, $s)
     ($time['d'] * 86400) +
     ($time['m'] * 2629746) +
     ($time['y'] * 31556952);
-    //if($GLOBALS['debug_echo']) echo 'passed_time: ' . $passed_time . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'passed_time: ' . $passed_time . PHP_EOL;
     $return_array = array();
     if ($passed_time > $required_time) {
         $return_array[0] = true;
@@ -268,22 +268,22 @@ function PassedTimeCheck($y, $m, $d, $h, $i, $s)
 {
     if (!$y) {
         $y = 0;
-    }//if($GLOBALS['debug_echo']) echo '$y: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$y: ' . $s . PHP_EOL;
     if (!$m) {
         $m = 0;
-    }//if($GLOBALS['debug_echo']) echo '$m: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$m: ' . $s . PHP_EOL;
     if (!$d) {
         $d = 0;
-    }//if($GLOBALS['debug_echo']) echo '$d: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$d: ' . $s . PHP_EOL;
     if (!$h) {
         $h = 0;
-    }//if($GLOBALS['debug_echo']) echo '$h: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$h: ' . $s . PHP_EOL;
     if (!$i) {
         $i = 0;
-    }//if($GLOBALS['debug_echo']) echo '$i: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$i: ' . $s . PHP_EOL;
     if (!$s) {
         $s = 0;
-    }//if($GLOBALS['debug_echo']) echo '$s: ' . $s . PHP_EOL;
+    }//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo '$s: ' . $s . PHP_EOL;
     //Calculate total number of seconds passed.
     $passed_time =
     ($s) +
@@ -292,7 +292,7 @@ function PassedTimeCheck($y, $m, $d, $h, $i, $s)
     ($d * 86400) +
     ($m * 2629746) +
     ($y * 31556952);
-    //if($GLOBALS['debug_echo']) echo 'passed_time: ' . $passed_time . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo 'passed_time: ' . $passed_time . PHP_EOL;
     if ($passed_time != 0) {
         return $passed_time;
     }
@@ -300,15 +300,15 @@ function PassedTimeCheck($y, $m, $d, $h, $i, $s)
 
 function CheckCooldown($foldername, $filename, $limit_array)
 {
-    if($GLOBALS['debug_echo']) echo "CHECK COOLDOWN" . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "limit_array: " . PHP_EOL; var_dump ($limit_array) . PHP_EOL;
+    if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "CHECK COOLDOWN" . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "limit_array: " . PHP_EOL; var_dump ($limit_array) . PHP_EOL;
     $TimeCompare = TimeCompare($foldername, $filename);
-    //if($GLOBALS['debug_echo']) echo "TimeCompare: " . PHP_EOL; var_dump ($TimeCompare) . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "TimeCompare: " . PHP_EOL; var_dump ($TimeCompare) . PHP_EOL;
     //$timetopass = $timelimitcheck[0]; //True/False, whether enough time has passed
     //$timetopass = $timelimitcheck[1]; //total # of seconds
     if ($TimeCompare) {
         $TimeLimitCheck = TimeLimitCheck($TimeCompare, $limit_array['year'], $limit_array['month'], $limit_array['day'], $limit_array['hour'], $limit_array['min'], $limit_array['sec']);
-        //if($GLOBALS['debug_echo']) echo "TimeLimitCheck: " . PHP_EOL; var_dump ($TimeLimitCheck) . PHP_EOL;
+        //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "TimeLimitCheck: " . PHP_EOL; var_dump ($TimeLimitCheck) . PHP_EOL;
         return $TimeLimitCheck;
     } else { //File was not found, so assume the check passes because they haven't used it before
         $TimeLimitCheck = array();
@@ -320,15 +320,15 @@ function CheckCooldown($foldername, $filename, $limit_array)
 
 function CheckCooldownMem($author_id, $variable, $limit_array)
 {
-    if($GLOBALS['debug_echo']) echo "[CHECK COOLDOWN]" . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "limit_array: " . PHP_EOL; var_dump ($limit_array) . PHP_EOL;
+    if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[CHECK COOLDOWN]" . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "limit_array: " . PHP_EOL; var_dump ($limit_array) . PHP_EOL;
     $TimeCompare = TimeCompareMem($author_id, $variable);
-    //if($GLOBALS['debug_echo']) echo "TimeCompare: " . PHP_EOL; var_dump ($TimeCompare) . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "TimeCompare: " . PHP_EOL; var_dump ($TimeCompare) . PHP_EOL;
     //$timetopass = $timelimitcheck[0]; //True/False, whether enough time has passed
     //$timetopass = $timelimitcheck[1]; //total # of seconds
     if ($TimeCompare) {
         $TimeLimitCheck = TimeLimitCheck($TimeCompare, $limit_array['year'], $limit_array['month'], $limit_array['day'], $limit_array['hour'], $limit_array['min'], $limit_array['sec']);
-        //if($GLOBALS['debug_echo']) echo "TimeLimitCheck: " . PHP_EOL; var_dump ($TimeLimitCheck) . PHP_EOL;
+        //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "TimeLimitCheck: " . PHP_EOL; var_dump ($TimeLimitCheck) . PHP_EOL;
         return $TimeLimitCheck;
     } else { //File was not found, so assume the check passes because they haven't used it before
         $TimeLimitCheck = array();
@@ -340,19 +340,19 @@ function CheckCooldownMem($author_id, $variable, $limit_array)
 
 function SetCooldown($foldername, $filename)
 {
-    if($GLOBALS['debug_echo']) echo "SET COOLDOWN" . PHP_EOL;
+    if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "SET COOLDOWN" . PHP_EOL;
     if ($foldername !== null) {
         $folder_symbol = "/";
     }  else $folder_symbol = "";
     include("constants.php");
-    $path = getcwd().$foldername.$folder_symbol; //if($GLOBALS['debug_echo']) echo "PATH: $path" . PHP_EOL;
+    $path = getcwd().$foldername.$folder_symbol; //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "PATH: $path" . PHP_EOL;
     $now = new DateTime();
     VarSave($foldername, $filename, $now);
 }
 
 function SetCooldownMem($author_id, $variable)
 {
-    if($GLOBALS['debug_echo']) echo "[SET COOLDOWN]" . PHP_EOL;
+    if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[SET COOLDOWN]" . PHP_EOL;
     $now = new DateTime();
     $varname = $author_id . $variable . "_cooldown";
     $GLOBALS["$varname"] = $now;
@@ -365,7 +365,7 @@ function FormatTime($seconds)
     $dtT = new \DateTime("@$seconds");
     //ymdhis
     $formatted = $dtF->diff($dtT)->format(' %y years, %m months, %d days, %h hours, %i minutes and %s seconds');
-    //if($GLOBALS['debug_echo']) echo "formatted: " . $formatted . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "formatted: " . $formatted . PHP_EOL;
     //remove 0 values
     $formatted = str_replace(" 0 years,", "", $formatted);
     $formatted = str_replace(" 0 months,", "", $formatted);
@@ -374,7 +374,7 @@ function FormatTime($seconds)
     $formatted = str_replace(" 0 minutes and", "", $formatted);
     $formatted = str_replace(" 0 seconds,", "", $formatted);
     $formatted = trim($formatted);
-    //if($GLOBALS['debug_echo']) echo "new formatted: " . $formatted . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "new formatted: " . $formatted . PHP_EOL;
     return $formatted;
 }
 
@@ -421,23 +421,23 @@ function snowflake_timestamp($snowflake)
 
 function GetMention(array $array = [])
 {
-    //if($GLOBALS['debug_echo']) echo "array[1] = " . $array[1] . PHP_EOL;
-    //if($GLOBALS['debug_echo']) echo "array[2] = " . $array[2] . PHP_EOL;
-    $size = count($array); //if($GLOBALS['debug_echo']) echo "Array size $size" . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "array[1] = " . $array[1] . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "array[2] = " . $array[2] . PHP_EOL;
+    $size = count($array); //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Array size $size" . PHP_EOL;
     //Exit conditions
     if ( is_object($array[0]) && get_class($array[0]) != "Discord\Parts\Guild\Guild") {
-        //if($GLOBALS['debug_echo']) echo "No guild passed!" . PHP_EOL;
+        //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "No guild passed!" . PHP_EOL;
         if (is_numeric($array[0])) {
             //Try to get the guild by ID
-            //if($GLOBALS['debug_echo']) echo "Guild not found when searching by ID!" . PHP_EOL;
+            //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Guild not found when searching by ID!" . PHP_EOL;
             return false; //Not yet implemented
         } else {
-            if($GLOBALS['debug_echo']) echo "No guild variable passed!" . PHP_EOL;
+            if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "No guild variable passed!" . PHP_EOL;
             return false; //Check if guild variable was passed
         }
     }
     $guild = $array[0];
-    //if($GLOBALS['debug_echo']) echo "Guild was passed!" . PHP_EOL;
+    //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Guild was passed!" . PHP_EOL;
     
     $option = null;
     $filter = null;
@@ -446,22 +446,22 @@ function GetMention(array $array = [])
         case 5:
             //Check if an instance of restcord
             if ( is_object($array[4]) && get_class($array[4]) == "RestCord\DiscordClient") {
-                //if($GLOBALS['debug_echo']) echo "Restcord included!" . PHP_EOL;
+                //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Restcord included!" . PHP_EOL;
                 $restcord = &$array[4];
             } else {
-                if($GLOBALS['debug_echo']) echo "Parameter isn't a valid instance of Restcord!" . PHP_EOL;
+                if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Parameter isn't a valid instance of Restcord!" . PHP_EOL;
             }
             // no break
         case 4:
             if (is_numeric($array[3])) {
-                $option = $array[3]; //if($GLOBALS['debug_echo']) echo "Option included!" . PHP_EOL;
+                $option = $array[3]; //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Option included!" . PHP_EOL;
             }
             // no break
         case 3:
             $filter = $array[2];
             if ($filter) {
-                //if($GLOBALS['debug_echo']) echo "Filter included!" . PHP_EOL;
-                $value = str_replace($filter, "", $array[1]); //if($GLOBALS['debug_echo']) echo "value: $value" . PHP_EOL;
+                //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Filter included!" . PHP_EOL;
+                $value = str_replace($filter, "", $array[1]); //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "value: $value" . PHP_EOL;
             }
             // no break
         case 2:
@@ -469,15 +469,15 @@ function GetMention(array $array = [])
         case 0:
         case 1:
         default:
-            if($GLOBALS['debug_echo']) echo "Unexpected amount of parameters!" . PHP_EOL;
+            if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Unexpected amount of parameters!" . PHP_EOL;
             return false;
     }
     
     //Explode the string into an array
     
     $value = str_replace("<@!", "", $value);
-    $value = str_replace("<@", "", $value); // if($GLOBALS['debug_echo']) echo "line: $line" . PHP_EOL;
-    $value = str_replace(">", "", $value); //if($GLOBALS['debug_echo']) echo "line: $line" . PHP_EOL;
+    $value = str_replace("<@", "", $value); // if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "line: $line" . PHP_EOL;
+    $value = str_replace(">", "", $value); //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "line: $line" . PHP_EOL;
     $linesplit = explode(" ", $value);
     //Check each part of the string for a mention
     $id_array = array();
@@ -490,14 +490,14 @@ function GetMention(array $array = [])
     }
     
     if (empty($id_array)) {
-        if($GLOBALS['debug_echo']) echo "ID array empty!" . PHP_EOL;
+        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "ID array empty!" . PHP_EOL;
         return false;
     }
     
     $return_array = array();
     foreach ($id_array as $id) {
         $value = str_replace($id, "", $value);
-        //if($GLOBALS['debug_echo']) echo "Option $option" . PHP_EOL;
+        //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Option $option" . PHP_EOL;
         switch ($option) { //What info do we care about getting back?
             case 1:
                 $mention_member	= $guild->members->offsetGet($id);
@@ -517,7 +517,7 @@ function GetMention(array $array = [])
                 $return_array[$id]['mention_user'] = $mention_user;
                 $return_array[$id]['restcord_user'] = $restcord_user ?? false;
                 $return_array[$id]['restcord_user_found'] = $restcord_user ?? false;
-                //if($GLOBALS['debug_echo']) echo "Built return_array!" . PHP_EOL;
+                //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Built return_array!" . PHP_EOL;
                 break;
         }
     }

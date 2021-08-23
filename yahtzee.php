@@ -71,7 +71,7 @@ if (array_key_exists($author_id . 'yahtzee', $GLOBALS)) {
                 $GLOBALS["$author_id"."_yn"] = strtoupper($message_content);
                 $GLOBALS["$author_id"."_yahtzee_function"] == null;
             } else { //append prev_question to output
-                if($GLOBALS['debug_echo']) echo "Not a valid answer! (Y/N)" . PHP_EOL;
+                if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Not a valid answer! (Y/N)" . PHP_EOL;
                 $message->reply("Not a valid answer! (Y/N)");
                 return true;
             }
@@ -81,7 +81,7 @@ if (array_key_exists($author_id . 'yahtzee', $GLOBALS)) {
                 $GLOBALS["$author_id"."_int"] = $message_content;
                 $GLOBALS["$author_id"."_yahtzee_function"] == null;
             } else { //append prev_question to output
-                if($GLOBALS['debug_echo']) echo "Not a valid integer!" . PHP_EOL;
+                if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Not a valid integer!" . PHP_EOL;
                 $message->reply("Invalid entry! Input must be an integer");
                 return true;
             }
@@ -216,7 +216,7 @@ if (array_key_exists($author_id . 'yahtzee', $GLOBALS)) {
                         $GLOBALS[$author_id . '_$num5']+=1;
                         break;
                     default:
-                        if($GLOBALS['debug_echo']) echo "DEFAULT CASE ON LINE " . __LINE__ . ", was something not declared?";
+                        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "DEFAULT CASE ON LINE " . __LINE__ . ", was something not declared?";
                 }
             }
             $GLOBALS["$author_id"."_yahtzee_stage"] = "calculateScore";

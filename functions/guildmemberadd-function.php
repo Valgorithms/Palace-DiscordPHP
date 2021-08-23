@@ -1,7 +1,7 @@
 <?php
 function guildMemberAdd($guildmember, $discord) {
 	$author_guild_id = $guildmember->guild->id;
-	if($GLOBALS['debug_echo']) echo "guildMemberAdd ($author_guild_id)" . PHP_EOL;
+	if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "guildMemberAdd ($author_guild_id)" . PHP_EOL;
 	$user = $guildmember->user;
 	if (isset($guildmember) && is_object($guildmember) && get_class($guildmember) == "Discord\Parts\User\Member") {
 		$guildmember = $guildmember;
@@ -41,7 +41,7 @@ function guildMemberAdd($guildmember, $discord) {
 
 	//Load config variables for the guild
 	$guild_folder = "\\guilds\\$author_guild_id";
-	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 	include "$guild_config_path";
 	if ($welcome_log_channel_id) {
 		$welcome_log_channel = $guildmember->guild->channels->get('id', $welcome_log_channel_id);
