@@ -150,13 +150,6 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($suggestion_approved_channel_id) $suggestion_approved_channel = $author_guild->channels->get('id', strval($suggestion_approved_channel_id));
 		if ($tip_pending_channel_id) $tip_pending_channel = $author_guild->channels->get('id', strval($tip_pending_channel_id));
 		if ($tip_approved_channel_id) $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
-		
-		$guild_custom_roles_path = getcwd()  . "\\$guild_folder\\custom_roles.php";
-		if (CheckFile($guild_folder."\\", 'custom_roles.php')) {
-			include "$guild_custom_roles_path"; //Overwrite default custom_roles
-		}else{
-			global $customroles, $customroles_message_text;
-		}
 	} else { //Direct message
 		if ($author_id != $discord->user->id) { //Don't trigger on messages sent by this bot
 			global $server_invite;
@@ -442,7 +435,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	global $sexualities, $sexuality_message_text;
 	global $nsfwroles, $nsfw_message_text;
 	global $channelroles, $channelroles_message_text;
-	global $customroles, $customroles_message_text;
+	$guild_custom_roles_path = getcwd()  . "$guild_folder\\custom_roles.php";
+	if (!include "$guild_custom_roles_path") //Overwrite default customroles
+		global $customroles, $customroles_message_text;
 
 
 	/*
