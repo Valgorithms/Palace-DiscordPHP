@@ -588,7 +588,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				$documentation = $documentation . "`setup admin @role`\n";
 				$documentation = $documentation . "`setup mod @role`\n";
 				$documentation = $documentation . "`setup bot @role`\n";
-				$documentation = $documentation . "`setup vzg @role` (Role with the name Palace Bot, not the actual bot)\n";
+				$documentation = $documentation . "`setup vzgbot @role` (Role with the name Palace Bot, not the actual bot)\n";
 				$documentation = $documentation . "`setup muted @role`\n";
 				$documentation = $documentation . "`setup verified @role`\n";
 				$documentation = $documentation . "`setup adult @role`\n";
