@@ -83,12 +83,12 @@ $slash->registerCommand('players', function (\Discord\Slash\Parts\Interaction $i
 				$desc_string = "";
 			}
 			
-			//$server_index[0] = "Persistence" . PHP_EOL;
-			//$server_url[0] = "byond://www.valzargaming.com:1714";
-			$server_index[1] = "TDM" . PHP_EOL;
-			$server_url[1] = "byond://51.254.161.128:1714";
-			$server_index[2] = "Nomads" . PHP_EOL;
-			$server_url[2] = "byond://51.254.161.128:1715";
+			$server_index[0] = "TDM" . PHP_EOL;
+			$server_url[0] = "byond://51.254.161.128:1714";
+			$server_index[1] = "Nomads" . PHP_EOL;
+			$server_url[1] = "byond://51.254.161.128:1715";
+			$server_index[2] = "Persistence" . PHP_EOL;
+			$server_url[2] = "byond://www.valzargaming.com:1717";
 			$server_index[3] = "Blue Colony" . PHP_EOL;
 			$server_url[3] = "byond://www.valzargaming.com:7777";
 			$server_state_dump = array(); // new assoc array for use with the embed
