@@ -114,7 +114,7 @@ $slash->registerCommand('players', function (\Discord\Slash\Parts\Interaction $i
 							case "host":
 								if( ($value == NULL) || ($value == "") ){
 									$server_state_dump[$index]["Host"] = "Taislin";
-								}elseif (strpos($server_state_dump[$index]["Host"], 'Guest')) { //Byond wasn't logged in at server start
+								}elseif (strpos($server_state_dump[$index]["Host"], 'Guest')!==) { //Byond wasn't logged in at server start
 									$server_state_dump[$index]["Host"] = "ValZarGaming";
 								}
 								else $server_state_dump[$index]["Host"] = $value;
