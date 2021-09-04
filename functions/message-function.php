@@ -2157,6 +2157,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 								case "host":
 									if( ($value == NULL) || ($value == "") ) {
 										$server_state_dump[$index]["Host"] = "Taislin";
+									}elseif(strpos($value, 'Guest')!==false){
+										$server_state_dump[$index]["Host"] = "ValZarGaming";
 									}else $server_state_dump[$index]["Host"] = $value;
 									break;
 								/*case "players":
