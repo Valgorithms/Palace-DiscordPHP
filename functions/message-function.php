@@ -3573,8 +3573,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if ($message_content_lower == 'pull') { //;pull
 			//if(shell_exec("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpull.bat"'))
 			
-			if($handle = popen("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpullbot.bat"', "r"))
-				return $message->react("👍");
+			if( ($handle = popen('start cmd /c "C:\WinNMP2021\WWW\lucky-komainu\gitpullbot.bat"', 'r'))
+			&& ($handle2 = popen('start cmd /c "C:\WinNMP2021\WWW\wylderkind\gitpullbot.bat"', 'r'))
+			&& ($handle3 = popen('start cmd /c "C:\WinNMP2021\WWW\wylderkind-dev\gitpullbot.bat"', 'r'))
+			) return $message->react("👍");
 			
 			/*
 			$process = new React\ChildProcess\Process('start '. 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\gitpullbot.bat"', null, null, array(
@@ -3596,7 +3598,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			});
 			*/
 			//$output = pclose(popen("start ". 'cmd /c "'. 'C:\WinNMP2021\WWW\lucky-komainu' . '\run.bat"', "r"));
-			return;
+			return $message->react("👎");
 		}
 	}
 	if ($creator) { //Mostly just debug commands
