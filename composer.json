@@ -1,6 +1,7 @@
 {
     "name": "vzgcoders/palace",
     "description": "ValZarGaming's offical Discord bot for moderation and fun built in ReactPHP.",
+	"license": "MIT",
     "authors": [
         {
             "name": "Valithor Obsidion",

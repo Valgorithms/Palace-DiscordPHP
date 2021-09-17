@@ -3,32 +3,21 @@ if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "----- BOT DISC
 
 switch ($code) {
     case '4004':
-        if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[CRITICAL] TOKEN INVALIDATED BY DISCORD!" . PHP_EOL;
-        //Use Restcord to send a message
-        $guild = $restcord->guild->getGuild(['guild.id' => 116927365652807686]);
-        try {
-            $restcord->channel->createMessage([
-                'channel.id' => 315259546308444160,
-                'content'    => '<@116927250145869826> token invalidated!',
-            ]);
-        } catch (GuzzleHttp\Command\Exception\CommandClientException $e) {
-            var_dump($e->getResponse()->getBody()->getContents());
-        }
+        echo "[CRITICAL] TOKEN INVALIDATED BY DISCORD!" . PHP_EOL;
         //Kill the bot
         $loop->stop();
-        $discord->destroy();
-        return true;
+	default:
+		$discord->destroy();
 }
 
-$discord->destroy();
 if ($vm == true) {
     switch ($code) {
-    case '1000':
-    case '4003':
-    //case '4004':
-        $loop->stop();
-        $loop = \React\EventLoop\Factory::create(); //Recreate loop if the cause of the disconnect was possibly related to a VM being paused
-}
+		case '1000':
+		case '4003':
+		//case '4004':
+			$loop->stop();
+			$loop = \React\EventLoop\Factory::create(); //Recreate loop if the cause of the disconnect was possibly related to a VM being paused
+	}
 }
 $discord = new \CharlotteDunois\Yasmin\Client(array(), $loop); //Create a new client using the same React loop
 
