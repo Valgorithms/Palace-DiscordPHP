@@ -8,6 +8,7 @@ $gameroles = array(
     "Deep Rock Galactic" => "🍻",
 	"Eco" => "🌎",
 	"Escape From Tarkov" => "🇷🇺",
+	"For The King" => "👑",
 	"Genshin Impact" => "👱‍♀️",
 	"Minecraft" => "⛏️",
 	"Phasmophobia" => "👻",
