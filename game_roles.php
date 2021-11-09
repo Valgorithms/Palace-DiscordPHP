@@ -8,6 +8,7 @@ $gameroles = array(
     "Deep Rock Galactic" => "🍻",
 	"Eco" => "🌎",
 	"Escape From Tarkov" => "🇷🇺",
+	"Final Fantasy XIV" => "🌒",
 	"For The King" => "👑",
 	"Genshin Impact" => "👱‍♀️",
 	"Minecraft" => "⛏️",
@@ -25,6 +26,8 @@ $gameroles_message_text = "**Role Menu: Games**
 :beers: : `Deep Rock Galactic`
 :earth_americas: : `Eco`
 :flag_ru: : `Escape From Tarkov`
+:waxing_crescent_moon: : `Final Fantasy XIV`
+:crown: : `For The King`
 :blond_haired_woman: : `Genshin Impact`
 :pick: : `Minecraft`
 :ghost: : `Phasmophobia`

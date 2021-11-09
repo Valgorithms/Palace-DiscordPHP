@@ -3935,7 +3935,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			}
 		}
 		if ($message_content_lower == 'get unregistered') { //;get unregistered
-			if($GLOBALS['debug_echo']) echo "[GET UNREGISTERED START]" . PHP_EOL;
+			echo "[GET UNREGISTERED START]" . PHP_EOL;
 			$GLOBALS["UNREGISTERED"] = null;
 			$author_guild->members->freshen()->done(
 				function ($members) use ($message, $author_guild) {
@@ -3976,14 +3976,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							}
 						}
 					}
-					if($GLOBALS['debug_echo']) echo count($GLOBALS["UNREGISTERED"]) . " UNREGISTERED ACCOUNTS" . PHP_EOL;
-					if($GLOBALS['debug_echo']) echo "[GET UNREGISTERED DONE]" . PHP_EOL;
+					echo count($GLOBALS["UNREGISTERED"]) . " UNREGISTERED ACCOUNTS" . PHP_EOL;
+					echo "[GET UNREGISTERED DONE]" . PHP_EOL;
 					return $message->react("👍");
 				}
 			);
 		}
 		if ($message_content_lower == 'fix unverified') { //;fix unverified
-			if($GLOBALS['debug_echo']) echo "[FIX UNVERIFIED]" . PHP_EOL;
+			echo "[FIX UNVERIFIED]" . PHP_EOL;
 			$string = "";
 			foreach ($author_guild->members as $target_member) {
 				$has_role = false;
@@ -4003,11 +4003,11 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			return;
 		}
 		if ($message_content_lower == 'unverify unregistered') { //;unverify unregistered
-			if($GLOBALS['debug_echo']) echo "[UNVERIFY UNREGISTERED START]" . PHP_EOL;
+			echo "[UNVERIFY UNREGISTERED START]" . PHP_EOL;
 			if ($GLOBALS["UNREGISTERED"]) {
-				if($GLOBALS['debug_echo']) echo "UNREGISTERED 0: " . $GLOBALS["UNREGISTERED"][0] . PHP_EOL;
+				echo "UNREGISTERED 0: " . $GLOBALS["UNREGISTERED"][0] . PHP_EOL;
 				$GLOBALS["UNREGISTERED_COUNT"] = count($GLOBALS["UNREGISTERED"]);
-				if($GLOBALS['debug_echo']) echo "UNREGISTERED_COUNT: " . $GLOBALS["UNREGISTERED_COUNT"] . PHP_EOL;
+				echo "UNREGISTERED_COUNT: " . $GLOBALS["UNREGISTERED_COUNT"] . PHP_EOL;
 				$GLOBALS["UNREGISTERED_X"] = 0;
 				$GLOBALS['UNREGISTERED_TIMER'] = $loop->addPeriodicTimer(5, function () use ($discord, $loop, $author_guild_id) {
 					//FIX THIS
@@ -4015,7 +4015,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 						$target_id = $GLOBALS["UNREGISTERED"][$GLOBALS["UNREGISTERED_X"]]; //GuildMember
 						//if($GLOBALS['debug_echo']) echo "UNREGISTERED ID: $target_id" . PHP_EOL;
 						if ($target_id) {
-							if($GLOBALS['debug_echo']) echo "UNVERIFYING $target_id" . PHP_EOL;
+							echo "UNVERIFYING $target_id" . PHP_EOL;
 							$target_guild = $discord->guilds->get('id', $author_guild_id); //if($GLOBALS['debug_echo']) echo "target_guild: " . get_class($target_guild) . PHP_EOL;
 							$target_member = $target_guild->members->get('id', $target_id); //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
 							$x = 0;
@@ -4037,14 +4037,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							$GLOBALS["UNREGISTERED_COUNT"] = null;
 							$GLOBALS['UNREGISTERED_X'] = null;
 							$GLOBALS['UNREGISTERED_TIMER'] = null;
-							if($GLOBALS['debug_echo']) echo "[UNREGISTERED TIMER DONE]";
+							echo "[UNREGISTERED TIMER DONE]";
 							return;
 						}
 					}
 				});
 				$message->react("👍");
 			} else $message->react("👎");
-			if($GLOBALS['debug_echo']) echo "[CHECK UNREGISTERED DONE]" . PHP_EOL;
+			echo "[CHECK UNREGISTERED DONE]" . PHP_EOL;
 			return;
 		}
 		if ($message_content_lower == 'get unverified') { //;get unverified
