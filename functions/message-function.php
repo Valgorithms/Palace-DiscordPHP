@@ -1701,6 +1701,9 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*/
 
+	if ($message_content_lower == 'invite') { //;invite
+		$author_channel->sendMessage($discord->application->getInviteURLAttribute('8'));
+	} 
 	if ($message_content_lower == 'help') { //;help
 		$documentation ="\n`;invite` sends a DM with an OAuth2 link to invite Palace Bot to your server\n";
 		$documentation = $documentation . "**\nCommand symbol: $command_symbol**\n";
@@ -4118,6 +4121,41 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					}
 				);
 			}
+			return;
+		}
+		if ($message_content_lower == 'verify unverified') { //;verify unverified
+			if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED START]" . PHP_EOL;
+			if ($GLOBALS["UNVERIFIED"]) {
+				if($GLOBALS['debug_echo']) echo "UNVERIFIED 0: " . $GLOBALS["UNVERIFIED"][0] . PHP_EOL;
+				$GLOBALS["UNVERIFIED_COUNT"] = count($GLOBALS["UNVERIFIED"]);
+				if($GLOBALS['debug_echo']) echo "UNVERIFIED_COUNT: " . $GLOBALS["UNVERIFIED_COUNT"] . PHP_EOL;
+				$GLOBALS["UNVERIFIED_X"] = 0;
+				$GLOBALS['UNVERIFIED_TIMER'] = $loop->addPeriodicTimer(3, function () use ($discord, $loop, $author_guild_id) {
+					//FIX THIS
+					if ($GLOBALS["UNVERIFIED_X"] < $GLOBALS["UNVERIFIED_COUNT"]) {
+						$target_id = $GLOBALS["UNVERIFIED"][$GLOBALS["UNVERIFIED_X"]]; //GuildMember
+						//if($GLOBALS['debug_echo']) echo "author_guild_id: " . $author_guild_id;
+						//if($GLOBALS['debug_echo']) echo "UNVERIFIED ID: $target_id" . PHP_EOL;
+						if ($target_id) {
+							if($GLOBALS['debug_echo']) echo "PURGING $target_id" . PHP_EOL;
+							$target_guild = $discord->guilds->get('id', $author_guild_id);
+							if($target_member = $target_guild->members->offsetGet($target_id) && $role_verified_id) //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
+							$target_guild->members->addrole($role_verified_id);
+							$GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
+							return;
+						} else {
+							$loop->cancelTimer($GLOBALS['UNVERIFIED_TIMER']);
+							$GLOBALS["UNVERIFIED_COUNT"] = null;
+							$GLOBALS['UNVERIFIED_X'] = null;
+							$GLOBALS['UNVERIFIED_TIMER'] = null;
+							if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED TIMER DONE]" . PHP_EOL;
+							return;
+						}
+					}
+				});
+				if ($react) $message->react("👍");
+			} elseif ($react) $message->react("👎");
+			if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED DONE]" . PHP_EOL;
 			return;
 		}
 		if ($message_content_lower == 'purge unverified') { //;purge unverified
