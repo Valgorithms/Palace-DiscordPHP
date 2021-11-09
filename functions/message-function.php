@@ -4048,7 +4048,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			return;
 		}
 		if ($message_content_lower == 'get unverified') { //;get unverified
-			if($GLOBALS['debug_echo']) echo "[GET UNVERIFIED START]" . PHP_EOL;
+			echo "[GET UNVERIFIED START]" . PHP_EOL;
 			$GLOBALS["UNVERIFIED"] = null;
 			if ($author_guild->id == '468979034571931648') { //Civ13
 				$author_guild->members->freshen()->done(
@@ -4081,11 +4081,12 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							}
 						}
 						$message->react("👍");
-						if($GLOBALS['debug_echo']) echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
-						if($GLOBALS['debug_echo']) echo "[GET UNVERIFIED DONE]" . PHP_EOL;
+						echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 					}
 				);
-			} elseif ($author_guild->id == '807759102624792576') { //Blue Colony
+			}
+			elseif ($author_guild->id == '807759102624792576') { //Blue Colony
 				$author_guild->members->freshen()->done(
 					function ($members) use ($message, $author_guild) {
 						//$members = $fetched_guild->members->all(); //array
@@ -4116,31 +4117,48 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							}
 						}
 						$message->react("👍");
-						if($GLOBALS['debug_echo']) echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
-						if($GLOBALS['debug_echo']) echo "[GET UNVERIFIED DONE]" . PHP_EOL;
+						echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+						echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 					}
 				);
+			}
+			elseif ($author_guild->id == '589291350609100818') { //Links Gaming Corner
+				//$members = $fetched_guild->members->all(); //array
+				foreach ($author_guild->members as $target_member) { //GuildMember
+					$target_skip = false;
+					//get roles of member
+					$target_guildmember_role_collection = $target_member->roles;
+					foreach ($target_guildmember_role_collection as $role) {
+						if ($role->name == "Verified") {
+							$target_skip = true;
+						}
+					}
+					if(!$target_skip) $GLOBALS["UNVERIFIED"][] = $target_member->id;
+				}
+				$message->react("👍");
+				echo count($GLOBALS["UNVERIFIED"]) . " UNVERIFIED ACCOUNTS" . PHP_EOL;
+				echo "[GET UNVERIFIED DONE]" . PHP_EOL;
 			}
 			return;
 		}
 		if ($message_content_lower == 'verify unverified') { //;verify unverified
-			if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED START]" . PHP_EOL;
+			echo "[PURGE UNVERIFIED START]" . PHP_EOL;
 			if ($GLOBALS["UNVERIFIED"]) {
-				if($GLOBALS['debug_echo']) echo "UNVERIFIED 0: " . $GLOBALS["UNVERIFIED"][0] . PHP_EOL;
+				echo "UNVERIFIED 0: " . $GLOBALS["UNVERIFIED"][0] . PHP_EOL;
 				$GLOBALS["UNVERIFIED_COUNT"] = count($GLOBALS["UNVERIFIED"]);
-				if($GLOBALS['debug_echo']) echo "UNVERIFIED_COUNT: " . $GLOBALS["UNVERIFIED_COUNT"] . PHP_EOL;
+				echo "UNVERIFIED_COUNT: " . $GLOBALS["UNVERIFIED_COUNT"] . PHP_EOL;
 				$GLOBALS["UNVERIFIED_X"] = 0;
-				$GLOBALS['UNVERIFIED_TIMER'] = $loop->addPeriodicTimer(3, function () use ($discord, $loop, $author_guild_id) {
+				$GLOBALS['UNVERIFIED_TIMER'] = $loop->addPeriodicTimer(3, function () use ($discord, $loop, $author_guild_id, $role_verified_id) {
 					//FIX THIS
 					if ($GLOBALS["UNVERIFIED_X"] < $GLOBALS["UNVERIFIED_COUNT"]) {
 						$target_id = $GLOBALS["UNVERIFIED"][$GLOBALS["UNVERIFIED_X"]]; //GuildMember
 						//if($GLOBALS['debug_echo']) echo "author_guild_id: " . $author_guild_id;
 						//if($GLOBALS['debug_echo']) echo "UNVERIFIED ID: $target_id" . PHP_EOL;
 						if ($target_id) {
-							if($GLOBALS['debug_echo']) echo "PURGING $target_id" . PHP_EOL;
+							echo "PURGING $target_id" . PHP_EOL;
 							$target_guild = $discord->guilds->get('id', $author_guild_id);
-							if($target_member = $target_guild->members->offsetGet($target_id) && $role_verified_id) //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
-							$target_guild->members->addrole($role_verified_id);
+							if($role_verified_id && $target_member = $target_guild->members->offsetGet($target_id)) //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
+							$target_member->addrole($role_verified_id);
 							$GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
 							return;
 						} else {
@@ -4148,14 +4166,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 							$GLOBALS["UNVERIFIED_COUNT"] = null;
 							$GLOBALS['UNVERIFIED_X'] = null;
 							$GLOBALS['UNVERIFIED_TIMER'] = null;
-							if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED TIMER DONE]" . PHP_EOL;
+							echo "[PURGE UNVERIFIED TIMER DONE]" . PHP_EOL;
 							return;
 						}
 					}
 				});
 				if ($react) $message->react("👍");
 			} elseif ($react) $message->react("👎");
-			if($GLOBALS['debug_echo']) echo "[PURGE UNVERIFIED DONE]" . PHP_EOL;
+			echo "[PURGE UNVERIFIED DONE]" . PHP_EOL;
 			return;
 		}
 		if ($message_content_lower == 'purge unverified') { //;purge unverified
