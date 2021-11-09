@@ -12,3 +12,15 @@ Discord template: https://discord.new/ttHsSykz5c6A
 Before you start using this Library, you **need** to know how DiscordPHP works, how PHP works, and how ReactPHP Event Loops and Promises work. This is a fundamental requirement before you start. Without this knowledge, you will only suffer.
 
 See https://github.com/elazar/asynchronous-php for resources.
+
+# Why is this bot open-source?
+Because there's no reason not to. I made it to do something useful for my community and figured it would be a good learning experience for others.
+
+# Can I contribute?
+Sure! If you find something wrong please create an issue if you discover one. If you have a new feature or want to change how something works create your own fork and make a pull requests. Please let me know before you decide to implement a new feature as there's a possibility I may have already written one with another bot I'm maintaining that I can import.
+
+# Can I fork it and distribute my own bot?
+Yep! I'm issuing this code under the MIT license. I don't care what you do with it, so long as you credit me as the original author.
+
+# How much would it cost for you to host this bot for me?
+I'm not in it for the money, but donations are always appreciated. You can either sponsor [VZGCoders](https://github.com/sponsors/VZGCoders) or [me](https://github.com/sponsors/valzargaming) directly. You can invite the bot to your server and ask me for any help you might need at any time and I'll do my best to get back to you.
