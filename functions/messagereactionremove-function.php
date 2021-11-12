@@ -18,13 +18,13 @@ function messageReactionRemove($reaction, $discord) {
 	$message_content_lower = strtolower($message_content);
 
 	//		Load author info
-	$author_user				= $message->author; //User object
+	$author_user				= $message->author->user; //User object
 	$author_channel 			= $message->channel;
 	$author_channel_id			= $author_channel->id; 												//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
-	if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
-		$is_dm = true;
-		return true; //Don't try and process direct messages
+	if (is_null($message->channel->guild_id) && ! ($author_member = $message->member)) {
+		$is_dm = true; //True if direct message
+		return;
 	}
 
 	$author_username 			= $author_user->username; 											//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
