@@ -908,15 +908,17 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			//Role Messages Setup
 			case 'message games': //;message games
 			case 'message gamerole': //;message gamerole
-			case 'message gameroles': //;message gameroles
+						case 'message gameroles': //;message gameroles
 				VarSave($guild_folder, "games_rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($gameroles_message_text)->done(function ($new_message) use ($guild_folder, $gameroles, $message) {
 					VarSave($guild_folder, "gameroles_message_id.php", strval($new_message->id));
-					/*
+					/* //Does not preserve order
 					foreach ($gameroles as $var_name => $value) {
 						$new_message->react($value);
 					}
 					*/
+					
+					/* //Preserves order but forces compiling in realtime
 					$promise = null;
 					$string = '';
 					$string1 = '$promise = $new_message->react(array_shift($gameroles))->done(function () use ($gameroles, $i, $new_message) {';
@@ -929,6 +931,18 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 					}
 					eval($string); //I really hate this language sometimes
 					return $message->delete();
+					*/
+					
+					//Preserves order and executes recursively until the job is done
+					$add = function ($gameroles, $new_message, $message) use (&$add) {
+						if (count($gameroles) != 0) {
+							$new_message->react(array_shift($gameroles))->done(function () use ($add, $gameroles, $new_message, $message) {
+								$add($gameroles, $new_message, $message);
+							});
+						}
+					};
+					$add($gameroles, $new_message, $message);
+					return $message->delete();
 				});
 				return;
 				break;
@@ -936,22 +950,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($species_message_text)->done(function ($new_message) use ($guild_folder, $species, $message) {
 					VarSave($guild_folder, "species_message_id.php", strval($new_message->id));
-					/*
-					foreach ($species as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($species))->done(function () use ($species, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($species); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($species); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
+					$add = function ($species, $new_message, $message) use (&$add) {
+						if (count($species) != 0) {
+							$new_message->react(array_shift($species))->done(function () use ($add, $species, $new_message, $message) {
+								$add($species, $new_message, $message);
+							});
+						}
+					};
+					$add($gameroles, $new_message, $message);
 					return $message->delete();
 				});
 				return;
@@ -960,22 +966,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($species2_message_text)->done(function ($new_message) use ($guild_folder, $species2, $message) {
 					VarSave($guild_folder, "species2_message_id.php", strval($new_message->id));
-					/*
-					foreach ($species2 as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($species2))->done(function () use ($species2, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($species2); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($species2); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
+					$add = function ($species2, $new_message, $message) use (&$add) {
+						if (count($species2) != 0) {
+							$new_message->react(array_shift($species2))->done(function () use ($add, $species2, $new_message, $message) {
+								$add($species2, $new_message, $message);
+							});
+						}
+					};
+					$add($species2, $new_message, $message);
 					return $message->delete();
 				});
 				return;
@@ -984,22 +982,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($species3_message_text)->done(function ($new_message) use ($guild_folder, $species3, $message) {
 					VarSave($guild_folder, "species3_message_id.php", strval($new_message->id));
-					/*
-					foreach ($species3 as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($species3))->done(function () use ($species3, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($species3); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($species3); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
+					$add = function ($species3, $new_message, $message) use (&$add) {
+						if (count($species3) != 0) {
+							$new_message->react(array_shift($species3))->done(function () use ($add, $species3, $new_message, $message) {
+								$add($species3, $new_message, $message);
+							});
+						}
+					};
+					$add($species3, $new_message, $message);
 					return $message->delete();
 				});
 				return;
@@ -1009,23 +999,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($gender_message_text)->done(function ($new_message) use ($guild_folder, $gender, $message) {
 					VarSave($guild_folder, "gender_message_id.php", strval($new_message->id));
-					/*
-					foreach ($gender as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($gender))->done(function () use ($gender, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($gender); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($gender); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
-					return $message->delete();
+					$add = function ($gender, $new_message, $message) use (&$add) {
+						if (count($gender) != 0) {
+							$new_message->react(array_shift($gender))->done(function () use ($add, $gender, $new_message, $message) {
+								$add($gender, $new_message, $message);
+							});
+						}
+					};
+					$add($gender, $new_message, $message);
+					return $message->delete();					
 				});
 				return;
 				break;
@@ -1035,23 +1017,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($pronouns_message_text)->done(function ($new_message) use ($guild_folder, $pronouns, $message) {
 					VarSave($guild_folder, "pronouns_message_id.php", strval($new_message->id));
-					/*
-					foreach ($pronouns as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($pronouns))->done(function () use ($pronouns, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($pronouns); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($pronouns); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
-					return $message->delete();
+					$add = function ($pronouns, $new_message, $message) use (&$add) {
+						if (count($pronouns) != 0) {
+							$new_message->react(array_shift($pronouns))->done(function () use ($add, $pronouns, $new_message, $message) {
+								$add($pronouns, $new_message, $message);
+							});
+						}
+					};
+					$add($pronouns, $new_message, $message);
+					return $message->delete();	
 				});
 				return;
 				break;
@@ -1060,23 +1034,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($sexuality_message_text)->done(function ($new_message) use ($guild_folder, $sexualities, $message) {
 					VarSave($guild_folder, "sexuality_message_id.php", strval($new_message->id));
-					/*
-					foreach ($sexualities as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($sexualities))->done(function () use ($sexualities, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($sexualities); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($sexualities); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
-					return $message->delete();
+					$add = function ($sexualities, $new_message, $message) use (&$add) {
+						if (count($sexualities) != 0) {
+							$new_message->react(array_shift($sexualities))->done(function () use ($add, $sexualities, $new_message, $message) {
+								$add($sexualities, $new_message, $message);
+							});
+						}
+					};
+					$add($sexualities, $new_message, $message);
+					return $message->delete();	
 				});
 				return;
 				break;
@@ -1085,24 +1051,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($nsfw_message_text)->done(function ($new_message) use ($guild_folder, $nsfwroles, $message) {
 					VarSave($guild_folder, "nsfw_message_id.php", strval($new_message->id));
-					/*
-					foreach ($nsfwroles as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($nsfwroles))->done(function () use ($nsfwroles, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($nsfwroles); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($nsfwroles); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
-					$message->delete();
-					return;
+					$add = function ($nsfwroles, $new_message, $message) use (&$add) {
+						if (count($nsfwroles) != 0) {
+							$new_message->react(array_shift($nsfwroles))->done(function () use ($add, $nsfwroles, $new_message, $message) {
+								$add($nsfwroles, $new_message, $message);
+							});
+						}
+					};
+					$add($nsfwroles, $new_message, $message);
+					return $message->delete();	
 				});
 				return;
 				break;
@@ -1112,23 +1069,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($channelroles_message_text)->done(function ($new_message) use ($guild_folder, $channelroles, $message) {
 					VarSave($guild_folder, "channelroles_message_id.php", strval($new_message->id));
-					/*
-					foreach ($channelroles as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($channelroles))->done(function () use ($channelroles, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($channelroles); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($channelroles); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
-					return $message->delete();
+					$add = function ($channelroles, $new_message, $message) use (&$add) {
+						if (count($channelroles) != 0) {
+							$new_message->react(array_shift($channelroles))->done(function () use ($add, $channelroles, $new_message, $message) {
+								$add($channelroles, $new_message, $message);
+							});
+						}
+					};
+					$add($channelroles, $new_message, $message);
+					return $message->delete();	
 				});
 				return;
 				break;
@@ -1137,61 +1086,15 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($customroles_message_text)->done(function ($new_message) use ($guild_folder, $customroles, $message) { //React in order
 					VarSave($guild_folder, "customroles_message_id.php", strval($new_message->id));
-					/*
-					foreach ($customroles as $var_name => $value) {
-						$new_message->react($value);
-					}
-					*/
-					
-					/*
-					if($GLOBALS['debug_echo']) echo "customroles[0]:" . $customroles[array_key_first($customroles)] . PHP_EOL;
-					$promise = $new_message->react($customroles[array_key_first($customroles)])->then(function ($result) {
-						//
-					});
-					
-					$new_promise = $new_promise ?? $promise;
-					$customroles = array_reverse($customroles);
-					for ($i = 1; $i < count($customroles); $i++) {
-					  $new_promise = $new_promise->then(function () use ($customroles, $i, $new_message) {
-						if($GLOBALS['debug_echo']) echo array_key_first($customroles);
-						for($j = $i+1; $j < count($customroles); $j++)
-							next($customroles);
-						return $new_message->react(next($customroles))->then(function ($result) {
-						  //
-						});
-					  });
-					  $new_promise = $new_promise ?? $promise;
-					}
-					$customroles = array_reverse($customroles);
-					$new_message->react(array_key_last($customroles))->done(
-						function ($result) {
-							//
+					$add = function ($customroles, $new_message, $message) use (&$add) {
+						if (count($customroles) != 0) {
+							$new_message->react(array_shift($customroles))->done(function () use ($add, $customroles, $new_message, $message) {
+								$add($customroles, $new_message, $message);
+							});
 						}
-					);
-					
-					
-					$promise = $new_promise ?? $promise;
-					$promise->done(
-						function ($result) {
-							//
-						}, function ($error) { // return with error ?
-						  return;
-						}
-					);
-					*/
-
-					$promise = null;
-					$string = '';
-					$string1 = '$promise = $new_message->react(array_shift($customroles))->done(function () use ($customroles, $i, $new_message) {';
-					$string2 = '});';
-					for ($i = 0; $i < count($customroles); $i++) {
-					  $string .= $string1;
-					}
-					for ($i = 0; $i < count($customroles); $i++) {
-					  $string .= $string2;
-					}
-					eval($string); //I really hate this language sometimes
-					return $message->delete();
+					};
+					$add($customroles, $new_message, $message);
+					return $message->delete();	
 				});
 				return;
 				break;
@@ -3615,10 +3518,6 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	if ($creator) { //Mostly just debug commands
-		if ($message_content_lower == 'button') { //;button
-			$component = Discord\Builders\Components\SelectMenu::new();
-			$builder->addComponent($component);
-		}
 		if ($message_content_lower == 'debug') { //;debug
 			if($GLOBALS['debug_echo']) echo '[DEBUG]' . PHP_EOL;
 			ob_start();
@@ -3630,6 +3529,50 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			ob_end_clean(); //here, output is cleaned. You may want to flush it with ob_end_flush()
 			file_put_contents('debug.txt', $debug_output);
 			ob_end_flush();
+		}
+		if ($message_content_lower == 'builder') { //;button
+			/* Discord\Builders\Components\*
+			addComponent($component)	adds a component to action row. must be a button component.
+			removeComponent($component)	removes the given component from the action row.
+			getComponents(): Component[]	returns all the action row components in an array.
+			*/
+			$builder = Discord\Builders\MessageBuilder::new();
+			
+			$row = Discord\Builders\Components\ActionRow::new();
+			$button = Discord\Builders\Components\Button::new(Discord\Builders\Components\Button::STYLE_SUCCESS);
+			$button->setLabel('Push me!');
+			$button->setListener(function (Discord\Parts\Interactions\Interaction $interaction) {
+				$interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()
+					->setContent("Why'd u push me?"));
+			}, $discord);
+			$row->addComponent($button);
+			$builder->addComponent($row);
+			//promise for delay
+			/*
+			$button->setListener(function (Discord\Parts\Interactions\Interaction $interaction) use ($discord) {
+				return someFunctionWhichWillReturnAPromise()->then(function ($returnValueFromFunction) use ($interaction) {
+					$interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()
+						->setContent($returnValueFromFunction));
+				});
+			}, $discord);
+			*/
+			
+			$select = Discord\Builders\Components\SelectMenu::new()
+				->addOption(Discord\Builders\Components\Option::new('me?'))
+				->addOption(Discord\Builders\Components\Option::new('or me?'));
+			
+			$select->setListener(function (Discord\Parts\Interactions\Interaction $interaction, Discord\Helpers\Collection $options) {
+				foreach ($options as $option) {
+					echo $option->getValue().PHP_EOL;
+				}
+
+				$interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent('Thanks!'));
+			}, $discord);
+			$builder->addComponent($select);
+			
+			$builder->setContent('Hello, world!');
+			$builder->setReplyTo($message);
+			$message->channel->sendMessage($builder);
 		}
 		if ($message_content_lower == 'stats') { //;stats
 			$stats->handle($message);
@@ -3655,6 +3598,43 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			foreach (str_split($guildstring, 2000) as $piece) {
 				$message->channel->sendMessage($piece);
 			}
+		}
+		if (str_starts_with ($message_content_lower, 'debug guild invites ')) { //;debug all invites
+			$filter = 'debug guild invites ';
+			$value = str_replace($filter, '', $message_content_lower);
+			if($GLOBALS['debug_echo']) echo "[DEBUG GUILD INVITES] `$value`" . PHP_EOL;
+			if (! is_numeric($value)) return $message->reply("`$value` is not a valid Guild ID!");
+			if (! $guild = $discord->guilds->offsetGet("$value")) return $message->reply("Unable to locate Guild with ID `$value`!");
+			/*
+			foreach($guild->channels as $channel) {
+				$channel->getInvites()->done(
+					function ($invites) use ($message, $guild) {
+						if (count($invites) > 0) {
+							foreach ($invites as $invite)
+								if ($invite->code) {
+									$url = 'https://discord.gg/' . $invite->code;
+									$message->reply("{$guild->name} ({$guild->id}) $url");
+									return;
+								}
+							
+						}
+						return;
+					},
+					function ($error) use ($message) {
+						return $message->react("❌");
+					}
+				);
+			}
+			return;
+			*/
+			$find_invite = function ($guild, $message) use (&$find_invite) {
+				if (count($gameroles) != 0) {
+					$new_message->react(array_shift($gameroles))->done(function () use ($find_invite, $guild, $message) {
+						$find_invite($gameroles, $new_message, $message);
+					});
+				} else return $message->delete();
+			};
+			$find_invite($gameroles, $new_message, $message);
 		}
 		if (str_starts_with($message_content_lower, 'debug guild invite ')) { //;debug guild invite guildid
 			$filter = "debug guild invite ";
