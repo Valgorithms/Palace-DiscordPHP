@@ -29,7 +29,8 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*/
 	$author	= $message->author; //Member OR User object
-	$author_user = $message->user;
+	$author_member = $message->author->member;
+	$author_user = $message->author->user;
 	if ($author_member = $message->member) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
 
 	$author_channel 												= $message->channel;
@@ -3609,6 +3610,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 	}
 	if ($creator) { //Mostly just debug commands
+		if ($message_content_lower == 'button') { //;button
+			$component = Discord\Builders\Components\SelectMenu::new();
+			$builder->addComponent($component);
+		}
 		if ($message_content_lower == 'debug') { //;debug
 			if($GLOBALS['debug_echo']) echo '[DEBUG]' . PHP_EOL;
 			ob_start();
