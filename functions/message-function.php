@@ -355,7 +355,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*/
 
 
-	if(!(include getcwd() . 'CHANGEME.PHP')) include getcwd() . '/vendor/vzgcoders/palace/CHANGEME.php';
+	if(!(include getcwd() . '/CHANGEME.PHP')) include getcwd() . '/vendor/vzgcoders/palace/CHANGEME.php';
 	if ($author_id == $creator_id) $creator = true;
 
 	//if($GLOBALS['debug_echo']) echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
