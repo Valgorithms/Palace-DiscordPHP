@@ -29,9 +29,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*********************
 	*/
 	$author	= $message->author; //Member OR User object
-	$author_member = $message->author->member;
-	$author_user = $message->author->user;
-	if ($author_member = $message->member) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
+	if (get_class($author) == "Discord\Parts\User\Member") {
+		$author_user = $author->user;
+		$author_member = $author;
+	} else {
+		$author_user = $author;
+		$author_member = null;
+	}
+	if ($author_member) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
 
 	$author_channel 												= $message->channel;
 	$author_channel_id												= $author_channel->id; 											//if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
