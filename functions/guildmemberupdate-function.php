@@ -1,6 +1,7 @@
 <?php
 function guildMemberUpdate($member, $discord, $member_old) {
-	if (is_null($member)) return; //either the loadAllMembers option or the privileged GUILD_MEMBERS intent may be missing
+	if (is_null($member)) return; //the privileged GUILD_MEMBERS intent may be missing
+	if (is_null($member_old)) return; //either the loadAllMembers option or the privileged GUILD_MEMBERS intent may be missing
 	if ($member->id === $discord->id) return; //Don't process changes for the bot (not compatible with $diff)
 	include_once "custom_functions.php";
 	$author_guild = $member->guild;

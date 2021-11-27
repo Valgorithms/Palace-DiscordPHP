@@ -1,13 +1,9 @@
 <?php
 $customroles = array(
-    "Persistence" => "♾️",
-    "Nomads" => "🛠️",
-    "TDM" => "🔫"
+    "Self-Promo" => "📰",
 );
 
 //Message copy-pasta:
-$customroles_message_text = "**Role Menu: Ping Tags**
-:infinity: : `Persistence`
-:tools: : `Nomads`
-:gun: : `TDM`
+$customroles_message_text = "**Role Menu: Custom Tags**
+:newspaper: : `Self-Promo`
 ";

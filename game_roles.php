@@ -1,6 +1,9 @@
 <?php
 $gameroles = array(
 	"LFG" => "🔍",
+	"Streamers" => "🛰️",
+	"Viewers" => "📡",
+	
 	"7 Days To Die" => "🧟",
 	"Call of Duty" => "🪖",
     "Crusaders of the Lost Idols" => "⚔️",
@@ -18,6 +21,8 @@ $gameroles = array(
 //Message copy-pasta:
 $gameroles_message_text = "**Role Menu: Games**
 :mag: : `Looking For Group`
+:satellite_orbital: : `Streamers`
+:satellite: : `Viewers`
 
 :zombie: : `7 Days To Die`
 :military_helmet: : `Call of Duty`
