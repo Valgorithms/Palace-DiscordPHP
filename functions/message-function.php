@@ -8,7 +8,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	$message_content = $message->content;
 	if (!$message_content) return;
 	$message_id = $message->id;
-	$message_content_lower = mb_strtolower($message_content);
+	$message_content_lower = mb_strtolower(trim($message_content));
 
 	/*
 	*********************
@@ -246,8 +246,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 	*/
 
 	if ($twitch) { //Passed down into the event from run.php
-		if($twitch_discord_output = $twitch->getDiscordOutput()) {
-		
+		if($twitch_discord_output = $twitch->getDiscordOutput()) {		
 			if ( //These values can be null, but we only want to do this if they are valid strings
 				($twitch_guild_id = $twitch->getGuildId())
 				&&
@@ -3602,39 +3601,37 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		if (str_starts_with ($message_content_lower, 'debug guild invites ')) { //;debug all invites
 			$filter = 'debug guild invites ';
 			$value = str_replace($filter, '', $message_content_lower);
-			if($GLOBALS['debug_echo']) echo "[DEBUG GUILD INVITES] `$value`" . PHP_EOL;
 			if (! is_numeric($value)) return $message->reply("`$value` is not a valid Guild ID!");
 			if (! $guild = $discord->guilds->offsetGet("$value")) return $message->reply("Unable to locate Guild with ID `$value`!");
-			/*
-			foreach($guild->channels as $channel) {
-				$channel->getInvites()->done(
-					function ($invites) use ($message, $guild) {
-						if (count($invites) > 0) {
-							foreach ($invites as $invite)
+			$find_invite = function ($guild, $message, $channels) use (&$find_invite) {
+				if ($channels) {
+					$find_invite_channels = function (&$channels, $message) use (&$find_invite_channels) {
+						if (! $channel = array_pop($channels)) return $message->react("👎");
+						$channel->getInvites()->done(function ($invites) use ($find_invite_channels, &$channels, $message) {
+							if (count($invites) == 0) {
+								return $find_invite_channels($channels, $message);
+							} else foreach ($invites as $invite) {
 								if ($invite->code) {
 									$url = 'https://discord.gg/' . $invite->code;
-									$message->reply("{$guild->name} ({$guild->id}) $url");
-									return;
-								}
-							
-						}
-						return;
-					},
-					function ($error) use ($message) {
-						return $message->react("❌");
+									return $message->reply("{$guild->name} ({$guild->id}) $url");
+								} else return $find_invite_channels($channels, $message);
+							}
+						});
+					};
+					return $find_invite_channels($channels, $message);
+				} else $guild->getInvites()->done(function ($invites) use ($find_invite, $guild, $message) {
+					if (count($invites) == 0) {
+						return $find_invite($guild, $message, array_chunk($guild->channels, 550));
 					}
-				);
-			}
-			return;
-			*/
-			$find_invite = function ($guild, $message) use (&$find_invite) {
-				if (count($gameroles) != 0) {
-					$new_message->react(array_shift($gameroles))->done(function () use ($find_invite, $guild, $message) {
-						$find_invite($gameroles, $new_message, $message);
-					});
-				} else return $message->delete();
+					foreach ($invites as $invite) {
+						if ($invite->code) {
+							$url = 'https://discord.gg/' . $invite->code;
+							return $message->reply("{$guild->name} ({$guild->id}) $url");
+						}
+					}
+				});
 			};
-			$find_invite($gameroles, $new_message, $message);
+			return $find_invite($guild, $message, null);
 		}
 		if (str_starts_with($message_content_lower, 'debug guild invite ')) { //;debug guild invite guildid
 			$filter = "debug guild invite ";
