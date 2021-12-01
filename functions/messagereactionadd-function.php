@@ -196,7 +196,7 @@ function messageReactionAdd($reaction, $discord) {
 										[
 										'name' => ucfirst($select_name),
 										'permissions' => 0,
-										'color' => 0x000ead,
+										'color' => 0x003ead,
 										'hoist' => false,
 										'mentionable' => false
 										]
