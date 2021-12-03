@@ -1,5 +1,5 @@
 <?php
-function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, $browser) {
+function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	if (is_null($message) || empty($message)) return; //An invalid message object was passed
 	if (is_null($message->content)) return; //Don't process messages without content
 	if ($message->webhook_id || $message->user->webhook) return; //Don't process webhooks
@@ -3857,8 +3857,7 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 		if (str_starts_with($message_content_lower, 'timer ')) { //;timer
 			if($GLOBALS['debug_echo']) echo "[TIMER]" . PHP_EOL;
-			$filter = "timer ";
-			$value = str_replace($filter, "", $message_content_lower);
+			$message_content_lower = substr($message_content_lower, 6);
 			if (is_numeric($value)) {
 				$discord->getLoop()->addTimer($value, function () use ($author_channel) {
 					return $author_channel->sendMessage("Timer");
@@ -3868,11 +3867,10 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 		}
 		if (str_starts_with($message_content_lower, 'resolveid ')) { //;timer
 			if($GLOBALS['debug_echo']) echo "[RESOLVEID]" . PHP_EOL;
-			$filter = "resolveid ";
-			$value = str_replace($filter, "", $message_content_lower);
-			if (is_numeric($value)) { //resolve with restcord
-				$restcord_result = $restcord->user->getUser(['user.id' => (int)$value]);
-				var_dump($restcord_result);
+			$message_content_lower = substr($message_content_lower, 10);
+			if (is_numeric($value)) {
+				$user = $discord->users->fetch("$value");
+				var_dump($user);
 			}
 		}
 		if ($message_content_lower == 'xml') {
@@ -3885,7 +3883,6 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				"GLOBALS",
 				"loop",
 				"discord",
-				"restcord"
 			);
 			if($GLOBALS['debug_echo']) echo "Skipped: ";
 			foreach ($GLOBALS as $key => $value) {
@@ -4868,17 +4865,6 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 			$value = trim($value);
 			if (is_numeric($value)) {
 				if($GLOBALS['debug_echo']) echo '[VALID] ' . $value . PHP_EOL;
-				/*
-				try {
-					$restcord_user = $restcord->user->getUser(['user.id' => intval($value)]);
-					$restcord_nick = $restcord_user->username;
-					$restcord_discriminator = $restcord_user->discriminator;
-					$restcord_result = "Discord ID is registered to $restcord_nick#$restcord_discriminator (<@$value>)";
-				} catch (Exception $e) {
-					$restcord_result = "Unable to locate user for ID $value";
-				}
-				$message->reply($restcord_result);
-				*/
 				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 				$discord->users->fetch($value)->done(
 					function ($target_user) use ($message, $value) {
@@ -5348,26 +5334,14 @@ function message($message, $discord, $loop, $token, $restcord, $stats, $twitch, 
 				return $author_channel->sendMessage("<@$author_id>, you can't ban yourself!");
 			}
 		} //foreach method didn't return, so nobody in the guild was mentioned
-		//Try restcord
+		
 		$filter = "ban ";
 		$value = str_replace($filter, "", $message_content_lower);
 		$value = str_replace("<@!", "", $value);
 		$value = str_replace("<@", "", $value);
 		$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
-		if (is_numeric($value)) { //resolve with restcord
-			//$restcord->guild
-			$restcord_param = ['guild.id' => (int)$author_guild_id, 'user.id' => (int)$value];
-			try {
-				//$restcord_result = $restcord->guild->createGuildBan($restcord_param);
-			} catch (Exception $e) {
-				$restcord_result = "Unable to locate user for ID $value";
-				if($GLOBALS['debug_echo']) echo $e . PHP_EOL;
-			}
-			//$message->reply($restcord_result);
-		} else {
-			if ($react) $message->react("👎");
-			//$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-		}
+		if ($react) $message->react("👎");
+		$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
 		return;
 	}
 	if ($author_perms['ban_members'] && str_starts_with($message_content_lower, 'unban ')) { //;ban
