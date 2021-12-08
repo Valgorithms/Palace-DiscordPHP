@@ -174,7 +174,7 @@ if (!CheckFile($guild_folder, "role_muted_id.php")) {
 
 //Rolepicker user ID
 if (!CheckFile($guild_folder, "rolepicker_id.php")) {
-    $rolepicker_id = $discord->user->id; //id of the user that posted the role picker messages
+    $rolepicker_id = $discord->id; //id of the user that posted the role picker messages
     VarSave($guild_folder, "rolepicker_id.php", strval($rolepicker_id));
 } else {
     $rolepicker_id = strval(VarLoad($guild_folder, "rolepicker_id.php"));

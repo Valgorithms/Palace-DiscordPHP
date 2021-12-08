@@ -1,6 +1,6 @@
 <?php
 function messageReactionRemove($reaction, $discord) {
-	if ($reaction->user_id == $discord->user->id) { //Don't process reactions this bot makes
+	if ($reaction->user_id == $discord->id) { //Don't process reactions this bot makes
 		if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[MESSAGE REACTION REMOVED - SELF]" . PHP_EOL;
 		return true;
 	}

@@ -157,7 +157,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		if ($tip_pending_channel_id) $tip_pending_channel = $author_guild->channels->get('id', strval($tip_pending_channel_id));
 		if ($tip_approved_channel_id) $tip_approved_channel = $author_guild->channels->get('id', strval($tip_approved_channel_id));
 	} else { //Direct message
-		if ($author_id != $discord->user->id) { //Don't trigger on messages sent by this bot
+		if ($author_id != $discord->id) { //Don't trigger on messages sent by this bot
 			global $server_invite;
 			//if($GLOBALS['debug_echo']) echo "[DM-EARLY BREAK]" . PHP_EOL;
 			if($GLOBALS['debug_echo']) echo "[DM] $author_check: $message_content" . PHP_EOL;
