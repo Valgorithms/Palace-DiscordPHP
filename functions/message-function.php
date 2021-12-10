@@ -729,9 +729,9 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					$documentation = $documentation . "`gameroles messageid` Message not yet sent!\n";
 				}
 				if ($species_message_id) {
-					$documentation = $documentation . "`spciese messageid` $species_message_id\n";
+					$documentation = $documentation . "`species messageid` $species_message_id\n";
 				} else {
-					$documentation = $documentation . "`spciese messageid` Message not yet sent!\n";
+					$documentation = $documentation . "`species messageid` Message not yet sent!\n";
 				}
 				if ($species2_message_id) {
 					$documentation = $documentation . "`species2 messageid` $species2_message_id\n";
