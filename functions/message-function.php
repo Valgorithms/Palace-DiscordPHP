@@ -802,62 +802,62 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 						$author_dmchannel->sendMessage($documentation);
 					});
 				}
-			case 'settings':
-					$documentation = "Command symbol: $command_symbol\n";
-					$documentation = $documentation . "\nBot options:\n";
-					//react
-					$documentation = $documentation . "`react:` ";
-					if ($react) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//vanity
-					$documentation = $documentation . "`vanity:` ";
-					if ($vanity) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//nsfw
-					$documentation = $documentation . "`nsfw:` ";
-					if ($nsfw) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//games
-					$documentation = $documentation . "`games:` ";
-					if ($games) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					
-					//rolepicker
-					$documentation = $documentation . "`\nrolepicker:` ";
-					if ($rp0) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					
-					if (!$rp0) $documentation = $documentation . "~~"; //Strikeout invalid options 
-					//gameroles
-					$documentation = $documentation . "`game roles:` ";
-					if ($gamerole) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//species
-					$documentation = $documentation . "`species:` ";
-					if ($rp1) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//gender
-					$documentation = $documentation . "`gender:` ";
-					if ($rp2) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//prnouns
-					$documentation = $documentation . "`pronouns:` ";
-					if ($rp5) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//sexuality
-					$documentation = $documentation . "`sexuality:` ";
-					if ($rp3) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//channel roles
-					$documentation = $documentation . "`channel roles:` ";
-					if ($channeloption) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					//customrole
-					$documentation = $documentation . "`customrole:` ";
-					if ($rp4) $documentation = $documentation . "**Enabled**\n";
-					else $documentation = $documentation . "**Disabled**\n";
-					if (!$rp0) $documentation = $documentation . "~~"; //Strikeout invalid options
+			case '__settings':
+				$documentation = "Command symbol: $command_symbol\n";
+				$documentation = $documentation . "\nBot options:\n";
+				//react
+				$documentation = $documentation . "`react:` ";
+				if ($react) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//vanity
+				$documentation = $documentation . "`vanity:` ";
+				if ($vanity) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//nsfw
+				$documentation = $documentation . "`nsfw:` ";
+				if ($nsfw) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//games
+				$documentation = $documentation . "`games:` ";
+				if ($games) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
 				
+				//rolepicker
+				$documentation = $documentation . "`\nrolepicker:` ";
+				if ($rp0) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				
+				if (!$rp0) $documentation = $documentation . "~~"; //Strikeout invalid options 
+				//gameroles
+				$documentation = $documentation . "`game roles:` ";
+				if ($gamerole) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//species
+				$documentation = $documentation . "`species:` ";
+				if ($rp1) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//gender
+				$documentation = $documentation . "`gender:` ";
+				if ($rp2) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//prnouns
+				$documentation = $documentation . "`pronouns:` ";
+				if ($rp5) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//sexuality
+				$documentation = $documentation . "`sexuality:` ";
+				if ($rp3) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//channel roles
+				$documentation = $documentation . "`channel roles:` ";
+				if ($channeloption) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//customrole
+				$documentation = $documentation . "`customrole:` ";
+				if ($rp4) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				if (!$rp0) $documentation = $documentation . "~~"; //Strikeout invalid options
+			
 				$doc_length = strlen($documentation);
 				if ($doc_length < 1024) {
 					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
@@ -1604,6 +1604,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$select = Discord\Builders\Components\SelectMenu::new()
 				->addOption(Discord\Builders\Components\Option::new('Reactions'))
 				->addOption(Discord\Builders\Components\Option::new('Vanity'))
+				->addOption(Discord\Builders\Components\Option::new('NSFW'))
 				->addOption(Discord\Builders\Components\Option::new('Games'))
 				->addOption(Discord\Builders\Components\Option::new('Rolepicker'))
 				->addOption(Discord\Builders\Components\Option::new('Species Roles'))
@@ -1677,10 +1678,10 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		if (str_starts_with($message_content_lower, 'settings')) {
 			$builder = Discord\Builders\MessageBuilder::new();
 			
-			$select = Discord\Builders\Components\SelectMenu::new()
-				->addOption(Discord\Builders\Components\Option::new('Current Setup'));
-			
-			$select->setListener(function (Discord\Parts\Interactions\Interaction $interaction, Discord\Helpers\Collection $options) use ($author_id, $author_guild, $author_guild_name, $guild_folder,
+			$row = Discord\Builders\Components\ActionRow::new();
+			$button = Discord\Builders\Components\Button::new(Discord\Builders\Components\Button::STYLE_SUCCESS);
+			$button->setLabel('Current Setup');
+			$button->setListener(function (Discord\Parts\Interactions\Interaction $interaction) use ($discord, $author_id, $author_guild, $author_guild_name, $guild_folder,
 			$role_dev_id, $role_admin_id, $role_mod_id, $role_bot_id, $role_vzgbot_id, $role_muted_id, $role_verified_id, $role_18_id, $rolepicker_id,
 			$welcome_public_channel_id, $welcome_log_channel_id, $verifylog_channel_id, $watch_channel_id,
 			$welcome_public_channel, $welcome_log_channel, $modlog_channel, $getverified_channel, $verifylog_channel, $watch_channel,
@@ -1688,132 +1689,207 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$suggestion_pending_channel, $suggestion_approved_channel, $tip_pending_channel, $tip_approved_channel,
 			$gameroles_message_id, $species_message_id, $species2_message_id, $species3_message_id, $gender_message_id, $pronouns_message_id, $sexuality_message_id, $nsfw_message_id,
 			$channelroles_message_id, $customroles_message_id, 
+			$command_symbol, $react, $vanity, $nsfw, $games, $rp0, $rp1, $rp2, $rp3, $rp4, $rp5, $channeloption, $gamerole
 			) {
 				if ($interaction->user->id != $author_id) return;
-				foreach ($options as $option) $choice = $option->getLabel();
-
-				if ($choice == 'Current Setup') {
-					//Roles
-					$documentation = "⠀\n**Roles:**\n";
-					$documentation = $documentation . "`dev @role` <@&$role_dev_id>\n";
-					$documentation = $documentation . "`admin @role` <@&$role_admin_id>\n";
-					$documentation = $documentation . "`mod @role` <@&$role_mod_id>\n";
-					$documentation = $documentation . "`bot @role` <@&$role_bot_id>\n";
-					$documentation = $documentation . "`vzg @role` <@&$role_vzgbot_id>\n";
-					$documentation = $documentation . "`muted @role` <@&$role_muted_id>\n";
-					$documentation = $documentation . "`verified @role` <@&$role_verified_id>\n";
-					$documentation = $documentation . "`adult @role` <@&$role_18_id>\n";
-					//User
-					$documentation = $documentation . "**Users:**\n";
-					$documentation = $documentation . "`rolepicker @user` <@$rolepicker_id>\n";
-					//Channels
-					$documentation = $documentation . "**Channels:**\n";
-					$documentation = $documentation . "`general <#channel_id>` <#{$general_channel->id}>\n";
-					if ($welcome_public_channel_id) {
-						$welcome_public_channel = $author_guild->channels->get('id', $welcome_public_channel_id);
-					}
-					if ($welcome_log_channel_id) {
-						$welcome_log_channel = $author_guild->channels->get('id', $welcome_log_channel_id);
-					}
-					if ($welcome_public_channel_id) {
-						$documentation = $documentation . "`welcome <#channel_id>` <#{$welcome_public_channel->id}>\n";
-					}
-					$documentation = $documentation . "`welcomelog <#channel_id>` <#{$welcome_log_channel->id}>\n";
-					$documentation = $documentation . "`log <#channel_id>` <#{$modlog_channel->id}>\n";
-					$documentation = $documentation . "`verify channel <#channel_id>` <#{$getverified_channel->id}>\n";
-					if ($verifylog_channel_id) {
-						$documentation = $documentation . "`verifylog <#channel_id>` <#{$verifylog_channel->id}>\n";
-					} else {
-						$documentation = $documentation . "`verifylog <#channel_id>` (defaulted to log channel)\n";
-					}
-					if ($watch_channel_id) {
-						$documentation = $documentation . "`watch <#channel_id>` <#{$watch_channel->id}>\n";
-					} else {
-						$documentation = $documentation . "`watch <#channel_id>` (defaulted to direct message only)\n";
-					}
-					$documentation = $documentation . "`rolepicker channel <#channel_id>`  <#{$rolepicker_channel->id}>\n";
-					$documentation = $documentation . "`nsfw rolepicker channel <#channel_id>`  <#{$nsfw_rolepicker_channel->id}>\n";
-					$documentation = $documentation . "`games rolepicker channel <#channel_id>`  <#{$games_rolepicker_channel->id}>\n";
-					$documentation = $documentation . "`games rolepicker channel <#channel_id>`  <#{$games_channel->id}>\n";
-					$documentation = $documentation . "`suggestion pending <#channel_id>` <#{$suggestion_pending_channel->id}>\n";
-					$documentation = $documentation . "`suggestion approved <#channel_id>` <#{$suggestion_approved_channel->id}>\n";
-					$documentation = $documentation . "`tip pending <#channel_id>` <#{$tip_pending_channel->id}>\n";
-					$documentation = $documentation . "`tip approved <#channel_id>` <#{$tip_approved_channel->id}>\n";
-					//Messages
-					$documentation = $documentation . "**Messages:**\n";
-					if ($gameroles_message_id) {
-						$documentation = $documentation . "`gameroles messageid` $gameroles_message_id\n";
-					} else {
-						$documentation = $documentation . "`gameroles messageid` Message not yet sent!\n";
-					}
-					if ($species_message_id) {
-						$documentation = $documentation . "`species messageid` $species_message_id\n";
-					} else {
-						$documentation = $documentation . "`species messageid` Message not yet sent!\n";
-					}
-					if ($species2_message_id) {
-						$documentation = $documentation . "`species2 messageid` $species2_message_id\n";
-					} else {
-						$documentation = $documentation . "`species2 messageid` Message not yet sent!\n";
-					}
-					if ($species3_message_id) {
-						$documentation = $documentation . "`species3 messageid` $species3_message_id\n";
-					} else {
-						$documentation = $documentation . "`species3 messageid` Message not yet sent!\n";
-					}
-					if ($gender_message_id) {
-						$documentation = $documentation . "`gender messageid` $gender_message_id\n";
-					} else {
-						$documentation = $documentation . "`gender messageid` Message not yet sent!\n";
-					}
-					if ($pronouns_message_id) {
-						$documentation = $documentation . "`prnouns messageid` $pronouns_message_id\n";
-					} else {
-						$documentation = $documentation . "`pronouns messageid` Message not yet sent!\n";
-					}				
-					if ($sexuality_message_id) {
-						$documentation = $documentation . "`sexuality messageid` $sexuality_message_id\n";
-					} else {
-						$documentation = $documentation . "`sexuality messageid` Message not yet sent!\n";
-					}
-					if ($nsfw_message_id) {
-						$documentation = $documentation . "`nsfw messageid` $nsfw_message_id\n";
-					} else {
-						$documentation = $documentation . "`nsfw messageid` Message not yet sent!\n";
-					}
-					if ($channelroles_message_id) {
-						$documentation = $documentation . "`channelroles messageid` $channelroles_message_id\n";
-					} else {
-						$documentation = $documentation . "`channelroles messageid` Message not yet sent!\n";
-					}
-					if ($customroles_message_id) {
-						$documentation = $documentation . "`customroles messageid` $customroles_message_id\n";
-					} else {
-						$documentation = $documentation . "`customroles messageid` Message not yet sent!\n";
-					}
-					
-					$documentation_sanitized = str_replace("\n", "", $documentation);
-					$doc_length = strlen($documentation_sanitized); if($GLOBALS['debug_echo']) echo "doc_length: " . $doc_length . PHP_EOL;
-					if ($doc_length < 1024) {
-						$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
-						$embed
-							->setTitle("Current setup for $author_guild_name")														// Set a title
-							->setColor(0xe1452d)																	// Set a color (the thing on the left side)
-							->setDescription("$documentation")														// Set a description (below title, above fields)
-				//					->addFieldValues("⠀", "$documentation")														// New line after this
-				//					->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
-				//					->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')			 	// Set an image (below everything except footer)
-				//					->setTimestamp()																	 	// Set a timestamp (gets shown next to footer)
-				//					->setAuthor("$author_check", "$author_guild_avatar")  									// Set an author with icon
-							->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
-							->setURL("");							 												// Set the URL
-				//				Open a DM channel then send the rich embed message
-						if($GLOBALS['debug_echo']) echo "embed class: " . get_class($embed) . PHP_EOL;
-						return $interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->addEmbed($embed), true);
-					} else return $interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent($documentation), true);
+				//Roles
+				$documentation = "⠀\n**Roles:**\n";
+				$documentation = $documentation . "`dev @role` <@&$role_dev_id>\n";
+				$documentation = $documentation . "`admin @role` <@&$role_admin_id>\n";
+				$documentation = $documentation . "`mod @role` <@&$role_mod_id>\n";
+				$documentation = $documentation . "`bot @role` <@&$role_bot_id>\n";
+				$documentation = $documentation . "`vzg @role` <@&$role_vzgbot_id>\n";
+				$documentation = $documentation . "`muted @role` <@&$role_muted_id>\n";
+				$documentation = $documentation . "`verified @role` <@&$role_verified_id>\n";
+				$documentation = $documentation . "`adult @role` <@&$role_18_id>\n";
+				//User
+				$documentation = $documentation . "**Users:**\n";
+				$documentation = $documentation . "`rolepicker @user` <@$rolepicker_id>\n";
+				//Channels
+				$documentation = $documentation . "**Channels:**\n";
+				$documentation = $documentation . "`general <#channel_id>` <#{$general_channel->id}>\n";
+				if ($welcome_public_channel_id) {
+					$welcome_public_channel = $author_guild->channels->get('id', $welcome_public_channel_id);
 				}
-			}, $discord);
-			$builder->addComponent($select);
+				if ($welcome_log_channel_id) {
+					$welcome_log_channel = $author_guild->channels->get('id', $welcome_log_channel_id);
+				}
+				if ($welcome_public_channel_id) {
+					$documentation = $documentation . "`welcome <#channel_id>` <#{$welcome_public_channel->id}>\n";
+				}
+				$documentation = $documentation . "`welcomelog <#channel_id>` <#{$welcome_log_channel->id}>\n";
+				$documentation = $documentation . "`log <#channel_id>` <#{$modlog_channel->id}>\n";
+				$documentation = $documentation . "`verify channel <#channel_id>` <#{$getverified_channel->id}>\n";
+				if ($verifylog_channel_id) {
+					$documentation = $documentation . "`verifylog <#channel_id>` <#{$verifylog_channel->id}>\n";
+				} else {
+					$documentation = $documentation . "`verifylog <#channel_id>` (defaulted to log channel)\n";
+				}
+				if ($watch_channel_id) {
+					$documentation = $documentation . "`watch <#channel_id>` <#{$watch_channel->id}>\n";
+				} else {
+					$documentation = $documentation . "`watch <#channel_id>` (defaulted to direct message only)\n";
+				}
+				$documentation = $documentation . "`rolepicker channel <#channel_id>`  <#{$rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`nsfw rolepicker channel <#channel_id>`  <#{$nsfw_rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`games rolepicker channel <#channel_id>`  <#{$games_rolepicker_channel->id}>\n";
+				$documentation = $documentation . "`games rolepicker channel <#channel_id>`  <#{$games_channel->id}>\n";
+				$documentation = $documentation . "`suggestion pending <#channel_id>` <#{$suggestion_pending_channel->id}>\n";
+				$documentation = $documentation . "`suggestion approved <#channel_id>` <#{$suggestion_approved_channel->id}>\n";
+				$documentation = $documentation . "`tip pending <#channel_id>` <#{$tip_pending_channel->id}>\n";
+				$documentation = $documentation . "`tip approved <#channel_id>` <#{$tip_approved_channel->id}>\n";
+				//Messages
+				$documentation = $documentation . "**Messages:**\n";
+				if ($gameroles_message_id) {
+					$documentation = $documentation . "`gameroles messageid` $gameroles_message_id\n";
+				} else {
+					$documentation = $documentation . "`gameroles messageid` Message not yet sent!\n";
+				}
+				if ($species_message_id) {
+					$documentation = $documentation . "`species messageid` $species_message_id\n";
+				} else {
+					$documentation = $documentation . "`species messageid` Message not yet sent!\n";
+				}
+				if ($species2_message_id) {
+					$documentation = $documentation . "`species2 messageid` $species2_message_id\n";
+				} else {
+					$documentation = $documentation . "`species2 messageid` Message not yet sent!\n";
+				}
+				if ($species3_message_id) {
+					$documentation = $documentation . "`species3 messageid` $species3_message_id\n";
+				} else {
+					$documentation = $documentation . "`species3 messageid` Message not yet sent!\n";
+				}
+				if ($gender_message_id) {
+					$documentation = $documentation . "`gender messageid` $gender_message_id\n";
+				} else {
+					$documentation = $documentation . "`gender messageid` Message not yet sent!\n";
+				}
+				if ($pronouns_message_id) {
+					$documentation = $documentation . "`prnouns messageid` $pronouns_message_id\n";
+				} else {
+					$documentation = $documentation . "`pronouns messageid` Message not yet sent!\n";
+				}				
+				if ($sexuality_message_id) {
+					$documentation = $documentation . "`sexuality messageid` $sexuality_message_id\n";
+				} else {
+					$documentation = $documentation . "`sexuality messageid` Message not yet sent!\n";
+				}
+				if ($nsfw_message_id) {
+					$documentation = $documentation . "`nsfw messageid` $nsfw_message_id\n";
+				} else {
+					$documentation = $documentation . "`nsfw messageid` Message not yet sent!\n";
+				}
+				if ($channelroles_message_id) {
+					$documentation = $documentation . "`channelroles messageid` $channelroles_message_id\n";
+				} else {
+					$documentation = $documentation . "`channelroles messageid` Message not yet sent!\n";
+				}
+				if ($customroles_message_id) {
+					$documentation = $documentation . "`customroles messageid` $customroles_message_id\n";
+				} else {
+					$documentation = $documentation . "`customroles messageid` Message not yet sent!\n";
+				}
+				
+				$documentation_sanitized = str_replace("\n", "", $documentation);
+				$doc_length = strlen($documentation_sanitized); if($GLOBALS['debug_echo']) echo "doc_length: " . $doc_length . PHP_EOL;
+				if ($doc_length < 1024) {
+					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed
+						->setTitle("Current Settings for `$author_guild_name`")														// Set a title
+						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
+						->setDescription("$documentation")														// Set a description (below title, above fields)
+						->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
+						->setURL("");							 												// Set the URL
+					if($GLOBALS['debug_echo']) echo "embed class: " . get_class($embed) . PHP_EOL;
+					return $interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->addEmbed($embed), true);
+				} else return $interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent($documentation), true);
+			}, $discord, true);
+			$row->addComponent($button);
+			$button = Discord\Builders\Components\Button::new(Discord\Builders\Components\Button::STYLE_SUCCESS);
+			$button->setLabel('Settings');
+			$button->setListener(function (Discord\Parts\Interactions\Interaction $interaction) use ($discord, $author_id, $author_guild, $author_guild_name, $guild_folder,
+			$role_dev_id, $role_admin_id, $role_mod_id, $role_bot_id, $role_vzgbot_id, $role_muted_id, $role_verified_id, $role_18_id, $rolepicker_id,
+			$welcome_public_channel_id, $welcome_log_channel_id, $verifylog_channel_id, $watch_channel_id,
+			$welcome_public_channel, $welcome_log_channel, $modlog_channel, $getverified_channel, $verifylog_channel, $watch_channel,
+			$general_channel, $rolepicker_channel, $nsfw_rolepicker_channel, $games_rolepicker_channel, $games_channel,
+			$suggestion_pending_channel, $suggestion_approved_channel, $tip_pending_channel, $tip_approved_channel,
+			$gameroles_message_id, $species_message_id, $species2_message_id, $species3_message_id, $gender_message_id, $pronouns_message_id, $sexuality_message_id, $nsfw_message_id,
+			$channelroles_message_id, $customroles_message_id, 
+			$command_symbol, $react, $vanity, $nsfw, $games, $rp0, $rp1, $rp2, $rp3, $rp4, $rp5, $channeloption, $gamerole
+			) {
+				if ($interaction->user->id != $author_id) return;
+				$documentation = "Command symbol: $command_symbol\n";
+				$documentation = $documentation . "\nBot options:\n";
+				//react
+				$documentation = $documentation . "`react:` ";
+				if ($react) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//vanity
+				$documentation = $documentation . "`vanity:` ";
+				if ($vanity) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//nsfw
+				$documentation = $documentation . "`nsfw:` ";
+				if ($nsfw) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//games
+				$documentation = $documentation . "`games:` ";
+				if ($games) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				
+				//rolepicker
+				$documentation = $documentation . "`\nrolepicker:` ";
+				if ($rp0) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				
+				if (!$rp0) $documentation = $documentation . "~~"; //Strikeout invalid options 
+				//gameroles
+				$documentation = $documentation . "`game roles:` ";
+				if ($gamerole) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//species
+				$documentation = $documentation . "`species:` ";
+				if ($rp1) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//gender
+				$documentation = $documentation . "`gender:` ";
+				if ($rp2) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//prnouns
+				$documentation = $documentation . "`pronouns:` ";
+				if ($rp5) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//sexuality
+				$documentation = $documentation . "`sexuality:` ";
+				if ($rp3) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//channel roles
+				$documentation = $documentation . "`channel roles:` ";
+				if ($channeloption) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				//customrole
+				$documentation = $documentation . "`customrole:` ";
+				if ($rp4) $documentation = $documentation . "**Enabled**\n";
+				else $documentation = $documentation . "**Disabled**\n";
+				if (!$rp0) $documentation = $documentation . "~~"; //Strikeout invalid options
+			
+				$doc_length = strlen($documentation);
+				if ($doc_length < 1024) {
+					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed
+						->setTitle("Current Settings For `$author_guild_name`")														// Set a title
+						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
+						->setDescription("$documentation")														// Set a description (below title, above fields)
+						->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
+						->setURL("");							 												// Set the URL
+					if($GLOBALS['debug_echo']) echo "embed class: " . get_class($embed) . PHP_EOL;
+					return $interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->addEmbed($embed), true);
+				} else return $interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent($documentation), true);
+			}, $discord, true);
+			$row->addComponent($button);
+			$builder->addComponent($row);
+			
 			
 			$row = Discord\Builders\Components\ActionRow::new();
 			$button = Discord\Builders\Components\Button::new(Discord\Builders\Components\Button::STYLE_SUCCESS);
@@ -1828,6 +1904,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$builder->setContent('Server Settings');
 			$builder->setReplyTo($message);
 			$message->channel->sendMessage($builder);
+			$message->delete();
 		}
 	}
 
@@ -1852,8 +1929,8 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		}
 		if ($creator || $owner || $dev) { //toggle options
 			$documentation = $documentation . "\n__**Owner / Dev:**__\n";
-			//toggle options
-			$documentation = $documentation . "*Toggle settings:*\n";
+			$documentation = $documentation . "`toggles` Change current toggle settings\n";
+			/*
 			//react
 			$documentation = $documentation . "`react`\n";
 			//vanity
@@ -1868,26 +1945,20 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$documentation = $documentation . "`gameroles`\n";
 			//species
 			$documentation = $documentation . "`species`\n";
-			/*
-			//species2
-			$documentation = $documentation . "`species2`\n";
-			//species3
-			$documentation = $documentation . "`species3`\n";
-			*/
 			//gender
 			$documentation = $documentation . "`gender`\n";
 			//sexuality
 			$documentation = $documentation . "`sexuality`\n";
 			//customrole
 			$documentation = $documentation . "`customrole`\n";
-			
+			*/
 			//TODO:
 			//tempmute/tm
 		}
 		if ($creator || $owner || $dev || $admin) {
 			$documentation = $documentation . "\n__**High Staff:**__\n";
 			//current settings
-			$documentation = $documentation . "`settings` sends a DM with current settings\n";
+			$documentation = $documentation . "`settings` View current settings\n";
 			
 			//v
 			if (!$role_verified_id) $documentation = $documentation . "~~";
