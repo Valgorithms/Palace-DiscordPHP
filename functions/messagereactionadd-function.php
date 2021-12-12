@@ -85,6 +85,41 @@ function messageReactionAdd($reaction, $discord) {
 	$guild_custom_roles_path = getcwd() . "$guild_folder\\custom_roles.php";
 	if (!include "$guild_custom_roles_path")
 		global $customroles;
+	
+	//Color data
+	$guild_species_color_path = getcwd() . "$guild_folder\\species_color.php";
+	if (!include "$guild_species_color_path")
+		$species_color = 15158332;
+	$guild_species2_color_path = getcwd() . "$guild_folder\\species2_color.php";
+	if (!include "$guild_species2_color_path")
+		$species2_color = 15158332;
+	$guild_species3_color_path = getcwd() . "$guild_folder\\species3_color.php";
+	if (!include "$guild_species3_color_path")
+		$species3_color = 15158332;
+	$guild_game_color_path = getcwd() . "$guild_folder\\game_color.php";
+	if (!include "$guild_game_color_path")
+		$gameroles_color = 0x003ead;
+	$guild_gender_color_path = getcwd() . "$guild_folder\\gender_color.php";
+	if (!include "$guild_gender_color_path")
+		$gender_color = 0x713678;
+	$guild_pronouns_color_path = getcwd() . "$guild_folder\\pronouns_color.php";
+	if (!include "$guild_pronouns_color_path")
+		$pronouns_color = 0x9b59b6;
+	$guild_sexualities_color_path = getcwd() . "$guild_folder\\sexualities_color.php";
+	if (!include "$guild_sexualities_color_path")
+		$sexualities_color = 0x992d22;
+	$guild_nsfwroles_color_path = getcwd() . "$guild_folder\\nsfwroles_color.php";
+	if (!include "$guild_nsfwroles_color_path")
+		$nsfwroles_color = 0xff0000;
+	$guild_nsfwsubroles_color_path = getcwd() . "$guild_folder\\nsfwsubroles_color.php";
+	if (!include "$guild_nsfwsubroles_color_path")
+		$nsfwsubroles_color = 0xff0000;
+	$guild_channel_color_path = getcwd() . "$guild_folder\\channel_roles_color.php";
+	if (!include "$guild_channel_color_path")
+		$channel_roles_color = 0x1abc9c;
+	$guild_custom_color_path = getcwd() . "$guild_folder\\custom_roles_color.php";
+	if (!include "$guild_custom_color_path")
+		$custom_roles_color = 0x1abc9c;
 
 	//Load emoji info
 	//guild, user
@@ -151,7 +186,7 @@ function messageReactionAdd($reaction, $discord) {
 				if (!CheckFile($guild_folder, "nsfw_option.php")) $nsfw	= $nsfw_option; //Custom role picker
 				else $nsfw = VarLoad($guild_folder, "nsfw_option.php");
 			} else $nsfw = false; //if($GLOBALS['debug_echo']) echo "nsfw: $nsfw" . PHP_EOL;
-		
+			
 			//Load guild roles info
 			$guild_roles											= $guild->roles;
 			$guild_roles_names 										= array();
@@ -174,19 +209,19 @@ function messageReactionAdd($reaction, $discord) {
 			$enabled_options = [];
 			$valid_message_ids = [];
 			if ($rp1) {
-				if ($species_message_id) $valid_message_ids["$species_message_id"] = ['species', 15158332];
-				if ($species2_message_id) $valid_message_ids["$species2_message_id"] = ['species2', 15158332];
-				if ($species3_message_id) $valid_message_ids["$species3_message_id"] = ['species3', 15158332];
+				if ($species_message_id) $valid_message_ids["$species_message_id"] = ['species', $species_color];
+				if ($species2_message_id) $valid_message_ids["$species2_message_id"] = ['species2', $species2_color];
+				if ($species3_message_id) $valid_message_ids["$species3_message_id"] = ['species3', $species3_color];
 			}
-			if ($rp2 && $sexuality_message_id) 	$valid_message_ids["$sexuality_message_id"] = ['sexualities', 0x992d22];
-			if ($rp3 && $gender_message_id) $valid_message_ids["$gender_message_id"] = ['gender', 0x713678];
-			if ($rp4 && $customroles_message_id) $valid_message_ids["$customroles_message_id"] = ['customroles', 0x1abc9c];
-			if ($rp5 && $pronouns_message_id) $valid_message_ids["$pronouns_message_id"] = ['pronouns', 0x9b59b6];
-			if ($channeloption && $channelroles_message_id) $valid_message_ids["$channelroles_message_id"] = ['channelroles', 0x1abc9c];
-			if ($gamerole && $gameroles_message_id) $valid_message_ids["$gameroles_message_id"] = ['gameroles', 0x003ead];
+			if ($rp2 && $sexuality_message_id) 	$valid_message_ids["$sexuality_message_id"] = ['sexualities', $sexualities_color];
+			if ($rp3 && $gender_message_id) $valid_message_ids["$gender_message_id"] = ['gender', $gender_color];
+			if ($rp4 && $customroles_message_id) $valid_message_ids["$customroles_message_id"] = ['customroles', $custom_roles_color];
+			if ($rp5 && $pronouns_message_id) $valid_message_ids["$pronouns_message_id"] = ['pronouns', $pronouns_color];
+			if ($channeloption && $channelroles_message_id) $valid_message_ids["$channelroles_message_id"] = ['channelroles', $channel_roles_color];
+			if ($gamerole && $gameroles_message_id) $valid_message_ids["$gameroles_message_id"] = ['gameroles', $gameroles_color];
 			if ($nsfw) {
-				if ($nsfw_message_id) $valid_message_ids["$nsfw_message_id"] = ['nsfwroles', 0xff0000];
-				if ($nsfwsubrole_message_id) $valid_message_ids["$nsfwsubrole_message_id"] = ['nsfwsubroles', 0xff0000];
+				if ($nsfw_message_id) $valid_message_ids["$nsfw_message_id"] = ['nsfwroles', $nsfwroles_color];
+				if ($nsfwsubrole_message_id) $valid_message_ids["$nsfwsubrole_message_id"] = ['nsfwsubroles', $nsfwsubroles_color];
 			}
 			
 			if ($valid_message_ids["$message_id"]) { //The message being reacted to is designated for the rolepicker
