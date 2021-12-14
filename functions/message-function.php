@@ -2612,7 +2612,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			}
 		}
 		//Foreach method didn't return, so nobody was mentioned
-		return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+		return $message->reply("You need to mention someone!");
 	}
 
 	//ymdhis cooldown time
@@ -2713,7 +2713,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				}
 			}
 			//Foreach method didn't return, so nobody was mentioned
-			return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+			return $message->reply("You need to mention someone!");
 		} else {
 			//		Reply with remaining time
 			$waittime = $avatar_limit_seconds - $cooldown[1];
@@ -3167,8 +3167,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					}
 				}
 				//foreach method didn't return, so nobody was mentioned
-				$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-				return;
+				return $message->reply("You need to mention someone!");
 			} else {
 				//		Reply with remaining time
 				$waittime = $vanity_limit_seconds - $cooldown[1];
@@ -3248,8 +3247,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					}
 				}
 				//foreach method didn't return, so nobody was mentioned
-				$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
-				return;
+				return $message->reply("You need to mention someone!");
 			} else {
 				//					Reply with remaining time
 				$waittime = $vanity_limit_seconds - $cooldown[1];
@@ -3330,7 +3328,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					}
 				}
 				//Foreach method didn't return, so nobody was mentioned
-				$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+				$message->reply("You need to mention someone!");
 				return;
 			} else {
 				//					Reply with remaining time
@@ -3409,7 +3407,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					}
 				}
 				//Foreach method didn't return, so nobody was mentioned
-				$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+				$message>-reply("You need to mention someone!");
 				return;
 			} else {
 				//			Reply with remaining time
@@ -3489,7 +3487,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					}
 				}
 				//Foreach method didn't return, so nobody was mentioned
-				$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+				$message>-reply("You need to mention someone!");
 				return;
 			} else {
 				//					Reply with remaining time
@@ -3567,7 +3565,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					}
 				}
 				//Foreach method didn't return, so nobody was mentioned
-				$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+				$message>-reply("You need to mention someone!");
 				return;
 			} else {
 				//					Reply with remaining time
@@ -3750,7 +3748,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					}
 				}
 				//Foreach method didn't return, so nobody was mentioned
-				$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+				$message>-reply("You need to mention someone!");
 				return;
 			} else {
 				//			Reply with remaining time
@@ -5632,7 +5630,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				} else return $author_channel->sendMessage("<@$mention_id> cannot be banned because of their roles!");
 			} else {
 				if ($react) $message->react("👎");
-				return $author_channel->sendMessage("<@$author_id>, you can't ban yourself!");
+				return $message>-reply("You can't ban yourself!");
 			}
 		} //foreach method didn't return, so nobody in the guild was mentioned
 		
@@ -5642,7 +5640,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		$value = str_replace("<@", "", $value);
 		$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 		if ($react) $message->react("👎");
-		$author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+		$message>-reply("You need to mention someone!");
 		return;
 	}
 	if ($author_perms['ban_members'] && str_starts_with($message_content_lower, 'unban ')) { //;ban
@@ -5828,11 +5826,11 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				} else return  $author_channel->sendMessage("<@$mention_id> cannot be kicked because of their roles!");
 			} else {
 				if ($react) $message->react("👎");
-				return $author_channel->sendMessage("<@$author_id>, you can't kick yourself!");
+				return $message>-reply("You can't kick yourself!");
 			}
 		} //foreach method didn't return, so nobody was mentioned
 		if ($react) $message->react("👎");
-		return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+		return $message>-reply("You need to mention someone!");
 	}
 	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'warn ')) { //;warn @
 		if($GLOBALS['debug_echo']) echo "[WARN] $author_check" . PHP_EOL;
@@ -6023,11 +6021,11 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				} else return $author_channel->sendMessage("<@$mention_id> cannot be muted because of their roles!");
 			} else {
 				if ($react) $message->react("👎");
-				return $author_channel->sendMessage("<@$author_id>, you can't mute yourself!");
+				return $message>-reply("You can't mute yourself!");
 			}
 		} //foreach method didn't return, so nobody was mentioned
 		if ($react) $message->react("👎");
-		return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+		return $message>-reply("You need to mention someone!");
 	}
 	if ($author_perms['manage_roles'] && str_starts_with($message_content_lower, 'unmute ')) { //;unmute
 		if($GLOBALS['debug_echo']) echo "[UNMUTE]" . PHP_EOL;
@@ -6115,11 +6113,11 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				} else return $author_channel->sendMessage("<@$mention_id> cannot be unmuted because of their roles!");
 			} else {
 				if ($react) $message->react("👎");
-				return $author_channel->sendMessage("<@$author_id>, you can't mute yourself!");
+				return $message>-reply("You can't mute yourself!");
 			}
 		} //foreach method didn't return, so nobody was mentioned
 		if ($react) $message->react("👎");
-		return $author_channel->sendMessage("<@$author_id>, you need to mention someone!");
+		return $message>-reply("You need to mention someone!");
 	}
 	if ($author_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'v ')) || (str_starts_with($message_content_lower, 'verify ')))) { //Verify ;v ;verify
 		if ($role_verified_id) { //This command only works if the Verified Role is setup

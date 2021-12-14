@@ -90,12 +90,6 @@ function messageReactionAdd($reaction, $discord) {
 	$guild_species_color_path = getcwd() . "$guild_folder\\species_color.php";
 	if (!include "$guild_species_color_path")
 		$species_color = 15158332;
-	$guild_species2_color_path = getcwd() . "$guild_folder\\species2_color.php";
-	if (!include "$guild_species2_color_path")
-		$species2_color = 15158332;
-	$guild_species3_color_path = getcwd() . "$guild_folder\\species3_color.php";
-	if (!include "$guild_species3_color_path")
-		$species3_color = 15158332;
 	$guild_game_color_path = getcwd() . "$guild_folder\\game_color.php";
 	if (!include "$guild_game_color_path")
 		$gameroles_color = 0x003ead;
@@ -210,8 +204,8 @@ function messageReactionAdd($reaction, $discord) {
 			$valid_message_ids = [];
 			if ($rp1) {
 				if ($species_message_id) $valid_message_ids["$species_message_id"] = ['species', $species_color];
-				if ($species2_message_id) $valid_message_ids["$species2_message_id"] = ['species2', $species2_color];
-				if ($species3_message_id) $valid_message_ids["$species3_message_id"] = ['species3', $species3_color];
+				if ($species2_message_id) $valid_message_ids["$species2_message_id"] = ['species2', $species_color];
+				if ($species3_message_id) $valid_message_ids["$species3_message_id"] = ['species3', $species_color];
 			}
 			if ($rp2 && $sexuality_message_id) 	$valid_message_ids["$sexuality_message_id"] = ['sexualities', $sexualities_color];
 			if ($rp3 && $gender_message_id) $valid_message_ids["$gender_message_id"] = ['gender', $gender_color];
