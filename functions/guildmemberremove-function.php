@@ -14,7 +14,7 @@ function guildMemberRemove($guildmember, $discord) {
 		$user_check 								= "$user_username#$user_discriminator"; 							//if($GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;\
 		$user_tag									= $user_check;
 		$user_createdTimestamp						= $user->createdTimestamp();
-		$user_createdFormatted						= date("D M j Y H:i:s", $user_createdTimestamp);
+		$user_createdFormatted						= date("D M j Y H:i:s", (int) $user_createdTimestamp);
 		
 		$target_guildmember_role_collection 		= $guildmember->roles;					//This is the Role object for the GuildMember
 		
