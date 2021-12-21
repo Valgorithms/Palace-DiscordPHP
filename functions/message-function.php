@@ -43,7 +43,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	$is_dm															= false; //if($GLOBALS['debug_echo']) echo "author_channel_class: " . $author_channel_class . PHP_EOL;
 
 	//if($GLOBALS['debug_echo']) echo "[CLASS] " . get_class($message->author) . PHP_EOL;
-	if (is_null($message->channel->guild_id) && is_null($author_member)) $is_dm = true; //True if direct message
+	if (is_null($message->guild_id) && is_null($author_member)) $is_dm = true; //True if direct message
 	$author_username 												= $author_user->username; 										//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
 	$author_discriminator 											= $author_user->discriminator;									//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
 	$author_id 														= $author_user->id;												//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
@@ -2552,7 +2552,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			
 			if ($mention_id != $discord->id) {
 				//Get the roles of the mentioned user
-				$target_guildmember 									= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
+				$target_guildmember 									= $message->guild->members->get('id', $mention_id); 	//This is a GuildMember object
 				$target_guildmember_role_collection 					= $target_guildmember->roles;					//This is the Role object for the GuildMember
 				
 				//Get the avatar URL of the mentioned user
@@ -2686,7 +2686,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 
 				if ($mention_id != $discord->id) {
 		//			Get the avatar URL of the mentioned user
-					$target_guildmember 								= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
+					$target_guildmember 								= $message->guild->members->get('id', $mention_id); 	//This is a GuildMember object
 					$target_guildmember_user							= $target_guildmember->user;									//if($GLOBALS['debug_echo']) echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
 					$mention_avatar 									= "{$target_guildmember_user->avatar}";
 					
@@ -3655,7 +3655,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					
 					if ($mention_id != $discord->id) {
 		//				Get the avatar URL
-						$target_guildmember 							= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
+						$target_guildmember 							= $message->guild->members->get('id', $mention_id); 	//This is a GuildMember object
 						$target_guildmember_user						= $target_guildmember->user;									//if($GLOBALS['debug_echo']) echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
 						$mention_avatar 								= "{$target_guildmember_user->avatar}";					//if($GLOBALS['debug_echo']) echo "mention_avatar: " . $mention_avatar . PHP_EOL;
 						
@@ -5043,7 +5043,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					});
 					return $message->delete();
 				case 'freshen';
-					return $message->channel->guild->members->freshen()->done(
+					return $message->guild->members->freshen()->done(
 						function ($members) {
 							//Do stuff 
 						}
@@ -5472,7 +5472,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$mention_watch_name_queue_full 							= $mention_watch_name_queue_full . PHP_EOL . $mention_watch_name_queue;
 			
 			if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL;
-			$target_guildmember 									= $message->channel->guild->members->get('id', $mention_id);
+			$target_guildmember 									= $message->guild->members->get('id', $mention_id);
 			$target_guildmember_role_collection 					= $target_guildmember->roles;									//if($GLOBALS['debug_echo']) echo "target_guildmember_role_collection: " . (count($author_guildmember_role_collection)-1);
 			
 			//				Populate arrays of the info we need
@@ -5560,7 +5560,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			
 			if ($author_id != $mention_id && $mention_id != $discord->id) { //Don't let anyone ban themselves
 				//Get the roles of the mentioned user
-				$target_guildmember 								= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
+				$target_guildmember 								= $message->guild->members->get('id', $mention_id); 	//This is a GuildMember object
 				$target_guildmember_role_collection 				= $target_guildmember->roles;					//This is the Role object for the GuildMember
 				
 	//  				Get the avatar URL of the mentioned user
@@ -5765,7 +5765,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			 
 			if ($author_id != $mention_id && $mention_id != $discord->id) { //Don't let anyone kick themselves or the bot
 				//Get the roles of the mentioned user
-				$target_guildmember 								= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
+				$target_guildmember 								= $message->guild->members->get('id', $mention_id); 	//This is a GuildMember object
 				$target_guildmember_role_collection 				= $target_guildmember->roles;					//This is the Role object for the GuildMember
 				
 				$target_dev = false;
@@ -5795,7 +5795,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					**🗓️Date:** $warndate
 					**📝Reason:** " . str_replace($filter, "", $message_content);
 					//Kick the user
-					$message->channel->guild->members->kick($target_guildmember);
+					$message->guild->members->kick($target_guildmember);
 					/*
 					$target_guildmember->kick($reason)->done(null, function ($error) {
 						var_dump($error->getMessage()); //if($GLOBALS['debug_echo']) echo any errors
@@ -5961,7 +5961,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			
 			if ($author_id != $mention_id && $mention_id != $discord->id) { //Don't let anyone mute themselves
 				//Get the roles of the mentioned user
-				$target_guildmember 								= $message->channel->guild->members->get('id', $mention_id); 	//This is a GuildMember object
+				$target_guildmember 								= $message->guild->members->get('id', $mention_id); 	//This is a GuildMember object
 				$target_guildmember_role_collection 				= $target_guildmember->roles;					//This is the Role object for the GuildMember
 				
 //  			Populate arrays of the info we need
@@ -6056,7 +6056,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			
 			if ($author_id != $mention_id && $mention_id != $discord->id) { //Don't let anyone mute themselves
 				//Get the roles of the mentioned user
-				$target_guildmember 								= $message->channel->guild->members->get('id', $mention_id);
+				$target_guildmember 								= $message->guild->members->get('id', $mention_id);
 				$target_guildmember_role_collection 				= $target_guildmember->roles;
 
 				//				Get the roles of the mentioned user
@@ -6155,7 +6155,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				
 				if (is_numeric($mention_id) && $mention_id != $discord->id) {
 					//		Get the roles of the mentioned user
-					$target_guildmember 									= $message->channel->guild->members->get('id', $mention_id);
+					$target_guildmember 									= $message->guild->members->get('id', $mention_id);
 					$target_guildmember_role_collection 					= $target_guildmember->roles;									//if($GLOBALS['debug_echo']) echo "target_guildmember_role_collection: " . (count($author_guildmember_role_collection)-1);
 
 					//		Get the avatar URL of the mentioned user
