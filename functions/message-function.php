@@ -956,7 +956,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 							});
 						}
 					};
-					$add($gameroles, $new_message, $message);
+					$add($species, $new_message, $message);
 					return $message->delete();
 				});
 				return;
