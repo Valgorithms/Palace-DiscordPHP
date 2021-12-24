@@ -107,7 +107,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			if (!in_array($author_guild_id, $whitelisted_guilds)) {
 				//$author_guild->leave()->done(null, function ($error) {
 				$discord->guilds->leave($author_guild)->done(null, function ($error) {
-					var_dump($error->getMessage()); //if($GLOBALS['debug_echo']) echo any errors
+					var_dump($error->getMessage());
 				});
 			}
 		}
@@ -1452,8 +1452,8 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				return $message->reply("Games Rolepicker channel ID saved!");
 			} else return $message->reply("Invalid input! Please enter a channel ID or <#mention> a channel");
 		}
-		if (str_starts_with($message_content_lower, 'setup games ')) {
-			$filter = "setup games ";
+		if (str_starts_with($message_content_lower, 'setup games channel ')) {
+			$filter = "setup games channel ";
 			$value = str_replace($filter, "", $message_content_lower);
 			$value = str_replace("<#", "", $value);
 			$value = str_replace(">", "", $value);
@@ -1733,7 +1733,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$documentation = $documentation . "`rolepicker channel <#channel_id>`  <#{$rolepicker_channel->id}>\n";
 				$documentation = $documentation . "`nsfw rolepicker channel <#channel_id>`  <#{$nsfw_rolepicker_channel->id}>\n";
 				$documentation = $documentation . "`games rolepicker channel <#channel_id>`  <#{$games_rolepicker_channel->id}>\n";
-				$documentation = $documentation . "`games rolepicker channel <#channel_id>`  <#{$games_channel->id}>\n";
+				$documentation = $documentation . "`games channel <#channel_id>`  <#{$games_channel->id}>\n";
 				$documentation = $documentation . "`suggestion pending <#channel_id>` <#{$suggestion_pending_channel->id}>\n";
 				$documentation = $documentation . "`suggestion approved <#channel_id>` <#{$suggestion_approved_channel->id}>\n";
 				$documentation = $documentation . "`tip pending <#channel_id>` <#{$tip_pending_channel->id}>\n";
@@ -2090,7 +2090,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 				->setURL("");							 												// Set the URL
 	//				Open a DM channel then send the rich embed message
-			return $author_user->sendMessage('', false, $embed)->then(
+			return $message->channel->sendMessage('', false, $embed)->then(
 				null,
 				function ($error) use ($author_user, $documentation, $message) {
 					$author_user->getPrivateChannel()->done(
@@ -2098,7 +2098,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 							$handle = fopen('help.txt', 'w+');
 							fwrite($handle, $documentation);
 							fclose($handle);
-							$author_dmchannel->sendFile('help.txt')->done(
+							$message->channel->sendFile('help.txt')->done(
 								function ($result) {
 									unlink('help.txt');
 								},
@@ -2120,7 +2120,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					$handle = fopen('help.txt', 'w+');
 					fwrite($handle, $documentation);
 					fclose($handle);
-					$author_dmchannel->sendFile('help.txt')->done(
+					$message->channel->sendFile('help.txt')->done(
 						function ($result) {
 							unlink('help.txt');
 						},
@@ -2626,24 +2626,17 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	if ($message_content_lower == 'avatar') { //;avatar
 		if($GLOBALS['debug_echo']) echo "[GET AUTHOR AVATAR]" . PHP_EOL;
 		//$cooldown = CheckCooldown($author_folder, "avatar_time.php", $avatar_limit); //	Check Cooldown Timer
-		$cooldown = CheckCooldownMem($author_id, "avatar", $avatar_limit);
+		$cooldown = CheckCooldownMem($author_id, 'avatar', $avatar_limit);
 		if (($cooldown[0]) || ($bypass)) {
-			//		Build the embed
 			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
 			$embed
-	//			->setTitle("Avatar")																	// Set a title
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
-	//			->setDescription("$author_guild_name")													// Set a description (below title, above fields)
-	//			->addFieldValues("Total Given", 		"$vanity_give_count")									// New line after this
-				
-	//			->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 				->setImage("$author_avatar")			 													// Set an image (below everything except footer)
 				->setTimestamp()																	 	// Set a timestamp (gets shown next to footer)
 				->setAuthor("$author_check", "$author_guild_avatar")  									// Set an author with icon
 				->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 				->setURL("");							 												// Set the URL
-			
-	//		Send the message
+
 			//SetCooldown($author_folder, "avatar_time.php");
 			SetCooldownMem($author_id, "avatar");
 			return $author_channel->sendEmbed($embed);
