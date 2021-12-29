@@ -2472,20 +2472,51 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		return;
 	}
 	if (str_starts_with($message_content_lower, 'remindme ')) { //;remindme
-		if($GLOBALS['debug_echo']) echo "[REMINDER]" . PHP_EOL;
+		if($GLOBALS['debug_echo']) echo '[REMINDER]'. PHP_EOL;
 		$arr = explode(' ', $message_content_lower);
 		//$filter = "remindme ";
 		//$value = str_replace($filter, "", $message_content_lower);
-		if(is_numeric($arr[1])) {
-			//if($GLOBALS['debug_echo']) echo 'test: ' . strpos($message_content,'remindme')+strlen($arr[0])+strlen($arr[1]) . PHP_EOL;
+		if (! is_numeric($arr[1])) return $message->reply("Invalid input! Please use the format `;remindme #` where # is seconds.");
+		
+		var_dump($arr);
+		$switch = ['second', 'seconds', 'minute', 'minutes', 'hour', 'hours', 'day', 'days'];
+		if (count($arr) > 2 && is_numeric($arr[1]) && in_array($arr[2], $switch)) {
+			$total_time = 0;
+			switch ($arr[2]) {
+				case 'second':
+				case 'seconds':
+					$total_time = $arr[1];
+					break;
+				case 'minute':
+				case 'minutes':
+					$total_time = $arr[1] * 60;
+					break;
+				case 'hour':
+				case 'hours':
+					$total_time = $arr[1] * 3600;
+					break;
+				case 'day':
+				case 'days':
+					$total_time = $arr[1] * 86400;
+					break;
+				default:
+					return $message->reply('NYI');
+			}
+			if ($total_time > 0) $message->reply("I'll remind you in $total_time seconds.");
+			else return $message->reply('Total time must be a positive integer!');
+			$discord->getLoop()->addTimer($total_time, function() use ($message, $string) {
+				return $message->channel->sendMessage("<@$author_id>, This is your requested reminder!" . PHP_EOL . "`{$message->content}`", false, null, false, $message);
+			});
+			return;
+		} else {
 			$string = trim(substr($message_content, strpos($message_content,' ')+1+strlen($arr[1])));
 			$discord->getLoop()->addTimer($arr[1], function() use ($message, $string) {
-				return $message->channel->sendMessage("This is your requested reminder!\n `$string`", false, null, false, $message);
+				return $message->channel->sendMessage("<@$author_id>, This is your requested reminder!" . PHP_EOL . "`{$message->content}`", false, null, false, $message);
 			});
 			
 			if ($react) $message->react("👍");
 			return $message->reply("I'll remind you in " . FormatTime($arr[1]) . '.');
-		}else return $message->reply("Invalid input! Please use the format `;remindme #` where # is seconds.");
+		}
 	}	
 	if ($message_content_lower == 'roles') { //;roles
 		if($GLOBALS['debug_echo']) echo "[GET AUTHOR ROLES]" . PHP_EOL;
