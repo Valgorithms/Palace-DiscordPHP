@@ -3840,6 +3840,23 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		}
 	}
 	if ($creator) { //Mostly just debug commands
+		if ($message_content_lower == 'permissions') { //;permissions
+			ob_start();
+			$botmember = $author_guild->members->offsetGet($discord->id);
+			var_dump($botmember);
+			$debug_output = ob_get_contents();
+			ob_end_clean(); //here, output is cleaned. You may want to flush it with ob_end_flush()
+			file_put_contents('botmember.txt', $debug_output);
+			ob_end_flush();
+			
+			ob_start();
+			$botperms = $botmember->getPermissions();
+			var_dump($botperms);
+			$debug_output = ob_get_contents();
+			ob_end_clean(); //here, output is cleaned. You may want to flush it with ob_end_flush()
+			file_put_contents('botperms.txt', $debug_output);
+			ob_end_flush();
+		}
 		if ($message_content_lower == 'debug') { //;debug
 			if($GLOBALS['debug_echo']) echo '[DEBUG]' . PHP_EOL;
 			ob_start();
