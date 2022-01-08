@@ -49,16 +49,19 @@ $command = $slash_client->createGuildSpecificCommand('115233111977099271', 'pala
 
 // register global command `/ping`
 /*
-$slash->registerCommand('ping', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) {
-	$interaction->replyWithSource('Pong!');
+$discord->listenCommand('ping', function ($interaction) {
+	$choices = $interaction->data->options;
+	$interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent('Pong!'));
 });
 */
-$slash->registerCommand('invite', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) {
-	$interaction->replyWithSource($discord->application->getInviteURLAttribute('8'));
+$discord->listenCommand('invite', function ($interaction) use ($discord){
+	$choices = $interaction->data->options;
+	$interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent($discord->application->getInviteURLAttribute('8')));
 });
 
 // register guild command `/players`
-$slash->registerCommand('players', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) use ($discord, $browser) {
+$discord->listenCommand('players', function ($interaction) use ($discord, $browser) {
+	$choices = $interaction->data->options;
 	$browser->get('https://www.valzargaming.com/servers/serverinfo_get.php')->done( //Hosted on the website, NOT the bot's server
 		function ($response) use ($interaction, $discord) {
 			if($GLOBALS['debug_echo']) echo '[RESPONSE]' . PHP_EOL;
@@ -199,7 +202,14 @@ $slash->registerCommand('players', function (\Discord\Slash\Parts\Interaction $i
 				->setURL("");
 			
 			if($GLOBALS['debug_echo']) echo '[SEND EMBED]' . PHP_EOL;
-			$interaction->replyWithSource('Players', false, [$embed]);			
+			$message = Discord\Builders\MessageBuilder::new()
+				->setContent('Players')
+				->addEmbed($embed);
+			$interaction->respondWithMessage($message)->done(
+			function ($success){
+			}, function ($error) use ($interaction, $discord) {
+				var_dump($error);
+			});
 		}, function ($error) use ($interaction, $discord) {
 			if($GLOBALS['debug_echo']) echo '[INTERACTION FAILED]' . PHP_EOL;
 			$discord->getChannel('315259546308444160')->sendMessage('<@116927250145869826>, Webserver is down! <#' . $interaction->channel->id . '>' ); //Alert Valithor
@@ -210,7 +220,8 @@ $slash->registerCommand('players', function (\Discord\Slash\Parts\Interaction $i
 
 /*
 // register guild command `/palace-test`
-$slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interaction $interaction, \Discord\Slash\Parts\Choices $choices) {
+$discord->listenCommand('palace-test', function ($interaction) {
+	$choices = $interaction->data->options;
 	if($GLOBALS['debug_echo']) echo 'Interactions: ' . PHP_EOL;
 	var_dump($interaction);
 	if($GLOBALS['debug_echo']) echo PHP_EOL;
@@ -228,6 +239,6 @@ $slash->registerCommand('palace-test', function (\Discord\Slash\Parts\Interactio
 
     // once finished, you MUST either acknowledge or reply to a message
     //$interaction->acknowledge(); // acknowledges the message and shows source message
-    $interaction->replyWithSource('Hello, world!'); // replies to the message and shows the source message
+    $interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent('Hello, world!')); // replies to the message and shows the source message
 });
 */
