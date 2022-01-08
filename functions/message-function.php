@@ -28,14 +28,15 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	*********************
 	*********************
 	*/
-	$author_user = $mesage->author;
+	$author_user = $mesage->user; //This will need to be updated in a future release of DiscordPHP
+	/*
 	if (get_class($author_user) == "Discord\Parts\User\Member") {
 		$author_user = $author->user;
 		$author_member = $author;
 	} else {
 		$author_user = $author;
 		$author_member = null;
-	}
+	}*/
 	if ($author_member = $message->member) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
 
 	$author_channel 												= $message->channel;
