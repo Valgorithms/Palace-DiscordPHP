@@ -87,32 +87,23 @@ function messageReactionAdd($reaction, $discord) {
 		global $customroles;
 	
 	//Color data
-	$guild_species_color_path = getcwd() . "$guild_folder\\species_color.php";
-	if (!include "$guild_species_color_path")
+	if (! $species_color = VarLoad($guild_folder, 'species_color.php'))
 		$species_color = 15158332;
-	$guild_game_color_path = getcwd() . "$guild_folder\\game_color.php";
-	if (!include "$guild_game_color_path")
+	if (! $gameroles_color = VarLoad($guild_folder, 'game_color.php'))
 		$gameroles_color = 0x003ead;
-	$guild_gender_color_path = getcwd() . "$guild_folder\\gender_color.php";
-	if (!include "$guild_gender_color_path")
+	if (! $gender_color = VarLoad($guild_folder, 'gender_color.php'))
 		$gender_color = 0x713678;
-	$guild_pronouns_color_path = getcwd() . "$guild_folder\\pronouns_color.php";
-	if (!include "$guild_pronouns_color_path")
+	if (! $pronouns_color = VarLoad($guild_folder, 'pronouns_color.php'))
 		$pronouns_color = 0x9b59b6;
-	$guild_sexualities_color_path = getcwd() . "$guild_folder\\sexualities_color.php";
-	if (!include "$guild_sexualities_color_path")
+	if (! $sexualities_color = VarLoad($guild_folder, 'sexualities_color.php'))
 		$sexualities_color = 0x992d22;
-	$guild_nsfwroles_color_path = getcwd() . "$guild_folder\\nsfwroles_color.php";
-	if (!include "$guild_nsfwroles_color_path")
+	if (! $nsfwroles_color = VarLoad($guild_folder, 'nsfwroles_color.php'))
 		$nsfwroles_color = 0xff0000;
-	$guild_nsfwsubroles_color_path = getcwd() . "$guild_folder\\nsfwsubroles_color.php";
-	if (!include "$guild_nsfwsubroles_color_path")
+	if (! $nsfwsubroles_color = VarLoad($guild_folder, 'nsfwsubroles_color.php'))
 		$nsfwsubroles_color = 0xff0000;
-	$guild_channel_color_path = getcwd() . "$guild_folder\\channel_roles_color.php";
-	if (!include "$guild_channel_color_path")
+	if (! $channel_roles_color = VarLoad($guild_folder, 'channel_roles_color.php'))
 		$channel_roles_color = 0x1abc9c;
-	$guild_custom_color_path = getcwd() . "$guild_folder\\custom_roles_color.php";
-	if (!include "$guild_custom_color_path")
+	if (! $custom_roles_color = VarLoad($guild_folder, 'custom_roles_color.php'))
 		$custom_roles_color = 0x1abc9c;
 
 	//Load emoji info
