@@ -2,8 +2,8 @@
 function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	if (is_null($message) || empty($message)) return; //An invalid message object was passed
 	if (is_null($message->content)) return; //Don't process messages without content
-	if ($message->webhook_id || $message->user->webhook) return; //Don't process webhooks
-	if ($message->user->bot) return; //Don't process messages sent by bots
+	if ($message->webhook_id || $message->author->webhook) return; //Don't process webhooks
+	if ($message->author->bot) return; //Don't process messages sent by bots
 
 	$message_content = $message->content;
 	if (!$message_content) return;
@@ -28,15 +28,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	*********************
 	*********************
 	*/
-	$author_user = $mesage->user; //This will need to be updated in a future release of DiscordPHP
-	/*
-	if (get_class($author_user) == "Discord\Parts\User\Member") {
-		$author_user = $author->user;
-		$author_member = $author;
-	} else {
-		$author_user = $author;
-		$author_member = null;
-	}*/
+	$author_user = $message->author; //This will need to be updated in a future release of DiscordPHP
 	if ($author_member = $message->member) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
 
 	$author_channel 												= $message->channel;

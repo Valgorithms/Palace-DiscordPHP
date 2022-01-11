@@ -23,7 +23,7 @@ function messageDelete($message, $discord) {
 	$message_content_lower = strtolower($message_content);
 
 	//Load author info
-	$author_user = $message->user;
+	$author_user = $message->author;
 	$author_channel_id = $channel_id; //if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
 	

@@ -1,22 +1,20 @@
 <?php
 function messageReactionRemove($reaction, $discord) {
-	if ($reaction->user_id == $discord->id) { //Don't process reactions this bot makes
+	if ($reaction->user_id == $discord->id) { //Don't process reactions this bot removes
 		if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[MESSAGE REACTION REMOVED - SELF]" . PHP_EOL;
 		return;
 	}
 	
-	$message = $message ?? $reaction->message;
+	$message = $reaction->message;
 	$message_content = $message->content;															//$message->channel->sendMessage($message_content);
 
 	//Load guild info
 	$guild	= $reaction->guild;
 	$author_guild_id = $reaction->guild_id; //if($GLOBALS['debug_echo']) echo "author_guild_id: $author_guild_id" . PHP_EOL;
-	$author_guild = $discord->guilds->get('id', $author_guild_id);
+	$author_guild = $discord->guilds->offsetGet($author_guild_id);
 
-	if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\Member") { //Load author info
-		$author_user = $message->author->user;
-		$author_member = $message->author;
-	} else $author_user = $author;
+	$author_user = $message->author ?? $discord->users->offsetGet($message->user_id);
+	$author_member = $message->member ?? $author_guild->members->offsetGet($message->user_id);
 	$author_channel = $message->channel;
 	$author_channel_id	= $author_channel->id; 														//if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 
@@ -26,7 +24,7 @@ function messageReactionRemove($reaction, $discord) {
 	*/
 
 	$is_dm = false;
-	if (is_object($message->author) && get_class($message->author) == "Discord\Parts\User\User") { //True if direct message
+	if (! $author_member) { //Null if direct message
 		if($GLOBALS['debug_echo']) echo '[MESSAGE REACT DM]' . PHP_EOL;
 		$is_dm = true;
 		return; //Don't try and process direct messages
@@ -40,7 +38,7 @@ function messageReactionRemove($reaction, $discord) {
 	$author_folder				= $author_guild_id."\\".$author_id;
 
 	//var_dump($reaction);
-	$respondent_user = $reaction->user;
+	$respondent_user = $reaction->user ?? $discord->users->offsetGet($reaction->user_id);
 	//Load respondent info
 	$respondent_username 		= $respondent_user->username; 										//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
 	$respondent_discriminator 	= $respondent_user->discriminator;									//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
@@ -55,7 +53,7 @@ function messageReactionRemove($reaction, $discord) {
 	//
 	*/
 
-	if($GLOBALS['debug_echo']) echo "[messageReactionAdd]" . PHP_EOL;
+	if($GLOBALS['debug_echo']) echo "[messageReactionRemove]" . PHP_EOL;
 	$message_content_lower = strtolower($message_content);
 
 	//Create a folder for the guild if it doesn't exist already
