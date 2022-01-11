@@ -2497,13 +2497,13 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			}
 			if ($total_time > 0) $message->reply("I'll remind you in $total_time seconds.");
 			else return $message->reply('Total time must be a positive integer!');
-			$discord->getLoop()->addTimer($total_time, function() use ($message, $string) {
+			$discord->getLoop()->addTimer($total_time, function() use ($message, $author_id, $string) {
 				return $message->channel->sendMessage("<@$author_id>, This is your requested reminder!" . PHP_EOL . "`{$message->content}`", false, null, false, $message);
 			});
 			return;
 		} else {
 			$string = trim(substr($message_content, strpos($message_content,' ')+1+strlen($arr[1])));
-			$discord->getLoop()->addTimer($arr[1], function() use ($message, $string) {
+			$discord->getLoop()->addTimer($arr[1], function() use ($message, $author_id, $string) {
 				return $message->channel->sendMessage("<@$author_id>, This is your requested reminder!" . PHP_EOL . "`{$message->content}`", false, null, false, $message);
 			});
 			
