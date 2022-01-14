@@ -5563,119 +5563,30 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	*/
 	if ($author_perms['ban_members'] && str_starts_with($message_content_lower, 'ban ')) { //;ban
 		if($GLOBALS['debug_echo']) echo "[BAN]" . PHP_EOL;
-		//Get an array of people mentioned
-		$mentions_arr 	= $message->mentions; //if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
-		
-		$GetMentionResult = GetMention([&$author_guild,  substr($message_content_lower, 4, strlen($message_content_lower)), null, 1, &$restcord]);
-		if (!$GetMentionResult) return $message->reply("Invalid input! Please enter a valid ID or @mention the user");
-		$mention_id_array = array();
-		$reason_text = null;
-		$keys = array_keys($GetMentionResult);
-		for ($i = 0; $i < count($GetMentionResult); $i++) {
-			if (is_numeric($keys[$i])) {
-				$mention_id_array[] = $keys[$i];
-			} else {
-				foreach ($GetMentionResult[$keys[$i]] as $key => $value) {
-					$reason_text = $value ?? "None";
+		$mention_id_array = [];
+		preg_match_all('/<@([0-9]*)>/', $message->content, $matches1);
+		preg_match_all('/<@!([0-9]*)>/', $message->content, $matches2);
+		$matches = array_merge($matches1, $matches2);
+		if ($matches) {
+			foreach($matches as $array) {
+				foreach ($array as $match) {
+					if (is_numeric($match)) {
+						if ($match != $discord->id && $match != $author_id) { // Don't let users ban themselves or the bot with this command
+							if ($member = $author_guild->members->offsetGet($match)) {
+								$mention_id_array[] = $match;
+							} else $invalid_mention_id_array = $match; // Used to inform the user who couldn't be banned because they don't exist in the server (or they're not cached in the members repository)
+						}
+					}
 				}
 			}
 		}
-
-		$mention_user = $GetMentionResult[0];
-		$mention_member = $GetMentionResult[1];
-		$mentions_arr = $mentions_arr ?? $GetMentionResult[2];
-		foreach ($mentions_arr as $mention_param) {
-			$mention_param_encode 									= json_encode($mention_param); 									//if($GLOBALS['debug_echo']) echo "mention_param_encode: " . $mention_param_encode . PHP_EOL;
-			$mention_json 											= json_decode($mention_param_encode, true); 				//if($GLOBALS['debug_echo']) echo "mention_json: " . PHP_EOL; var_dump($mention_json);
-			$mention_id 											= $mention_json['id']; 											//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_discriminator 									= $mention_json['discriminator']; 								//if($GLOBALS['debug_echo']) echo "mention_id: " . $mention_id . PHP_EOL; //Just the discord ID
-			$mention_username 										= $mention_json['username']; 									//if($GLOBALS['debug_echo']) echo "mention_username: " . $mention_username . PHP_EOL; //Just the discord ID
-			$mention_check 											= $mention_username ."#".$mention_discriminator;
-			
-			if ($author_id != $mention_id && $mention_id != $discord->id) { //Don't let anyone ban themselves
-				//Get the roles of the mentioned user
-				$target_guildmember 								= $message->guild->members->get('id', $mention_id); 	//This is a GuildMember object
-				$target_guildmember_role_collection 				= $target_guildmember->roles;					//This is the Role object for the GuildMember
-				
-	//  				Get the avatar URL of the mentioned user
-				//					$target_guildmember_user							= $target_guildmember->user;									//if($GLOBALS['debug_echo']) echo "member_class: " . get_class($target_guildmember_user) . PHP_EOL;
-				//					$mention_avatar 									= "{$target_guildmember_user->avatar}";					//if($GLOBALS['debug_echo']) echo "mention_avatar: " . $mention_avatar . PHP_EOL;				//if($GLOBALS['debug_echo']) echo "target_guildmember_role_collection: " . (count($target_guildmember_role_collection)-1);
-
-				//  				Populate arrays of the info we need
-				//  				$target_guildmember_roles_names 					= array();
-				
-				$target_dev = false;
-				$target_owner = false;
-				$target_admin = false;
-				$target_mod = false;
-				$target_vzgbot = false;
-				$target_guildmember_roles_ids = array();
-				foreach ($target_guildmember_role_collection as $role) {
-					
-						$target_guildmember_roles_ids[] 						= $role->id; 											//if($GLOBALS['debug_echo']) echo "role[$x] id: " . PHP_EOL; //var_dump($role->id);
-						if ($role->id == $role_dev_id) {
-							$target_dev 		= true;
-						}							//Author has the dev role
-						if ($role->id == $role_owner_id) {
-							$target_owner	 	= true;
-						}							//Author has the owner role
-						if ($role->id == $role_admin_id) {
-							$target_admin 		= true;
-						}							//Author has the admin role
-						if ($role->id == $role_mod_id) {
-							$target_mod 		= true;
-						}							//Author has the mod role
-						if ($role->id == $role_vzgbot_id) {
-							$target_vzgbot 		= true;
-						}							//Author is this bot
-						if ($role->name == "Palace Bot") {
-							$target_vzgbot 		= true;
-						}							//Author is this bot
-					
-				}
-				if ((!$target_dev && !$target_owner && !$target_admin && !$target_vzg) || ($creator || $owner)) { //Guild owner and bot creator can ban anyone
-					if ($mention_id == $creator_id) return; //Don't ban the creator
-					//Build the string to log
-					$filter = "ban <@!$mention_id>";
-					$warndate = date("m/d/Y");
-					$reason = "**User:** <@$mention_id>
-					**🗓️Date:** $warndate
-					**📝Reason:** $reason_text";
-					//Ban the user and clear 1 days worth of messages
-					$target_guildmember->ban(null, $reason);
-					//Build the embed message
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
-					$embed
-	//							->setTitle("Commands")																	// Set a title
-						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
-						->setDescription("$reason")																// Set a description (below title, above fields)
-	//							->addFieldValues("⠀", "$reason")																// New line after this
-						
-	//							->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
-	//							->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')			 	// Set an image (below everything except footer)
-						->setTimestamp()																	 	// Set a timestamp (gets shown next to footer)
-						->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
-						->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
-						->setURL("");							 												// Set the URL
-	//						Send the message
-					if ($react) $message->react("🔨");
-					if ($modlog_channel) $modlog_channel->sendEmbed($embed);
-					return; //No more processing, we only want to process the first person mentioned
-				} else return $author_channel->sendMessage("<@$mention_id> cannot be banned because of their roles!");
-			} else {
-				if ($react) $message->react("👎");
-				return $message->reply("You can't ban yourself!");
-			}
-		} //foreach method didn't return, so nobody in the guild was mentioned
-		
-		$filter = "ban ";
-		$value = str_replace($filter, "", $message_content_lower);
-		$value = str_replace("<@!", "", $value);
-		$value = str_replace("<@", "", $value);
-		$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
-		if ($react) $message->react("👎");
-		$message->reply("You need to mention someone!");
-		return;
+		$msg = "The following users have been banned: ";
+		foreach ($mention_id_array as $target_member_id) {
+			if($GLOBALS['debug_echo']) '[BAN ID] ' . $target_member_id . PHP_EOL . ' [BAN MEMBER] ' . $author_guild->members->offsetGet("$target_member_id") . PHP_EOL . '[MESSAGE CONTENT] ' . $message->content . PHP_EOL;
+			$author_guild->bans->ban($target_member = $author_guild->members->offsetGet("$target_member_id"), 0, $message->content);
+			$msg .= $target_member;
+		}
+		return $message->reply("$author_check: $msg");
 	}
 	if ($author_perms['ban_members'] && str_starts_with($message_content_lower, 'unban ')) { //;ban
 		if($GLOBALS['debug_echo']) echo "[UNBAN]" . PHP_EOL;
