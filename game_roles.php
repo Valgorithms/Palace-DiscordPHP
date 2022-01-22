@@ -17,6 +17,7 @@ $gameroles = array(
 	"Minecraft" => "⛏️",
 	"Phasmophobia" => "👻",
 	"Project Zomboid" => "🏘️",
+	"Rimworld" => "💉",
 	"Subnautica" => "🤿"
 );
 //Message copy-pasta:
@@ -37,6 +38,7 @@ $gameroles_message_text = "**Role Menu: Games**
 :blond_haired_woman: : `Genshin Impact`
 :pick: : `Minecraft`
 :ghost: : `Phasmophobia`
-:diving_mask: : `Subnautica`
 :homes: : `Project Zomboid`
+:syringe: : `Rimworld`
+:diving_mask: : `Subnautica`
 ";
