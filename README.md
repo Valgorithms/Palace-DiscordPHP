@@ -16,7 +16,7 @@ See https://github.com/elazar/asynchronous-php for resources.
 # Why is this bot open-source?
 Because there's no reason not to. I made it to do something useful for my community and figured it would be a good learning experience for others.
 
-# Can I contribute?
+# Can I contribute to development?
 Sure! If you find something wrong please create an issue if you discover one. If you have a new feature or want to change how something works create your own fork and make a pull requests. Please let me know before you decide to implement a new feature as there's a possibility I may have already written one with another bot I'm maintaining that I can import.
 
 # Can I fork it and distribute my own bot?
@@ -24,3 +24,6 @@ Yep! I'm issuing this code under the MIT license. I don't care what you do with 
 
 # How much would it cost for you to host this bot for me?
 I'm not in it for the money, but donations are always appreciated. You can either sponsor [VZGCoders](https://github.com/sponsors/VZGCoders) or [me](https://github.com/sponsors/valzargaming) directly. You can invite the bot to your server and ask me for any help you might need at any time and I'll do my best to get back to you.
+
+# How can I support development?
+Developing and maintaining bots like this one takes time and hard work. If you want to support the various projects I work on please consider [donating](https://github.com/sponsors/valzargaming). Telling your fellow server owners about it helps us too! The main thing that stalls development for us is lack of user feedback.
