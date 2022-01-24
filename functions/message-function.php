@@ -5888,7 +5888,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = str_replace("<@!", "", $value);
 			$value = str_replace("<@", "", $value);
 			$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
-			if (is_numeric($value) && $value != $discord->id && $value != $author_id ) { // //Don't let anyone mute themselves or the bot
+			if (is_numeric($value) && $value != $discord->id && $value != $author_id && $value != $guild_owner_id) { // //Don't let anyone mute themselves or the bot or the guild owner
 				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
 				$mention_user				= $mention_member->user;
@@ -5977,7 +5977,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = str_replace("<@!", "", $value);
 			$value = str_replace("<@", "", $value);
 			$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
-			if (is_numeric($value) && $value != $discord->id) {
+			if (is_numeric($value) && $value != $discord->id && $value != $guild_owner_id) {
 				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
 				$mention_user				= $mention_member->user;
