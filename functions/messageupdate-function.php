@@ -14,13 +14,9 @@ function messageUpdate($message_new, $discord, $message_old) {
 	//Load global variables
 
 	//Load author info
-	$author	= $message_new->author; //Member OR User object
-	if (isset($author) && is_object($author) && get_class($author) == "Discord\Parts\User\Member") {
-		$author_user = $author->user;
-		$author_member = $author;
-	} else {
-		$author_user = $author;
-	}
+	$author_user = $message_new->author; //This will need to be updated in a future release of DiscordPHP
+	if ($author_member = $message_new->member) $author_perms = $author_member->getPermissions($message->channel); //Populate permissions granted by roles
+
 	$author_channel = $message_new->channel;
 	$author_channel_id = $author_channel->id; 												//if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
