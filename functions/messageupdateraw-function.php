@@ -37,11 +37,9 @@ function messageUpdateRaw($channel, $data_array, $discord) {
 		$author_user													= $message->author; //User object
 		$author_channel 												= $message->channel;
 		$author_channel_id												= $author_channel->id; 											//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
-		$is_dm = false;
-		if (is_object($author_user) && get_class($author_user) != "Discord\Parts\User\Member") { //True if direct message
-			$is_dm = true;
-			return true; //Don't process DMs
-		}
+
+		$author_user = $message->author; //This will need to be updated in a future release of DiscordPHP
+		if (! $author_member = $message->member ?? $guild->members->offsetGet($author->user->id)) return;
 		
 		$author_username 												= $author_user->username; 										//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
 		$author_discriminator 											= $author_user->discriminator;									//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
