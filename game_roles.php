@@ -4,7 +4,6 @@ $gameroles = array(
 	"Streamers" => "🛰️",
 	"Viewers" => "📡",
 	
-	"7 Days To Die" => "🧟",
 	"Call of Duty" => "🪖",
     "Crusaders of the Lost Idols" => "⚔️",
 	"DayZ" => "👨‍🌾",
@@ -14,6 +13,7 @@ $gameroles = array(
 	"Final Fantasy XIV" => "🌒",
 	"For The King" => "👑",
 	"Genshin Impact" => "👱‍♀️",
+	"Magic the Gathering" => "💳",
 	"Minecraft" => "⛏️",
 	"Phasmophobia" => "👻",
 	"Project Zomboid" => "🏘️",
@@ -26,7 +26,6 @@ $gameroles_message_text = "**Role Menu: Games**
 :satellite_orbital: : `Streamers`
 :satellite: : `Viewers`
 
-:zombie: : `7 Days To Die`
 :military_helmet: : `Call of Duty`
 :crossed_swords: : `Crusaders of the Lost Idols`
 :man_farmer: : `DayZ`
@@ -36,6 +35,7 @@ $gameroles_message_text = "**Role Menu: Games**
 :waxing_crescent_moon: : `Final Fantasy XIV`
 :crown: : `For The King`
 :blond_haired_woman: : `Genshin Impact`
+:credit_card: : `Magic the Gathering`
 :pick: : `Minecraft`
 :ghost: : `Phasmophobia`
 :homes: : `Project Zomboid`
