@@ -36,7 +36,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	$is_dm															= false; //if($GLOBALS['debug_echo']) echo "author_channel_class: " . $author_channel_class . PHP_EOL;
 
 	//if($GLOBALS['debug_echo']) echo "[CLASS] " . get_class($message->author) . PHP_EOL;
-	if (is_null($message->guild_id) && is_null($author_member)) $is_dm = true; //True if direct message
+	if ($message->channel->type == 1 || (is_null($message->guild_id) && is_null($author_member))) $is_dm = true; //True if direct message
 	$author_username 												= $author_user->username; 										//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
 	$author_discriminator 											= $author_user->discriminator;									//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
 	$author_id 														= $author_user->id;												//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
@@ -86,10 +86,9 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			if (in_array($author_guild_id, $blacklisted_guilds)) {
 				//$author_guild->leave($author_guild_id)->done(null, function ($error) {
 				$discord->guilds->leave($author_guild)->done(null, function ($error) {
-					if (strlen($error) < (2049)) {
-						if($GLOBALS['debug_echo']) echo "[ERROR] $error" . PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
-					} else {
-						if($GLOBALS['debug_echo']) echo "[ERROR] [BLACKLISTED GUILD] $author_guild_id";
+					if($GLOBALS['debug_echo']){
+						echo "[ERROR] [BLACKLISTED GUILD] $author_guild_id:" . PHP_EOL;
+						var_dump($error);
 					}
 				});
 			}
@@ -318,20 +317,10 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			if ($watcher != null) {																									//if($GLOBALS['debug_echo']) echo "watcher: " . $watcher . PHP_EOL;
 				$null_array = false; //Mark the array as valid
 				if ($watcher_member = $author_guild->members->get('id', $watcher)) {
-					if (get_class($watcher_member) == "Discord\Parts\User\Member") {
-						$watcher_user = $watcher_member->user;
-					} else {
-						$watcher_user = $watcher_member;
-					}
-					$watcher_user->getPrivateChannel()->done(
-						function ($watcher_dmchannel) use ($message) {	//Promise
-							//if($GLOBALS['debug_echo']) echo "watcher_dmchannel class: " . get_class($watcher_dmchannel) . PHP_EOL; //DMChannel
-							if (isset($watch_channel)) {
-								return $watch_channel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
-							} elseif (isset($watcher_dmchannel)) {
-								return $watcher_dmchannel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
-							}
-							return;
+					$discord->users->fetch("$watcher")->done(
+						function ($watcher_user) use ($message, $watch_channel) {
+							if (isset($watch_channel)) $watch_channel->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
+							else $watcher_user->sendMessage("<@{$message->author->id}> sent a message in <#{$message->channel->id}>: \n{$message->content}");
 						}
 					);
 				}
@@ -354,19 +343,6 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 
 	if(!(include getcwd() . '/CHANGEME.PHP')) include getcwd() . '/vendor/vzgcoders/palace/CHANGEME.php';
 	if ($author_id == $creator_id) $creator = true;
-
-	//if($GLOBALS['debug_echo']) echo '[TEST]' . __FILE__ . ':' . __LINE__ . PHP_EOL;
-	//$adult 		= false; //This role current serves no purpose
-	//$owner		= false; //This is populated directly from the guild
-	//$dev		= false; //This is a higher rank than admin because they're assumed to have administrator privileges
-	//$admin 		= false;
-	//$mod		= false;
-	//$assistant  = false; $role_assistant_id = "688346849349992494";
-	//$tech  		= false; $role_tech_id 		= "688349304691490826";
-	//$verified	= false;
-	//$bot		= false;
-	//$vzgbot		= false;
-	//$muted		= false;
 
 	$author_guild_roles_names 				= array(); 												//Names of all guild roles
 	$author_guild_roles_ids 				= array(); 												//IDs of all guild roles
@@ -475,8 +451,16 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				foreach ($author_member->roles as $role) $removed_roles[] = $role->id;
 				VarSave($guild_folder."/".$author_id, "removed_roles.php", $removed_roles);
 				//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
-				foreach ($removed_roles as $role_id)
-					if ($role_id != $role_muted_id) $author_member->removeRole($role_id);
+				/*foreach ($removed_roles as $role_id)
+					if ($role_id != $role_muted_id) $author_member->removeRole($role_id);*/
+				$remove = function ($removed_roles, $role_muted_id) use (&$remove) {
+					if (count($removed_roles) != 0) {
+						$author_member->removeRole(array_shift($removed_roles), $role_muted_id)->done(function () use ($remove, $removed_roles) {
+							$remove($removed_roles, $role_muted_id);
+						});
+					} else $author_member->addRole($role_muted_id);
+				};
+				$remove($removed_roles, $role_muted_id);
 				if ($role_muted_id) $author_member->addRole($role_muted_id);
 				//return $message->react("🤐");
 				return $message->delete();
@@ -4337,14 +4321,18 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 						//if($GLOBALS['debug_echo']) echo "UNREGISTERED ID: $target_id" . PHP_EOL;
 						if ($target_id) {
 							echo "UNVERIFYING $target_id" . PHP_EOL;
+							
 							$target_guild = $discord->guilds->get('id', $author_guild_id); //if($GLOBALS['debug_echo']) echo "target_guild: " . get_class($target_guild) . PHP_EOL;
 							$target_member = $target_guild->members->get('id', $target_id); //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
 							$x = 0;
 							switch ($author_guild_id) {
 								case '468979034571931648':
-									$target_member->removeRole("468982790772228127");
-									$target_member->removeRole("468983261708681216");
-									$target_member->addRole("469312086766518272");
+									//$remove($removed_roles);
+									$target_member->removeRole("468982790772228127")->done( function ($result) use ($target_member) {
+										$target_member->removeRole("468983261708681216")->done( function ($result) use ($target_member) {
+											$target_member->addRole("469312086766518272");
+										});
+									});
 									break;
 								case '807759102624792576':
 									$target_member->removeRole("816839199906070561");
@@ -5939,8 +5927,16 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				**🗓️Date:** $warndate
 				**📝Reason:** " . str_replace($filter, "", $message_content);
 				//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
-				foreach ($removed_roles as $role)
-					$target_guildmember->removeRole($role);
+				/*foreach ($removed_roles as $role)
+					$target_guildmember->removeRole($role);*/
+				$remove = function ($removed_roles, $role_muted_id) use (&$add) {
+					if (count($removed_roles) != 0) {
+						$target_guildmember->removeRole(array_shift($removed_roles))->done(function () use ($add, $removed_roles) {
+							$remove($removed_roles);
+						});
+					} else $target_guildmember->addRole($role_muted_id);
+				};
+				$remove($removed_roles);
 				if ($role_muted_id) $target_guildmember->addRole($role_muted_id);
 				if ($react) $message->react("🤐");
 				/*
