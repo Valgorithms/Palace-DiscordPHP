@@ -20,7 +20,7 @@ function messageUpdate($message_new, $discord, $message_old) {
 	$author_channel = $message_new->channel;
 	$author_channel_id = $author_channel->id; 												//if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 	$is_dm = false;
-	if (is_null($message->guild_id) && is_null($author_member)) {
+	if ($message->channel->type == 1 || (is_null($message->guild_id) && is_null($author_member))) {
 		$is_dm = true; //True if direct message
 		//return; //Don't try to process direct messages
 	}
