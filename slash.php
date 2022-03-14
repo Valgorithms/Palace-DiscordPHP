@@ -1,60 +1,45 @@
 <?php
 if($GLOBALS['debug_echo']) echo '[SLASH INIT]' . PHP_EOL;
-$slash_client = new \Discord\Slash\RegisterClient("$token"); //Register commands
-$slash = new \Discord\Slash\Client([ //Listen for events
-	'public_key' => "$public_key",
-    'loop' => $discord->getLoop(), // reactphp event loop, default creates a new loop
-]);
-$slash->linkDiscord($discord);
-
-/// GETTING COMMANDS
-// gets a list of all GLOBAL comamnds (not guild-specific)
-//$commands = $client->getCommands();
-// gets a list of all guild-specific commands to the given guild
-//$guildCommands = $client->getCommands('guild_id_here');
-// gets a specific command with command id - if you are getting a guild-specific command you must provide a guild id
-//$command = $client->getCommand('command_id', 'optionally_guild_id');
-
-/// CREATING COMMANDS
-/*
-$command = $slash_client->createGlobalCommand('ping', 'Pong!', [ //Global command
-    // optional array of options
-]);
-*/
-$command = $slash_client->createGlobalCommand('invite', 'Bot invite link', [ //Global command
-    // optional array of options
-]);
-// creates guild specific commands
-$command = $slash_client->createGuildSpecificCommand('468979034571931648', 'players', 'Show Civ13 and Blue Colony server information', [
-    // optional array of options
-]);
-$command = $slash_client->createGuildSpecificCommand('807759102624792576', 'players', 'Show Civ13 and Blue Colony server information', [
-    // optional array of options
-]);
-
-/*
-$command = $slash_client->createGuildSpecificCommand('115233111977099271', 'palace-test', 'command_description', [ //Guild command
-    // optional array of options
-]);
-*/
-
-/// UPDATING COMMANDS
-// change the command name etc.....
-//$command->name = 'newcommandname';
-//$client->updateCommand($command);
-
-/// DELETING COMMANDS
-//$client->deleteCommand($command);
+// creates clobal commands, needs to be saved only once
+$discord->application->commands->freshen()->done(
+	function ($commands) use ($discord) {
+		$command = new Discord\Parts\Interactions\Command\Command($discord, [
+				'name' => 'invite',
+				'description' => 'Bot invite link'
+		]);
+		if (! $commands->get('name', 'invite')) {
+			$commands->save($command);
+		}
+	}
+);
 
 
-// register global command `/ping`
-/*
-$discord->listenCommand('ping', function ($interaction) {
-	$choices = $interaction->data->options;
-	$interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent('Pong!'));
-});
-*/
-$discord->listenCommand('invite', function ($interaction) use ($discord){
+// creates guild specific commands, needs to be saved only once
+$discord->guilds['468979034571931648']->commands->freshen()->done(
+	function ($commands) use ($discord) {
+		if (! $commands->get('name', 'players')) {
+			$command = new Discord\Parts\Interactions\Command\Command($discord, [
+				'name' => 'players',
+				'description' => 'Show Civ13 and Blue Colony server information'
+			]);
+			$commands->save($command);
+		}
+	}
+);
+
+$discord->guilds['807759102624792576']->commands->freshen()->done(
+	function ($commands) use ($discord) {
+		if (! $commands->get('name', 'players')) {
+			$command = new Discord\Parts\Interactions\Command\Command($discord, [
+				'name' => 'players',
+				'description' => 'Show Civ13 and Blue Colony server information'
+			]);
+			$commands->save($command);
+		}
+	}
+);
+
+$discord->listenCommand('invite', function ($interaction) use ($discord) {
 	$choices = $interaction->data->options;
 	$interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent($discord->application->getInviteURLAttribute('8')));
 });
