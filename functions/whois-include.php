@@ -72,7 +72,7 @@ $embed
 	->addFieldValues("ID", "$mention_id", true)
 	->addFieldValues("Avatar", "[Link]($mention_avatar)", true)
 	->addFieldValues("Account Created", "$mention_createdDate", true)
-	->addFieldValues("Account Age", "$mention_createdAge", true);
+	->addFieldValues("Account Age", '<t:' . $mention_member->joined_at->timestamp . ':R>', true);
 if($mention_joinedDate) $embed->addFieldValues("Joined Server", "$mention_joinedDate", true);
 if($mention_joinedAge) $embed->addFieldValues("Server Age", "$mention_joinedAge");
 $embed
