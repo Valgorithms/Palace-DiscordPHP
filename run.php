@@ -193,7 +193,7 @@ $twitch = new Twitch\Twitch($options);
 
 function webapiFail($part, $id) {
 	//logInfo('[webapi] Failed', ['part' => $part, 'id' => $id]);
-	return new \GuzzleHttp\Psr7\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
+	return new \React\Http\Message\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
 }
 function webapiSnow($string) {
 	return preg_match('/^[0-9]{16,18}$/', $string);
@@ -281,7 +281,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 		case 'restart':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') { //Restricted for obvious reasons
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			$return = 'restarting';
 			//execInBackground('cmd /c "'. __DIR__  . '\run.bat"');
@@ -291,7 +291,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 		case 'lookup':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id))
 				return webapiFail('user_id', $id);
@@ -300,7 +300,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 		case 'owner':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id))
 				return webapiFail('user_id', $id);
@@ -318,7 +318,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 		case 'whitelist':
 			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
-				return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
+				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
 			if (!$id || !webapiSnow($id))
 				return webapiFail('user_id', $id);
@@ -355,7 +355,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 				$discord->users->fetch($id)->done(
 					function ($user) {
 						$return = $user->avatar;
-						return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'text/json'], json_encode($return));
+						return new \React\Http\Message\Response(200, ['Content-Type' => 'text/json'], json_encode($return));
 					}, function ($error) {
 						return webapiFail('user_id', $id);
 					}
@@ -364,7 +364,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			}else{
 				$return = $user->avatar;
 			}
-			//if (!$return) return new \GuzzleHttp\Psr7\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
+			//if (!$return) return new \React\Http\Message\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ('').PHP_EOL);
 			break;
 
 		case 'avatars':
@@ -383,16 +383,16 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			}
 
 			$promise->done(function () use ($results) {
-			  return new \GuzzleHttp\Psr7\Response (200, ['Content-Type' => 'application/json'], json_encode($results));
+			  return new \React\Http\Message\Response (200, ['Content-Type' => 'application/json'], json_encode($results));
 			}, function () use ($results) {
 			  // return with error ?
-			  return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'application/json'], json_encode($results));
+			  return new \React\Http\Message\Response(200, ['Content-Type' => 'application/json'], json_encode($results));
 			});
 			break;
 		default:
-			return new \GuzzleHttp\Psr7\Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
+			return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Not implemented'.PHP_EOL);
 	}
-	return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'text/json'], json_encode($return));
+	return new \React\Http\Message\Response(200, ['Content-Type' => 'text/json'], json_encode($return));
 });
 $socket = new \React\Socket\Server(sprintf('%s:%s', '0.0.0.0', '55555'), $loop);
 $webapi->listen($socket);
