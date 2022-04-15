@@ -4659,7 +4659,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		}
 	}
 	
-	if ($author_perms['manage_messages'] && $message_content_lower == 'clearall') { //;clearall Clear as many messages in the author's channel at once as possible
+	if ( ($creator || $author_perms['manage_messages']) && $message_content_lower == 'clearall') { //;clearall Clear as many messages in the author's channel at once as possible
 		if($GLOBALS['debug_echo']) echo "[CLEARALL] $author_check" . PHP_EOL;
 		$author_channel->limitDelete(100);
 		
@@ -4671,7 +4671,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		});
 		return;
 	};
-	if ($author_perms['manage_messages'] && str_starts_with($message_content_lower, 'clear ')) { //;clear #
+	if ( ($creator || $author_perms['manage_messages']) && str_starts_with($message_content_lower, 'clear ')) { //;clear #
 		if($GLOBALS['debug_echo']) echo "[CLEAR #] $author_check" . PHP_EOL;
 		$filter = "clear ";
 		$value = str_replace($filter, "", $message_content_lower);
@@ -4711,7 +4711,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		});
 		return;
 	};
-	/*if ($author_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'vwatch ')) || (str_starts_with($message_content_lower, 'vw ')))) { //;vwatch @
+	/*if ( ($creator || $author_perms['manage_roles']) && ((str_starts_with($message_content_lower, 'vwatch ')) || (str_starts_with($message_content_lower, 'vw ')))) { //;vwatch @
 		if($GLOBALS['debug_echo']) echo "[VWATCH] $author_check" . PHP_EOL;
 		//		Get an array of people mentioned
 		$mentions_arr 												= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4813,7 +4813,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		}
 	}
 	*/
-	if ($author_perms['ban_members'] && str_starts_with($message_content_lower, 'ban ')) { //;ban
+	if ( ($creator || $author_perms['ban_members']) && str_starts_with($message_content_lower, 'ban ')) { //;ban
 		if($GLOBALS['debug_echo']) echo "[BAN]" . PHP_EOL;
 		$mention_id_array = [];
 		preg_match_all('/<@([0-9]*)>/', $message->content, $matches1);
@@ -4840,7 +4840,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		}
 		return $message->reply("$author_check: $msg");
 	}
-	if ($author_perms['ban_members'] && str_starts_with($message_content_lower, 'unban ')) { //;ban
+	if ( ($creator || $author_perms['ban_members']) && str_starts_with($message_content_lower, 'unban ')) { //;ban
 		if($GLOBALS['debug_echo']) echo "[UNBAN]" . PHP_EOL;
 		//Get an array of people mentioned
 		$mentions_arr 	= $message->mentions; //if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -4934,7 +4934,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		}
 		return;
 	}
-	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'kick ')) { //;kick
+	if ( ($creator || $author_perms['kick_members']) && str_starts_with($message_content_lower, 'kick ')) { //;kick
 		if($GLOBALS['debug_echo']) echo "[KICK]" . PHP_EOL;
 		//Get an array of people mentioned
 		if(!($mentions_arr = $message->mentions)) { //if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5029,7 +5029,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		if ($react) $message->react("👎");
 		return $message->reply("You need to mention someone!");
 	}
-	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'warn ')) { //;warn @
+	if ( ($creator || $author_perms['kick_members']) && str_starts_with($message_content_lower, 'warn ')) { //;warn @
 		if($GLOBALS['debug_echo']) echo "[WARN] $author_check" . PHP_EOL;
 		//$message->reply("Not yet implemented!");
 //		Get an array of people mentioned
@@ -5075,7 +5075,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			return $message->reply("Nobody in the guild was mentioned!");
 		}
 	}
-	if ($author_perms['kick_members'] && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions <@user_id> #
+	if ( ($creator || $author_perms['kick_members']) && str_starts_with($message_content_lower, 'removeinfraction ')) { //;removeinfractions <@user_id> #
 		if($GLOBALS['debug_echo']) echo "[REMOVE INFRACTION] $author_check" . PHP_EOL;
 		//	Get an array of people mentioned
 		$mentions_arr = $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5130,7 +5130,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$x++;
 		}
 	}
-	if ($author_perms['manage_roles'] && str_starts_with($message_content_lower, 'mute ')) { //;mute
+	if ( ($creator || $author_perms['manage_roles']) && str_starts_with($message_content_lower, 'mute ')) { //;mute
 		if($GLOBALS['debug_echo']) echo "[MUTE]" . PHP_EOL;
 		//			Get an array of people mentioned
 		$mentions_arr = $message->mentions;
@@ -5227,7 +5227,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		if ($react) $message->react("👎");
 		return $message->reply("You need to mention someone!");
 	}
-	if ($author_perms['manage_roles'] && str_starts_with($message_content_lower, 'unmute ')) { //;unmute
+	if ( ($creator || $author_perms['manage_roles']) && str_starts_with($message_content_lower, 'unmute ')) { //;unmute
 		if($GLOBALS['debug_echo']) echo "[UNMUTE]" . PHP_EOL;
 		//			Get an array of people mentioned
 		$mentions_arr 												= $message->mentions; 									//if($GLOBALS['debug_echo']) echo "mentions_arr: " . PHP_EOL; var_dump ($mentions_arr); //Shows the collection object
@@ -5313,7 +5313,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		if ($react) $message->react("👎");
 		return $message->reply("You need to mention someone!");
 	}
-	if ($author_perms['manage_roles'] && ((str_starts_with($message_content_lower, 'v ')) || (str_starts_with($message_content_lower, 'verify ')))) { //Verify ;v ;verify
+	if ( ($creator || $author_perms['manage_roles']) && ((str_starts_with($message_content_lower, 'v ')) || (str_starts_with($message_content_lower, 'verify ')))) { //Verify ;v ;verify
 		if ($role_verified_id) { //This command only works if the Verified Role is setup
 			if($GLOBALS['debug_echo']) echo "[VERIFY] $author_check" . PHP_EOL;
 			//	Get an array of people mentioned
@@ -5412,7 +5412,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			}
 		}
 	}
-	if (($author_perms['manage_messages'] && $author_perms['manage_roles']) && (($message_content_lower == 'cv') || ($message_content_lower == 'clearv'))) { //;clearv ;cv Clear all messages in the get-verified channel
+	if ( ($creator || ($author_perms['manage_messages'] && $author_perms['manage_roles'])) && (($message_content_lower == 'cv') || ($message_content_lower == 'clearv'))) { //;clearv ;cv Clear all messages in the get-verified channel
 		if ($getverified_channel_id) { //This command only works if the Get Verified Channel is setup
 			if($GLOBALS['debug_echo']) echo "[CV] $author_check" . PHP_EOL;
 			if ($getverified_channel) {
