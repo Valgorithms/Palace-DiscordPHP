@@ -674,7 +674,9 @@ try {
     
     if($GLOBALS['debug_echo']) echo "RESTARTING BOT" . PHP_EOL;
     $discord->destroy();
-    $restart_cmd = 'cmd /c "'. getcwd() . '\run.bat"'; //if($GLOBALS['debug_echo']) echo $restart_cmd . PHP_EOL;
+    if (substr(php_uname(), 0, 7) == "Windows") {
+        $restart_cmd = 'cmd /c "'. getcwd() . '\run.bat"'; //if($GLOBALS['debug_echo']) echo $restart_cmd . PHP_EOL;
+    }
     //system($restart_cmd);
     execInBackground($restart_cmd);
     die();
