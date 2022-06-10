@@ -51,9 +51,9 @@ function guildBanRemove($ban, $discord) {
 			//	->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 			//	->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
 				->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-				->setAuthor("$author_check ($user_id)", "$author_avatar")  							// Set an author with icon
-				->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-				->setURL("");                             												// Set the URL
+				->setAuthor("$author_check ($user_id)", "$author_avatar");  							// Set an author with icon
+				if ($guild->id != '115233111977099271')  $embed->setFooter("Palace Bot by Valithor#5947");                             					// Set a footer without icon
+				$embed->setURL("");                             												// Set the URL
 			if ($reason) $embed->addFieldValues("Reason", $reason);
 			$modlog_channel->sendEmbed($embed);
 		}

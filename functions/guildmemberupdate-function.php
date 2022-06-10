@@ -257,9 +257,9 @@ function guildMemberUpdate($member, $discord, $member_old) {
 	//				->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 	//				->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
 					->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-					->setAuthor("$new_tag", "$new_avatar")  												// Set an author with icon
-					->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-					->setURL("");                             												// Set the URL
+					->setAuthor("$new_tag", "$new_avatar");  												// Set an author with icon
+					if ($author_guild_id != '115233111977099271') $embed->setFooter("Palace Bot by Valithor#5947");                             					// Set a footer without icon
+					$embed->setURL("");                             												// Set the URL
 	//				Send a message
 				if ($modlog_channel) {
 					$modlog_channel->sendEmbed($embed);

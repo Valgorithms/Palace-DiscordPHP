@@ -267,9 +267,9 @@ function messageReactionRemove($reaction, $discord) {
 						$embed
 							->setColor(0xa7c5fd)
 							->setDescription("<@$respondent_id>\n**Removed role**\n<@&$target_role_id>")
-							->setTimestamp()
-							->setFooter("Palace Bot by Valithor#5947")
-							->setURL(""); 
+							->setTimestamp();
+							if ($author_guild_id != '115233111977099271') $embed->setFooter("Palace Bot by Valithor#5947");
+							$embed->setURL(""); 
 						$author_channel->sendEmbed($embed)->done(
 							function ($new_message) use ($discord) {
 								$discord->getLoop()->addTimer(10, function () use ($new_message) {

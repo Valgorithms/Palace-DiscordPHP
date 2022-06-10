@@ -78,9 +78,9 @@ function messageUpdate($message_new, $discord, $message_old) {
 				$embed
 					->setColor(0xa7c5fd)
 					->addFieldValues("Message Update", "$changes")
-					->setAuthor("$author_check ($author_id)", "$author_avatar")
-					->setFooter("Palace Bot by Valithor#5947")
-					->setTimestamp()
+					->setAuthor("$author_check ($author_id)", "$author_avatar");
+					if ($author_guild_id != '115233111977099271') $embed->setFooter("Palace Bot by Valithor#5947");
+					$embed->setTimestamp()
 					->setURL("");
 				return $modlog_channel->sendEmbed($embed);
 			} elseif (strlen($changes) <= 2000) //Send changes as text
@@ -98,9 +98,9 @@ function messageUpdate($message_new, $discord, $message_old) {
 				->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
 				->addFieldValues("Message Update", "$changes")												// New line after this
 				->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-				->setAuthor("$author_check ($author_id)", "$author_avatar")  							// Set an author with icon
-				->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-				->setURL("");                             												// Set the URL
+				->setAuthor("$author_check ($author_id)", "$author_avatar");  							// Set an author with icon
+				if ($author_guild_id != '115233111977099271') $embed->setFooter("Palace Bot by Valithor#5947");                             					// Set a footer without icon
+				$embed->setURL("");                             												// Set the URL
 			
 				return $modlog_channel->sendMessage("A message was updated but it was too long to log within an embed. Please see the attached file.", false, array('embed' => $embed, 'files' => [['name' => "changes.txt", 'data' => $changes_file]]))->done(
 					null,

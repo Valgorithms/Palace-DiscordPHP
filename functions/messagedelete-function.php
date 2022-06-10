@@ -73,10 +73,10 @@ function messageDelete($message, $discord) {
 		
 		->setThumbnail("$author_avatar")														// Set a thumbnail (the image in the top right corner)
 	//	->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
-		->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
+		->setTimestamp();                                                                   	// Set a timestamp (gets shown next to footer)
 		
-		->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-		->setURL("");
+		if ($guild->id != '115233111977099271') $embed->setFooter("Palace Bot by Valithor#5947");                             					// Set a footer without icon
+		$embed->setURL("");
 	//	Send the message
 	//	We do not need another promise here, so we call done, because we want to consume the promise
 	if ($modlog_channel) {

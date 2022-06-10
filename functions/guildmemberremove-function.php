@@ -55,9 +55,9 @@ function guildMemberRemove($guildmember, $discord) {
 			"Account created on $user_createdFormatted")											// Set a description (below title, above fields)
 			->addFieldValues("Member Count", "$guild_memberCount")
 			->addFieldValues("Roles", "$mention_role_id_queue")										// New line after this
-			->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-			->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-			->setURL("");                             												// Set the URL
+			->setTimestamp();                                                                     	// Set a timestamp (gets shown next to footer)
+			if ($author_guild_id != '115233111977099271') $embed->setFooter("Palace Bot by Valithor#5947");                             					// Set a footer without icon
+			$embed->setURL("");                             												// Set the URL
 			if ($user_avatar) $embed->setThumbnail("$user_avatar");									// Set a thumbnail (the image in the top right corner)
 		
 		if ($welcome_log_channel) {

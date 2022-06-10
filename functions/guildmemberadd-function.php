@@ -60,9 +60,9 @@ function guildMemberAdd($guildmember, $discord) {
 		//X days ago
 		->addFieldValues("Member Count", "$guild_memberCount")
 	//	->setImage('https://avatars1.githubusercontent.com/u/4529744?s=460&v=4')             	// Set an image (below everything except footer)
-		->setTimestamp()                                                                     	// Set a timestamp (gets shown next to footer)
-		->setFooter("Palace Bot by Valithor#5947")                             					// Set a footer without icon
-		->setURL("");
+		->setTimestamp();                                                                     	// Set a timestamp (gets shown next to footer)
+		if ($author_guild_id->id != '115233111977099271')  $embed->setFooter("Palace Bot by Valithor#5947");                             					// Set a footer without icon
+		$embed->setURL("");
 	if ($user_avatar) $embed->setThumbnail("$user_avatar");										// Set a thumbnail (the image in the top right corner)
 
 	if ($welcome_log_channel) { //Send a detailed embed with user info
