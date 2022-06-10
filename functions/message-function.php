@@ -4833,12 +4833,14 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			}
 		}
 		$msg = "The following users have been banned: ";
+        $banned = '';
 		foreach ($mention_id_array as $target_member_id) {
 			if($GLOBALS['debug_echo']) '[BAN ID] ' . $target_member_id . PHP_EOL . ' [BAN MEMBER] ' . $author_guild->members->offsetGet("$target_member_id") . PHP_EOL . '[MESSAGE CONTENT] ' . $message->content . PHP_EOL;
 			$author_guild->bans->ban($target_member = $author_guild->members->offsetGet("$target_member_id"), 0, $message->content);
-			$msg .= $target_member;
+			$banned .= $target_member;
 		}
-		return $message->reply("$author_check: $msg");
+        if ($banned) return $message->reply($msg . $banned);
+        else return $message->reply('No discord members were mentioned to ban!');
 	}
 	if ( ($creator || $author_perms['ban_members']) && str_starts_with($message_content_lower, 'unban ')) { //;ban
 		if($GLOBALS['debug_echo']) echo "[UNBAN]" . PHP_EOL;
