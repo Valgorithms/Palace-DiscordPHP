@@ -4840,7 +4840,10 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$banned .= $target_member;
 		}
         if ($banned) return $message->reply($msg . $banned);
-        else return $message->reply('No discord members were mentioned to ban!');
+        else {
+			if ($author_guild->id != '468979034571931648') return $message->reply('No discord members were mentioned to ban!');
+			return;
+		}
 	}
 	if ( ($creator || $author_perms['ban_members']) && str_starts_with($message_content_lower, 'unban ')) { //;ban
 		if($GLOBALS['debug_echo']) echo "[UNBAN]" . PHP_EOL;
