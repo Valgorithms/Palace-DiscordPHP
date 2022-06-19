@@ -4,10 +4,8 @@ function guildMemberAdd($guildmember, $discord) {
 	if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "guildMemberAdd ($author_guild_id)" . PHP_EOL;
 	$user = $guildmember->user;
 	if (isset($guildmember) && is_object($guildmember) && get_class($guildmember) == "Discord\Parts\User\Member") {
-		$guildmember = $guildmember;
 		$user = $guildmember->user;
 	} else {
-		$author_user = $author;
 		$user = $guildmember;
 	}
 
