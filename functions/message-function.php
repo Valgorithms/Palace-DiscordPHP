@@ -453,7 +453,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
 				/*foreach ($removed_roles as $role_id)
 					if ($role_id != $role_muted_id) $author_member->removeRole($role_id);*/
-				$remove = function ($removed_roles, $role_muted_id) use (&$remove) {
+				$remove = function ($removed_roles, $role_muted_id) use (&$remove, $author_member) {
 					if (count($removed_roles) != 0) {
 						$author_member->removeRole(array_shift($removed_roles), $role_muted_id)->done(function () use ($remove, $removed_roles) {
 							$remove($removed_roles, $role_muted_id);
