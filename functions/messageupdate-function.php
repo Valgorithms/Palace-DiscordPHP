@@ -42,7 +42,7 @@ function messageUpdate($message_new, $discord, $message_old) {
 	if (!CheckFile($guild_folder, "guild_config.php")) {
 		$file = 'guild_config_template.php';
 		if (!copy(getcwd() . '/vendor/vzgcoders/palace/' . $file, $guild_config_path)) {
-			$message->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
+			$message_new->reply("Failed to create guild_config file! Please contact <@116927250145869826> for assistance.");
 		} else {
 			$author_channel->sendMessage("<@$guild_owner_id>, I'm here! Please ;setup the bot." . PHP_EOL . "While interacting with this bot, any conversations made through direct mention of the bot name are stored anonymously in a secure database. Avatars, IDs, Names, or any other unique user identifier is not stored with these messages. Through continuing to use this bot, you agree to allow it to track user information to support its functions and for debugging purposes. Your message data will never be used for anything more. If you wish to have any associated information removed, please contact Valithor#5937.");
 			//$author_channel->sendMessage("(Maintenance is currently ongoing and many commands are currently not working. We are aware of the issue and working on a fix.)");
