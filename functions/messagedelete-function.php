@@ -83,7 +83,7 @@ function messageDelete($message, $discord) {
 		/*
 		//old method (Yasmin)
 		if ($data_string) { //Embed the changes as a text file
-			$modlog_channel->sendMessage('', array('embed' => $embed, 'files' => [['name' => "message.txt", 'data' => $data_string]]))->done(null, function ($error) {
+			$modlog_channel->sendMessage('', array('embeds' => $embed, 'files' => [['name' => "message.txt", 'data' => $data_string]]))->done(null, function ($error) {
 				if($GLOBALS['debug_echo']) echo $error.PHP_EOL; //if($GLOBALS['debug_echo']) echo any errors
 			});
 		}else{
