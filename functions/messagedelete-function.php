@@ -1,7 +1,9 @@
 <?php
 function messageDelete($message, $discord, $browser) {
     $message_id = $message->id;
-    $author_username = $author_user->username;
+    $author_user = $message->author;
+    if ($guild_id = $message->guild_id) $discord->guilds->offsetGet($guild_id);
+    if (! $author_member = $message->member) $author_member = $author_guild->members->offsetGet($author_user->id);
     $author_channel_id = $channel_id;
     
     //Browser function used to retrieve attachments from deleted messages
@@ -19,7 +21,7 @@ function messageDelete($message, $discord, $browser) {
         }
     };
     //Recursive processing of deleted embeds and attachments
-    $func = function ($channel, $data_string = '', $message_embeds = [], $message_attachments = [], $x = 1) use (&$func, $browser_get, $message_id, $author_user, $author_channel_id) {
+    $func = function ($channel, $data_string = '', $message_embeds = [], $message_attachments = [], $x = 1) use (&$func, $browser_get, $browser, $message_id, $author_user, $author_channel_id) {
         if (count($message_embeds) != 0) {
             $deleted_embed = array_shift($message_embeds);
             $deleted_embed->setTimestamp();
@@ -27,43 +29,37 @@ function messageDelete($message, $discord, $browser) {
             $builder2->setContent("Deleted embed $x");
             $builder2->addEmbed($deleted_embed);
             $channel->sendMessage($builder2);
-            $x++;
-            $func($channel, $data_string, $message_embeds, $message_attachments, $x);
-        } else {
-            if (count($message_attachments) != 0) {
-                $builder2 = Discord\Builders\MessageBuilder::new();
-                $deleted_attachment = array_shift($message_attachments);
-                $response = $browser_get($browser, $deleted_attachment->url, [], true); //using cURL=true for testing
-                if ($response) {
-                    echo '[RESPONSE]' . PHP_EOL;
-                    var_dump($response);
-                    $builder2->addFileFromContent($deleted_attachment->filename, $response);
-                    $builder2->setContent("Deleted attachment $x");
-                    $builder2->addFileFromContent($deleted_attachment->filename, file_get_contents($deleted_attachment->url));
-                    $channel->sendMessage($builder2);
-                    $x++;
-                    $func($channel, $data_string, $message_embeds, $message_attachments, $x);
-                } else {
-                    echo '[NO RESPONSE]' . PHP_EOL;
-                    //Resolve promise interface and continue inside of ->done
-                    /*
-                    $builder2->addFileFromContent($deleted_attachment->filename, $response);
-                    $builder2->setContent("Deleted attachment $x");
-                    $builder2->addFileFromContent($deleted_attachment->filename, file_get_contents($deleted_attachment->url));
-                    $channel->sendMessage($builder2);
-                    $x++;
-                    $func($channel, $data_string, $message_embeds, $message_attachments, $x);
-                    */
-                }
+            return $func($channel, $data_string, $message_embeds, $message_attachments, ++$x);
+        }
+        if (count($message_attachments) != 0) {
+            $builder2 = Discord\Builders\MessageBuilder::new();
+            $deleted_attachment = array_shift($message_attachments);
+            $response = $browser_get($browser, $deleted_attachment->url, [], true); //using cURL=true for testing
+            if ($response) {
+                echo '[RESPONSE]' . PHP_EOL;
+                var_dump($response);
+                $builder2->addFileFromContent($deleted_attachment->filename, $response);
+                $builder2->setContent("Deleted attachment $x");
+                $builder2->addFileFromContent($deleted_attachment->filename, file_get_contents($deleted_attachment->url));
+                $channel->sendMessage($builder2);
+            } else {
+                echo '[NO RESPONSE]' . PHP_EOL;
+                //Resolve promise interface and continue inside of ->done
+                /*
+                $builder2->addFileFromContent($deleted_attachment->filename, $response);
+                $builder2->setContent("Deleted attachment $x");
+                $builder2->addFileFromContent($deleted_attachment->filename, file_get_contents($deleted_attachment->url));
+                $channel->sendMessage($builder2);
+                $func($channel, $data_string, $message_embeds, $message_attachments, ++$x);
+                */
             }
+            return $func($channel, $data_string, $message_embeds, $message_attachments, ++$x);
         }
     };
     
 	//id, author, channel, guild, member
 	//createdAt, editedAt, createdTimestamp, editedTimestamp, content, cleanContent, attachments, embeds, mentions, pinned, type, reactions, webhookID
 	$message_content = $message->content;
-    $author_user = $message->author;
-	$guild_id = $message->guild_id;;
 	$channel_id = $message->channel_id;
 	$message_embeds	= $message->embeds; //collection of embeds, needs a foreach method
     $message_attachments = $message->attachments;
@@ -94,17 +90,18 @@ function messageDelete($message, $discord, $browser) {
 		if($GLOBALS['debug_echo']) echo "[SELF MESSAGE DELETED]" . PHP_EOL;
 		return; //Don't log messages made by this bot
 	}
-	$author_discriminator = $author_user->discriminator; //if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
-	$author_id = $author_user->id; //if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
-	$author_avatar = $author_user->avatar; //if($GLOBALS['debug_echo']) echo "author_avatar: " . $author_avatar . PHP_EOL;
-	$author_check = "$author_username#$author_discriminator"; //if($GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;
+	$author_id = $author_user->id;
+	$author_avatar = $author_user->avatar;
+    $author_username = $author_user->username;
+    $author_discriminator = $author_user->discriminator;
+	$author_check = "$author_username#$author_discriminator";
 
 	//Load guild info
 	if (!$guild = $discord->guilds->offsetGet($guild_id)) return; //Probably a DM, we don't care for it
 
 	//Load config variables for the guild
 	$guild_folder = "\\guilds\\$guild_id";
-	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
+	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php";
 	include "$guild_config_path";
 
 	if ($author_channel_id == $modlog_channel_id) return; //Don't log deletion of messages in the log channel
@@ -174,7 +171,6 @@ function messageDelete($message, $discord, $browser) {
                     $builder2 = Discord\Builders\MessageBuilder::new();
                     $builder2->addEmbed($deleted_embed);
 					$modlog_channel->sendMessage($builder2);
-					$x++;
 				}
                 */
             
@@ -185,10 +181,9 @@ function messageDelete($message, $discord, $browser) {
             $builder->setContent("Long message with ID $message_id sent by $author_user was deleted from <#$author_channel_id>");
             if($embed) $builder->addEmbed($embed);
             $builder->addFileFromContent('message.txt', $data_string);
-            return $modlog_channel->sendMessage($builder)->done(function () use ($func, $modlog_channel, $message_embeds, $message_attachments) {
+            return $modlog_channel->sendMessage($builder)->done(function () use ($func, $modlog_channel, $data_string, $message_embeds, $message_attachments) {
                 $func($modlog_channel, $data_string, $message_embeds, $message_attachments);
             });
 		}
 	}
-	return; //No more processing, we only want to process the first person mentioned
 }
