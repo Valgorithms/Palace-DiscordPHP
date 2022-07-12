@@ -58,7 +58,7 @@ function messageDelete($message, $discord) {
 	$log_message = "Message $message_id deleted from <#$author_channel_id>\n**Content:** $message_content" . PHP_EOL;
 	if (strlen($log_message) > 2048) {
 		$log_message = "Message $message_id deleted from <#$author_channel_id>";
-		$data_string = "$message_content";
+		$data_string = str_replace('```', '\`\`\`', $message_content);
 	}
 	//		Build the embed
 	$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
