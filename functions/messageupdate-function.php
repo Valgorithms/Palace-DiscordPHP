@@ -66,8 +66,8 @@ function messageUpdate($message_new, $discord, $message_old) {
 		$changes .= "**Channel:** <#$author_channel_id>\n";
 		$changes .= "**Message ID:** $message_id_new\n";
 		
-		$changes .= "**Before:** ```⠀$message_content_old\n```\n";
-		$changes .= "**After:**```⠀$message_content_new\n```\n";
+		$changes .= '**Before:** ```⠀' . str_replace('```', '\`\`\`', $message_content_old) . "\n```\n";
+		$changes .= '**After:**```⠀' . str_replace('```', '\`\`\`', $message_content_new) . "\n```\n";
 	}
 
 	if ($modlog_channel) {
