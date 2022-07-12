@@ -90,7 +90,7 @@ function messageDelete($message, $discord) {
 			$modlog_channel->sendEmbed($embed);
 		}
 		*/
-		$message_array['embed'] = $embed;
+		$message_array['embeds'] = $embed;
 		//$content = $message->content ?? '';
 		$content = '';
 		if (!$message_embeds && !$data_string) { //if($GLOBALS['debug_echo']) echo "!message_embeds && !data_string" . PHP_EOL;
