@@ -2,7 +2,8 @@
 function messageDelete($message, $discord, $browser) {
     $message_id = $message->id;
     $author_user = $message->author;
-    if ($guild_id = $message->guild_id) $discord->guilds->offsetGet($guild_id);
+    $guild_id = $message->guild_id
+    if (! $author_guild = $message->guild ) $author_guild = $discord->guilds->offsetGet($guild_id);
     if (! $author_member = $message->member) $author_member = $author_guild->members->offsetGet($author_user->id);
     $author_channel_id = $channel_id;
     
