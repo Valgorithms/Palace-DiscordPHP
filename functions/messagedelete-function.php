@@ -3,9 +3,9 @@ function messageDelete($message, $discord, $browser = null) {
     $message_id = $message->id;
     $author_user = $message->author;
     $guild_id = $message->guild_id;
-    if (! $author_guild = $message->guild) $author_guild = $discord->guilds->offsetGet($guild_id);
-    if (! $author_member = $message->member) $author_member = $author_guild->members->offsetGet($author_user->id);
-    $author_channel_id = $channel_id;
+    if (! $author_guild = $message->guild && $guild_id) $author_guild = $discord->guilds->offsetGet($guild_id);
+    if (! $author_member = $message->member && $author_guild) $author_member = $author_guild->members->offsetGet($author_user->id);
+    $author_channel_id = $message->channel_id;
     
     //Browser function used to retrieve attachments from deleted messages
     $browser_get = function ($browser, string $url, array $headers = [], $curl = false)
