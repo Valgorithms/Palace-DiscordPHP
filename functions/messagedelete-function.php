@@ -1,5 +1,5 @@
 <?php
-function messageDelete($message, $discord, $browser) {
+function messageDelete($message, $discord, $browser = null) {
     $message_id = $message->id;
     $author_user = $message->author;
     $guild_id = $message->guild_id;
