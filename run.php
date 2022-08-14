@@ -208,7 +208,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 	$idarray = array(); //get from post data
 	
 	if ($ip) if($GLOBALS['debug_echo']) echo '[REQUESTING IP] ' . $ip . PHP_EOL ;
-	if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0')
+	if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '11.0.0')
 		if($GLOBALS['debug_echo']) echo "[REMOTE_ADDR]" . $request->getServerParams()['REMOTE_ADDR'].PHP_EOL;
 	$GLOBALS['querycount'] = $GLOBALS['querycount'] + 1;
 	if($GLOBALS['debug_echo']) echo 'querycount:' . $GLOBALS['querycount'] . PHP_EOL;
@@ -279,7 +279,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'restart':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') { //Restricted for obvious reasons
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '11.0.0') { //Restricted for obvious reasons
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
@@ -289,7 +289,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'lookup':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '11.0.0') {
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
@@ -298,7 +298,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'owner':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '11.0.0') {
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
@@ -316,7 +316,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'whitelist':
-			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '10.0.0') {
+			if (substr($request->getServerParams()['REMOTE_ADDR'], 0, 6) != '11.0.0') {
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
@@ -403,7 +403,7 @@ $webapi->on('error', function ($e) {
 /*
 $socket->on('connection', function (React\Socket\ConnectionInterface $connection) {
     if($GLOBALS['debug_echo']) echo $connection->getRemoteAddress() . PHP_EOL;
-	if (substr($connection->getRemoteAddress(), 0, 12) != "tcp://10.0.0") return true;
+	if (substr($connection->getRemoteAddress(), 0, 12) != "tcp://11.0.0") return true;
 });
 */
 
