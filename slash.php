@@ -49,7 +49,7 @@ $discord->listenCommand('invite', function ($interaction) use ($discord) {
 // register guild command `/players`
 $discord->listenCommand('players', function ($interaction) use ($discord, $browser) {
 	$choices = $interaction->data->options;
-	$browser->get('https://11.0.0.175/servers/serverinfo_get.php')->done( //Hosted on the website, NOT the bot's server
+	$browser->get('http://10.0.0.175/servers/serverinfo_get.php')->done( //Hosted on the website, NOT the bot's server
 		function ($response) use ($interaction, $discord) {
 			//if($GLOBALS['debug_echo']) echo '[RESPONSE]' . PHP_EOL;
 			include "../servers/serverinfo.php"; //$servers[1]["key"] = address / alias / port / servername
