@@ -3837,7 +3837,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			case 'status': //;status
 				if($GLOBALS['debug_echo']) echo "[STATUS] $author_check" . PHP_EOL;
 				$ch = curl_init(); //create curl resource
-				curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/serverstate.txt"); // set url
+				curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/serverstate.txt"); // set url
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
 				return $message->reply(curl_exec($ch));
 				break;
@@ -3849,7 +3849,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					if($GLOBALS['debug_echo']) echo "[RESUME] $author_check" .  PHP_EOL;
 					//Trigger the php script remotely
 					$ch = curl_init(); //create curl resource
-					curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/resume.php"); // set url
+					curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/resume.php"); // set url
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
 					curl_setopt($ch, CURLOPT_POST, true);
 					$message->reply(curl_exec($ch));
@@ -3871,7 +3871,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 						$message->react("⏰")->done(function ($author_channel) use ($message) {	//Promise
 							//Trigger the php script remotely
 							$ch = curl_init(); //create curl resource
-							curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/savemanual1.php"); // set url
+							curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/savemanual1.php"); // set url
 							curl_setopt($ch, CURLOPT_POST, true);
 							
 							curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -3914,7 +3914,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 						//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 							//Trigger the php script remotely
 							$ch = curl_init(); //create curl resource
-							curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/savemanual2.php"); // set url
+							curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/savemanual2.php"); // set url
 							curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -3956,7 +3956,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 						//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 							//Trigger the php script remotely
 							$ch = curl_init(); //create curl resource
-							curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/savemanual3.php"); // set url
+							curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/savemanual3.php"); // set url
 							curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -3994,7 +3994,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
-						curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/deletemanual1.php"); // set url
+						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/deletemanual1.php"); // set url
 						curl_setopt($ch, CURLOPT_POST, true);
 						
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4030,7 +4030,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
-						curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/loadmanual1.php"); // set url
+						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual1.php"); // set url
 						curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4062,7 +4062,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
-						curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/loadmanual2.php"); // set url
+						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual2.php"); // set url
 						curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4094,7 +4094,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
-						curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/loadmanual3.php"); // set url
+						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadmanual3.php"); // set url
 						curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4126,7 +4126,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
-						curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/load1h.php"); // set url
+						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/load1h.php"); // set url
 						curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4158,7 +4158,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
-						curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/load2h.php"); // set url
+						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/load2h.php"); // set url
 						curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4188,7 +4188,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
-						curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/host.php"); // set url
+						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/host.php"); // set url
 						curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4223,7 +4223,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						$ch = curl_init(); //create curl resource
-						curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/kill.php"); // set url
+						curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/kill.php"); // set url
 						curl_setopt($ch, CURLOPT_POST, true);
 							
 						curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4258,7 +4258,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					//$message->react("⏰")->done(function($author_channel) use ($message) {	//Promise
 						//Trigger the php script remotely
 						//$ch = curl_init(); //create curl resource
-						//curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/update.php"); // set url
+						//curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/update.php"); // set url
 						//curl_setopt($ch, CURLOPT_POST, true);
 
 						//curl_setopt($ch, CURLOPT_USERAGENT, 'Palace Bot');
@@ -4305,7 +4305,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				case 'pause': //;pause
 					//Trigger the php script remotely
 					$ch = curl_init(); //create curl resource
-					curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/pause.php"); // set url
+					curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/pause.php"); // set url
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
 					curl_setopt($ch, CURLOPT_POST, true);
 					$message->reply(curl_exec($ch));
@@ -4314,7 +4314,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				case 'loadnew': //;loadnew
 					//Trigger the php script remotely
 					$ch = curl_init(); //create curl resource
-					curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/loadnew.php"); // set url
+					curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/loadnew.php"); // set url
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
 					curl_setopt($ch, CURLOPT_POST, true);
 					$message->reply(curl_exec($ch));
@@ -4327,7 +4327,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					}
 					//Trigger the php script remotely
 					$ch = curl_init(); //create curl resource
-					curl_setopt($ch, CURLOPT_URL, "http://11.0.0.18:81/civ13/VM_restart.php"); // set url
+					curl_setopt($ch, CURLOPT_URL, "http://10.0.0.18:81/civ13/VM_restart.php"); // set url
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
 					curl_setopt($ch, CURLOPT_POST, true);
 					$message->reply(curl_exec($ch));
@@ -4343,7 +4343,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			if($GLOBALS['debug_echo']) echo "[START] $author_check" .  PHP_EOL;
 			//Trigger the php script remotely
 			$ch = curl_init(); //create curl resource
-			curl_setopt($ch, CURLOPT_URL, "http://11.0.0.97/magmacreeper/start.php"); // set url
+			curl_setopt($ch, CURLOPT_URL, "http://10.0.0.97/magmacreeper/start.php"); // set url
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
 			curl_setopt($ch, CURLOPT_POST, true);
 			$message->reply(curl_exec($ch));
@@ -4353,7 +4353,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			if($GLOBALS['debug_echo']) echo "[START] $author_check" .  PHP_EOL;
 			//Trigger the php script remotely
 			$ch = curl_init(); //create curl resource
-			curl_setopt($ch, CURLOPT_URL, "http://11.0.0.97/magmacreeper/pull.php"); // set url
+			curl_setopt($ch, CURLOPT_URL, "http://10.0.0.97/magmacreeper/pull.php"); // set url
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //return the transfer as a string
 			curl_setopt($ch, CURLOPT_POST, true);
 			$message->reply(curl_exec($ch));
