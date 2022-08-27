@@ -194,7 +194,7 @@ $discord->listenCommand('players', function ($interaction) use ($discord, $brows
 				->addEmbed($embed);
 			$interaction->respondWithMessage($message)->done(
 			function ($success){
-			}, function ($error) use ($interaction, $discord) {
+			}, function ($error) {
 				var_dump($error);
 			});
 		}, function ($error) use ($interaction, $discord) {
