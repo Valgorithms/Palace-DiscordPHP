@@ -567,6 +567,6 @@ function appendImages($array)
     //imagepng($combined, $path); //Only works for resources, but imagick is an object
     
     /* Return the URL where the image can be accessed by Discord */
-    $webpath = "https://www.valzargaming.com/cache/" . $img_rand;
+    $webpath = "http://www.valzargaming.com/cache/" . $img_rand;
     return $webpath;
 }
