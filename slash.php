@@ -78,9 +78,9 @@ $discord->listenCommand('players', function ($interaction) use ($discord, $brows
 			$server_index[1] = "Nomads" . PHP_EOL;
 			$server_url[1] = "byond://51.254.161.128:1715";
 			$server_index[2] = "Persistence" . PHP_EOL;
-			$server_url[2] = "byond://www.valzargaming.com:1717";
+			$server_url[2] = "byond://69.140.47.22:1717";
 			$server_index[3] = "Blue Colony" . PHP_EOL;
-			$server_url[3] = "byond://www.valzargaming.com:7777";
+			$server_url[3] = "byond://69.140.47.22:7777";
 			$server_state_dump = array(); // new assoc array for use with the embed
 			
 			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
@@ -201,8 +201,8 @@ $discord->listenCommand('players', function ($interaction) use ($discord, $brows
 			//if($GLOBALS['debug_echo']) echo '[INTERACTION FAILED]' . PHP_EOL;
 			$discord->getChannel('315259546308444160')->sendMessage('<@116927250145869826>, Webserver is down! <#' . $interaction->channel->id . '>' ); //Alert Valithor
 			//$interaction->acknowledge(); // acknowledges the message and show source message
-		}
-	);
+		},
+    );
 });
 
 /*
