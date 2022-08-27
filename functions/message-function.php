@@ -1098,7 +1098,6 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				if ($react) $message->react("👍");
 				if ($vanity_flip) return $message->reply("Vanity functions enabled!");
 				else return $message->reply("Vanity functions disabled!");
-				;
 				break;
 			case 'nsfw':
 				if (!CheckFile($guild_folder, "nsfw_option.php")) {
@@ -2321,9 +2320,9 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$server_index[1] = "Nomads" . PHP_EOL;
 				$server_url[1] = "byond://51.254.161.128:1715";
 				$server_index[2] = "Persistence" . PHP_EOL;
-				$server_url[2] = "byond://www.valzargaming.com:1717";
+				$server_url[2] = "byond://69.140.47.22:1717";
 				$server_index[3] = "Blue Colony" . PHP_EOL;
-				$server_url[3] = "byond://www.valzargaming.com:7777";
+				$server_url[3] = "byond://69.140.47.22:7777";
 				$server_state_dump = array(); // new assoc array for use with the embed
 				
 				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
