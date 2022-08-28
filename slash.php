@@ -42,13 +42,11 @@ $discord->guilds['807759102624792576']->commands->freshen()->done(
 */
 
 $discord->listenCommand('invite', function ($interaction) use ($discord) {
-	$choices = $interaction->data->options;
 	$interaction->respondWithMessage(Discord\Builders\MessageBuilder::new()->setContent($discord->application->getInviteURLAttribute('8')));
 });
 
 // register guild command `/players`
 $discord->listenCommand('players', function ($interaction) use ($discord, $browser) {
-	$choices = $interaction->data->options;
 	$browser->get('http://192.168.1.175:8080/servers/serverinfo_get.php')->done( //Hosted on the website, NOT the bot's server
 		function ($response) use ($interaction, $discord) {
 			//if($GLOBALS['debug_echo']) echo '[RESPONSE]' . PHP_EOL;
