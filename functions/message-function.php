@@ -2291,7 +2291,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		//Sends a message containing data for each server we host as collected from serverinfo.json
 		//This method does not have to be called locally, so it can be moved to VZG Verifier
 		if($GLOBALS['debug_echo']) echo "[SERVER STATE] $author_check" . PHP_EOL;
-		$browser->get('https://www.valzargaming.com/servers/serverinfo_get.php')->done( //Hosted on the website, NOT the bot's server
+		$browser->get('http://192.168.1.175:8080/servers/serverinfo_get.php')->done( //Hosted on the website, NOT the bot's server
 			function ($response) use ($author_channel, $discord, $message) {
 				if($GLOBALS['debug_echo']) echo '[RESPONSE]' . PHP_EOL;
 				include "../servers/serverinfo.php"; //$servers[1]["key"] = address / alias / port / servername
