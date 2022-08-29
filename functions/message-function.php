@@ -643,7 +643,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					$author_user->sendMessage('', false, $embed);
 					return;
 				} else {
-					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
+					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($documentation) {	//Promise
 						if($GLOBALS['debug_echo']) echo "[;SETUP MESSAGE]" . PHP_EOL;
 						$author_dmchannel->sendMessage($documentation);
 					});
@@ -668,15 +668,9 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				//Channels
 				$documentation = $documentation . "**Channels:**\n";
 				$documentation = $documentation . "`general <#channel_id>` <#{$general_channel->id}>\n";
-				if ($welcome_public_channel_id) {
-					$welcome_public_channel = $author_guild->channels->get('id', $welcome_public_channel_id);
-				}
-				if ($welcome_log_channel_id) {
-					$welcome_log_channel = $author_guild->channels->get('id', $welcome_log_channel_id);
-				}
-				if ($welcome_public_channel_id) {
-					$documentation = $documentation . "`welcome <#channel_id>` <#{$welcome_public_channel->id}>\n";
-				}
+				if ($welcome_public_channel_id) $welcome_public_channel = $author_guild->channels->get('id', $welcome_public_channel_id);
+				if ($welcome_log_channel_id) $welcome_log_channel = $author_guild->channels->get('id', $welcome_log_channel_id);
+				if ($welcome_public_channel_id) $documentation = $documentation . "`welcome <#channel_id>` <#{$welcome_public_channel->id}>\n";
 				$documentation = $documentation . "`welcomelog <#channel_id>` <#{$welcome_log_channel->id}>\n";
 				$documentation = $documentation . "`log <#channel_id>` <#{$modlog_channel->id}>\n";
 				$documentation = $documentation . "`verify channel <#channel_id>` <#{$getverified_channel->id}>\n";
@@ -768,13 +762,13 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 						->setURL("");							 												// Set the URL
 			//				Open a DM channel then send the rich embed message
 					if($GLOBALS['debug_echo']) echo "embed class: " . get_class($embed) . PHP_EOL;
-					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
+					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($embed) {	//Promise
 						if($GLOBALS['debug_echo']) echo "[;CURRENTSETUP EMBED]" . PHP_EOL;
 						$author_dmchannel->sendEmbed($embed);
 						return;
 					});
 				} else {
-					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
+					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($documentation) {	//Promise
 						if($GLOBALS['debug_echo']) echo "[;CURRENTSETUP MESSAGE]" . PHP_EOL;
 						$author_dmchannel->sendMessage($documentation);
 					});
@@ -851,12 +845,12 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					->setFooter("Palace Bot by Valithor#5947")							 					// Set a footer without icon
 					->setURL("");							 												// Set the URL
 		//				Open a DM channel then send the rich embed message
-				$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $embed) {	//Promise
-					if($GLOBALS['debug_echo']) echo "[;SETTINGS EMBED]" . PHP_EOL;
-					return $author_dmchannel->sendEmbed($embed);
-				});
+                    $author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($embed) {	//Promise
+                        if($GLOBALS['debug_echo']) echo "[;SETTINGS EMBED]" . PHP_EOL;
+                        return $author_dmchannel->sendEmbed($embed);
+                    });
 				} else {
-					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($message, $documentation) {	//Promise
+					$author_user->getPrivateChannel()->done(function ($author_dmchannel) use ($documentation) {	//Promise
 						if($GLOBALS['debug_echo']) echo "[;SETTINGS MESSAGE]" . PHP_EOL;
 						return $author_dmchannel->sendMessage($documentation);
 					});
@@ -910,14 +904,14 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					*/
 					
 					//Preserves order and executes recursively until the job is done
-					$add = function ($gameroles, $new_message, $message) use (&$add) {
+					$add = function ($gameroles, $new_message) use (&$add) {
 						if (count($gameroles) != 0) {
-							$new_message->react(array_shift($gameroles))->done(function () use ($add, $gameroles, $new_message, $message) {
-								$add($gameroles, $new_message, $message);
+							$new_message->react(array_shift($gameroles))->done(function () use ($add, $gameroles, $new_message) {
+								$add($gameroles, $new_message);
 							});
 						}
 					};
-					$add($gameroles, $new_message, $message);
+					$add($gameroles, $new_message);
 					return $message->delete();
 				});
 				return;
@@ -926,30 +920,30 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($species_message_text)->done(function ($new_message) use ($guild_folder, $species, $message) {
 					VarSave($guild_folder, "species_message_id.php", strval($new_message->id));
-					$add = function ($species, $new_message, $message) use (&$add) {
+					$add = function ($species, $new_message) use (&$add) {
 						if (count($species) != 0) {
-							$new_message->react(array_shift($species))->done(function () use ($add, $species, $new_message, $message) {
-								$add($species, $new_message, $message);
+							$new_message->react(array_shift($species))->done(function () use ($add, $species, $new_message) {
+								$add($species, $new_message);
 							});
 						}
 					};
-					$add($species, $new_message, $message);
+					$add($species, $new_message);
 					return $message->delete();
 				});
 				return;
 				break;
 			case 'message species2': //;message species2
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
-				$author_channel->sendMessage($species2_message_text)->done(function ($new_message) use ($guild_folder, $species2, $message) {
+				$author_channel->sendMessage($species2_message_text)->done(function ($new_message) use ($guild_folder, $species2) {
 					VarSave($guild_folder, "species2_message_id.php", strval($new_message->id));
-					$add = function ($species2, $new_message, $message) use (&$add) {
+					$add = function ($species2, $new_message) use (&$add) {
 						if (count($species2) != 0) {
-							$new_message->react(array_shift($species2))->done(function () use ($add, $species2, $new_message, $message) {
-								$add($species2, $new_message, $message);
+							$new_message->react(array_shift($species2))->done(function () use ($add, $species2, $new_message) {
+								$add($species2, $new_message);
 							});
 						}
 					};
-					$add($species2, $new_message, $message);
+					$add($species2, $new_message);
 					return $message->delete();
 				});
 				return;
@@ -958,14 +952,14 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($species3_message_text)->done(function ($new_message) use ($guild_folder, $species3, $message) {
 					VarSave($guild_folder, "species3_message_id.php", strval($new_message->id));
-					$add = function ($species3, $new_message, $message) use (&$add) {
+					$add = function ($species3, $new_message) use (&$add) {
 						if (count($species3) != 0) {
-							$new_message->react(array_shift($species3))->done(function () use ($add, $species3, $new_message, $message) {
-								$add($species3, $new_message, $message);
+							$new_message->react(array_shift($species3))->done(function () use ($add, $species3, $new_message) {
+								$add($species3, $new_message);
 							});
 						}
 					};
-					$add($species3, $new_message, $message);
+					$add($species3, $new_message);
 					return $message->delete();
 				});
 				return;
@@ -975,14 +969,14 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($gender_message_text)->done(function ($new_message) use ($guild_folder, $gender, $message) {
 					VarSave($guild_folder, "gender_message_id.php", strval($new_message->id));
-					$add = function ($gender, $new_message, $message) use (&$add) {
+					$add = function ($gender, $new_message) use (&$add) {
 						if (count($gender) != 0) {
-							$new_message->react(array_shift($gender))->done(function () use ($add, $gender, $new_message, $message) {
-								$add($gender, $new_message, $message);
+							$new_message->react(array_shift($gender))->done(function () use ($add, $gender, $new_message) {
+								$add($gender, $new_message);
 							});
 						}
 					};
-					$add($gender, $new_message, $message);
+					$add($gender, $new_message);
 					return $message->delete();					
 				});
 				return;
@@ -993,14 +987,14 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($pronouns_message_text)->done(function ($new_message) use ($guild_folder, $pronouns, $message) {
 					VarSave($guild_folder, "pronouns_message_id.php", strval($new_message->id));
-					$add = function ($pronouns, $new_message, $message) use (&$add) {
+					$add = function ($pronouns, $new_message) use (&$add) {
 						if (count($pronouns) != 0) {
-							$new_message->react(array_shift($pronouns))->done(function () use ($add, $pronouns, $new_message, $message) {
-								$add($pronouns, $new_message, $message);
+							$new_message->react(array_shift($pronouns))->done(function () use ($add, $pronouns, $new_message) {
+								$add($pronouns, $new_message);
 							});
 						}
 					};
-					$add($pronouns, $new_message, $message);
+					$add($pronouns, $new_message);
 					return $message->delete();	
 				});
 				return;
@@ -1010,14 +1004,14 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($sexuality_message_text)->done(function ($new_message) use ($guild_folder, $sexualities, $message) {
 					VarSave($guild_folder, "sexuality_message_id.php", strval($new_message->id));
-					$add = function ($sexualities, $new_message, $message) use (&$add) {
+					$add = function ($sexualities, $new_message) use (&$add) {
 						if (count($sexualities) != 0) {
-							$new_message->react(array_shift($sexualities))->done(function () use ($add, $sexualities, $new_message, $message) {
-								$add($sexualities, $new_message, $message);
+							$new_message->react(array_shift($sexualities))->done(function () use ($add, $sexualities, $new_message) {
+								$add($sexualities, $new_message);
 							});
 						}
 					};
-					$add($sexualities, $new_message, $message);
+					$add($sexualities, $new_message);
 					return $message->delete();	
 				});
 				return;
@@ -1045,14 +1039,14 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($channelroles_message_text)->done(function ($new_message) use ($guild_folder, $channelroles, $message) {
 					VarSave($guild_folder, "channelroles_message_id.php", strval($new_message->id));
-					$add = function ($channelroles, $new_message, $message) use (&$add) {
+					$add = function ($channelroles, $new_message) use (&$add) {
 						if (count($channelroles) != 0) {
-							$new_message->react(array_shift($channelroles))->done(function () use ($add, $channelroles, $new_message, $message) {
-								$add($channelroles, $new_message, $message);
+							$new_message->react(array_shift($channelroles))->done(function () use ($add, $channelroles, $new_message) {
+								$add($channelroles, $new_message);
 							});
 						}
 					};
-					$add($channelroles, $new_message, $message);
+					$add($channelroles, $new_message);
 					return $message->delete();	
 				});
 				return;
@@ -1062,14 +1056,14 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				VarSave($guild_folder, "rolepicker_channel_id.php", strval($author_channel_id)); //Make this channel the rolepicker channel
 				$author_channel->sendMessage($customroles_message_text)->done(function ($new_message) use ($guild_folder, $customroles, $message) { //React in order
 					VarSave($guild_folder, "customroles_message_id.php", strval($new_message->id));
-					$add = function ($customroles, $new_message, $message) use (&$add) {
+					$add = function ($customroles, $new_message) use (&$add) {
 						if (count($customroles) != 0) {
-							$new_message->react(array_shift($customroles))->done(function () use ($add, $customroles, $new_message, $message) {
-								$add($customroles, $new_message, $message);
+							$new_message->react(array_shift($customroles))->done(function () use ($add, $customroles, $new_message) {
+								$add($customroles, $new_message);
 							});
 						}
 					};
-					$add($customroles, $new_message, $message);
+					$add($customroles, $new_message);
 					return $message->delete();	
 				});
 				return;
@@ -4403,7 +4397,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 						return $message->react("👎");
 					});
 				});
-			} else return $message->reply("Invalid input!");
+			} return $message->reply("Invalid input!");
 		}
 		if (str_starts_with($message_content_lower, 'whois ')) { //;whois
 			if($GLOBALS['debug_echo']) echo "[WHOIS] $author_check" . PHP_EOL;
@@ -4428,7 +4422,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					$discord->users->fetch($value)->done(
 						function ($mention_user) use ($discord, $author_channel) {
 							include 'whois-include.php';
-						}, function ($error) use ($author_channel, $message) {
+						}, function ($error) use ($message) {
 							return $message->react("👎");
 						}					
 					);
@@ -4702,7 +4696,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		}
 		
 		$duration = 3;
-		$author_channel->sendMessage("$author_check ($author_id) deleted $value messages!")->done(function ($new_message) use ($discord, $message, $duration) { //Send message to channel confirming the message deletions then delete the new message after 3 seconds
+		$author_channel->sendMessage("$author_check ($author_id) deleted $value messages!")->done(function ($new_message) use ($discord, $duration) { //Send message to channel confirming the message deletions then delete the new message after 3 seconds
 			$discord->getLoop()->addTimer($duration, function () use ($new_message) {
 				return $new_message->delete();
 			});
@@ -5197,9 +5191,9 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
 				/*foreach ($removed_roles as $role)
 					$target_guildmember->removeRole($role);*/
-				$remove = function ($removed_roles, $role_muted_id) use (&$add) {
+				$remove = function ($removed_roles, $role_muted_id) use (&$remove) {
 					if (count($removed_roles) != 0) {
-						$target_guildmember->removeRole(array_shift($removed_roles))->done(function () use ($add, $removed_roles) {
+						$target_guildmember->removeRole(array_shift($removed_roles))->done(function () use ($remove, $removed_roles) {
 							$remove($removed_roles);
 						});
 					} else $target_guildmember->addRole($role_muted_id);
