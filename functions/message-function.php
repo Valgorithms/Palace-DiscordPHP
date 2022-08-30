@@ -425,49 +425,6 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	$guild_custom_roles_path = getcwd() . "$guild_folder\\custom_roles.php";
 	if (!include "$guild_custom_roles_path")
 		global $customroles, $customroles_message_text;
-
-	/*
-	*********************
-	*********************
-	Automod Trigger
-	*********************
-	*********************
-	*/
-	if (CheckFile($guild_folder, "bad_full_words.php")) {
-		$bad_full_words = VarLoad($guild_folder, "bad_full_words.php");
-	} else {
-		$bad_full_words = array();
-		VarSave($guild_folder, "bad_full_words.php", $bad_full_words);
-	}
-
-	if($creator || $vzgbot || $bot || $owner || $dev || $admin || $mod || $muted || $author_perms['manage_guild'] || $author_perms['ban_members'] || $author_perms['kick_members']) {
-		//Exempt
-	}else{
-		foreach ($bad_full_words as $word) {
-			//if($GLOBALS['debug_echo']) echo "[WORD] $word" . PHP_EOL;
-			if (str_contains($message_content_lower, ' ' . $word . ' ') || ($message_content_lower == $word)) { //Mute the offender
-				if($GLOBALS['debug_echo']) echo '[BAD WORD] $word' . PHP_EOL;
-				$removed_roles = array();
-				foreach ($author_member->roles as $role) $removed_roles[] = $role->id;
-				VarSave($guild_folder."/".$author_id, "removed_roles.php", $removed_roles);
-				//Remove all roles and add the muted role (TODO: REMOVE ALL ROLES AND RE-ADD THEM UPON BEING UNMUTED)
-				/*foreach ($removed_roles as $role_id)
-					if ($role_id != $role_muted_id) $author_member->removeRole($role_id);*/
-				$remove = function ($removed_roles, $role_muted_id) use (&$remove, $author_member) {
-					if (count($removed_roles) != 0) {
-						$author_member->removeRole(array_shift($removed_roles), $role_muted_id)->done(function () use ($remove, $removed_roles) {
-							$remove($removed_roles, $role_muted_id);
-						});
-					} else $author_member->addRole($role_muted_id);
-				};
-				$remove($removed_roles, $role_muted_id);
-				if ($role_muted_id) $author_member->addRole($role_muted_id);
-				//return $message->react("🤐");
-				return $message->delete();
-			}
-		}
-	}
-
 		
 	/*
 	*********************
@@ -2104,57 +2061,6 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					$message->reply("Unable to send you a DM! Please check your privacy settings and try again.");
 				}
 			);
-		}
-	}
-
-	/*
-	*********************
-	*********************
-	Automod Commands
-	*********************
-	*********************
-	*/
-	
-	if($creator || $owner || $dev || $admin || $author_perms['manage_guild']) { //Allow high staff to edit the ban word list
-		if (str_starts_with($message_content_lower, 'automod')) { //;automod
-			$subcommand = trim(substr($message_content_lower, 7));
-			if($GLOBALS['debug_echo']) echo "[SUBCOMMAND $subcommand]" . PHP_EOL;
-			
-			$switch = null;
-			if (str_starts_with($subcommand, 'add')) $switch = 'add';
-			if (str_starts_with($subcommand, 'rem')) $switch = 'rem';
-			if (str_starts_with($subcommand, 'remove')) $switch = 'remove';
-			if (str_starts_with($subcommand, 'list')) $switch = 'list';
-			
-			if($switch) {
-				$array = explode(' ', trim(str_replace($switch, "", $subcommand)));
-				if($GLOBALS['debug_echo']) echo "[ARRAY] "; var_dump($array); if($GLOBALS['debug_echo']) echo PHP_EOL; 
-				
-				if(!empty($array)) {
-					foreach($array as $word) {
-						if ($switch == 'add') //Add to banned words
-							if(!in_array($word, $bad_full_words)) {
-								$bad_full_words[] = $word;
-								VarSave($guild_folder, "bad_full_words.php", $bad_full_words);
-							}else return $message->react("👎");
-						if (($switch == 'rem') || ($switch == 'remove')) //Remove from banned words
-							if(in_array($word, $bad_full_words)) { //Remove from whitelist (Rebuilds the array)
-								$pruned_bad_full_words_array = array();
-								foreach ($bad_full_words as $value)
-									if ($word != $value) $pruned_bad_full_words_array[] = $value;
-								VarSave($guild_folder, "bad_full_words.php", $pruned_bad_full_words_array);
-								
-							}else return $message->react("👎");
-					}
-				}
-				if ($switch == 'list') { //Display all banned words
-					$string = "Banned words: ";
-					foreach ($bad_full_words as $bannedword)
-						$string .= "`$bannedword` ";
-					return $message->channel->sendMessage($string);
-				}
-				return $message->react("👍");
-			}
 		}
 	}
 	
