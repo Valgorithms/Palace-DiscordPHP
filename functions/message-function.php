@@ -2079,16 +2079,8 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 	*********************
 	*********************
 	*/
-	if (str_starts_with($message_content_lower, 'join #')) { //;join #channel
-		$filter = 'join #';
-		$value = explode(' ', str_replace($filter, "", $message_content_lower));
-		$twitch->joinChannel($value[0]);
-	}
-	if (str_starts_with($message_content_lower, 'leave #')) { //;leave #channel
-		$filter = 'leave #';
-		$value = explode(' ', str_replace($filter, "", $message_content_lower));
-		$twitch->leaveChannel($value[0]);
-	}
+	if (str_starts_with($message_content_lower, 'join #')) return $twitch->joinChannel(explode(' ', str_replace('join #', "", $message_content_lower))[0]);
+	if (str_starts_with($message_content_lower, 'leave #')) return $twitch->leaveChannel(explode(' ', str_replace('leave #', "", $message_content_lower))[0]);
 
 	/*
 	*********************
