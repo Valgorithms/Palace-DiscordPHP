@@ -1,3 +1,8 @@
+# Notice of deprecation
+Development of this bot has been halted in anticopation of a full rewrite that will make it more easy to manage and develop for. Further updates will be made at [https://github.com/VZGCoders/Palace-Revived/](https://github.com/VZGCoders/Palace-Revived/)
+
+# About this bot
+
 **This fork is dedicated to maintaining the code used by Palace Bot#9203, which runs on the teamreflex/DiscordPHP API library. You can choose to self-host your own instance of this bot or invite my hosted instance to your server. If hosting your own instance, it is advisable to merge all -include.php files into run.php to remove the read overhead of loading a file every time it is needed **OR** the preferred method of enabling JIT via opcache in PHP's config. Please note that doing so will require the bot to be restarted any time a change is made to it.**
 
 Invite link: https://discord.com/oauth2/authorize?client_id=662093882795753482&scope=bot&permissions=8
