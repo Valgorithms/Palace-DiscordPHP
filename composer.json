@@ -10,9 +10,11 @@
     ],
     "require": {
         "php": "^8.0.0",
-        "team-reflex/discord-php": "dev-master",
-        "react/filesystem": "^0.1.1",
-		"vzgcoders/twitchphp": "dev-main"
+        "team-reflex/discord-php": "dev-cacheInterface",
+		"vzgcoders/twitchphp": "dev-main",
+        "clue/redis-react": "^2.6",
+        "wyrihaximus/react-cache-redis": "^4.2.0",
+        "react/filesystem": "^0.1.1"
     },
     "suggest": {
         "ext-uv": "For a faster, and more performant loop. PHP >=7 only. Preferred.",
