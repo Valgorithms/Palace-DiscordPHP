@@ -2,7 +2,7 @@
 function guildMemberRemove($guildmember, $discord) {
 	$author_guild_id = $guildmember->guild->id;
 	if($GLOBALS['debug_echo']) echo "[guildMemberRemove] $author_guild_id" . PHP_EOL;
-	$user = $guildmember->user ?? $discord->users->offsetGet($guildmember->id);
+	$user = $guildmember->user ?? $discord->users->get('id', $guildmember->id);
 	//TODO: Varload welcome setting
 	$welcome = true;
 

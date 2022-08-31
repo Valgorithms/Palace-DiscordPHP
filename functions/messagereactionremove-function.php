@@ -11,10 +11,10 @@ function messageReactionRemove($reaction, $discord) {
 	//Load guild info
 	$guild	= $reaction->guild;
 	$author_guild_id = $reaction->guild_id; //if($GLOBALS['debug_echo']) echo "author_guild_id: $author_guild_id" . PHP_EOL;
-	$author_guild = $discord->guilds->offsetGet($author_guild_id);
+	$author_guild = $discord->guilds->get('id', $author_guild_id);
 
-	$author_user = $message->author ?? $discord->users->offsetGet($message->user_id);
-	$author_member = $message->member ?? $author_guild->members->offsetGet($message->user_id);
+	$author_user = $message->author ?? $discord->users->get('id', $message->user_id);
+	$author_member = $message->member ?? $author_guild->members->get('id', $message->user_id);
 	$author_channel = $message->channel;
 	$author_channel_id	= $author_channel->id; 														//if($GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 
@@ -38,14 +38,14 @@ function messageReactionRemove($reaction, $discord) {
 	$author_folder				= $author_guild_id."\\".$author_id;
 
 	//var_dump($reaction);
-	$respondent_user = $reaction->user ?? $discord->users->offsetGet($reaction->user_id);
+	$respondent_user = $reaction->user ?? $discord->users->get('id', $reaction->user_id);
 	//Load respondent info
 	$respondent_username 		= $respondent_user->username; 										//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
 	$respondent_discriminator 	= $respondent_user->discriminator;									//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
 	$respondent_id 				= $respondent_user->id;												//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
 	$respondent_avatar 			= $respondent_user->avatar;											//if($GLOBALS['debug_echo']) echo "author_avatar: " . $author_avatar . PHP_EOL;
 	$respondent_check 			= "$respondent_username#$respondent_discriminator"; 				//if($GLOBALS['debug_echo']) echo "respondent_check: " . $respondent_check . PHP_EOL;
-	$respondent_member			= $reaction->member ?? $author_guild->members->offsetGet($respondent_id);
+	$respondent_member			= $reaction->member ?? $author_guild->members->get('id', $respondent_id);
 
 	/*
 	//

@@ -3,9 +3,9 @@ function guildBanRemove($ban, $discord) {
 	include_once "custom_functions.php";
 
 	$guild_id = $ban->guild_id;
-	$guild = $ban->guild ?? $discord->guilds->offsetGet($guild_id);
+	$guild = $ban->guild ?? $discord->guilds->get('id', $guild_id);
 	$user_id = $ban->user_id;
-	$user = $ban->user ?? $discord->users->offsetGet($user_id);
+	$user = $ban->user ?? $discord->users->get('id', $user_id);
 	$reason = $ban->reason;
 
 	if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "[guildBanRemove] ($guild_id)" . PHP_EOL;

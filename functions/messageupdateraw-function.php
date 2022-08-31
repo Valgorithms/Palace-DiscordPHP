@@ -39,7 +39,7 @@ function messageUpdateRaw($channel, $data_array, $discord) {
 		$author_channel_id												= $author_channel->id; 											//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_channel_id: " . $author_channel_id . PHP_EOL;
 
 		$author_user = $message->author; //This will need to be updated in a future release of DiscordPHP
-		if (! $author_member = $message->member ?? $guild->members->offsetGet($author->user->id)) return;
+		if (! $author_member = $message->member ?? $guild->members->get('id', $author->user->id)) return;
 		
 		$author_username 												= $author_user->username; 										//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
 		$author_discriminator 											= $author_user->discriminator;									//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;

@@ -70,7 +70,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		$author_guild_id 											= $author_guild->id; 											//if($GLOBALS['debug_echo']) echo "discord_guild_id: " . $author_guild_id . PHP_EOL;
 		$author_guild_name											= $author_guild->name;
 		$guild_owner_id												= $author_guild->owner_id;
-		if(is_null($author_member)) $author_member = $author_guild->members->offsetGet($author_id);
+		if(is_null($author_member)) $author_member = $author_guild->members->get('id', $author_id);
 		//Leave the guild if the owner is blacklisted
 		global $blacklisted_owners;
 		if ($blacklisted_owners) {
@@ -260,9 +260,9 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 							foreach($matches as $array) {
 								foreach ($array as $match) {
 									if(is_numeric($match)) {
-										if ($user = $discord->users->offsetGet($match))
+										if ($user = $discord->users->get('id', $match))
 											$username = $user->username;
-										if (($member = $author_guild->members->offsetGet($match)) && $member->nick)
+										if (($member = $author_guild->members->get('id', $match)) && $member->nick)
 											$nickname = $member->nick;
 										if ($nickname || $username)
 											$content = str_replace($match, '@'.($nickname ?? $username), $content);
@@ -491,7 +491,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					if (!preg_match('/^[0-9]{16,18}$/', $value))
 						return $message->react('❌');
 				if ($switch == 'add')
-					if ($target_user = $discord->users->offsetGet($value)) //Add to whitelist
+					if ($target_user = $discord->users->get('id', $value)) //Add to whitelist
 						if(!in_array($value, $whitelist_array)) {
 							$whitelist_array[] = $value;
 							VarSave($guild_folder, "ownerwhitelist.php", $whitelist_array);
@@ -4715,7 +4715,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				foreach ($array as $match) {
 					if (is_numeric($match)) {
 						if ($match != $discord->id && $match != $author_id) { // Don't let users ban themselves or the bot with this command
-							if ($member = $author_guild->members->offsetGet($match)) {
+							if ($member = $author_guild->members->get('id', $match)) {
 								$mention_id_array[] = $match;
 							} else $invalid_mention_id_array = $match; // Used to inform the user who couldn't be banned because they don't exist in the server (or they're not cached in the members repository)
 						}
@@ -4726,8 +4726,8 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		$msg = "The following users have been banned: ";
         $banned = '';
 		foreach ($mention_id_array as $target_member_id) {
-			if($GLOBALS['debug_echo']) '[BAN ID] ' . $target_member_id . PHP_EOL . ' [BAN MEMBER] ' . $author_guild->members->offsetGet("$target_member_id") . PHP_EOL . '[MESSAGE CONTENT] ' . $message->content . PHP_EOL;
-			$author_guild->bans->ban($target_member = $author_guild->members->offsetGet("$target_member_id"), 0, $message->content);
+			if($GLOBALS['debug_echo']) '[BAN ID] ' . $target_member_id . PHP_EOL . ' [BAN MEMBER] ' . $author_guild->members->get('id', "$target_member_id") . PHP_EOL . '[MESSAGE CONTENT] ' . $message->content . PHP_EOL;
+			$author_guild->bans->ban($target_member = $author_guild->members->get('id', "$target_member_id"), 0, $message->content);
 			$banned .= $target_member;
 		}
         if ($banned) return $message->reply($msg . $banned);
@@ -4843,7 +4843,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			foreach ($arr as $val) {
 				if (is_numeric($val))
 					if (preg_match('/^[0-9]{16,18}$/', $val))
-						if ($target_user = $discord->users->offsetGet($val))
+						if ($target_user = $discord->users->get('id', $val))
 							$mentions_arr[] = $target_user;
 			}
 		}

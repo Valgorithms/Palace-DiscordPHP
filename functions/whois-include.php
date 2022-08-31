@@ -59,7 +59,7 @@ if ($mention_tags == "") {
 $guildstring = "";
 //Check if user is in a shared guild
 foreach($discord->guilds as $guild) {
-	if($member = $guild->members->offsetGet($mention_id)) {
+	if($member = $guild->members->get('id', $mention_id)) {
 			$guildstring .= $guild->name . ' (' . $guild->id . ")\n";
 	}
 }

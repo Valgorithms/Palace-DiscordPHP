@@ -220,55 +220,55 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			break;
 
 		case 'guild':
-			if (!$id || !webapiSnow($id) || !$return = $discord->guilds->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$return = $discord->guilds->get('id', $id))
 				return webapiFail('guild_id', $id);
 			break;
 
 		case 'bans':
-			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->get('id', $id))
 				return webapiFail('guild_id', $id);
 			$return = $guild->bans;
 			break;
 
 		case 'channels':
-			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->get('id', $id))
 				return webapiFail('guild_id', $id);
 			$return = $guild->channels;
 			break;
 
 		case 'members':
-			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->get('id', $id))
 				return webapiFail('guild_id', $id);
 			$return = $guild->members;
 			break;
 
 		case 'emojis':
-			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->get('id', $id))
 				return webapiFail('guild_id', $id);
 			$return = $guild->emojis;
 			break;
 
 		case 'invites':
-			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->get('id', $id))
 				return webapiFail('guild_id', $id);
 			$return = $guild->invites;
 			break;
 
 		case 'roles':
-			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->get('id', $id))
 				return webapiFail('guild_id', $id);
 			$return = $guild->roles;
 			break;
 
 		case 'guildMember':
-			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$guild = $discord->guilds->get('id', $id))
 				return webapiFail('guild_id', $id);
-			if (!$id2 || !webapiSnow($id2) || !$return = $guild->members->offsetGet($id2))
+			if (!$id2 || !webapiSnow($id2) || !$return = $guild->members->get('id', $id2))
 				return webapiFail('user_id', $id2);
 			break;
 
 		case 'user':
-			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id)) {
+			if (!$id || !webapiSnow($id) || !$return = $discord->users->get('id', $id)) {
 				return webapiFail('user_id', $id);
 			}
 			break;
@@ -293,7 +293,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 				if($GLOBALS['debug_echo']) echo '[REJECT]' . $request->getServerParams()['REMOTE_ADDR'] . PHP_EOL;
 				return new \React\Http\Message\Response(501, ['Content-Type' => 'text/plain'], 'Reject'.PHP_EOL);
 			}
-			if (!$id || !webapiSnow($id) || !$return = $discord->users->offsetGet($id))
+			if (!$id || !webapiSnow($id) || !$return = $discord->users->get('id', $id))
 				return webapiFail('user_id', $id);
 			break;
 
@@ -305,7 +305,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			if (!$id || !webapiSnow($id))
 				return webapiFail('user_id', $id);
 			$return = false;
-			if ($user = $discord->users->offsetGet($id)) { //Search all guilds the bot is in and check if the user id exists as a guild owner
+			if ($user = $discord->users->get('id', $id)) { //Search all guilds the bot is in and check if the user id exists as a guild owner
 				foreach ($discord->guilds as $guild) {
 					if ($id == $guild->owner_id) {
 						$return = true;
@@ -324,7 +324,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 				return webapiFail('user_id', $id);
 			$return = false;
 			$result = array();
-			if ($user = $discord->users->offsetGet($id)) { //If they're not actively in a discord server shared with the bot they probably shouldn't have access to this
+			if ($user = $discord->users->get('id', $id)) { //If they're not actively in a discord server shared with the bot they probably shouldn't have access to this
 				foreach ($discord->guilds as $guild) {
 					$target_folder = "\\guilds\\".$guild->id;
 					$whitelist_array = array();
@@ -351,7 +351,7 @@ $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerReques
 			if (!$id || !webapiSnow($id)) {
 				return webapiFail('user_id', $id);
 			}
-			if (!$user = $discord->users->offsetGet($id)) {
+			if (!$user = $discord->users->get('id', $id)) {
 				$discord->users->fetch($id)->done(
 					function ($user) {
 						$return = $user->avatar;

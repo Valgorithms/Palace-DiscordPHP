@@ -6,7 +6,7 @@ function messageReactionAdd($reaction, $discord) {
 	//Load guild info
 	$guild	= $reaction->guild;
 	$author_guild_id = $reaction->guild_id; //if($GLOBALS['debug_echo']) echo "author_guild_id: $author_guild_id" . PHP_EOL;
-	$author_guild = $discord->guilds->offsetGet($author_guild_id);
+	$author_guild = $discord->guilds->get('id', $author_guild_id);
 
 	$author_user = $message->author;
 	$author_channel = $message->channel;
@@ -31,14 +31,14 @@ function messageReactionAdd($reaction, $discord) {
 	$author_check 				= "$author_username#$author_discriminator"; 						//if($GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;
 
 	//var_dump($reaction);
-	$respondent_user = $reaction->user ?? $discord->users->offsetGet($reaction->user_id);
+	$respondent_user = $reaction->user ?? $discord->users->get('id', $reaction->user_id);
 	//Load respondent info
 	$respondent_username 		= $respondent_user->username; 										//if($GLOBALS['debug_echo']) echo "author_username: " . $author_username . PHP_EOL;
 	$respondent_discriminator 	= $respondent_user->discriminator;									//if($GLOBALS['debug_echo']) echo "author_discriminator: " . $author_discriminator . PHP_EOL;
 	$respondent_id 				= $respondent_user->id;												//if($GLOBALS['debug_echo']) echo "author_id: " . $author_id . PHP_EOL;
 	$respondent_avatar 			= $respondent_user->avatar;											//if($GLOBALS['debug_echo']) echo "author_avatar: " . $author_avatar . PHP_EOL;
 	$respondent_check 			= "$respondent_username#$respondent_discriminator"; 				//if($GLOBALS['debug_echo']) echo "respondent_check: " . $respondent_check . PHP_EOL;
-	$respondent_member			= $reaction->member ?? $author_guild->members->offsetGet($respondent_id);
+	$respondent_member			= $reaction->member ?? $author_guild->members->get('id', $respondent_id);
 
 	/*
 	//

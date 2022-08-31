@@ -3,8 +3,8 @@ function messageDelete($message, $discord, $browser = null) {
     $message_id = $message->id;
     $author_user = $message->author;
     $guild_id = $message->guild_id;
-    if ($guild_id && ! $author_guild = $message->guild) $author_guild = $discord->guilds->offsetGet($guild_id);
-    if ($author_guild && ! $author_member = $message->member) $author_member = $author_guild->members->offsetGet($author_user->id);
+    if ($guild_id && ! $author_guild = $message->guild) $author_guild = $discord->guilds->get('id', $guild_id);
+    if ($author_guild && ! $author_member = $message->member) $author_member = $author_guild->members->get('id', $author_user->id);
     $author_channel_id = $message->channel_id;
     
     //Browser function used to retrieve attachments from deleted messages
@@ -73,7 +73,7 @@ function messageDelete($message, $discord, $browser = null) {
 		$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if($GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;
 		include "$guild_config_path";
 		
-		if ($modlog_channel_id && ($modlog_channel = $guild->channels->offsetGet($modlog_channel_id))) $modlog_channel->sendMessage($content);
+		if ($modlog_channel_id && ($modlog_channel = $guild->channels->get('id', $modlog_channel_id))) $modlog_channel->sendMessage($content);
 		return;
 	} //Don't process blank messages, bots, or webhooks
 	if($GLOBALS['debug_echo']) echo '[messageDelete] ' . $message->guild_id . '/' . $channel_id . PHP_EOL;
@@ -98,7 +98,7 @@ function messageDelete($message, $discord, $browser = null) {
 	$author_check = "$author_username#$author_discriminator";
 
 	//Load guild info
-	if (!$guild = $discord->guilds->offsetGet($guild_id)) return; //Probably a DM, we don't care for it
+	if (!$guild = $discord->guilds->get('id', $guild_id)) return; //Probably a DM, we don't care for it
 
 	//Load config variables for the guild
 	$guild_folder = "\\guilds\\$guild_id";

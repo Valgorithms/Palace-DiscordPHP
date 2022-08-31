@@ -1,7 +1,7 @@
 <?php
 if ($message_content_lower == 'permissions') { //;permissions
 	ob_start();
-	$botmember = $author_guild->members->offsetGet($discord->id);
+	$botmember = $author_guild->members->get('id', $discord->id);
 	var_dump($botmember);
 	$debug_output = ob_get_contents();
 	ob_end_clean(); //here, output is cleaned. You may want to flush it with ob_end_flush()
@@ -101,7 +101,7 @@ if (str_starts_with ($message_content_lower, 'debug guild invites ')) { //;debug
 	$filter = 'debug guild invites ';
 	$value = str_replace($filter, '', $message_content_lower);
 	if (! is_numeric($value)) return $message->reply("`$value` is not a valid Guild ID!");
-	if (! $guild = $discord->guilds->offsetGet("$value")) return $message->reply("Unable to locate Guild with ID `$value`!");
+	if (! $guild = $discord->guilds->get('id', "$value")) return $message->reply("Unable to locate Guild with ID `$value`!");
 	$find_invite = function ($guild, $message, $channels) use (&$find_invite) {
 		if ($channels) {
 			$find_invite_channels = function (&$channels, $message) use (&$find_invite_channels) {
@@ -136,7 +136,7 @@ if (str_starts_with($message_content_lower, 'debug guild invite ')) { //;debug g
 	$filter = "debug guild invite ";
 	$value = str_replace($filter, "", $message_content_lower);
 	if($GLOBALS['debug_echo']) echo "[DEBUG GUILD INVITE] `$value`" . PHP_EOL;
-	if ($guild = $discord->guilds->offsetGet($value)) {
+	if ($guild = $discord->guilds->get('id', $value)) {
 		if ($guild->vanity_url_code) {
 			if($GLOBALS['debug_echo']) echo "[VANITY INVITE EXISTS] `$value`" . PHP_EOL;
 			$message->react("👍");
@@ -144,7 +144,7 @@ if (str_starts_with($message_content_lower, 'debug guild invite ')) { //;debug g
 			$message->channel->sendMessage("{$guild->name} ({$guild->id}) $url");
 			return;
 		}
-		if ( ($bot_member = $guild->members->offsetGet($discord->id)) && ($bot_perms = $bot_member->getPermissions()) && $bot_perms['manage_guild']) {
+		if ( ($bot_member = $guild->members->get('id', $discord->id)) && ($bot_perms = $bot_member->getPermissions()) && $bot_perms['manage_guild']) {
 			foreach ($guild->invites as $invite) {
 				if ($invite->code) {
 					$url = 'https://discord.gg/' . $invite->code;
@@ -644,7 +644,7 @@ if ($message_content_lower == 'verify unverified') { //;verify unverified
 				if ($target_id) {
 					echo "PURGING $target_id" . PHP_EOL;
 					$target_guild = $discord->guilds->get('id', $author_guild_id);
-					if($role_verified_id && $target_member = $target_guild->members->offsetGet($target_id)) //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
+					if($role_verified_id && $target_member = $target_guild->members->get('id', $target_id)) //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
 					$target_member->addrole($role_verified_id);
 					$GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
 					return;
@@ -679,7 +679,7 @@ if ($message_content_lower == 'purge unverified') { //;purge unverified
 				if ($target_id) {
 					if($GLOBALS['debug_echo']) echo "PURGING $target_id" . PHP_EOL;
 					$target_guild = $discord->guilds->get('id', $author_guild_id);
-					if($target_member = $target_guild->members->offsetGet($target_id)) //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
+					if($target_member = $target_guild->members->get('id', $target_id)) //if($GLOBALS['debug_echo']) echo "target_member: " . get_class($target_member) . PHP_EOL;
 					$target_guild->members->kick($target_member); //$target_member->kick("unverified purge");
 					$GLOBALS["UNVERIFIED_X"] = $GLOBALS["UNVERIFIED_X"] + 1;
 					return;

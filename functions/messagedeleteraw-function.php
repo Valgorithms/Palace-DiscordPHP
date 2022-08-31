@@ -12,7 +12,7 @@ function messageDeleteRaw($channel, $message_id, $discord) {
 		->setTimestamp();                                                                     	// Set a timestamp (gets shown next to footer)
 		if ($author_guild_id != '115233111977099271') $embed->setFooter("Palace Bot by Valithor#5947");                             					// Set a footer without icon
 		$embed->setURL("");
-	$guild = $channel->guild ?? $discord->guilds->offsetGet($author_guild_id);
+	$guild = $channel->guild ?? $discord->guilds->get('id', $author_guild_id);
 	//Load config variables for the guild
 	$guild_folder = "\\guilds\\$author_guild_id";
 	$guild_config_path = getcwd() . "$guild_folder\\guild_config.php"; //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "guild_config_path: " . $guild_config_path . PHP_EOL;

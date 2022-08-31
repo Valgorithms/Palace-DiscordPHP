@@ -500,7 +500,7 @@ function GetMention(array $array = [])
         //if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "Option $option" . PHP_EOL;
         switch ($option) { //What info do we care about getting back?
             case 1:
-                $mention_member	= $guild->members->offsetGet($id);
+                $mention_member	= $guild->members->get('id', $id);
                 $mention_user = $mention_member->user;
                 $return_array[$id]['mention_member'] = $mention_member;
                 $return_array[$id]['mention_user'] = $mention_user;
@@ -511,7 +511,7 @@ function GetMention(array $array = [])
             case 3:
             case null: //Grab all that apply
             default:
-                $mention_member	= $guild->members->offsetGet($id);
+                $mention_member	= $guild->members->get('id', $id);
                 $mention_user = $mention_member->user;
                 $return_array[$id]['mention_member'] = $mention_member;
                 $return_array[$id]['mention_user'] = $mention_user;
