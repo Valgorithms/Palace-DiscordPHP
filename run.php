@@ -196,7 +196,7 @@ function webapiFail($part, $id) {
 	return new \React\Http\Message\Response(($id ? 404 : 400), ['Content-Type' => 'text/plain'], ($id ? 'Invalid' : 'Missing').' '.$part.PHP_EOL);
 }
 function webapiSnow($string) {
-	return preg_match('/^[0-9]{16,18}$/', $string);
+	return preg_match('/^[0-9]{16,20}$/', $string);
 }
 $GLOBALS['querycount'] = 0;
 $webapi = new \React\Http\Server($loop, function (\Psr\Http\Message\ServerRequestInterface $request) use ($discord) {

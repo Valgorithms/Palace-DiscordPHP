@@ -1536,7 +1536,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				->addOption(Discord\Builders\Components\Option::new('Rolepicker'))
 				->addOption(Discord\Builders\Components\Option::new('Species Roles'))
 				->addOption(Discord\Builders\Components\Option::new('Gender Roles'))
-				->addOption(Discord\Builders\Components\Option::new('Pronoun Roless'))
+				->addOption(Discord\Builders\Components\Option::new('Pronoun Roles'))
 				->addOption(Discord\Builders\Components\Option::new('Sexuality Roles'))
 				->addOption(Discord\Builders\Components\Option::new('Channel Roles'))
 				->addOption(Discord\Builders\Components\Option::new('Game Roles'))
