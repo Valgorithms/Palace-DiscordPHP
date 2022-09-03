@@ -1,6 +1,6 @@
 <?php
 $nsfwsubroles = array(
-    "Placeholder" => "🖌️"
+    "Placeholder" => "🔞"
 );
 
 //Message copy-pasta:
