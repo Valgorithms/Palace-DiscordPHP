@@ -67,7 +67,7 @@ $discord = new \Discord\Discord([
     'storeMessages' => true,
 	'logger' => $logger,
 	'loop' => $loop,
-	'intents' => Intents::getDefaultIntents() | Intents::GUILD_MEMBERS, // default intents as well as guild members
+	'intents' => Intents::getDefaultIntents() | Intents::GUILD_MEMBERS | Discord\WebSockets\Intents::MESSAGE_CONTENT, // default intents as well as guild members
 ]);
 $browser = new \React\Http\Browser($discord->getLoop()/*, $connector*/);
 include 'slash.php'; //$slash
