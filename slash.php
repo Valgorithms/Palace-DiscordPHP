@@ -14,10 +14,10 @@ $discord->application->commands->freshen()->done(
 	}
 );
 
-
 // creates guild specific commands, needs to be saved only once
 $discord->guilds['468979034571931648']->commands->freshen()->done(
 	function ($commands) use ($discord) {
+        //if ($command = $commands->get('name', 'players')) $commands->delete($command->id);
 		if (! $commands->get('name', 'players')) {
 			$command = new Discord\Parts\Interactions\Command\Command($discord, [
 				'name' => 'players',
@@ -30,6 +30,7 @@ $discord->guilds['468979034571931648']->commands->freshen()->done(
 
 $discord->guilds['807759102624792576']->commands->freshen()->done(
 	function ($commands) use ($discord) {
+        //if ($command = $commands->get('name', 'players')) $commands->delete($command->id);
 		if (! $commands->get('name', 'players')) {
 			$command = new Discord\Parts\Interactions\Command\Command($discord, [
 				'name' => 'players',
