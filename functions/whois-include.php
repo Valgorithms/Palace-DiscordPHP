@@ -64,7 +64,7 @@ foreach($discord->guilds as $guild) {
 	}
 }
 //var_dump(\Discord\Parts\Embed\Embed::class);
-$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+$embed = new \Discord\Parts\Embed\Embed($discord);
 $embed
 	->setTitle("$mention_check ($mention_id)")																// Set a title
 	->setColor(0xe1452d)																	// Set a color (the thing on the left side)

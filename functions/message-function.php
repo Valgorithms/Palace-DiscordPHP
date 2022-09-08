@@ -584,7 +584,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$documentation_sanitized = str_replace("\n", "", $documentation);
 				$doc_length = strlen($documentation_sanitized);
 				if ($doc_length < 1024) {
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 						->setTitle("Setup commands for $author_guild_name")														// Set a title
 						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -705,7 +705,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$documentation_sanitized = str_replace("\n", "", $documentation);
 				$doc_length = strlen($documentation_sanitized); if($GLOBALS['debug_echo']) echo "doc_length: " . $doc_length . PHP_EOL;
 				if ($doc_length < 1024) {
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 						->setTitle("Current setup for $author_guild_name")														// Set a title
 						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -788,7 +788,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			
 				$doc_length = strlen($documentation);
 				if ($doc_length < 1024) {
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 					->setTitle("Settings for $author_guild_name")											// Set a title
 					->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -1721,7 +1721,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$documentation_sanitized = str_replace("\n", "", $documentation);
 				$doc_length = strlen($documentation_sanitized); if($GLOBALS['debug_echo']) echo "doc_length: " . $doc_length . PHP_EOL;
 				if ($doc_length < 1024) {
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 						->setTitle("Current Settings for `$author_guild_name`")														// Set a title
 						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -1803,7 +1803,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			
 				$doc_length = strlen($documentation);
 				if ($doc_length < 1024) {
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 						->setTitle("Current Settings For `$author_guild_name`")														// Set a title
 						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -2004,7 +2004,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		$documentation_sanitized = str_replace("\n", "", $documentation);
 		$doc_length = strlen($documentation);
 		if ($doc_length <= 2048) {
-			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+			$embed = new \Discord\Parts\Embed\Embed($discord);
 			$embed
 				->setTitle("Commands for $author_guild_name")											// Set a title
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -2217,7 +2217,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$server_url[3] = "byond://69.140.47.22:7777";
 				$server_state_dump = array(); // new assoc array for use with the embed
 				
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				foreach ($server_index as $index => $servername) {
 					$assocArray = json_decode($server_state[$index], true);
 					foreach ($assocArray as $key => $value) {
@@ -2400,7 +2400,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		if ($react) $message->react("👍");
 		//	$message->reply($author_role_name_queue_full . PHP_EOL);
 		//	Build the embed
-		$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+		$embed = new \Discord\Parts\Embed\Embed($discord);
 		$embed
 	//		->setTitle("Roles")																		// Set a title
 			->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -2487,7 +2487,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					if ($react) $message->react("👍");
 					//$message->reply($mention_role_name_queue_full . PHP_EOL);
 					//					Build the embed
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 		//						->setTitle("Roles")																		// Set a title
 						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -2527,7 +2527,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		//$cooldown = CheckCooldown($author_folder, "avatar_time.php", $avatar_limit); //	Check Cooldown Timer
 		$cooldown = CheckCooldownMem($author_id, 'avatar', $avatar_limit);
 		if (($cooldown[0]) || ($bypass)) {
-			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+			$embed = new \Discord\Parts\Embed\Embed($discord);
 			$embed
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
 				->setImage("$author_avatar")			 													// Set an image (below everything except footer)
@@ -2583,7 +2583,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					$mention_avatar 									= "{$target_guildmember_user->avatar}";
 					
 					//			Build the embed
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 		//			->setTitle("Avatar")																	// Set a title
 					->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -2708,7 +2708,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					$array_count = 0;
 				}
 				//Build the embed
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				$embed
 				->setTitle("#$array_count")																// Set a title
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -2843,7 +2843,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					$array_count = 0;
 				}
 				//Build the embed
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				$embed
 				->setTitle("#$array_count")																// Set a title
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -3483,7 +3483,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$cooldown = CheckCooldownMem($author_id, "vstats", $vanity_limit);
 			if (($cooldown[0]) || ($bypass)) {
 				//			Build the embed
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				$embed
 					->setTitle("Vanity Stats")																// Set a title
 					->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -3605,7 +3605,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 						}
 						
 						//Build the embed
-						$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+						$embed = new \Discord\Parts\Embed\Embed($discord);
 						$embed
 							->setTitle("Vanity Stats")																// Set a title
 							->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -4523,7 +4523,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			if ($mention_infraction_queue != "") {
 				$length = strlen($mention_infraction_queue_full);
 				if ($length < 1025) {
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 	//					->setTitle("Commands")																	// Set a title
 					->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -4576,7 +4576,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 */
 		}
 		if ($modlog_channel) {
-			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+			$embed = new \Discord\Parts\Embed\Embed($discord);
 			$embed
 //				->setTitle("Commands")																	// Set a title
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -4785,7 +4785,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 
 
 			//Build the embed message
-			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+			$embed = new \Discord\Parts\Embed\Embed($discord);
 			$embed
 //					->setTitle("Commands")																	// Set a title
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -4899,7 +4899,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					} //Boot
 					/*
 					//Build the embed message
-					$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+					$embed = new \Discord\Parts\Embed\Embed($discord);
 					$embed
 	//							->setTitle("Commands")																	// Set a title
 						->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -5101,7 +5101,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				if ($react) $message->react("🤐");
 				/*
 				//Build the embed message
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				$embed
 //							->setTitle("Commands")																	// Set a title
 					->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -5187,7 +5187,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				if ($react) $message->react("😩");
 				//Build the embed message
 				/*
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				$embed
 //							->setTitle("Commands")																	// Set a title
 					->setColor(0xe1452d)																	// Set a color (the thing on the left side)
@@ -5265,7 +5265,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 					
 						//			Build the embed
 						/*
-						$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+						$embed = new \Discord\Parts\Embed\Embed($discord);
 						$embed
 			//				->setTitle("Roles")																		// Set a title
 							->setColor(0xe1452d)																	// Set a color (the thing on the left side)

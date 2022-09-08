@@ -74,7 +74,7 @@ function messageUpdate($message_new, $discord, $message_old) {
 		if ($changes) {
 			if($GLOBALS['debug_echo']) echo '[CHANGES]' . PHP_EOL;
 			if (strlen($changes) <= 1024) {
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				$embed
 					->setColor(0xa7c5fd)
 					->addFieldValues("Message Update", "$changes")
@@ -93,7 +93,7 @@ function messageUpdate($message_new, $discord, $message_old) {
 				$changes_file = "**Before:** ```⠀$message_content_old\n```\n";
 				$changes_file = $changes_file . "**After:**```⠀$message_content_new\n```\n";
 
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				$embed
 				->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
 				->addFieldValues("Message Update", "$changes")												// New line after this

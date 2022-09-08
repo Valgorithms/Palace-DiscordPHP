@@ -46,7 +46,7 @@ function guildMemberRemove($guildmember, $discord) {
 		}
 		
 		//			Build the embed
-		$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+		$embed = new \Discord\Parts\Embed\Embed($discord);
 		$embed
 			->setTitle("Member Left")																// Set a title
 			->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)

@@ -48,7 +48,7 @@ function messageUpdateRaw($channel, $data_array, $discord) {
 		$author_check 													= "$author_username#$author_discriminator"; 					//if(isset($GLOBALS['debug_echo']) && $GLOBALS['debug_echo']) echo "author_check: " . $author_check . PHP_EOL;
 		
 	//			Build the embed
-		$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+		$embed = new \Discord\Parts\Embed\Embed($discord);
 		$embed
 	//				->setTitle("$user_check")																// Set a title
 			->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)

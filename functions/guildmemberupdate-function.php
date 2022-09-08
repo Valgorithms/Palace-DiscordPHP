@@ -248,7 +248,7 @@ function guildMemberUpdate($member, $discord, $member_old) {
 		if ($changes != "") {
 			//$changes = "<@$member_id>'s information has changed:\n" . $changes;
 			if (strlen($changes) < 1025) {
-				$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+				$embed = new \Discord\Parts\Embed\Embed($discord);
 				$embed
 	//				->setTitle("")																			// Set a title
 					->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)

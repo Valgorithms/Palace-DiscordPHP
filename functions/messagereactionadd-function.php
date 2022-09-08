@@ -212,8 +212,7 @@ function messageReactionAdd($reaction, $discord) {
 					if ($value == $emoji_name) {
 						$select_name = $var_name;
 						if (!in_array(strtolower($select_name), $guild_roles_names)) {//Check to make sure the role exists in the guild
-							$new_role = $discord->factory(
-							Discord\Parts\Guild\Role::class,
+							$new_role = \Discord\Parts\Guild\Role($discord,
 								[
 									'name' => ucfirst($select_name),
 									'permissions' => 0,
@@ -243,7 +242,7 @@ function messageReactionAdd($reaction, $discord) {
 						if ($respondent_member->id != $discord->id) {
 							$respondent_member->addRole($guild_roles_role[$target_role_id]); // $target_role_id);
 							//Post a message tagging the user, then delete it after a few seconds
-							$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+							$embed = new \Discord\Parts\Embed\Embed($discord);
 							$embed
 								->setColor(0xa7c5fd)
 								->setDescription("<@$respondent_id>\n**Added role**\n<@&$target_role_id>")

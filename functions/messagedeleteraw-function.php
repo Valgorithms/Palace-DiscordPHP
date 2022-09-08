@@ -5,7 +5,7 @@ function messageDeleteRaw($channel, $message_id, $discord) {
 	$log_message = "Message with id $message_id was deleted from <#$channel_id>\n" . PHP_EOL;
 	$author_guild_id = $channel->guild_id;
 	
-	$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+	$embed = new \Discord\Parts\Embed\Embed($discord);
 	$embed
 		->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)
 		->setDescription("$log_message")														// Set a description (below title, above fields)

@@ -8,8 +8,7 @@ switch ($message_content_lower) {
 		return;
 	case 'debug role': //;debug role
 		if($GLOBALS['debug_echo']) echo '[DEBUG ROLE]' . PHP_EOL;
-		$new_role = $discord->factory(
-			Discord\Parts\Guild\Role::class,
+		$new_role = \Discord\Parts\Guild\Role($discord,
 			[
 				'name' => ucfirst("__debug"),
 				'permissions' => 8,

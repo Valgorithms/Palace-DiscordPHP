@@ -193,10 +193,6 @@ if (str_starts_with($message_content_lower, 'debug guild leave ')) { //;debug gu
 if (str_starts_with($message_content_lower, 'debug guild create')) { //;debug guild create
 	return; //Only works for bots that are in less than 10 guilds
 	if($GLOBALS['debug_echo']) echo '[DEBUG GUILD CREATE]' . PHP_EOL;
-	/*
-	$guild = $discord->factory(\Discord\Parts\Guild\Guild::class);
-	$guild->name = 'Doll House';
-	*/
 	$guild_temp = $discord->guilds->create([
 		'name' => 'Test Server',
 	]);
@@ -285,7 +281,7 @@ if ($message_content_lower == 'genimage') {
 	$image_path = "http://www.valzargaming.com/discord%20-%20palace/" . $img_output_path;
 	//if($GLOBALS['debug_echo']) echo "image_path: " . $image_path . PHP_EOL;
 	//	Build the embed message
-	$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+	$embed = new \Discord\Parts\Embed\Embed($discord);
 	$embed
 //		->setTitle("$author_check")																// Set a title
 		->setColor(0xe1452d)																	// Set a color (the thing on the left side)

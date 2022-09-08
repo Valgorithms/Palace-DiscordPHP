@@ -48,7 +48,7 @@ function guildMemberAdd($guildmember, $discord) {
 		$welcome_public_channel	= $guildmember->guild->channels->get('id', $welcome_public_channel_id);
 	}
 	//	Build the embed
-	$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+	$embed = new \Discord\Parts\Embed\Embed($discord);
 	$embed
 		->setTitle("Member Joined")																// Set a title
 		->setColor(0xa7c5fd)																	// Set a color (the thing on the left side)

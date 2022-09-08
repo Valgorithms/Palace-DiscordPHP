@@ -41,7 +41,7 @@ function guildBanAdd($ban, $discord) {
 		$modlog_channel	= $guild->channels->get('id', $modlog_channel_id);
 		if ($modlog_channel) {
 			//Build the embed message
-			$embed = $discord->factory(\Discord\Parts\Embed\Embed::class);
+			$embed = new \Discord\Parts\Embed\Embed($discord);
 			$embed
 			//	->setTitle("Commands")																	// Set a title
 				->setColor(0xe1452d)																	// Set a color (the thing on the left side)
