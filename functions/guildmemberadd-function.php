@@ -99,7 +99,11 @@ function guildMemberAdd($guildmember, $discord) {
 		});
 	}
 	if ($welcome_public_channel) { //Greet the new user to the server
-		$welcome_public_channel->sendMessage("Welcome <@$user_id> to $author_guild_name!");
+        $welcome_public_channel->sendMessage("Welcome <@$user_id> to $author_guild_name!")->done(function ($new_message) use ($discord) {
+            $discord->getLoop()->addTimer(60, function () use ($new_message) {
+                $new_message->delete();
+            });
+        });
 	}
 	$user_folder = "\\users\\$user_id";
 	CheckDir($user_folder);
