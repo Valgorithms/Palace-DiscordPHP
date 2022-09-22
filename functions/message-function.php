@@ -488,7 +488,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$filter = ">";
 				$value = str_replace($filter, "", $value);
 				if(is_numeric($value))
-					if (!preg_match('/^[0-9]{16,18}$/', $value))
+					if (!preg_match('/^[0-9]{16,20}$/', $value))
 						return $message->react('❌');
 				if ($switch == 'add')
 					if ($target_user = $discord->users->get('id', $value)) //Add to whitelist
@@ -2428,7 +2428,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = str_replace("<@", "", $value);
 			$value = str_replace(">", "", $value); //if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+				if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
 				$mention_user				= $mention_member->user;
 				$mentions_arr				= array($mention_user);
@@ -2559,7 +2559,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$value = str_replace("<@", "", $value);
 				$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 				if (is_numeric($value)) {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+					if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 					$mention_member				= $author_guild->members->get('id', $value);
 					$mention_user				= $mention_member->user;
 					$mentions_arr				= array($mention_user);
@@ -4307,7 +4307,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = str_replace(">", "", $value);
 			$value = trim($value);
 			if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');				
+				if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');				
 				if ($mention_member	= $author_guild->members->get('id', $value)) { //$message->reply("Invalid input! Please enter an ID or @mention the user");
 					if (get_class($mention_member) == "Discord\Parts\User\Member") {
 						$mention_user = $mention_member->user;
@@ -4341,7 +4341,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = trim($value);
 			if (is_numeric($value)) {
 				if($GLOBALS['debug_echo']) echo '[VALID] ' . $value . PHP_EOL;
-				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+				if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 				$discord->users->fetch($value)->done(
 					function ($target_user) use ($message, $value) {
 						$target_username = $target_user->username;
@@ -4376,7 +4376,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$value = str_replace("<@", "", $value);
 				$value = str_replace(">", "", $value);
 				if (is_numeric($value)) {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+					if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 					$mention_member				= $author_guild->members->get('id', $value);
 					$mention_user				= $mention_member->user;
 					$mentions_arr				= array($mention_user);
@@ -4436,7 +4436,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$value = str_replace("<@", "", $value);
 				$value = str_replace(">", "", $value);
 				if (is_numeric($value)) {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+					if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 					$mention_member				= $author_guild->members->get('id', $value);
 					$mention_user				= $mention_member->user;
 					$mentions_arr				= array($mention_user);
@@ -4479,7 +4479,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 				$value = str_replace("<@", "", $value);
 				$value = str_replace(">", "", $value);
 				if (is_numeric($value)) {
-					if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+					if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 					$mention_member = $author_guild->members->get('id', $value);
 					$mention_user = $mention_member->user;
 					$mentions_arr = array($mention_user);
@@ -4626,7 +4626,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = str_replace("<@", "", $value);
 			$value = str_replace(">", "", $value);
 			if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+				if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
 				$mention_user				= $mention_member->user;
 				$mentions_arr				= array($mention_user);
@@ -4842,7 +4842,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$arr = explode(' ', $value);
 			foreach ($arr as $val) {
 				if (is_numeric($val))
-					if (preg_match('/^[0-9]{16,18}$/', $val))
+					if (preg_match('/^[0-9]{16,20}$/', $val))
 						if ($target_user = $discord->users->get('id', $val))
 							$mentions_arr[] = $target_user;
 			}
@@ -4983,7 +4983,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 		$value = str_replace(">", "", $value);
 		$arr = explode(' ', $value); //[mention_id, index]
 		if (is_numeric($arr[0])) {
-			if (!preg_match('/^[0-9]{16,18}$/', $arr[0])) return $message->react('❌');
+			if (!preg_match('/^[0-9]{16,20}$/', $arr[0])) return $message->react('❌');
 			$mention_member				= $author_guild->members->get('id', $arr[0]);
 			$mention_user				= $mention_member->user;
 			$mentions_arr				= array($mention_user);
@@ -5037,7 +5037,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = str_replace("<@", "", $value);
 			$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value) && $value != $discord->id && $value != $author_id && $value != $guild_owner_id) { // //Don't let anyone mute themselves or the bot or the guild owner
-				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+				if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
 				$mention_user				= $mention_member->user;
 				$mentions_arr				= array($mention_user);
@@ -5134,7 +5134,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = str_replace("<@", "", $value);
 			$value = str_replace(">", "", $value);//if($GLOBALS['debug_echo']) echo "value: " . $value . PHP_EOL;
 			if (is_numeric($value) && $value != $discord->id && $value != $guild_owner_id) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+				if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
 				$mention_user				= $mention_member->user;
 				$mentions_arr				= array($mention_user);
@@ -5227,7 +5227,7 @@ function message($message, $discord, $loop, $token, $stats, $twitch, $browser) {
 			$value = str_replace(">", "", $value);
 			
 			if (is_numeric($value)) {
-				if (!preg_match('/^[0-9]{16,18}$/', $value)) return $message->react('❌');
+				if (!preg_match('/^[0-9]{16,20}$/', $value)) return $message->react('❌');
 				$mention_member				= $author_guild->members->get('id', $value);
 				$mention_user				= $mention_member->user;
 				$mentions_arr				= array($mention_user);
